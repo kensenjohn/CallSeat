@@ -18,10 +18,10 @@ try
 	if(sEventID!=null)
 	{
 		GuestTableManager guestTableManager = new GuestTableManager();
-		HashMap<Integer, TableGuestsBean> hmTables =  guestTableManager.getTablesAndGuest("00119643-b401-4611-bec8-7fc1fb9f1c74");
-		appLogging.error("Table with Ints = " + hmTables);
+		HashMap<Integer, TableGuestsBean> hmTables =  guestTableManager.getTablesAndGuest(sEventID);
+		//appLogging.error("Table with Ints = " + hmTables);
 		HashMap<String, TableGuestsBean> hmConsTableGuestBean = guestTableManager.consolidateTableAndGuest(hmTables);
-		appLogging.info("Table with String = " + hmConsTableGuestBean);
+		//appLogging.info("Table with String = " + hmConsTableGuestBean);
 		jsonResponseObj.put("table_detail",guestTableManager.getTablesAndGuestJson(hmConsTableGuestBean));
 		
 		jsonResponseObj.put(Constants.J_RESP_SUCCESS, true);
