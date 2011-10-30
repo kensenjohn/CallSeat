@@ -1,0 +1,28 @@
+To check the version of tomcat currently running in your machine.
+
+go to the home folder of tomcat. i.e where tomcat is installed.
+Inside the bin folder of tomcat there is a filde called 
+version.sh
+version.batr
+
+run the file
+
+sh version.sh
+
+Ouput is as follows (will vary depending on each setup)
+
+Using CATALINA_BASE:   /opt/bitnami/apache-tomcat
+Using CATALINA_HOME:   /opt/bitnami/apache-tomcat
+Using CATALINA_TMPDIR: /opt/bitnami/apache-tomcat/temp
+Using JRE_HOME:        /opt/bitnami/java
+Using CLASSPATH:       /opt/bitnami/apache-tomcat/bin/bootstrap.jar
+Server version: Apache Tomcat/6.0.33
+Server built:   Aug 16 2011 02:16:34
+Server number:  6.0.33.0
+OS Name:        Linux
+OS Version:     2.6.32-314-ec2
+Architecture:   i386
+JVM Version:    1.6.0_22-b04
+JVM Vendor:     Sun Microsystems Inc.
+
+

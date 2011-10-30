@@ -1,0 +1,6 @@
+1) Add a main config file
+2) Add an entry to database being used. Link all database calls through the config file and not "hardcoded" in the DBDAO calls
+3) Create columns in the tables to hold the epoch times.
+4) Add a converter of time, as per the timezone.
+
+

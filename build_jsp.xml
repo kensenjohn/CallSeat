@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="OpenFiles" default="main">
+	<property name="webapp" value="${basedir}"/>
+	<property file="${webapp}/gsbuild.properties" prefix="build_props"/>
+	<property name="webfolder" value="${build_props.WEB_FOLDER}" />
+	<property name="destfolder" value="${build_props.DEST_PROJECT}" />
+	<property name="commonfolder" value="${build_props.COMMON_FOLDER}" />
+	
+	<target name="main">
+		<copy todir="${destfolder}/${webfolder}/">
+			<fileset dir="${basedir}/${webfolder}/"/>
+		</copy>
+	</target>
+</project>

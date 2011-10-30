@@ -1,0 +1,17 @@
+SSH into AWS
+
+1) Make sure your EC2 isntance has the appropriate Security Group
+2) The Seucrity Group should have SSH with the port range set to your IP address or to 0.0.0.0/0 (The whole internet)
+3) Make sure you have the key pair(.pem) file that you assigned to this instance during setup.
+4) Go to the folder, set the permission of the .pem file to "read"
+	chmod 400 <key_pair_pemfile>
+
+5) From the EC2 Dashboard get the Public DNS name for the isntance. SElect the instance, and go to the details about it. One of the parameter is Public DNS.
+6) Use Putty, or terminal to SSH using the following command
+
+     ssh -i <key_pair_pemfile> root@<public_dns_name>
+
+	Username(root) can be different for different instances.
+	I used a "bitnami" AMI for my instnace. The username was "bitnami"
+
+

@@ -1,0 +1,93 @@
+#html {background-color:#BBCDF7;}
+html {background-color:#E9F2FE;}
+.page_setup  {width:100%;height:100%; text-align:center; margin:0px; padding:0px;}
+#.container {width:960px; height:100%; margin:0px auto; text-align:left;background-color:#E9F2FE;}
+.container {width:960px; height:100%; margin:0px auto; text-align:left;background-color:#BBCDF7;}
+.box_container {width:100%; height:100%; margin:0px auto; text-align:left;background-color:#BBCDF7;}
+.rounded-corners {-moz-border-radius: 4px;-webkit-border-radius: 4px;-khtml-border-radius: 4px;border-radius: 4px;}
+
+header h1{display:block;margin:0;float:left;width:100px;height:45px;background-image:url(/web/img/logo.png);text-indent:-9999px;}
+header h1 a{display:block;width:73px;height:57px;}
+header nav{  float:right; font-size:13px;vertical-align:top;height:20px;font-family:"Arial";}
+header nav ul li{ display:inline; list-style:none; float:left; padding-left:10px;vertical-align:bottom;}
+header nav a { color:#184ABE; font-size:14px; display:inline;vertical-align:bottom;}
+header nav a:hover { color:#184ABE; text-decoration:none}
+
+.main_body{width:100%; text-align:center; margin:0px; padding:0px;clear:both}
+.clear_both{clear:both}
+.def_txt_bgc{ color:#4183C4; background-color:#4183C4; }
+.l_txt{ font-family:"Arial";color:#0C235A;font-size:22px;  }
+.s_b_txt{ font-family:"Arial";color:#0C235A;font-size:12px;font-weight:bold; }
+.m_b_txt{ font-family:"Arial";color:#0C235A;font-size:15px;font-weight:bold; }
+
+.landing_input{ text-align:left; margin:10px;}
+.landing_when { margin:20px; }
+.landing_when_label { color:#0C235A;font-size:13px;  }
+
+.horiz_nav ul li { display: inline;float:none;text-align:left }
+
+.ul_li_left ul li {float:none;text-align:left }
+.ul_li_right ul li {float:none;text-align:right }
+.fill_box { width:100%; height:100%;}
+
+.action_button {
+display: inline-block;
+outline: none;
+cursor: pointer;
+text-align: center;
+text-decoration: none;
+font: 14px/100% Arial, Helvetica, sans-serif;
+padding: .5em 2em .55em;
+text-shadow: 0 1px 1px rgba(0,0,0,.5);
+-webkit-border-radius: .5em;
+-moz-border-radius: .5em;
+border-radius: .5em;
+-webkit-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+-moz-box-shadow: 0 1px 2px rgba(0,0,0,.2);
+box-shadow: 0 1px 2px rgba(0,0,0,.2);
+color: #fffbf9;
+border: solid 1px #000000;
+background: #344794; /* for non-css3 browsers */
+background: -webkit-gradient(linear, left top, left bottom, from(#344794), to(#344794)); /* For Webkit Browsers */
+background: -moz-linear-gradient(top, #344794, #344794); /* for Firefox */
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#344794', endColorstr='#344794'); /* for IE */
+}
+.action_button:hover {
+background: #c50503;
+background: -webkit-gradient(linear, left top, left bottom, from(#c30000), to(#ff8a50));
+background: -moz-linear-gradient(top, #c30000, #ff8a50);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#c30000', endColorstr='#ff8a50');
+}
+.action_button:active {
+border: solid 1px #ec3331;
+color: #f9baae;
+background: -webkit-gradient(linear, left top, left bottom, from(#dc3921), to(#ffb36a));
+background: -moz-linear-gradient(top, #dc3921, #ffb36a);
+filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dc3921', endColorstr='#ffb36a');
+}
+
+table.addtabledetail 
+{
+	font-family:arial;
+	background-color: #CDCDCD;
+	margin:10px 0pt 15px;
+	font-size: 12pt;
+	width: 95%;
+	text-align: left;
+	align:center;
+}
+table.addtabledetail thead tr th{
+	background-color: #e6EEEE;
+	border: 1px solid #FFF;
+	font-size: 12pt;
+	padding: 4px;
+}
+table.addtabledetail tbody td {
+	color: #3D3D3D;
+	padding: 4px;
+	background-color: #FFF;
+	vertical-align: top;
+}
+table.addtabledetail tbody tr.odd td {
+	background-color:#F0F0F6;
+}

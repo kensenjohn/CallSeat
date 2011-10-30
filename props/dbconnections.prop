@@ -1,0 +1,14 @@
+drivers=com.mysql.jdbc.Driver
+db_env=admin|guest
+admin.url=jdbc:mysql://localhost:3306/guestadmin?uniCode=true&characterEncoding=UTF-8
+admin.user=appadmin
+admin.password=FD3C08EEE89Ftestmystrength
+admin.initConn=1
+admin.maxConn=45
+
+guest.url=jdbc:mysql://localhost:3306/guestadmin?uniCode=true&characterEncoding=UTF-8
+guest.user=appadmin
+guest.password=FD3C08EEE89Ftestmystrength
+guest.initConn=1
+guest.maxConn=45
+

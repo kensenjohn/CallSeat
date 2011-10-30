@@ -1,0 +1,81 @@
+Setting up the Amazon EC2 instance.
+1) Go to the amazon AWS website
+2) Login - create the intial developer key etc etc. will take a few days
+
+Create Instance
+	- In the AWS Management Consol - EC2 DashBoard
+	- Click Laucnh
+	- Search for the type of instance you want. FreeBSD
+	- Hit Select.
+	- Select the instance type you want to run (micro/small/medium)
+	- Select the region you want it to be in.
+	- Hit Next/Continue
+	- As of now leave Kernel and Ram empty
+	- Select "Prevention against accidental termination. ". This will prevent us from hitting "terminate", which will destroy the instnace.
+	- Hit Continue
+	- Add a Tag to identify the instance
+	- Hit Continue
+	- This is where you setup a Key Pair. This will be downloaded to your machine. 
+		The keypair is the security stuff used to ssh into the EC2 instance from your local machine.
+	- If you are creating a key pair.
+		Enter a Name and then
+		Click to create your key pair:*
+			This will download the key pair to yor local. You can move it to where ever you want to.
+			When you ssh, you will be using the key to get in.
+
+			Ex: Go to the folder where the keypair is stored.
+				in your putty or terminal type the following command
+
+				ssh -i <key_pair_name>  <usernam_of_instance>@<domain_of_instance>
+
+		If you have alredy created a keypair and want to reuse it.
+		Select it from the "Choose from your existing Key Pairs" drop down.
+
+	- Hit Continue
+	- Now you come to Security area. This is the Firewall setting.
+		This is where you tell the firewall for your instance, what request to allow.
+		Who to be able to execute the requests. etc
+		
+			For SSH:
+				> Select SSH 
+						Port 22
+			For Ping Capabiltiy:
+				> Select Custom ICMP
+						Select All (Under Type dropdown)
+			For Internet Access(to be able to access the webserver in your instance)
+				> Select Custom TCP
+						Port Range ( 0 - 65535)
+			For other port action, to be able to read write from ports
+				> Select Custom UDP
+						Port Range ( 0 - 65535)
+
+
+		How to select the Source(the IP address range)
+
+				If you want only your desk top computer to be able to access the EC2 instance:
+				- Get the IP address of your local machine
+				- example : 64.132.35.12/32
+					the  "/32" indicates a subnet mask.
+
+				If you want the entire internet to access the instance. Be careful when you are set this up for SSH.
+						0.0.0.0/0
+
+				Add as many ranges as you want to limit or allow access to the EC2 Instance.
+
+
+		Give this security group an appropriate name
+		ex: mystance_dev_Security
+
+		You can create multiple security groups.
+		Then attach and instance to a security group that you want.
+
+	- Hit Continue
+	- Review all the settings you made.
+	- You can always go back to make changes at this step
+	- IF satisfied, click on Launch.		
+		
+					
+
+
+				
+

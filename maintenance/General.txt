@@ -1,0 +1,30 @@
+1) See Connections
+      show PROCESSLIST;
+
+2) Restart Mysql instance
+
+	sudo /etc/init.d/mysql stop
+	sudo /etc/init.d/mysql start
+
+3) Version of Mysql
+ SHOW VARIABLES LIKE "%version%";
+
+One of the parameter will be the version of Mysql.
+
+4) Creating a user.
+CREATE USER 'nxm'@'localhost' IDENTIFIED BY PASSWORD '*90E462C37378CED12064BB3388827D2BA3A9B689';
+
+Here above a password has is being used.
+
+5) To create the password hash
+SELECT PASSWORD('test'); 
+
+In mysql older than 4.1 - this will return a 16 byte hash
+378b243e220ca493
+
+In newer than 4.1 mydql you will get a 41 byte hash. first character will be a star.
+*94BDCEBE19083CE2A1F959FD02F964C7AF4CFC29
+
+6) Grant priveleges to user
+GRANT SELECT, INSERT, UPDATE, DELETE ON guestadmin.* TO 'nxm'@'localhost';
+

@@ -1,0 +1,41 @@
+We use the SCP command to copy files and directories into the EC2 image, from the local folder.
+
+scp - stand for secure copy.
+
+Copy a File
+
+scp <source_file> <remote_machine_username>@<remote_machine_host_name>:<desticantion_directory>
+
+ex:
+scp index.html root@mylocalhost.com:/home/kjohn/
+
+Executing this will prompt you for the remote host password.
+Enter password and hit enter.
+If password is correct, it will show the file being copied. Number of bytes copied and the speed at which it is being trasfered.
+
+Recursively copy a directory
+Use the -r option
+
+scp -r <source_directory> <remote_machine_username>@<remote_machine_host_name>:<desticantion_directory>
+
+ex:
+scp -r /home/localwebapp/* root@mylocalhost.com:/home/kjohn/
+
+Similary will ask the password. After validating password will show the list of files it is being copied.
+It will maintain the directory structure at the destination.
+
+For EC2:
+We are going to use the SSH key .pem file along with the above two options.
+to use the .pem file for authentication, we use the -i option similar to SSH.
+
+The username and domain of the amazon ec2 instance will vary.
+
+copy 1 file to EC2
+scp -i <location_of_pemfile> <source_file> <remote_machine_username>@<remote_machine_host_name>:<desticantion_directory>
+scp -i /usr/localdescktop/password.pem index.html root@my_amazon_ec2.com:/home/kjohn/
+
+copy recursive directory
+scp -i <location_of_pemfile> -r <source_directory> <remote_machine_username>@<remote_machine_host_name>:<desticantion_directory>
+scp -i /usr/localdescktop/password.pem -r /home/localwebapp/* root@my_amazon_ec2.com:/home/kjohn/
+
+

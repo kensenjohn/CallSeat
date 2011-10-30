@@ -1,0 +1,12 @@
+- Java SDK -1.6
+- Tomcat 6
+- MySql
+- Create database in mysql
+	execute the queries for initial setup of user, table,
+- For logs
+	create a folder under /var/log/guests/
+	add the log files there. Give them all read write permission so that the logger can write into them
+- Props
+	create a folder /etc/guests/props/
+		create the required prop files. give them read write access.
+
