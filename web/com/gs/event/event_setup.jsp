@@ -40,19 +40,16 @@
    <div class="page_setup">
 		<div class="container rounded-corners">
 			<jsp:include page="../common/top_nav.jsp"/>
+			<jsp:include page="lobby_tab.jsp">
+				<jsp:param name="select_tab" value="event_tab"/>
+			</jsp:include>
 			<div class="main_body">
 				<div class="clear_both landing_input">					
-					<div>
-						<span class="m_b_txt"><%=sEventTitle %></span>
-						<span class="m_b_txt" style="float:right;">
-							Scheduled For : 
-							<input type="text"  class="clearOnClick" id="sched_date" name="sched_date" value="<%= sEventDate %>"> 
-						</span> 
-									
-					</div>
+											
 					<jsp:include page="../common/action_nav.jsp">
 						<jsp:param name="admin_id" value="<%=adminBean.getAdminId() %>"/>
 						<jsp:param name="event_id" value="<%=eventBean.getEventId() %>"/>
+						<jsp:param name="select_tab" value="table_tab"/>
 					</jsp:include>
 				</div>
 				<div  class="clear_both" style="width: 100%;  text-align: center;">
@@ -72,6 +69,7 @@
 <script type="text/javascript" src="/web/js/jquery.datepick.js"></script> 
 <script type="text/javascript">
 	var varEventID = '<%=eventBean.getEventId()%>'
+	var varAdminID = '<%=adminBean.getAdminId()%>'
 	$(document).ready(function() {
 		
 		$("#sched_date").datepick();
@@ -93,8 +91,29 @@
 			'type'				: 'iframe'
 		});
 		
+		loadActions();
 		loadTables();
 	});
+	
+	function loadActions()
+	{
+		$("#lnk_event_id").click(function() 
+		{
+			
+		});
+		$("#lnk_guest_id").click(function() 
+		{
+			//window.location = 'guest_setup.jsp?event_id='+varEventID+'&admin_id='+varAdminID;
+			
+			$("#frm_lobby_tab").attr("action" , "guest_setup.jsp");
+			$("#lobby_event_id").val(varEventID);
+			$("#lobby_admin_id").val(varAdminID);
+			$("#frm_lobby_tab").submit();
+		});
+		$("#lnk_dashboard_id").click(function() {
+			
+		});
+	}
 	
 	function loadTables()
 	{
@@ -104,18 +123,18 @@
 		var actionUrl = "proc_load_table.jsp";
 		var methodType = "POST";
 		
-		getAllTablesData(actionUrl,dataString,methodType);
+		getDataAjax(actionUrl,dataString,methodType, getTableGuestResult);
 		
 	}
 	
-	function getAllTablesData(actionUrl,dataString,methodType)
+	function getDataAjax(actionUrl,dataString,methodType, callBackMethod)
 	{
 		$.ajax({
 			  url: actionUrl ,
 			  type: methodType ,
 			  dataType: "json",
 			  data: dataString ,
-			  success: getTableGuestResult,
+			  success: callBackMethod,
 			  error:function(a,b,c)
 			  {
 				  alert(a.responseText + ' = ' + b + " = " + c);
@@ -152,74 +171,96 @@
 			if(tableDetails!=undefined)
 			{
 				var numOfRows = tableDetails.num_of_rows;
-				//alert( numOfRows); 
 				var allTables = tableDetails.tables;
 				
-				//createTableDetails(allTables ,  numOfRows);
-				
-				/*$("#table_details").tablesorter({ 
-			        // pass the headers argument and assing a object 
-			        headers: { 
-			            // assign the secound column (we start counting zero) 
-			            0: { 
-			                // disable it by setting the property sorter to false 
-			                sorter: false 
-			            }, 
-			            // assign the third column (we start counting zero) 
-			            1: { 
-			                // disable it by setting the property sorter to false 
-			                sorter: false 
-			            } 
-			        } 
-			    });*/
-			    
 				$("#div_table_details").tableformatter({
-					varTableDetails : tableDetails
+					varTableDetails : tableDetails,
+					varDeleteTableURL : '/web/com/gs/event/proc_delete_table.jsp'
 				});
+				applyActionEvents(tableDetails);
 				
 			}
 			
 		}
 	}
-	function createTableDetails(allTables,numOfRows)
-	{
-		var tableDetail = '<table cellspacing="1" class="addtabledetail" id="table_details"> '+tableDetailHeader()+''+tableDetailRows(allTables,numOfRows)+'</table>';
-		$("#div_table_details").replaceWith(tableDetail);
-	}
 	
-	function tableDetailRows(allTables,numOfRows )
+	function applyActionEvents( json_table_details )
 	{
-		var valRows = '';
-		for( i=0; i<numOfRows; i++ )
+		var numOfRows = json_table_details.num_of_rows;
+		var allTables = json_table_details.tables;
+		
+		for( i = 0 ; i<numOfRows ; i++)
 		{
 			var tmpTable = allTables[i];
-			valRows = valRows + '<tr><td>'+tmpTable.table_name+'</td>'+
-								'<td>'+tmpTable.table_num+'</td></tr>';
+			
+			var varTableId = tmpTable.table_id;
+			
+			$('#del_'+varTableId).click(function() {
+				delete_table_action('/web/com/gs/event/proc_delete_table.jsp',varTableId);
+			});
+			$('#edit_'+varTableId).click(function() {
+				delete_table_action('/web/com/gs/event/proc_delete_table.jsp',varTableId);
+			});
+			$('#guest_'+varTableId).click(function() {
+				delete_table_action('/web/com/gs/event/proc_delete_table.jsp',varTableId);
+			});
+			
 		}
-		return valRows;
 	}
-	function tableDetailHeader()
+	
+	function guest_table_action(url,tableid)
 	{
-		/*
-		    <thead>> 
-		        <tr> 
-		            <th class="{sorter: false}">first name</th> 
-		            <th>last name</th> 
-		            <th>age</th> 
-		            <th>total</th> 
-		            <th class="{sorter: false}">discount</th> 
-		            <th>date</th> 
-		        </tr> 
-		    </thead>
-		*/
-		
-		var valHeader = '<thead><tr> ' + 
-							'<th style="width:30%">Table Name</th><th style="width:10%">Number</th>'+
-							'<th style="width:20%">Assigned Seats</th>'+
-							'<th style="width:35%"></th>'
-						+'</tr></thead>';
-		return valHeader;
+		alert('Edit Guests');
 	}
+	
+	function edit_table_action(url,tableid)
+	{
+		alert('Edit Table');
+	}
+	
+	function delete_table_action(url,tableid)
+	{
+		var confirmDelete = confirm('Do you want to delete this table?');
+		
+		if(confirmDelete == true)
+		{
+			$("#table_"+tableid).remove();
+			
+			var dataString = '&event_id='+ varEventID + '&table_id='+tableid;
+			var actionUrl = "proc_delete_table.jsp";
+			var methodType = "POST";
+			
+			//getAllTablesData(actionUrl,dataString,methodType);
+			
+			getDataAjax(actionUrl,dataString,methodType, deleteTable);
+			
+			
+		}
+		
+	}
+	
+	function deleteTable(jsonResult)
+	{
+		if(!jsonResult.success)
+		{
+			var varResponse = jsonResult.response;
+			if(varResponse!=undefined)
+			{
+				var varMessage = varResponse.error_message;
+				if(varMessage!=undefined && varMessage!= '' )
+				{
+					$("#err_mssg").text(varMessage);
+				}
+			}
+			
+		}
+		else
+		{	
+			//var varTa
+			loadTables();
+		}
+	}
+	
 	
 </script>
 <jsp:include page="../common/footer_top.jsp"/>

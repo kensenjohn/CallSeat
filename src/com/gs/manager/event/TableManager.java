@@ -5,6 +5,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gs.bean.EventTableBean;
 import com.gs.bean.TableBean;
 import com.gs.common.Utility;
 import com.gs.data.event.TableData;
@@ -55,9 +56,30 @@ public class TableManager
 		return hmTables;
 	}
 
-	public void assignTableToEvent()
+	public Integer deleteTable(TableBean tableBean)
 	{
+		Integer numOfTablesDel = 0;
+		if (tableBean != null && !"".equalsIgnoreCase(tableBean.getTableId()))
+		{
+			TableData tableData = new TableData();
 
+			numOfTablesDel = tableData.deleteTables(tableBean.getTableId());
+		}
+		return numOfTablesDel;
 	}
 
+	public Integer deleteEventTable(EventTableBean eventtableBean)
+	{
+		Integer numOfEventTablesDel = 0;
+		if (eventtableBean != null && !"".equalsIgnoreCase(eventtableBean.getTableId())
+				&& !"".equalsIgnoreCase(eventtableBean.getEventId()))
+		{
+			TableData tableData = new TableData();
+
+			numOfEventTablesDel = tableData.deleteEventTable(eventtableBean.getTableId(),
+					eventtableBean.getEventId());
+
+		}
+		return numOfEventTablesDel;
+	}
 }

@@ -29,7 +29,7 @@ public class GuestTableData
 				+ " LEFT OUTER JOIN GTTABLEGUESTS GTG ON GT.TABLEID = GTG.FK_TABLEID "
 				+ " LEFT OUTER JOIN GTGUESTS GG ON GTG.FK_GUESTID = GG.GUESTID "
 				+ " LEFT OUTER JOIN GTUSERINFO GU ON GG.FK_USERINFOID = GU.USERINFOID "
-				+ " WHERE GE.EVENTID=? ";
+				+ " WHERE GE.EVENTID=? ORDER BY GT.CREATEDATE DESC";
 
 		ArrayList<Object> aParams = DBDAO.createConstraint(sEventId);
 
@@ -45,7 +45,8 @@ public class GuestTableData
 
 				tableGuestsBean.setTableId(ParseUtil.checkNull(hmTableGuest.get("TABLEID")));
 				tableGuestsBean.setTableName(ParseUtil.checkNull(hmTableGuest.get("TABLENAME")));
-				tableGuestsBean.setTableNum(ParseUtil.checkNull(hmTableGuest.get("NUMOFSEATS")));
+				tableGuestsBean.setTableNum(ParseUtil.checkNull(hmTableGuest.get("TABLENUM")));
+				tableGuestsBean.setNumOfSeats(ParseUtil.checkNull(hmTableGuest.get("NUMOFSEATS")));
 				tableGuestsBean.setIsTemporary(ParseUtil.checkNull(hmTableGuest.get("IS_TMP")));
 				tableGuestsBean.setDelelteRow(ParseUtil.checkNull(hmTableGuest.get("DEL_ROW")));
 				tableGuestsBean.setAdminId(ParseUtil.checkNull(hmTableGuest.get("FK_ADMINID")));
@@ -69,5 +70,22 @@ public class GuestTableData
 		}
 
 		return hmTableGuests;
+	}
+
+	public Integer deleteGuestTable(TableGuestsBean tableGuestBean)
+	{
+		Integer numOfRows = 0;
+		if (tableGuestBean != null && tableGuestBean.getTableId() != null
+				&& !"".equalsIgnoreCase(tableGuestBean.getTableId()))
+		{
+
+			String sQuery = "DELETE FROM GTTABLEGUESTS WHERE FK_TABLEID = ? ";
+
+			ArrayList<Object> aParams = DBDAO.createConstraint(tableGuestBean.getTableId());
+
+			numOfRows = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB, "GuestTableData.java",
+					"deleteGuestTable()");
+		}
+		return numOfRows;
 	}
 }

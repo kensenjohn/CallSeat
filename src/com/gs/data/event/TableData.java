@@ -7,12 +7,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gs.bean.TableBean;
+import com.gs.common.Configuration;
+import com.gs.common.Constants;
 import com.gs.common.ParseUtil;
 import com.gs.common.db.DBDAO;
 
 public class TableData
 {
 	Logger appLogging = LoggerFactory.getLogger("AppLogging");
+	Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+
+	private String ADMIN_DB = applicationConfig.get(Constants.ADMIN_DB);
 
 	public TableBean getTableById(String sTableId)
 	{
@@ -94,5 +99,35 @@ public class TableData
 
 		}
 		return hmTables;
+	}
+
+	public Integer deleteTables(String sTableId)
+	{
+		Integer numOfRows = 0;
+		if (sTableId != null && !"".equalsIgnoreCase(sTableId))
+		{
+			String sQuery = "DELETE FROM GTTABLE WHERE TABLEID = ?";
+			ArrayList<Object> aParams = DBDAO.createConstraint(sTableId);
+
+			numOfRows = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB, "TableData.java",
+					"deleteTables()");
+		}
+		return numOfRows;
+	}
+
+	public Integer deleteEventTable(String sTableId, String sEventId)
+	{
+		Integer numOfRows = 0;
+		if (sTableId != null && !"".equalsIgnoreCase(sTableId) && sEventId != null
+				&& !"".equalsIgnoreCase(sEventId))
+		{
+			String sQuery = " DELETE FROM  GTEVENTTABLES  WHERE FK_EVENTID =? and FK_TABLEID =  ? ";
+
+			ArrayList<Object> aParams = DBDAO.createConstraint(sEventId, sTableId);
+
+			numOfRows = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB, "TableData.java",
+					"deleteEventTable()");
+		}
+		return numOfRows;
 	}
 }

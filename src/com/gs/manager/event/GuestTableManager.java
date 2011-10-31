@@ -155,4 +155,17 @@ public class GuestTableManager
 		return jsonObject;
 
 	}
+
+	public Integer deleteGuestTables(TableGuestsBean tableGuestBean)
+	{
+		Integer numOfGuestTablesDel = 0;
+		if (tableGuestBean != null && !"".equalsIgnoreCase(tableGuestBean.getTableId()))
+		{
+			GuestTableData guestTableData = new GuestTableData();
+
+			numOfGuestTablesDel = guestTableData.deleteGuestTable(tableGuestBean);
+
+		}
+		return numOfGuestTablesDel;
+	}
 }
