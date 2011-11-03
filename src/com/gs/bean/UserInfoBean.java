@@ -1,5 +1,9 @@
 package com.gs.bean;
 
+import java.util.HashMap;
+
+import com.gs.common.ParseUtil;
+
 public class UserInfoBean
 {
 	/*
@@ -10,7 +14,7 @@ public class UserInfoBean
 	 * | | STATE | varchar(30) | YES | | NULL | | | COUNTRY | varchar(45) | YES
 	 * | | NULL | | | IP_ADDRESS | varchar(1024) | YES | | NULL
 	 */
-
+	private boolean isUserInfoExists = false;
 	private String userInfoId = "";
 	private String firstName = "";
 	private String lastName = "";
@@ -27,6 +31,57 @@ public class UserInfoBean
 	private String cellPhone = "";
 	private String phoneNum = "";
 	private String humanCreateDate = "";
+	private String timezone = "";
+
+	public UserInfoBean()
+	{
+
+	}
+
+	public UserInfoBean(HashMap<String, String> hmUserInfo)
+	{
+		/*
+		 * | USERINFOID | varchar(45) | NO | PRI | NULL | | | FIRST_NAME |
+		 * varchar(256) | NO | | NULL | | | LAST_NAME | varchar(256) | YES | |
+		 * NULL | | | ADDRESS_1 | varchar(1024) | YES | | NULL | | | ADDRESS_2 |
+		 * varchar(1024) | YES | | NULL | | | CITY | varchar(1024) | YES | |
+		 * NULL | | | STATE | varchar(30) | YES | | NULL | | | COUNTRY |
+		 * varchar(45) | YES | | NULL | | | IP_ADDRESS | varchar(1024) | YES | |
+		 * NULL | | | CELL_PHONE | varchar(15) | YES | | NULL | | | PHONE_NUM |
+		 * varchar(15) | YES | | NULL | | | EMAIL | varchar(100) | YES | | NULL
+		 * | | | IS_TMP | int(1) | NO | | 1 | | | DEL_ROW | int(1) | NO | | 0 |
+		 * | | CREATEDATE | bigint(20) | NO | | 0 | | | HUMAN_CREATEDATE |
+		 * varchar(45) | YES | | NULL | | | TIMEZONE | varchar(15) | NO | | NULL
+		 * | |
+		 */
+		setUserInfoId(ParseUtil.checkNull(hmUserInfo.get("USERINFOID")));
+		this.firstName = ParseUtil.checkNull(hmUserInfo.get("FIRST_NAME"));
+		this.lastName = ParseUtil.checkNull(hmUserInfo.get("LAST_NAME"));
+		this.address1 = ParseUtil.checkNull(hmUserInfo.get("ADDRESS_1"));
+		this.address2 = ParseUtil.checkNull(hmUserInfo.get("ADDRESS_2"));
+		this.city = ParseUtil.checkNull(hmUserInfo.get("CITY"));
+		this.state = ParseUtil.checkNull(hmUserInfo.get("STATE"));
+		this.country = ParseUtil.checkNull(hmUserInfo.get("COUNTRY"));
+		this.ipAddress = ParseUtil.checkNull(hmUserInfo.get("IP_ADDRESS"));
+		this.isTemporary = ParseUtil.checkNull(hmUserInfo.get("IS_TMP"));
+		this.deleteRow = ParseUtil.checkNull(hmUserInfo.get("DEL_ROW"));
+		this.createDate = ParseUtil.sToL(hmUserInfo.get("CREATEDATE"));
+		this.email = ParseUtil.checkNull(hmUserInfo.get("EMAIL"));
+		this.cellPhone = ParseUtil.checkNull(hmUserInfo.get("CELL_PHONE"));
+		this.phoneNum = ParseUtil.checkNull(hmUserInfo.get("PHONE_NUM"));
+		this.humanCreateDate = ParseUtil.checkNull(hmUserInfo.get("HUMAN_CREATEDATE"));
+		this.timezone = ParseUtil.checkNull(hmUserInfo.get("TIMEZONE"));
+	}
+
+	public String getTimezone()
+	{
+		return timezone;
+	}
+
+	public void setTimezone(String timezone)
+	{
+		this.timezone = timezone;
+	}
 
 	public String getUserInfoId()
 	{
@@ -35,6 +90,10 @@ public class UserInfoBean
 
 	public void setUserInfoId(String userInfoId)
 	{
+		if (userInfoId != null && !"".equalsIgnoreCase(userInfoId))
+		{
+			isUserInfoExists = true;
+		}
 		this.userInfoId = userInfoId;
 	}
 
@@ -186,6 +245,16 @@ public class UserInfoBean
 	public void setHumanCreateDate(String humanCreateDate)
 	{
 		this.humanCreateDate = humanCreateDate;
+	}
+
+	public boolean isUserInfoExists()
+	{
+		return isUserInfoExists;
+	}
+
+	public void setUserInfoExists(boolean isUserInfoExists)
+	{
+		this.isUserInfoExists = isUserInfoExists;
 	}
 
 }

@@ -66,7 +66,7 @@ background: -moz-linear-gradient(top, #dc3921, #ffb36a);
 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dc3921', endColorstr='#ffb36a');
 }
 
-table.addtabledetail 
+table.addtabledetail
 {
 	font-family:arial;
 	background-color: #CDCDCD;
@@ -138,24 +138,31 @@ ul.lobby_tabs li.rounded{
 	border-top-left-radius: 10px;
 	border-top-right-radius: 10px;
 	
-	border-top: 3px solid #0C235A;
-	border-left:  3px solid  #0C235A;
-	border-right: 3px solid  #0C235A;
-	color:#0C235A;
+	border-top: 3px solid #344794;
+	border-left:  3px solid  #344794;
+	border-right: 3px solid  #344794;
+	
 	
 	cursor:pointer;
 }
 ul.lobby_tabs li.select{
 	height:25px;
+	color:#000000;
 }
 ul.lobby_tabs li.unselect{
 	height:22px;
+	background:#344794;
+	color:#FFFFFF;
 }	
 ul.lobby_tabs li.show_base{
-	border-bottom: 3px solid #0C235A;
+	border-bottom: 3px solid #344794;
 }
 
 #div_table_details {
 	margin-left:40px;
 }
+#div_guests_details {
+	margin-left:40px;
+}
+
 

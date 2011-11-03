@@ -7,6 +7,8 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class DateSupport
 {
+	private static final DateTimeFormatter PRETTY_DATE_2 = DateTimeFormat
+			.forPattern(Constants.PRETTY_DATE_PATTERN_2);
 
 	public static Long getEpochMillis()
 	{
@@ -23,5 +25,16 @@ public class DateSupport
 		DateTime utcTime = localDateTime.withZone(zoneUTC);
 
 		return formatter1.print(utcTime);
+	}
+
+	public static String getTimeByZone(Long epochDate, String sTimeZone)
+	{
+		DateTimeZone timeZone = DateTimeZone.forID(sTimeZone);
+
+		DateTime localDateTime = new DateTime(epochDate);
+		DateTime localTime = localDateTime.withZone(timeZone);
+
+		return PRETTY_DATE_2.print(localTime);
+
 	}
 }

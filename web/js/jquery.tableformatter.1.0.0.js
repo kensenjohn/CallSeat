@@ -9,8 +9,6 @@
 			 
 			 var config = $.extend({},$.fn.tableformatter.defaults,jsonTableDetails);
 			 
-			//alert('in init -' + jsonTableDetails.num_of_rows );
-			
 			 json_table_details = config;
 			 tableformat_function.init(this);
 			 

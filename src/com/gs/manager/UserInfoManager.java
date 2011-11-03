@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gs.bean.UserInfoBean;
+import com.gs.common.Constants;
 import com.gs.common.DateSupport;
 import com.gs.common.Utility;
 import com.gs.data.UserInfoData;
@@ -61,6 +62,7 @@ public class UserInfoManager
 		// change this to a valid date
 		userInfoBean.setCreateDate(DateSupport.getEpochMillis());
 		userInfoBean.setHumanCreateDate(DateSupport.getUTCDateTime());
+		userInfoBean.setTimezone(Constants.DEFAULT_TIMEZONE);
 
 		return userInfoBean;
 	}

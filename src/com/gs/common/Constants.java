@@ -18,6 +18,8 @@ public class Constants
 	public static String CONFIG_LOGS = "ConfiguLogging";
 
 	public static String DATE_PATTERN = "yyyy-MM-dd hh:mm:ss";
+	public static String PRETTY_DATE_PATTERN_1 = "MM/dd/yyyy hh:mm z";
+	public static String PRETTY_DATE_PATTERN_2 = "MM/dd/yyyy";
 	public static String TIME_PATTERN = "hh mm";
 
 	public static String ROOT_FOLDER = "5ec93f8053404960b7936e8699fc49cc";
@@ -26,6 +28,8 @@ public class Constants
 	public static String J_RESP_SUCCESS = "success";
 	public static String J_RESP_ERR_MSSG = "error_message";
 	public static String J_RESP_RESPONSE = "response";
+
+	public static String DEFAULT_TIMEZONE = "UTC";
 
 	public enum TWILIO_CALL_STATUS
 	{

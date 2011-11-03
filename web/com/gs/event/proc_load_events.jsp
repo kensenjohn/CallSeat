@@ -8,30 +8,25 @@
 
 <%
 JSONObject jsonResponseObj = new JSONObject();
-String sEventID = ParseUtil.checkNull(request.getParameter("event_id"));
+String sAdminID = ParseUtil.checkNull(request.getParameter("admin_id"));
 Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 Logger appLogging = LoggerFactory.getLogger("AppLogging");
 response.setContentType("application/json");
 try
 {
-	
-	if(sEventID!=null)
+	if(sAdminID!=null && !"".equalsIgnoreCase(sAdminID))
 	{
-		GuestTableManager guestTableManager = new GuestTableManager();
-		HashMap<Integer, TableGuestsBean> hmTables =  guestTableManager.getTablesAndGuest(sEventID);
+		EventManager eventManager = new EventManager();
+		ArrayList<EventBean> arrEventBean = eventManager.getAllEvents(sAdminID);
 		
-		HashMap<String, TableGuestsBean> hmConsTableGuestBean = guestTableManager.consolidateTableAndGuest(hmTables);
-		jsonResponseObj.put("table_detail",guestTableManager.getTablesAndGuestJson(hmConsTableGuestBean));
+		jsonResponseObj.put("event_detail",eventManager.getEventJson(arrEventBean));
 		
 		jsonResponseObj.put(Constants.J_RESP_SUCCESS, true);
 	}
 	else
 	{
 		jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
-		appLogging.error("Invalid event used to retrieve table details");
 	}
-
-	out.println(jsonResponseObj);
 }
 catch(Exception e)
 {

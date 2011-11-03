@@ -22,14 +22,19 @@
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 		String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 		
+		boolean isAllGuestAdd = ParseUtil.sTob(request.getParameter("all_guest_tab"));
+		
 		jspLogging.info("Add Table for event : " + sEventId + " by : " + sAdminId);
 %>
 
 		<div class="box_container rounded-corners fill_box">
 			<div style="padding:20px">
-				<div style="text-align:center;" ><span class="l_txt" style="padding:10px;" >Guest Details</span></div><br/>
+				<div style="text-align:left;" >
+					<span class="l_txt" style="padding:10px;" >Add Guest to</span>
+				</div>
+				<br/>
 				<div>
-				<form id="frm_add_guest" name="frm_add_guest">
+				<form id="frm_add_guest" >
 				<div>
 				<span>First Name :</span> <input type="text" id="table_name" name="first_name"/> &nbsp;&nbsp;
 				<span>Last Name :</span> <input type="text" id="last_name" name="last_name"/><br/>
@@ -49,11 +54,12 @@
 	</body>
 	<script type="text/javascript">
 		var varAdminId = '<%=sAdminId%>';
+		$.fancybox.showActivity;
 		$(document).ready(function() {
-			//loadTables();
+			loadEvents();
 			$("#add_guest").click(addGuest);
 		});
-		function loadTables()
+		function loadEvents()
 		{
 			var actionUrl = "proc_get_tables.jsp";
 			var methodType = "GET";

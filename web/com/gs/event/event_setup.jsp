@@ -49,7 +49,7 @@
 					<jsp:include page="../common/action_nav.jsp">
 						<jsp:param name="admin_id" value="<%=adminBean.getAdminId() %>"/>
 						<jsp:param name="event_id" value="<%=eventBean.getEventId() %>"/>
-						<jsp:param name="select_tab" value="table_tab"/>
+						<jsp:param name="select_action_nav" value="table_tab"/>
 					</jsp:include>
 				</div>
 				<div  class="clear_both" style="width: 100%;  text-align: center;">
@@ -108,6 +108,7 @@
 			$("#frm_lobby_tab").attr("action" , "guest_setup.jsp");
 			$("#lobby_event_id").val(varEventID);
 			$("#lobby_admin_id").val(varAdminID);
+			
 			$("#frm_lobby_tab").submit();
 		});
 		$("#lnk_dashboard_id").click(function() {

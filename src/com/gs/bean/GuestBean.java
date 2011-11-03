@@ -1,5 +1,8 @@
 package com.gs.bean;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class GuestBean
 {
 	/*
@@ -14,6 +17,7 @@ public class GuestBean
 	private String adminId = "";
 	private Long createDate = 0L;
 	private String totalSeat = "";
+	private String rsvpSeat = "";
 	private String isTmp = "";
 	private String delRow = "";
 
@@ -87,12 +91,44 @@ public class GuestBean
 		this.delRow = delRow;
 	}
 
+	public String getRsvpSeat()
+	{
+		return rsvpSeat;
+	}
+
+	public void setRsvpSeat(String rsvpSeat)
+	{
+		this.rsvpSeat = rsvpSeat;
+	}
+
 	@Override
 	public String toString()
 	{
 		return "GuestBean [guestID=" + guestID + ", userInfoId=" + userInfoId + ", adminId="
-				+ adminId + ", createDate=" + createDate + ", totalSeat=" + totalSeat + ", isTmp="
-				+ isTmp + ", delRow=" + delRow + "]";
+				+ adminId + ", createDate=" + createDate + ", totalSeat=" + totalSeat
+				+ ", rsvpSeat=" + rsvpSeat + ", isTmp=" + isTmp + ", delRow=" + delRow + "]";
+	}
+
+	public JSONObject toJson()
+	{
+
+		JSONObject jsonObject = new JSONObject();
+		try
+		{
+			jsonObject.put("guest_id", guestID);
+			jsonObject.put("user_info_id", userInfoId);
+			jsonObject.put("admin_id", adminId);
+			jsonObject.put("create_date", createDate);
+			jsonObject.put("total_seat", totalSeat);
+			jsonObject.put("rsvp_seat", rsvpSeat);
+			jsonObject.put("is_tmp", isTmp);
+			jsonObject.put("del_row", delRow);
+		} catch (JSONException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jsonObject;
 	}
 
 }

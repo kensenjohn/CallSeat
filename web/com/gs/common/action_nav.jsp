@@ -3,7 +3,7 @@
 String sEventDate = ParseUtil.checkNull(request.getParameter("hid_event_date"));
 String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
-String sSelectTab = ParseUtil.checkNull(request.getParameter("select_tab"));
+String sSelectTab = ParseUtil.checkNull(request.getParameter("select_action_nav"));
 
 
 %>
@@ -28,6 +28,17 @@ String sSelectTab = ParseUtil.checkNull(request.getParameter("select_tab"));
 %>
 		<li>
 			<a class="action_button" href="../event/add_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" id="add_guest">Add Guest</a>
+		</li>
+<%
+	}
+%>
+
+<%
+	if("all_guest_tab".equalsIgnoreCase(sSelectTab))
+	{
+%>
+		<li>
+			<a class="action_button" href="../event/add_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>&all_guest_tab=true" id="add_all_guests">Add Guest</a>
 		</li>
 <%
 	}

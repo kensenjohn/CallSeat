@@ -1,14 +1,23 @@
 package com.gs.manager.event;
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gs.bean.EventBean;
 import com.gs.bean.EventTableBean;
+import com.gs.bean.UserInfoBean;
 import com.gs.common.Constants;
 import com.gs.common.DateSupport;
+import com.gs.common.ExceptionHandler;
+import com.gs.common.ParseUtil;
 import com.gs.common.Utility;
 import com.gs.data.event.EventData;
+import com.gs.manager.AdminManager;
 
 public class EventManager
 {
@@ -102,5 +111,61 @@ public class EventManager
 			eventTableBean = null; // so that this will not be used again.
 		}
 		return eventTableBean;
+	}
+
+	public ArrayList<EventBean> getAllEvents(String sAdminId)
+	{
+		ArrayList<EventBean> arrEventBean = new ArrayList<EventBean>();
+		if (sAdminId != null && !"".equalsIgnoreCase(sAdminId))
+		{
+			AdminManager adminManager = new AdminManager();
+			UserInfoBean adminUserInfoBean = adminManager.getAminUserInfo(sAdminId);
+
+			if (adminUserInfoBean.isUserInfoExists())
+			{
+				EventData eventData = new EventData();
+				ArrayList<EventBean> tmpArrEventBean = eventData.getAllEventsByAdmin(sAdminId);
+
+				if (tmpArrEventBean != null && !tmpArrEventBean.isEmpty())
+				{
+					for (EventBean eventBean : tmpArrEventBean)
+					{
+						eventBean.setHumanEventDate(DateSupport.getTimeByZone(
+								ParseUtil.sToL(eventBean.getEventDate()),
+								adminUserInfoBean.getTimezone()));
+
+						arrEventBean.add(eventBean);
+					}
+				}
+			}
+
+		}
+		return arrEventBean;
+	}
+
+	public JSONObject getEventJson(ArrayList<EventBean> arrEventBean)
+	{
+		JSONObject jsonObject = new JSONObject();
+		JSONArray jsonEventArray = new JSONArray();
+		try
+		{
+			if (arrEventBean != null && !arrEventBean.isEmpty())
+			{
+				Integer numOfEvent = 0;
+				for (EventBean eventBean : arrEventBean)
+				{
+					jsonEventArray.put(numOfEvent, eventBean.toJson());
+					numOfEvent++;
+				}
+
+				jsonObject.put("num_of_rows", ParseUtil.iToI(arrEventBean.size()));
+				jsonObject.put("events", jsonEventArray);
+			}
+		} catch (JSONException e)
+		{
+			appLogging.error("Error converting EventBean to JSON "
+					+ ExceptionHandler.getStackTrace(e));
+		}
+		return jsonObject;
 	}
 }

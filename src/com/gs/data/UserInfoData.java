@@ -16,7 +16,7 @@ public class UserInfoData
 	{
 		appLogging.debug("Invoking insert User Info Bean");
 		String sQuery = "INSERT INTO GTUSERINFO (USERINFOID, FIRST_NAME, LAST_NAME, ADDRESS_1, ADDRESS_2, CITY, STATE, COUNTRY,IP_ADDRESS,IS_TMP, "
-				+ " DEL_ROW, CREATEDATE, CELL_PHONE, PHONE_NUM, EMAIL , HUMAN_CREATEDATE ) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?) ";
+				+ " DEL_ROW, CREATEDATE, CELL_PHONE, PHONE_NUM, EMAIL , HUMAN_CREATEDATE,TIMEZONE ) VALUES ( ?,?,?,?,?,?,?,?,?,?,?,?,?,?,?, ?,?) ";
 
 		ArrayList<Object> aParams = DBDAO.createConstraint(userInfoBean.getUserInfoId(),
 				userInfoBean.getFirstName(), userInfoBean.getLastName(),
@@ -25,7 +25,7 @@ public class UserInfoData
 				userInfoBean.getIsTemporary(), userInfoBean.getDeleteRow(),
 				userInfoBean.getCreateDate(), userInfoBean.getCellPhone(),
 				userInfoBean.getPhoneNum(), userInfoBean.getEmail(),
-				userInfoBean.getHumanCreateDate());
+				userInfoBean.getHumanCreateDate(), userInfoBean.getTimezone());
 
 		int numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, "admin", "UserInfoData.java",
 				"insertUserInfo() ");

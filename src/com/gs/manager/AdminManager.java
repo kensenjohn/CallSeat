@@ -72,4 +72,16 @@ public class AdminManager
 
 		return adminBean;
 	}
+
+	public UserInfoBean getAminUserInfo(String sAdminId)
+	{
+		UserInfoBean adminUserInfo = new UserInfoBean();
+		if (sAdminId != null && !"".equals(sAdminId))
+		{
+			AdminData adminData = new AdminData();
+			adminUserInfo = adminData.getAdminUserInfo(sAdminId);
+
+		}
+		return adminUserInfo;
+	}
 }

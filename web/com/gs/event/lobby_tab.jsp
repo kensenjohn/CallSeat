@@ -63,6 +63,6 @@
 	</ul>
 </div>
 <form id="frm_lobby_tab" method="POST" action="">
-	<input type="hidden" id="lobby_event_id"  name="" value=""/>
-	<input type="hidden" id="lobby_admin_id"  name="" value=""/>
+	<input type="hidden" id="lobby_event_id"  name="lobby_event_id" value=""/>
+	<input type="hidden" id="lobby_admin_id"  name="lobby_admin_id" value=""/>
 </form>

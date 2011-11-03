@@ -1,15 +1,19 @@
 package com.gs.data.event;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import com.gs.bean.EventBean;
 import com.gs.bean.EventTableBean;
+import com.gs.common.Configuration;
+import com.gs.common.Constants;
 import com.gs.common.db.DBDAO;
 
 public class EventData
 {
-	// private ConfigBean config =
-	// Configuration.getConfig(Constants.APPLICATION_PROP);
+	Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+
+	private String ADMIN_DB = applicationConfig.get(Constants.ADMIN_DB);
 
 	public Integer insertEvent(EventBean eventBean)
 	{
@@ -23,7 +27,7 @@ public class EventData
 					eventBean.getEventCreateDate(), eventBean.getEventAdminId(),
 					eventBean.getIsTmp(), eventBean.getDelRow());
 
-			numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, "admin", "EventData.java",
+			numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB, "EventData.java",
 					"insertEvent() ");
 		}
 
@@ -42,9 +46,35 @@ public class EventData
 					eventTableBean.getAssignToEvent(), eventTableBean.getIsTmp(),
 					eventTableBean.getDelRow());
 
-			numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, "admin", "EventData.java",
+			numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB, "EventData.java",
 					"insertEventTable() ");
 		}
 		return numOfRowsInserted;
+	}
+
+	public ArrayList<EventBean> getAllEventsByAdmin(String sAmindId)
+	{
+		ArrayList<EventBean> arrEventBean = new ArrayList<EventBean>();
+		if (sAmindId != null && !"".equalsIgnoreCase(sAmindId))
+		{
+			String sQuery = "SELECT  EVENTID, EVENTNUM, EVENTNAME, FK_FOLDERID , CREATEDATE , FK_ADMINID , "
+					+ " IS_TMP , DEL_ROW  FROM GTEVENT WHERE FK_ADMINID = ?";
+
+			ArrayList<Object> aParams = DBDAO.createConstraint(sAmindId);
+
+			ArrayList<HashMap<String, String>> arrAllEvents = DBDAO.getDBData(ADMIN_DB, sQuery,
+					aParams, true, "EventData.java", "getAllEventsByAdmin()");
+
+			if (arrAllEvents != null && !arrAllEvents.isEmpty())
+			{
+				for (HashMap<String, String> hmEvent : arrAllEvents)
+				{
+					EventBean eventBean = new EventBean(hmEvent);
+					arrEventBean.add(eventBean);
+				}
+			}
+		}
+
+		return arrEventBean;
 	}
 }
