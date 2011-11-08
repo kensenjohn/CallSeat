@@ -14,6 +14,8 @@
 
 	String sEventDate = ParseUtil.checkNull(request.getParameter("hid_event_date"));
 	boolean isFromLanding = ParseUtil.sTob(request.getParameter("from_landing"));
+	String sEventId = ParseUtil.checkNull(request.getParameter("lobby_event_id"));
+	String sAdminId = ParseUtil.checkNull(request.getParameter("lobby_admin_id"));
 	jspLogging.info("Invoked by landing page : " + isFromLanding);
 	String sEventTitle = "New Event";
 	
@@ -27,10 +29,38 @@
 	{
 		AdminManager adminManager = new AdminManager();		
 		adminBean = adminManager.createAdmin();
-		EventManager eventManager = new EventManager();
-		eventBean = eventManager.createEvent(adminBean.getAdminId());
+		
+		if(adminBean!=null)
+		{
+			EventCreationMetaDataBean eventMeta = new EventCreationMetaDataBean();
+			eventMeta.setAdminBean(adminBean);
+			eventMeta.setEventDate(sEventDate);
+			eventMeta.setEventDatePattern("MM/dd/yyyy");
+			eventMeta.setEventTimeZone("UTC");
+			
+			EventManager eventManager = new EventManager();
+			eventBean = eventManager.createEvent(eventMeta);
+		}
+		
 		jspLogging.debug("Admin Bean : " + adminBean);
 	}
+	else
+	{
+		if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId) && sEventId!=null && !"".equalsIgnoreCase(sEventId))
+		{
+			AdminManager adminManager = new AdminManager();		
+			adminBean = adminManager.getAdmin(sAdminId);
+			
+			EventManager eventManager = new EventManager();
+			eventBean = eventManager.getEvent(sEventId);
+			
+			sEventDate = eventBean.getHumanEventDate();
+		}
+		
+	}
+	
+	sEventId = eventBean.getEventId();
+	sAdminId = adminBean.getAdminId();
 %>
 <link rel="stylesheet" type="text/css" href="/web/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="/web/css/blue/style.css" media="screen" />
@@ -47,8 +77,8 @@
 				<div class="clear_both landing_input">					
 											
 					<jsp:include page="../common/action_nav.jsp">
-						<jsp:param name="admin_id" value="<%=adminBean.getAdminId() %>"/>
-						<jsp:param name="event_id" value="<%=eventBean.getEventId() %>"/>
+						<jsp:param name="admin_id" value="<%=sAdminId %>"/>
+						<jsp:param name="event_id" value="<%=sEventId %>"/>
 						<jsp:param name="select_action_nav" value="table_tab"/>
 					</jsp:include>
 				</div>
@@ -60,6 +90,9 @@
 			</div>
 		</div>
 	</div>
+	<div id="action_fancy_box">
+		
+	</div>
 </body>
 <script>
 	!window.jQuery && document.write('<script src="/web/js/fancybox/jquery-1.4.3.min.js"><\/script>');
@@ -68,8 +101,8 @@
 <script type="text/javascript" src="/web/js/jquery.tableformatter.1.0.0.js"></script>
 <script type="text/javascript" src="/web/js/jquery.datepick.js"></script> 
 <script type="text/javascript">
-	var varEventID = '<%=eventBean.getEventId()%>'
-	var varAdminID = '<%=adminBean.getAdminId()%>'
+	var varEventID = '<%=sEventId%>'
+	var varAdminID = '<%=sAdminId%>'
 	$(document).ready(function() {
 		
 		$("#sched_date").datepick();
@@ -176,7 +209,9 @@
 				
 				$("#div_table_details").tableformatter({
 					varTableDetails : tableDetails,
-					varDeleteTableURL : '/web/com/gs/event/proc_delete_table.jsp'
+					varDeleteTableURL : '/web/com/gs/event/proc_delete_table.jsp',
+					var_event_id : varEventID,
+					var_admin_id : varAdminID
 				});
 				applyActionEvents(tableDetails);
 				
@@ -200,10 +235,15 @@
 				delete_table_action('/web/com/gs/event/proc_delete_table.jsp',varTableId);
 			});
 			$('#edit_'+varTableId).click(function() {
-				delete_table_action('/web/com/gs/event/proc_delete_table.jsp',varTableId);
+				edit_table_action('/web/com/gs/event/proc_delete_table.jsp',varTableId);
 			});
-			$('#guest_'+varTableId).click(function() {
-				delete_table_action('/web/com/gs/event/proc_delete_table.jsp',varTableId);
+			$("#link_guest_"+varTableId).fancybox({
+				'width'				: '98%',
+				'height'			: '98%',
+				'autoScale'			: false,
+				'transitionIn'		: 'none',
+				'transitionOut'		: 'none',
+				'type'				: 'iframe'
 			});
 			
 		}
@@ -234,8 +274,6 @@
 			//getAllTablesData(actionUrl,dataString,methodType);
 			
 			getDataAjax(actionUrl,dataString,methodType, deleteTable);
-			
-			
 		}
 		
 	}

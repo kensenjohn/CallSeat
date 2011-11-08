@@ -2,6 +2,9 @@ package com.gs.bean;
 
 import java.util.HashMap;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.gs.common.ParseUtil;
 
 public class UserInfoBean
@@ -257,4 +260,31 @@ public class UserInfoBean
 		this.isUserInfoExists = isUserInfoExists;
 	}
 
+	public JSONObject toJson()
+	{
+
+		JSONObject jsonObject = new JSONObject();
+		try
+		{
+			jsonObject.put("first_name", this.firstName);
+			jsonObject.put("last_name", this.lastName);
+			jsonObject.put("address1", this.address1);
+			jsonObject.put("address2", this.address2);
+			jsonObject.put("city", this.city);
+			jsonObject.put("state", this.state);
+			jsonObject.put("country", this.country);
+			jsonObject.put("ip_address", this.ipAddress);
+			jsonObject.put("is_tmp", this.isTemporary);
+			jsonObject.put("del_row", this.deleteRow);
+			jsonObject.put("email", this.email);
+			jsonObject.put("cell_phone", this.cellPhone);
+			jsonObject.put("phone_num", this.phoneNum);
+			jsonObject.put("time_zone", this.timezone);
+		} catch (JSONException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return jsonObject;
+	}
 }

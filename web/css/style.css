@@ -19,6 +19,7 @@ header nav a:hover { color:#184ABE; text-decoration:none}
 .l_txt{ font-family:"Arial";color:#0C235A;font-size:22px;  }
 .s_b_txt{ font-family:"Arial";color:#0C235A;font-size:12px;font-weight:bold; }
 .m_b_txt{ font-family:"Arial";color:#0C235A;font-size:15px;font-weight:bold; }
+.m_txt{ font-family:"Arial";color:#0C235A;font-size:15px;}
 
 .landing_input{ text-align:left; margin-top:5px;margin-left:10px;margin-right:10px;margin-bottom:1px;}
 .landing_when { margin:20px; }
@@ -101,6 +102,7 @@ table.addtabledetail tbody td div.action_column {
 	text-align: center;
 }
 
+
 ul.lobby_tabs {
 	list-style: none;
 	float:left;
@@ -156,6 +158,12 @@ ul.lobby_tabs li.unselect{
 }	
 ul.lobby_tabs li.show_base{
 	border-bottom: 3px solid #344794;
+}
+
+.action_link {	
+	text-decoration:underline;
+	color:blue;
+	cursor:pointer;
 }
 
 #div_table_details {

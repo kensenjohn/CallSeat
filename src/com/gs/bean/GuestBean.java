@@ -20,6 +20,19 @@ public class GuestBean
 	private String rsvpSeat = "";
 	private String isTmp = "";
 	private String delRow = "";
+	private String humanCreateDate = "";
+
+	public String getHumanCreateDate()
+	{
+		return humanCreateDate;
+	}
+
+	public void setHumanCreateDate(String humanCreateDate)
+	{
+		this.humanCreateDate = humanCreateDate;
+	}
+
+	private UserInfoBean userInfoBean = null;
 
 	public String getGuestId()
 	{
@@ -101,6 +114,16 @@ public class GuestBean
 		this.rsvpSeat = rsvpSeat;
 	}
 
+	public UserInfoBean getUserInfoBean()
+	{
+		return userInfoBean;
+	}
+
+	public void setUserInfoBean(UserInfoBean userInfoBean)
+	{
+		this.userInfoBean = userInfoBean;
+	}
+
 	@Override
 	public String toString()
 	{
@@ -123,6 +146,15 @@ public class GuestBean
 			jsonObject.put("rsvp_seat", rsvpSeat);
 			jsonObject.put("is_tmp", isTmp);
 			jsonObject.put("del_row", delRow);
+
+			if (this.userInfoBean != null)
+			{
+				JSONObject jsonUserInfoObject = new JSONObject();
+
+				jsonObject.put("user_info", this.userInfoBean.toJson());
+
+			}
+
 		} catch (JSONException e)
 		{
 			// TODO Auto-generated catch block
@@ -130,5 +162,4 @@ public class GuestBean
 		}
 		return jsonObject;
 	}
-
 }

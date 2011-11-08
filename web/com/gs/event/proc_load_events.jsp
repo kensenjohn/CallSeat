@@ -26,12 +26,14 @@ try
 	else
 	{
 		jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
+		appLogging.error("Invalid Admin ID used to retrieve event details" + sAdminID );
 	}
+	out.println(jsonResponseObj);
 }
 catch(Exception e)
 {
 	jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
-	appLogging.error("Error loading table for event : " + sEventID + ExceptionHandler.getStackTrace(e));
+	appLogging.error("Error loading events for Admin : " + sAdminID + ExceptionHandler.getStackTrace(e));
 	out.println(jsonResponseObj);
 	
 }

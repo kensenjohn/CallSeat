@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import com.gs.bean.AdminBean;
 import com.gs.bean.UserInfoBean;
 import com.gs.common.DateSupport;
+import com.gs.common.Utility;
 import com.gs.data.AdminData;
 
 public class AdminManager
@@ -61,11 +62,13 @@ public class AdminManager
 		{
 			adminBean.setUserInfoId(userInfoBean.getUserInfoId());
 
+			adminBean.setAdminId(Utility.getNewGuid());
 			adminBean.setIsTemporary("1");
 			adminBean.setDeleteRow("0");
 			adminBean.setCreateDate(DateSupport.getEpochMillis()); // change
-																	// this to a
+			// this to a
 			// valid date
+			adminBean.setHumanCreateDate(DateSupport.getUTCDateTime());
 		}
 
 		// adminBean.
@@ -83,5 +86,16 @@ public class AdminManager
 
 		}
 		return adminUserInfo;
+	}
+
+	public AdminBean getAdmin(String sAdminId)
+	{
+		AdminBean adminBean = new AdminBean();
+		if (sAdminId != null && !"".equals(sAdminId))
+		{
+			AdminData adminData = new AdminData();
+			adminBean = adminData.getAdmin(sAdminId);
+		}
+		return adminBean;
 	}
 }

@@ -1,5 +1,6 @@
 <%@ page import="com.gs.common.*"%>
 <%@ page import="com.gs.manager.*"%>
+<%@ page import="com.gs.manager.event.*"%>
 <%@ page import="com.gs.bean.*"%>
 <%@page import="org.json.*" %>
 <%@ page import="java.util.*"%>
@@ -21,7 +22,11 @@ try
 		ArrayList<GuestBean> arrGuestBean = guestManager.getGuestsByAdmin(sAdminId);
 		appLogging.info( "Guest = " + arrGuestBean );
 		
+		EventGuestManager eventGuestManager = new EventGuestManager();
+		HashMap<String, ArrayList<EventGuestBean>>  hmEventGuestBean = eventGuestManager.getEventGuests(arrGuestBean);
+		
 		jsonResponseObj.put("guest_rows",guestManager.getGuestsJson(arrGuestBean));
+		jsonResponseObj.put("event_guest_rows",eventGuestManager.getEventGuestsJson(hmEventGuestBean));
 		jsonResponseObj.put(Constants.J_RESP_SUCCESS, true);
 	}
 	else

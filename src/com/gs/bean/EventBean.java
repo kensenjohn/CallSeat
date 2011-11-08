@@ -18,7 +18,7 @@ public class EventBean
 	private String eventFolderId = "";
 	private Long eventCreateDate = 0L;
 	private String eventAdminId = "";
-	private String eventDate = "";
+	private Long eventDate = 0L;
 
 	private String isTmp = "";
 	private String delRow = "";
@@ -41,6 +41,7 @@ public class EventBean
 		this.eventAdminId = ParseUtil.checkNull(hmEventBean.get("FK_ADMINID"));
 		this.isTmp = ParseUtil.checkNull(hmEventBean.get("IS_TMP"));
 		this.delRow = ParseUtil.checkNull(hmEventBean.get("DEL_ROW"));
+		this.eventDate = ParseUtil.sToL(hmEventBean.get("EVENTDATE"));
 	}
 
 	public String getEventNum()
@@ -123,12 +124,12 @@ public class EventBean
 		this.delRow = delRow;
 	}
 
-	public String getEventDate()
+	public Long getEventDate()
 	{
 		return eventDate;
 	}
 
-	public void setEventDate(String eventDate)
+	public void setEventDate(Long eventDate)
 	{
 		this.eventDate = eventDate;
 	}

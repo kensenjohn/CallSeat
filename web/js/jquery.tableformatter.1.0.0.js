@@ -19,7 +19,9 @@
 	 $.fn.tableformatter.defaults = 
      {
 			varTableDetails: '',
-			varDeleteTableURL : ''
+			varDeleteTableURL : '',
+			var_event_id : '',
+			var_admin_id : ''
      };
 	
 	var json_table_details = '';
@@ -29,7 +31,7 @@
 		init : function ( div_table_details)
 		{
 			$(div_table_details).children().detach()
-			$(div_table_details).append(this.table_create.create_table())
+			$(div_table_details).append(this.table_create.create_table());
 		},
 		table_create :
 		{
@@ -109,12 +111,20 @@
 			},
 			create_edit_table :  function ( single_table_detail )
 			{
-				var varEditLink = '<span id="edit_'+single_table_detail.table_id+'">Edit Table</span>';
+				var varEditLink = '<span id="edit_'+single_table_detail.table_id+'">'+
+						'<a id="link_table_'+single_table_detail.table_id+'" '+ 
+						' href="/web/com/gs/event/edit_table_guests.jsp?table_id='+single_table_detail.table_id+
+						'&event_id='+json_table_details.var_event_id+'&admin_id='+json_table_details.var_admin_id+'"> '+
+						' Edit Table </a></span>';
 				return varEditLink;
 			},
 			create_guest_table :  function ( single_table_detail )
 			{
-				var varEditLink = '<span id="guest_'+single_table_detail.table_id+'">Edit Guests</span>';
+				var varEditLink = '<span id="guest_'+single_table_detail.table_id+'">' + 
+						'<a id="link_guest_'+single_table_detail.table_id+'" '+
+						' href="/web/com/gs/event/edit_table_guests.jsp?table_id='+single_table_detail.table_id+
+						'&event_id='+json_table_details.var_event_id+'&admin_id='+json_table_details.var_admin_id+'"> ' + 
+						'Edit Guests </a></span>';
 				return varEditLink;
 			}
 			

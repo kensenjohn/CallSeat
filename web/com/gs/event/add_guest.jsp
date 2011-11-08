@@ -29,63 +29,93 @@
 
 		<div class="box_container rounded-corners fill_box">
 			<div style="padding:20px">
+				<form id="frm_add_guest" >
 				<div style="text-align:left;" >
-					<span class="l_txt" style="padding:10px;" >Add Guest to</span>
+<%
+					if(isAllGuestAdd)
+					{
+%>
+						<span class="l_txt" style="padding:10px;" >Add Guest to</span> <div id="div_event_list"></div>
+<%	
+					}
+					else
+					{
+%>
+						<span class="l_txt" style="padding:10px;" >Guest for</span> <div id="div_event_list"></div>
+<%
+					}
+%>
+					
 				</div>
 				<br/>
 				<div>
-				<form id="frm_add_guest" >
+				
 				<div>
 				<span>First Name :</span> <input type="text" id="table_name" name="first_name"/> &nbsp;&nbsp;
 				<span>Last Name :</span> <input type="text" id="last_name" name="last_name"/><br/>
+				<span>Cell Number :</span> <input type="text" id="cell_num" name="cell_num"/><br/>
+				<span>Home Number :</span> <input type="text" id="home_num" name="home_num"/><br/>			
 				<span>Email :</span> <input type="text" id="email_addr" name="email_addr"/><br/>
-				<span>Number of Seats :</span> <input type="text" id="num_of_seats" name="num_of_seats"/><br/>
-				<span>Cell Number :</span> <input type="text" id="cell_num" name="cell_num"/><br>
-				<span>Assign to Table</span> 
+				<span>Invited to :</span> <input type="text" id="invited_num_of_seats" name="invited_num_of_seats"/><br/>
+				<span>RSVP to :</span> <input type="text" id="rsvp_num_of_seats" name="rsvp_num_of_seats"/><br/>
+				
 				<a class="action_button" id="add_guest" name="add_guest">Add Guest</a></br>
-				<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+<%
+				if(isAllGuestAdd)
+				{
+%>
+					<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+<%
+				}
+%>
+
 				<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
 				</div>
-				</form>
-				</div>				
+				
+				</div>	
+				</form>			
 				<span id="err_mssg"></span>
 			</div>
 		</div>
 	</body>
 	<script type="text/javascript">
 		var varAdminId = '<%=sAdminId%>';
-		$.fancybox.showActivity;
-		$(document).ready(function() {
-			loadEvents();
+		var varIsAllGuestAdd = <%=isAllGuestAdd%>;
+		$(document).ready(function() 
+		{	if(varIsAllGuestAdd)
+			{
+				loadEvents(); //load all events only if there are guests.
+			}
+			
 			$("#add_guest").click(addGuest);
 		});
 		function loadEvents()
 		{
-			var actionUrl = "proc_get_tables.jsp";
+			var actionUrl = "proc_load_events.jsp";
 			var methodType = "GET";
 			var dataString = "&admin_id="+varAdminId;
-			
-			submitTableData(actionUrl,dataString,methodType);
+			//alert(dataString);
+			makeAjaxCall(actionUrl,dataString,methodType,createEventList);
 			
 		}
 		function addGuest()
-		{	alert('add guest called');
+		{	//alert('add guest called');
 			var dataString = $("#frm_add_guest").serialize();
 			var actionUrl = "proc_add_guest.jsp";
 			var methodType = "POST";
 			
 			dataString = dataString + '&save_data=y';
-			submitTableData(actionUrl,dataString,methodType);
+			makeAjaxCall(actionUrl,dataString,methodType,getResult);
 		}
 		
-		function submitTableData(actionUrl,dataString,methodType)
+		function makeAjaxCall(actionUrl,dataString,methodType,callBackMethod)
 		{
 			$.ajax({
 				  url: actionUrl ,
 				  type: methodType ,
 				  dataType: "json",
 				  data: dataString ,
-				  success: getResult,
+				  success: callBackMethod,
 				  error:function(a,b,c)
 				  {
 					  alert(a.responseText + ' = ' + b + " = " + c);
@@ -93,6 +123,43 @@
 				});
 		}
 		
+		function createEventList(jsonResult)
+		{
+			if(!jsonResult.success)
+			{
+				
+			}
+			else
+			{
+				var eventDetails = jsonResult.event_detail;
+				if(eventDetails!=undefined)
+				{
+					
+					var varEventDD = generateEventDropDown(eventDetails);
+					
+					$("#div_event_list").append(varEventDD);
+					
+				}
+			}
+		}
+		
+		function generateEventDropDown(eventDetails)
+		{
+			var varNumOfEvents = eventDetails.num_of_rows;
+			var varEventList = eventDetails.events;
+			
+			var varEventDD = '<select id="dd_event_list" name="dd_event_list"> <option id="all" value="all">Add to list</option>';
+			for(i=0; i<varNumOfEvents ; i++ )
+			{
+				varEventDD = varEventDD + '<option id="'+varEventList[i].event_id+'"  value="'+varEventList[i].event_id+'">' 
+					+ varEventList[i].event_name + ' ' + varEventList[i].human_event_date + '</option>'
+			}
+			varEventDD = varEventDD + '</select>';
+			
+			return varEventDD;
+		}
+		
+				
 		function getResult(jsonResult)
 		{
 			if(!jsonResult.success)
@@ -110,7 +177,17 @@
 			}
 			else
 			{
-				parent.loadTables();
+				alert('is all guest added = ' + varIsAllGuestAdd);
+				if(varIsAllGuestAdd == true)
+				{
+					alert('cam to if');
+					parent.loadGuests();
+				}
+				else
+				{
+					alert('cam to else');
+					//parent.loadTables();
+				}
 				parent.$.fancybox.close();
 				
 			}

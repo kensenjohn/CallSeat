@@ -4,11 +4,15 @@ import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DateSupport
 {
 	private static final DateTimeFormatter PRETTY_DATE_2 = DateTimeFormat
 			.forPattern(Constants.PRETTY_DATE_PATTERN_2);
+
+	private static final Logger appLogging = LoggerFactory.getLogger("AppLogging");
 
 	public static Long getEpochMillis()
 	{
@@ -25,6 +29,20 @@ public class DateSupport
 		DateTime utcTime = localDateTime.withZone(zoneUTC);
 
 		return formatter1.print(utcTime);
+	}
+
+	public static Long getMillis(String sDate, String sPattern, String sTimeZone)
+	{
+		appLogging.info(sDate + " - " + sPattern + " - " + sTimeZone);
+		DateTimeZone timeZone = DateTimeZone.forID(sTimeZone);
+
+		DateTimeFormatter formatter = DateTimeFormat.forPattern(sPattern);
+		DateTime dateTime = formatter.parseDateTime(sDate);
+		appLogging.info("date Time = " + dateTime);
+		dateTime = dateTime.withZone(timeZone);
+		appLogging.info("millis = " + dateTime.getMillis());
+		return dateTime.getMillis();
+
 	}
 
 	public static String getTimeByZone(Long epochDate, String sTimeZone)

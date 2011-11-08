@@ -1,6 +1,8 @@
 package com.gs.bean;
 
-import com.gs.common.Utility;
+import java.util.HashMap;
+
+import com.gs.common.ParseUtil;
 
 public class AdminBean
 {
@@ -9,10 +11,33 @@ public class AdminBean
 	private Long createDate = 0L;
 	private String isTemporary = "1";
 	private String deleteRow = "0";
+	private String humanCreateDate = "";
+	private UserInfoBean adminUserInfoBean = new UserInfoBean();
+	private boolean isAdminExists = false;
+
+	public AdminBean(HashMap<String, String> hmAdminRes)
+	{
+
+		this.adminId = ParseUtil.checkNull(hmAdminRes.get("ADMINID"));
+		this.userInfoId = ParseUtil.checkNull(hmAdminRes.get("FK_USERINFOID"));
+		this.createDate = ParseUtil.sToL(hmAdminRes.get("ADMIN_CREATEDATE"));
+		this.isTemporary = ParseUtil.checkNull(hmAdminRes.get("ADMIN_IS_TMP"));
+		this.deleteRow = ParseUtil.checkNull(hmAdminRes.get("ADMIN_DEL_ROW"));
+
+		if (this.userInfoId != null && !"".equalsIgnoreCase(this.userInfoId))
+		{
+			this.adminUserInfoBean = new UserInfoBean(hmAdminRes);
+
+			if (this.adminUserInfoBean.isUserInfoExists())
+			{
+				isAdminExists = true;
+			}
+		}
+	}
 
 	public AdminBean()
 	{
-		this.adminId = Utility.getNewGuid();
+		// this.adminId = Utility.getNewGuid();
 	}
 
 	public String getAdminId()
@@ -63,6 +88,31 @@ public class AdminBean
 	public void setDeleteRow(String deleteRow)
 	{
 		this.deleteRow = deleteRow;
+	}
+
+	public UserInfoBean getAdminUserInfoBean()
+	{
+		return adminUserInfoBean;
+	}
+
+	public void setAdminUserInfoBean(UserInfoBean adminUserInfoBean)
+	{
+		this.adminUserInfoBean = adminUserInfoBean;
+	}
+
+	public boolean isAdminExists()
+	{
+		return isAdminExists;
+	}
+
+	public String getHumanCreateDate()
+	{
+		return humanCreateDate;
+	}
+
+	public void setHumanCreateDate(String humanCreateDate)
+	{
+		this.humanCreateDate = humanCreateDate;
 	}
 
 	@Override

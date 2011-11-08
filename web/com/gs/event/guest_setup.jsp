@@ -50,7 +50,7 @@
 <script type="text/javascript" src="/web/js/jquery.guestsformatter.1.0.0.js"></script>
 <script type="text/javascript" src="/web/js/jquery.datepick.js"></script> 
 <script type="text/javascript">
-	var varAdminId = '<%=sAdminId%>';
+	var varAdminID = '<%=sAdminId%>';
 	var varEventID = '<%=sEventId%>';
 	$(document).ready(function() {
 		
@@ -64,11 +64,46 @@
 			'padding'			: 0,
 			'margin'			: 0
 		});
+		loadActions();
 		loadGuests();
 	});
+	function loadActions()
+	{
+		$("#lnk_event_id").click(function() 
+		{
+			$("#frm_lobby_tab").attr("action" , "event_setup.jsp");
+			$("#lobby_event_id").val(varEventID);
+			$("#lobby_admin_id").val(varAdminID);
+			createNewInputElement('from_landing', false, 'frm_lobby_tab', 'hidden');
+			
+			$("#frm_lobby_tab").submit();
+		});
+		$("#lnk_guest_id").click(function() 
+		{
+			
+			
+			
+		});
+		$("#lnk_dashboard_id").click(function() {
+			
+		});
+	}
+	
+	function createNewInputElement(elemId,elemValue,elemParent,elemType)
+	{
+		var varElem = 
+			jQuery('<input/>', {
+			    id:		elemId,
+			    name:	elemId,
+			    value: 	elemValue,
+			    type:	elemType
+			});
+		
+		varElem.appendTo('#'+elemParent);
+	}
 	function loadGuests()
 	{
-		var dataString = '&event_id='+ varEventID + '&admin_id='+ varAdminId;
+		var dataString = '&event_id='+ varEventID + '&admin_id='+ varAdminID;
 		var actionUrl = "proc_load_guests.jsp";
 		var methodType = "POST";
 		
@@ -110,6 +145,7 @@
 		{
 			
 			var guestRows = jsonResult.guest_rows;
+			var eventGuestRows = jsonResult.event_guest_rows;
 			
 			
 			if(guestRows!=undefined)
@@ -119,6 +155,7 @@
 				
 				$("#div_guests_details").guestformatter({
 					varGuestDetails : guestRows,
+					varEventGuestDetails : eventGuestRows,
 					varDeleteTableURL : '/web/com/gs/event/proc_delete_table.jsp'
 				});
 				//applyActionEvents(tableDetails);

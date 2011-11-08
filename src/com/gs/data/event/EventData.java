@@ -20,12 +20,14 @@ public class EventData
 		int numOfRowsInserted = 0;
 		if (eventBean.getEventId() != null && !"".equalsIgnoreCase(eventBean.getEventId()))
 		{
-			String sQuery = "INSERT INTO GTEVENT ( EVENTID, EVENTNAME, FK_FOLDERID , CREATEDATE , FK_ADMINID , IS_TMP , DEL_ROW ) "
-					+ " VALUES ( ? , ? , ? , ? , ? , ? , ? ) ";
+			String sQuery = "INSERT INTO GTEVENT ( EVENTID, EVENTNAME, FK_FOLDERID , CREATEDATE ,"
+					+ " FK_ADMINID , IS_TMP , DEL_ROW, EVENTDATE, HUMANCREATEDATE, HUMANEVENTDATE ) "
+					+ " VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ?) ";
 			ArrayList<Object> aParams = DBDAO.createConstraint(eventBean.getEventId(),
 					eventBean.getEventName(), eventBean.getEventFolderId(),
 					eventBean.getEventCreateDate(), eventBean.getEventAdminId(),
-					eventBean.getIsTmp(), eventBean.getDelRow());
+					eventBean.getIsTmp(), eventBean.getDelRow(), eventBean.getEventDate(),
+					eventBean.getHumanCreateDate(), eventBean.getHumanEventDate());
 
 			numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB, "EventData.java",
 					"insertEvent() ");
@@ -40,7 +42,7 @@ public class EventData
 		if (eventTableBean != null && eventTableBean.getEventTableId() != null)
 		{
 			String sQuery = "INSERT INTO GTEVENTTABLES ( EVENTTABLEID , FK_EVENTID , FK_TABLEID , "
-					+ " ASSIGN_TO_EVENT , IS_TMP , DEL_ROW ) VALUES ( ? , ? , ? , ? , ? , ? )";
+					+ " ASSIGN_TO_EVENT , IS_TMP , DEL_ROW ) VALUES ( ? , ? , ? , ? , ? , ?  )";
 			ArrayList<Object> aParams = DBDAO.createConstraint(eventTableBean.getEventTableId(),
 					eventTableBean.getEventId(), eventTableBean.getTableId(),
 					eventTableBean.getAssignToEvent(), eventTableBean.getIsTmp(),
@@ -58,7 +60,7 @@ public class EventData
 		if (sAmindId != null && !"".equalsIgnoreCase(sAmindId))
 		{
 			String sQuery = "SELECT  EVENTID, EVENTNUM, EVENTNAME, FK_FOLDERID , CREATEDATE , FK_ADMINID , "
-					+ " IS_TMP , DEL_ROW  FROM GTEVENT WHERE FK_ADMINID = ?";
+					+ " IS_TMP , DEL_ROW , EVENTDATE FROM GTEVENT WHERE FK_ADMINID = ?";
 
 			ArrayList<Object> aParams = DBDAO.createConstraint(sAmindId);
 
@@ -76,5 +78,30 @@ public class EventData
 		}
 
 		return arrEventBean;
+	}
+
+	public EventBean getEvent(String sEventId)
+	{
+		EventBean eventBean = new EventBean();
+		if (sEventId != null && !"".equalsIgnoreCase(sEventId))
+		{
+			String sQuery = "SELECT  EVENTID, EVENTNUM, EVENTNAME, FK_FOLDERID , CREATEDATE , FK_ADMINID , "
+					+ " IS_TMP , DEL_ROW , EVENTDATE FROM GTEVENT WHERE EVENTID = ?";
+
+			ArrayList<Object> aParams = DBDAO.createConstraint(sEventId);
+
+			ArrayList<HashMap<String, String>> arrEvent = DBDAO.getDBData(ADMIN_DB, sQuery,
+					aParams, true, "EventData.java", "getAllEventsByAdmin()");
+
+			if (arrEvent != null && !arrEvent.isEmpty())
+			{
+				for (HashMap<String, String> hmEvent : arrEvent)
+				{
+					eventBean = new EventBean(hmEvent);
+					// arrEventBean.add(eventBean);
+				}
+			}
+		}
+		return eventBean;
 	}
 }
