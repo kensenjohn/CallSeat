@@ -243,7 +243,10 @@
 				'autoScale'			: false,
 				'transitionIn'		: 'none',
 				'transitionOut'		: 'none',
-				'type'				: 'iframe'
+				'type'				: 'iframe',
+				'onClosed'			: function() {
+										loadTables();
+										}
 			});
 			
 		}

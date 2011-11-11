@@ -17,7 +17,9 @@ public class TableGuestsBean
 	/*
 	 * TABLEID,TABLENAME, TABLENUM, NUMOFSEATS, IS_TMP, DEL_ROW, F
 	 * K_ADMINID,MODIFYDATE, MODIFIEDBY, TABLEGUESTID, FK_GUESTID, IS_TMP,
-	 * DEL_ROW, ASSIGNED_SEATS,
+	 * DEL_ROW, ASSIGNED_SEATS, GG.GUESTID, GU.FIRST_NAME, GU.LAST_NAME,
+	 * GU.CELL_PHONE, GU.PHONE_NUM , GEG.RSVP_SEATS, " + "
+	 * GEG.TOTAL_INVITED_SEATS
 	 */
 
 	private String tableId = "";
@@ -35,6 +37,73 @@ public class TableGuestsBean
 	private String guestTableIsTmp = "";
 	private String guestTableDelRow = "";
 	private String guestAssignedSeats = "";
+
+	private String firstName = "";
+	private String lastName = "";
+	private String cellPhone = "";
+	private String phoneNum = "";
+	private String rsvpSeats = "";
+	private String totalInvitedSeats = "";
+
+	public String getFirstName()
+	{
+		return firstName;
+	}
+
+	public void setFirstName(String firstName)
+	{
+		this.firstName = firstName;
+	}
+
+	public String getLastName()
+	{
+		return lastName;
+	}
+
+	public void setLastName(String lastName)
+	{
+		this.lastName = lastName;
+	}
+
+	public String getCellPhone()
+	{
+		return cellPhone;
+	}
+
+	public void setCellPhone(String cellPhone)
+	{
+		this.cellPhone = cellPhone;
+	}
+
+	public String getPhoneNum()
+	{
+		return phoneNum;
+	}
+
+	public void setPhoneNum(String phoneNum)
+	{
+		this.phoneNum = phoneNum;
+	}
+
+	public String getRsvpSeats()
+	{
+		return rsvpSeats;
+	}
+
+	public void setRsvpSeats(String rsvpSeats)
+	{
+		this.rsvpSeats = rsvpSeats;
+	}
+
+	public String getTotalInvitedSeats()
+	{
+		return totalInvitedSeats;
+	}
+
+	public void setTotalInvitedSeats(String totalInvitedSeats)
+	{
+		this.totalInvitedSeats = totalInvitedSeats;
+	}
 
 	public String getTableId()
 	{
@@ -206,6 +275,18 @@ public class TableGuestsBean
 			jsonObject.put("guest_table_is_tmp", guestTableIsTmp);
 			jsonObject.put("guest_table_del_row", guestTableDelRow);
 			jsonObject.put("guest_assigned_seats", guestAssignedSeats);
+
+			/*
+			 * GG.GUESTID, GU.FIRST_NAME, GU.LAST_NAME, GU.CELL_PHONE,
+			 * GU.PHONE_NUM , GEG.RSVP_SEATS, " + " GEG.TOTAL_INVITED_SEATS
+			 */
+
+			jsonObject.put("guest_first_name", firstName);
+			jsonObject.put("guest_last_name", lastName);
+			jsonObject.put("guest_cell_phone", cellPhone);
+			jsonObject.put("guest_phone_num", phoneNum);
+			jsonObject.put("guest_rsvp_num", rsvpSeats);
+			jsonObject.put("guest_invited_num", totalInvitedSeats);
 
 		} catch (JSONException e)
 		{

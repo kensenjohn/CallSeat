@@ -3,6 +3,10 @@ package com.gs.data.event;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.gs.bean.AssignedGuestBean;
 import com.gs.bean.TableGuestsBean;
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
@@ -12,8 +16,72 @@ import com.gs.common.db.DBDAO;
 public class GuestTableData
 {
 	Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+	Logger appLogging = LoggerFactory.getLogger("AppLogging");
 
 	private String ADMIN_DB = applicationConfig.get(Constants.ADMIN_DB);
+
+	public HashMap<Integer, AssignedGuestBean> getUnAssignedGuest(String sEventId)
+	{
+		HashMap<Integer, AssignedGuestBean> hmTableGuests = new HashMap<Integer, AssignedGuestBean>();
+
+		String sQuery = "SELECT GG.GUESTID ,  GU.FIRST_NAME, GU.LAST_NAME ,GE.EVENTID "
+				+ " FROM GTGUESTS GG "
+				+ " INNER JOIN GTUSERINFO GU ON GG.FK_USERINFOID = GU.USERINFOID "
+				+ " INNER JOIN GTEVENTGUESTS GEG ON GG.GUESTID = GEG.FK_GUESTID "
+				+ " INNER JOIN  GTEVENT GE ON GEG.FK_EVENTID = GE.EVENTID "
+				+ " INNER JOIN GTEVENTTABLES GET ON  GET.FK_EVENTID = GE.EVENTID "
+				+ " LEFT OUTER JOIN GTTABLEGUESTS GTG ON  GTG.FK_GUESTID = GG.GUESTID "
+				+ " WHERE  GE.EVENTID = ?";
+
+		ArrayList<Object> aParams = DBDAO.createConstraint(sEventId);
+
+		ArrayList<HashMap<String, String>> arrAssignedGuestsRes = DBDAO.getDBData(ADMIN_DB, sQuery,
+				aParams, true, "GuestTableData.java", "getUnAssignedGuest()");
+
+		if (arrAssignedGuestsRes != null && !arrAssignedGuestsRes.isEmpty())
+		{
+			Integer iNumOfRows = 0;
+			for (HashMap<String, String> hmAssignedGuests : arrAssignedGuestsRes)
+			{
+				AssignedGuestBean assignedGuestBean = new AssignedGuestBean(hmAssignedGuests);
+
+				hmTableGuests.put(iNumOfRows, assignedGuestBean);
+			}
+		}
+		return hmTableGuests;
+	}
+
+	public HashMap<Integer, AssignedGuestBean> getTableGuest(String sEventId, String sTableId)
+	{
+		HashMap<Integer, AssignedGuestBean> hmTableGuests = new HashMap<Integer, AssignedGuestBean>();
+
+		String sQuery = "SELECT GG.GUESTID , GU.FIRST_NAME, GU.LAST_NAME, GU.CELL_PHONE, GU.PHONE_NUM, "
+				+ " GEG.TOTAL_INVITED_SEATS, GEG.RSVP_SEATS, GTG.ASSIGNED_SEATS, GT.NUMOFSEATS FROM GTGUESTS GG , "
+				+ "GTUSERINFO GU ,  GTEVENT GE , GTEVENTGUESTS GEG , GTEVENTTABLES GET, GTTABLE GT , "
+				+ "GTTABLEGUESTS GTG "
+				+ " WHERE "
+				+ " GG.FK_USERINFOID = GU.USERINFOID AND GE.EVENTID = GEG.FK_EVENTID AND "
+				+ " GEG.FK_GUESTID = GG.GUESTID AND GE.EVENTID = ?  AND GET.FK_TABLEID = GT.TABLEID AND "
+				+ " GET.FK_EVENTID = GE.EVENTID AND GT.TABLEID = ? AND GTG.FK_TABLEID = GT.TABLEID AND "
+				+ " GTG.FK_GUESTID = GG.GUESTID ";
+
+		ArrayList<Object> aParams = DBDAO.createConstraint(sEventId, sTableId);
+
+		ArrayList<HashMap<String, String>> arrAssignedGuestsRes = DBDAO.getDBData(ADMIN_DB, sQuery,
+				aParams, true, "GuestTableData.java", "getAllTablesGuest()");
+
+		if (arrAssignedGuestsRes != null && !arrAssignedGuestsRes.isEmpty())
+		{
+			Integer iNumOfRows = 0;
+			for (HashMap<String, String> hmAssignedGuests : arrAssignedGuestsRes)
+			{
+				AssignedGuestBean assignedGuestBean = new AssignedGuestBean(hmAssignedGuests);
+
+				hmTableGuests.put(iNumOfRows, assignedGuestBean);
+			}
+		}
+		return hmTableGuests;
+	}
 
 	public HashMap<Integer, TableGuestsBean> getAllTablesGuest(String sEventId)
 	{
@@ -22,12 +90,15 @@ public class GuestTableData
 		String sQuery = "SELECT  "
 				+ " GT.TABLEID, GT.TABLENAME, GT.TABLENUM, GT.NUMOFSEATS, GT.IS_TMP, GT.DEL_ROW, GT.FK_ADMINID, "
 				+ " GT.MODIFYDATE, GT.MODIFIEDBY, GTG.TABLEGUESTID, GTG.FK_GUESTID, "
-				+ " GTG.IS_TMP AS GUEST_IS_TMP , GTG.DEL_ROW AS GUEST_DEL_ROW, GTG.ASSIGNED_SEATS "
+				+ " GTG.IS_TMP AS GUEST_IS_TMP , GTG.DEL_ROW AS GUEST_DEL_ROW, GTG.ASSIGNED_SEATS, "
+				+ " GG.GUESTID, GU.FIRST_NAME, GU.LAST_NAME, GU.CELL_PHONE, GU.PHONE_NUM , GEG.RSVP_SEATS, "
+				+ " GEG.TOTAL_INVITED_SEATS "
 				+ " FROM GTEVENT GE "
 				+ " LEFT OUTER JOIN GTEVENTTABLES GEVT ON GE.EVENTID = GEVT.FK_EVENTID "
 				+ " LEFT OUTER JOIN  GTTABLE GT ON GEVT.FK_TABLEID = GT.TABLEID "
 				+ " LEFT OUTER JOIN GTTABLEGUESTS GTG ON GT.TABLEID = GTG.FK_TABLEID "
-				+ " LEFT OUTER JOIN GTGUESTS GG ON GTG.FK_GUESTID = GG.GUESTID "
+				+ " LEFT OUTER JOIN ( GTGUESTS GG INNER JOIN GTEVENTGUESTS GEG ON GEG.FK_GUESTID = GG.GUESTID )"
+				+ " ON GTG.FK_GUESTID = GG.GUESTID "
 				+ " LEFT OUTER JOIN GTUSERINFO GU ON GG.FK_USERINFOID = GU.USERINFOID "
 				+ " WHERE GE.EVENTID=? ORDER BY GT.CREATEDATE DESC";
 
@@ -63,6 +134,18 @@ public class GuestTableData
 				tableGuestsBean.setGuestAssignedSeats(ParseUtil.checkNull(hmTableGuest
 						.get("ASSIGNED_SEATS")));
 
+				/*
+				 * GG.GUESTID, GU.FIRST_NAME, GU.LAST_NAME, GU.CELL_PHONE,
+				 * GU.PHONE_NUM , GEG.RSVP_SEATS, " + " GEG.TOTAL_INVITED_SEATS
+				 */
+				tableGuestsBean.setFirstName(ParseUtil.checkNull(hmTableGuest.get("FIRST_NAME")));
+				tableGuestsBean.setLastName(ParseUtil.checkNull(hmTableGuest.get("LAST_NAME")));
+				tableGuestsBean.setCellPhone(ParseUtil.checkNull(hmTableGuest.get("CELL_PHONE")));
+				tableGuestsBean.setPhoneNum(ParseUtil.checkNull(hmTableGuest.get("PHONE_NUM")));
+				tableGuestsBean.setRsvpSeats(ParseUtil.checkNull(hmTableGuest.get("RSVP_SEATS")));
+				tableGuestsBean.setTotalInvitedSeats(ParseUtil.checkNull(hmTableGuest
+						.get("TOTAL_INVITED_SEATS")));
+
 				hmTableGuests.put(iTableGuestNum, tableGuestsBean);
 				iTableGuestNum++;
 
@@ -87,5 +170,54 @@ public class GuestTableData
 					"deleteGuestTable()");
 		}
 		return numOfRows;
+	}
+
+	public Integer insertGuestTableAssignment(TableGuestsBean tableGuestBean)
+	{
+		appLogging.info("tableGuestBean = " + tableGuestBean);
+		Integer iNumOfRows = 0;
+		if (tableGuestBean != null && tableGuestBean.getTableId() != null
+				&& !"".equalsIgnoreCase(tableGuestBean.getTableId())
+				&& tableGuestBean.getGuestId() != null
+				&& !"".equalsIgnoreCase(tableGuestBean.getGuestId())
+				&& tableGuestBean.getGuestAssignedSeats() != null
+				&& !"".equalsIgnoreCase(tableGuestBean.getGuestAssignedSeats()))
+		{
+			appLogging.info("Going to insert data");
+
+			String sQuery = "INSERT INTO GTTABLEGUESTS (TABLEGUESTID,FK_TABLEID,FK_GUESTID, IS_TMP , DEL_ROW, ASSIGNED_SEATS ) "
+					+ " VALUES (?,?,?,?,?, ?) ";
+
+			ArrayList<Object> aParams = DBDAO.createConstraint(tableGuestBean.getTableGuestId(),
+					tableGuestBean.getTableId(), tableGuestBean.getGuestId(),
+					tableGuestBean.getIsTemporary(), tableGuestBean.getDelelteRow(),
+					tableGuestBean.getGuestAssignedSeats());
+			iNumOfRows = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB, "GuestTableData.java",
+					"insertGuestTable()");
+		}
+
+		return iNumOfRows;
+	}
+
+	public Integer updateGuestTableAssignment(TableGuestsBean tableGuestBean)
+	{
+		Integer iNumOfRows = 0;
+		if (tableGuestBean != null && tableGuestBean.getTableId() != null
+				&& !"".equalsIgnoreCase(tableGuestBean.getTableId())
+				&& tableGuestBean.getGuestId() != null
+				&& !"".equalsIgnoreCase(tableGuestBean.getGuestId())
+				&& tableGuestBean.getGuestAssignedSeats() != null
+				&& !"".equalsIgnoreCase(tableGuestBean.getGuestAssignedSeats()))
+		{
+			String sQuery = "UPDATE GTTABLEGUESTS SET  ASSIGNED_SEATS = ? "
+					+ " WHERE  FK_TABLEID = ? and FK_GUESTID = ? ";
+			ArrayList<Object> aParams = DBDAO.createConstraint(
+					tableGuestBean.getGuestAssignedSeats(), tableGuestBean.getTableId(),
+					tableGuestBean.getGuestId());
+			iNumOfRows = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB, "GuestTableData.java",
+					"insertGuestTable()");
+		}
+
+		return iNumOfRows;
 	}
 }

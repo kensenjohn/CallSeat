@@ -30,7 +30,7 @@
 		
 		init : function ( div_table_details)
 		{
-			$(div_table_details).children().detach()
+			$(div_table_details).children().detach();
 			$(div_table_details).append(this.table_create.create_table());
 		},
 		table_create :
@@ -71,9 +71,8 @@
 						var assignments = '';
 						if( tmpTable.num_of_seats > 0 )
 						{
-							assignments = tmpTable.guest_assigned_seats > 0 ? tmpTable.guest_assigned_seats : '0' + ' of ' + tmpTable.num_of_seats;
+							assignments = tmpTable.guest_assigned_seats > 0 ? tmpTable.guest_assigned_seats + ' of ' + tmpTable.num_of_seats : '0' + ' of ' + tmpTable.num_of_seats;
 						}
-						
 						
 						valRows = valRows + '<tr id="table_'+tmpTable.table_id+'" '+varOddClass+'><td>'+tmpTable.table_name+'</td>'+
 											'<td>'+tmpTable.table_num+'</td>'+

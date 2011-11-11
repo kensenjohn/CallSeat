@@ -35,7 +35,16 @@ public class TableData
 			for (HashMap<String, String> hmResult : arrResult)
 			{
 				tableBean.setTableId(hmResult.get("TABLEID"));
-				tableBean.setTableName(hmResult.get("TABLENAME"));
+				tableBean.setTableName(hmResult.get("TABLENUM"));
+				tableBean.setTableNum(ParseUtil.checkNull(hmResult.get("NUMOFSEATS")));
+				tableBean.setNumOfSeats(ParseUtil.checkNull(hmResult.get("NUMOFSEATS")));
+				tableBean.setIsTmp(ParseUtil.checkNull(hmResult.get("IS_TMP")));
+				tableBean.setDelRow(ParseUtil.checkNull(hmResult.get("DEL_ROW")));
+				tableBean.setCreateDate(ParseUtil.sToL(hmResult.get("CREATEDATE")));
+				tableBean.setAdminId(ParseUtil.checkNull(hmResult.get("FK_ADMINID")));
+
+				tableBean.setModifyBy(ParseUtil.checkNull(hmResult.get("MODIFIEDBY")));
+				tableBean.setModifyDate(ParseUtil.sToL(hmResult.get("MODIFYDATE")));
 
 			}
 		}

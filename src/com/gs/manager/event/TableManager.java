@@ -48,6 +48,15 @@ public class TableManager
 
 	}
 
+	public TableBean getTable(String sTableId)
+	{
+		TableData tableData = new TableData();
+
+		TableBean tableBean = tableData.getTableById(sTableId);
+
+		return tableBean;
+	}
+
 	public HashMap<Integer, TableBean> retrieveEventTables(String sEventId)
 	{
 		TableData tableData = new TableData();
