@@ -1,5 +1,6 @@
 package com.gs.manager.event;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -10,11 +11,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gs.bean.AssignedGuestBean;
+import com.gs.bean.EventGuestBean;
+import com.gs.bean.GuestBean;
 import com.gs.bean.TableBean;
 import com.gs.bean.TableGuestsBean;
+import com.gs.bean.UserInfoBean;
 import com.gs.common.ExceptionHandler;
 import com.gs.common.ParseUtil;
 import com.gs.common.Utility;
+import com.gs.data.GuestData;
 import com.gs.data.event.GuestTableData;
 import com.gs.data.event.TableData;
 
@@ -22,11 +27,88 @@ public class GuestTableManager
 {
 	Logger appLogging = LoggerFactory.getLogger("AppLogging");
 
-	public HashMap<Integer, AssignedGuestBean> getUnAssignedGuest(String sEventId)
+	public HashMap<Integer, AssignedGuestBean> getUnAssignedGuest(
+			GuestTableMetaData guestTableMetaData)
 	{
-		GuestTableData guestTableData = new GuestTableData();
-		HashMap<Integer, AssignedGuestBean> hmTableGuests = guestTableData
-				.getUnAssignedGuest(sEventId);
+		HashMap<Integer, AssignedGuestBean> hmTableGuests = new HashMap<Integer, AssignedGuestBean>();
+		if (guestTableMetaData != null && guestTableMetaData.getEventId() != null
+				&& !"".equalsIgnoreCase(guestTableMetaData.getEventId()))
+		{
+			EventGuestMetaData eventGuestMetaData = new EventGuestMetaData();
+			eventGuestMetaData.setEventId(guestTableMetaData.getEventId());
+
+			EventGuestManager eventGuestManager = new EventGuestManager();
+			ArrayList<EventGuestBean> arrEventGuestBean = eventGuestManager
+					.getGuestsByEvent(eventGuestMetaData);
+
+			appLogging.info("Arr Event Guests: " + arrEventGuestBean);
+
+			HashMap<Integer, TableGuestsBean> hmAllAssignedGuests = getTablesAndGuest(guestTableMetaData
+					.getEventId());
+
+			appLogging.info("Arr Event Guests: " + hmAllAssignedGuests);
+
+			Integer iNumOfGuests = 0;
+			if (arrEventGuestBean != null && !arrEventGuestBean.isEmpty())
+			{
+				for (EventGuestBean eventGuestBean : arrEventGuestBean)
+				{
+					String sGuestId = eventGuestBean.getGuestId();
+					Integer iRsvp = ParseUtil.sToI(eventGuestBean.getRsvpSeats());
+
+					int iAssignedSeats = 0;
+					if (hmAllAssignedGuests != null && !hmAllAssignedGuests.isEmpty())
+					{
+						Set<Integer> setTableGuestNum = hmAllAssignedGuests.keySet();
+
+						for (Integer iTableGuestBean : setTableGuestNum)
+						{
+							TableGuestsBean tableGuestBean = hmAllAssignedGuests
+									.get(iTableGuestBean);
+
+							String assignedGuestId = tableGuestBean.getGuestId();
+							if (assignedGuestId != null
+									&& assignedGuestId.equalsIgnoreCase(sGuestId))
+							{
+								iAssignedSeats = iAssignedSeats
+										+ ParseUtil.sToI(tableGuestBean.getGuestAssignedSeats());
+							}
+
+						}
+					}
+
+					int numRemaininAssignment = iRsvp - iAssignedSeats;
+
+					if (numRemaininAssignment > 0)
+					{
+						// This indicates that this guest has at least 1 seat to
+						// be assigned.
+
+						AssignedGuestBean unassignedBean = new AssignedGuestBean();
+						unassignedBean.setGuestId(sGuestId);
+
+						GuestData guestData = new GuestData();
+						GuestBean guestBean = guestData.getGuest(sGuestId);
+
+						if (guestBean != null && guestBean.getUserInfoBean() != null)
+						{
+							UserInfoBean userInfoBean = guestBean.getUserInfoBean();
+
+							unassignedBean.setCellNumber(userInfoBean.getCellPhone());
+							unassignedBean.setHomeNumber(userInfoBean.getPhoneNum());
+							unassignedBean.setFirstName(userInfoBean.getFirstName());
+							unassignedBean.setLastName(userInfoBean.getLastName());
+						}
+						unassignedBean.setRsvpSeats(eventGuestBean.getRsvpSeats());
+						unassignedBean.setUnAssignedSeats(ParseUtil.iToS(numRemaininAssignment));
+
+						hmTableGuests.put(iNumOfGuests, unassignedBean);
+						iNumOfGuests++;
+					}
+
+				}
+			}
+		}
 
 		return hmTableGuests;
 	}
@@ -38,6 +120,11 @@ public class GuestTableManager
 				sTableId);
 
 		return hmTableGuests;
+	}
+
+	public void getGuestWithNoTable(String sEventId)
+	{
+
 	}
 
 	public HashMap<Integer, TableGuestsBean> getTablesAndGuest(String sEventId)
@@ -60,9 +147,9 @@ public class GuestTableManager
 			if (setIndexResRows != null && !setIndexResRows.isEmpty())
 			{
 
-				boolean isNewTable = false;
 				for (Integer indexRows : setIndexResRows)
 				{
+					boolean isNewTable = false;
 					TableGuestsBean tableGuestBean = hmTableGuests.get(indexRows);
 
 					TableGuestsBean tmpTableGuestBean = hmConsTableGuestBean.get(tableGuestBean
@@ -303,6 +390,11 @@ public class GuestTableManager
 		}
 
 		return tableGuestBean;
+
+	}
+
+	public void getTableGuests(String sEventId)
+	{
 
 	}
 }

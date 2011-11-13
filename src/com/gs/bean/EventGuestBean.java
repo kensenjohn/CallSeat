@@ -1,7 +1,11 @@
 package com.gs.bean;
 
+import java.util.HashMap;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import com.gs.common.ParseUtil;
 
 public class EventGuestBean
 {
@@ -12,6 +16,26 @@ public class EventGuestBean
 	private String deleteRow = "";
 	private String totalNumberOfSeats = "";
 	private String rsvpSeats = "";
+
+	public EventGuestBean()
+	{
+
+	}
+
+	public EventGuestBean(HashMap<String, String> hmGuestEvents)
+	{
+		if (hmGuestEvents != null)
+		{
+			this.eventGuestId = ParseUtil.checkNull(hmGuestEvents.get("EVENTGUESTID"));
+			this.eventId = ParseUtil.checkNull(hmGuestEvents.get("FK_EVENTID"));
+			this.guestId = ParseUtil.checkNull(hmGuestEvents.get("FK_GUESTID"));
+			this.isTemporary = ParseUtil.checkNull(hmGuestEvents.get("IS_TMP"));
+			this.deleteRow = ParseUtil.checkNull(hmGuestEvents.get("DEL_ROW"));
+			this.totalNumberOfSeats = ParseUtil.checkNull(hmGuestEvents.get("TOTAL_INVITED_SEATS"));
+			this.rsvpSeats = ParseUtil.checkNull(hmGuestEvents.get("RSVP_SEATS"));
+		}
+
+	}
 
 	public String getEventGuestId()
 	{

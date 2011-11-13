@@ -1,0 +1,45 @@
+{
+	"status" : "ok"|"error"|,
+	"response" : {
+				"messages":
+				{
+					"ok_mssg" :
+					[
+						{
+							"txt_loc_id" : "div_id"|"span_id"
+							"text" : "ok text goes here"
+						}
+						{
+							"txt_loc_id" : "div_id"|"span_id"
+							"text" : "ok text goes here"
+						}
+					],
+					"error_mssg" :
+					[
+						{
+							"txt_loc_id" : "div_id"|"span_id"
+							"text" : "error text goes here"
+						}
+						{
+							"txt_loc_id" : "div_id"|"span_id"
+							"text" : "error text goes here"
+						}
+					]
+					
+				},
+				"payload" : 
+				{
+					"table_detail":
+					{
+						"tables":[
+						{
+								"guest_rsvp_num":"",
+								"guest_phone_num":"",
+								"guest_cell_phone":"",
+						}
+					}
+				},
+				"is_payload_exist" : true|false,
+				"is_message_exist" : true|false
+		}
+}

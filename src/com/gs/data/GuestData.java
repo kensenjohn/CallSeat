@@ -45,23 +45,69 @@ public class GuestData
 		return numOfRowsInserted;
 	}
 
+	public GuestBean getGuest(String sGuestId)
+	{
+		GuestBean guestBean = new GuestBean();
+
+		if (sGuestId != null && !"".equalsIgnoreCase(sGuestId))
+		{
+			String sQuery = "SELECT GG.GUESTID, GG.FK_USERINFOID, GG.FK_ADMINID, GG.CREATEDATE, "
+					+ " GG.TOTAL_SEATS, GG.RSVP_SEATS, GG.IS_TMP, GG.DEL_ROW, GG.HUMANCREATEDATE, "
+					+ " GU.FIRST_NAME, GU.LAST_NAME, GU.ADDRESS_1, GU.ADDRESS_2, GU.CITY, "
+					+ " GU.STATE, GU.COUNTRY, GU.IP_ADDRESS, GU.CELL_PHONE, GU.PHONE_NUM, GU.EMAIL, "
+					+ " GU.IS_TMP AS USER_IS_TMP , GU.DEL_ROW AS USER_DEL_ROW, GU.CREATEDATE AS USER_CREATEDATE "
+					+ " FROM GTGUESTS GG ,  GTUSERINFO GU "
+					+ " WHERE GG.GUESTID = ?  AND GG.FK_USERINFOID = GU.USERINFOID ORDER BY GG.CREATEDATE DESC ";
+			ArrayList<Object> aParams = DBDAO.createConstraint(sGuestId);
+
+			ArrayList<HashMap<String, String>> arrHmGuests = DBDAO.getDBData(ADMIN_DB, sQuery,
+					aParams, false, "GuestData.java", "getGuestByAdmin()");
+
+			if (arrHmGuests != null && !arrHmGuests.isEmpty())
+			{
+				for (HashMap<String, String> hmGuests : arrHmGuests)
+				{
+					guestBean = new GuestBean();
+
+					guestBean.setGuestId(ParseUtil.checkNull(hmGuests.get("GUESTID")));
+					guestBean.setUserInfoId(ParseUtil.checkNull(hmGuests.get("FK_USERINFOID")));
+					guestBean.setAdminId(ParseUtil.checkNull(hmGuests.get("FK_ADMINID")));
+					guestBean.setCreateDate(ParseUtil.sToL(hmGuests.get("CREATEDATE")));
+					guestBean.setTotalSeat(ParseUtil.checkNull(hmGuests.get("TOTAL_SEATS")));
+					guestBean.setRsvpSeat(ParseUtil.checkNull(hmGuests.get("RSVP_SEATS")));
+					guestBean.setIsTemporary(ParseUtil.checkNull(hmGuests.get("IS_TMP")));
+					guestBean.setDeleteRow(ParseUtil.checkNull(hmGuests.get("DEL_ROW")));
+
+					UserInfoBean userInfoBean = new UserInfoBean();
+
+					userInfoBean.setFirstName(ParseUtil.checkNull(hmGuests.get("FIRST_NAME")));
+					userInfoBean.setLastName(ParseUtil.checkNull(hmGuests.get("LAST_NAME")));
+					userInfoBean.setAddress1(ParseUtil.checkNull(hmGuests.get("ADDRESS_1")));
+					userInfoBean.setAddress2(ParseUtil.checkNull(hmGuests.get("ADDRESS_2")));
+					userInfoBean.setCity(ParseUtil.checkNull(hmGuests.get("CITY")));
+					userInfoBean.setState(ParseUtil.checkNull(hmGuests.get("STATE")));
+					userInfoBean.setCountry(ParseUtil.checkNull(hmGuests.get("COUNTRY")));
+					userInfoBean.setIpAddress(ParseUtil.checkNull(hmGuests.get("IP_ADDRESS")));
+					userInfoBean.setCellPhone(ParseUtil.checkNull(hmGuests.get("CELL_PHONE")));
+					userInfoBean.setPhoneNum(ParseUtil.checkNull(hmGuests.get("PHONE_NUM")));
+					userInfoBean.setEmail(ParseUtil.checkNull(hmGuests.get("EMAIL")));
+					userInfoBean.setIsTemporary(ParseUtil.checkNull(hmGuests.get("USER_ISTMP")));
+					userInfoBean.setDeleteRow(ParseUtil.checkNull(hmGuests.get("USER_DELROW")));
+
+					guestBean.setUserInfoBean(userInfoBean);
+				}
+			}
+
+		}
+
+		return guestBean;
+
+	}
+
 	public ArrayList<GuestBean> getGuestByAdmin(String sAdmin)
 	{
 		ArrayList<GuestBean> arrGuestBean = new ArrayList<GuestBean>();
 
-		/*
-		 * FIRST_NAME | varchar(256) | NO | | NULL | | | LAST_NAME |
-		 * varchar(256) | YES | | NULL | | | ADDRESS_1 | varchar(1024) | YES | |
-		 * NULL | | | ADDRESS_2 | varchar(1024) | YES | | NULL | | | CITY |
-		 * varchar(1024) | YES | | NULL | | | STATE | varchar(30) | YES | | NULL
-		 * | | | COUNTRY | varchar(45) | YES | | NULL | | | IP_ADDRESS |
-		 * varchar(1024) | YES | | NULL | | | CELL_PHONE | varchar(15) | YES | |
-		 * NULL | | | PHONE_NUM | varchar(15) | YES | | NULL | | | EMAIL |
-		 * varchar(100) | YES | | NULL | | | IS_TMP | int(1) | NO | | 1 | | |
-		 * DEL_ROW | int(1) | NO | | 0 | | | CREATEDATE | bigint(20) | NO | | 0
-		 * | | | HUMAN_CREATEDATE | varchar(45) | YES | | NULL | | | TIMEZONE |
-		 * varchar(15) | NO | | NULL | |
-		 */
 		String sQuery = "SELECT GG.GUESTID, GG.FK_USERINFOID, GG.FK_ADMINID, GG.CREATEDATE, "
 				+ " GG.TOTAL_SEATS, GG.RSVP_SEATS, GG.IS_TMP, GG.DEL_ROW, GG.HUMANCREATEDATE, "
 				+ " GU.FIRST_NAME, GU.LAST_NAME, GU.ADDRESS_1, GU.ADDRESS_2, GU.CITY, "
@@ -141,6 +187,34 @@ public class GuestData
 
 		}
 		return numOfRowsInserted;
+	}
+
+	public ArrayList<EventGuestBean> getEventAllGuests(String sEventId)
+	{
+		ArrayList<EventGuestBean> arrEventGuestBean = new ArrayList<EventGuestBean>();
+		if (sEventId != null && !"".equalsIgnoreCase(sEventId))
+		{
+			String sQuery = "SELECT EVENTGUESTID, FK_EVENTID, FK_GUESTID , IS_TMP , DEL_ROW, RSVP_SEATS, "
+					+ " TOTAL_INVITED_SEATS FROM GTEVENTGUESTS WHERE FK_EVENTID = ? ";
+
+			ArrayList<Object> aParams = DBDAO.createConstraint(sEventId);
+
+			ArrayList<HashMap<String, String>> arrHmGuestEvents = DBDAO.getDBData(ADMIN_DB, sQuery,
+					aParams, false, "GuestData.java", "getEventAllGuests()");
+
+			if (arrHmGuestEvents != null && !arrHmGuestEvents.isEmpty())
+			{
+				for (HashMap<String, String> hmGuestEvents : arrHmGuestEvents)
+				{
+					EventGuestBean eventGuestBean = new EventGuestBean(hmGuestEvents);
+
+					arrEventGuestBean.add(eventGuestBean);
+				}
+			}
+		}
+
+		return arrEventGuestBean;
+
 	}
 
 	public ArrayList<EventGuestBean> getEventGuests(String sGuestId)

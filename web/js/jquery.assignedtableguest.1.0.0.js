@@ -68,6 +68,7 @@
 						var numOfRows = tmpAllTable.num_of_rows;
 						var varTables = tmpAllTable.tables;
 						
+						var varTotalAssignedPerTable = 0;
 						for( var i =0 ; i < numOfRows ; i++)
 						{
 							if(i%2==0)
@@ -91,9 +92,13 @@
 								'<td>'+tmpTableGuest.guest_cell_phone+'</td>' +
 								'<td>'+tmpTableGuest.guest_phone_num+'</td>' +
 								'<td>&nbsp;</td>' +'</tr>';
+								
+								varTotalAssignedPerTable = eval(varTotalAssignedPerTable) + eval(tmpTableGuest.guest_assigned_seats);
 							}
 							
 						}
+						
+						$("#assigned_per_table").text(varTotalAssignedPerTable);
 						
 						
 					}

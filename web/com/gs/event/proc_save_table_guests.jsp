@@ -27,9 +27,10 @@ try
 	{
 		jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
 	}
-	else if(sGuestId==null || "".equalsIgnoreCase(sGuestId) || "".equalsIgnoreCase(sGuestId))
+	else if(sGuestId==null || "".equalsIgnoreCase(sGuestId) || "".equalsIgnoreCase(sGuestId)  || "all".equalsIgnoreCase(sGuestId))
 	{
 		jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
+		appLogging.error("No guest was selected. " );
 	}
 	else
 	{

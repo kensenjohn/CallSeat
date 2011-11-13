@@ -19,6 +19,17 @@ public class AssignedGuestBean
 
 	private String rsvpSeats = "";
 	private String assignedSeats = "";
+	private String unAssignedSeats = "";
+
+	public String getUnAssignedSeats()
+	{
+		return unAssignedSeats;
+	}
+
+	public void setUnAssignedSeats(String unAssignedSeats)
+	{
+		this.unAssignedSeats = unAssignedSeats;
+	}
 
 	private String totalTableSeats = "";
 

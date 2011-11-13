@@ -52,6 +52,19 @@ public class EventGuestManager
 		return iNumOfRecs;
 	}
 
+	public ArrayList<EventGuestBean> getGuestsByEvent(EventGuestMetaData eventGuestMetaData)
+	{
+		ArrayList<EventGuestBean> arrEventGuestBean = new ArrayList<EventGuestBean>();
+		if (eventGuestMetaData != null && eventGuestMetaData.getEventId() != null
+				&& !"".equalsIgnoreCase(eventGuestMetaData.getEventId()))
+		{
+			GuestData guestData = new GuestData();
+			arrEventGuestBean = guestData.getEventAllGuests(eventGuestMetaData.getEventId());
+		}
+
+		return arrEventGuestBean;
+	}
+
 	public HashMap<String, ArrayList<EventGuestBean>> getEventGuests(
 			ArrayList<GuestBean> arrGuestBean)
 	{
