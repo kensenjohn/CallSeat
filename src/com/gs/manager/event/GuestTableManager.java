@@ -309,8 +309,9 @@ public class GuestTableManager
 		return numOfGuestTablesDel;
 	}
 
-	public void assignSeatsForGuest(GuestTableMetaData guestTableMetaData)
+	public GuestTableResponse assignSeatsForGuest(GuestTableMetaData guestTableMetaData)
 	{
+		GuestTableResponse guestTableResponse = new GuestTableResponse();
 		String sEventId = guestTableMetaData.getEventId();
 		String sAdminId = guestTableMetaData.getAdminId();
 		String sTableId = guestTableMetaData.getTableId();
@@ -352,12 +353,31 @@ public class GuestTableManager
 		appLogging.info("iNumOfSeats " + iNumOfSeats + " totalSeatsAtTable = " + totalSeatsAtTable
 				+ " countAssigned = " + countAssigned);
 
-		if (iNumOfSeats < (totalSeatsAtTable - countAssigned))
+		if (iNumOfSeats <= (totalSeatsAtTable - countAssigned))
 		{
 			TableGuestsBean tableGuestBean = assignGuestToTable(sGuestId, sTableId, iNumOfSeats,
 					isGuestAlreadySeatedAtTable);
+
+			if (tableGuestBean != null && tableGuestBean.getTableGuestId() != null
+					&& !"".equalsIgnoreCase(tableGuestBean.getTableGuestId()))
+			{
+				guestTableResponse.setTableGuestsBean(tableGuestBean);
+				guestTableResponse.setSuccess(true);
+				guestTableResponse.setMessage("Guest was successfully assigned to table.");
+			} else
+			{
+				guestTableResponse.setSuccess(false);
+				guestTableResponse
+						.setMessage("Guest was not assigned a seat. Please try again later.");
+			}
+		} else
+		{
+			guestTableResponse.setSuccess(false);
+			guestTableResponse
+					.setMessage("Guest was not assigned a seat. Number of guests exceeds number of seats at table.");
 		}
 
+		return guestTableResponse;
 	}
 
 	private TableGuestsBean assignGuestToTable(String sGuestId, String sTableId,

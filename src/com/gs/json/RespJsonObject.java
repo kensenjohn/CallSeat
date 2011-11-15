@@ -3,7 +3,7 @@ package com.gs.json;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class CustomRespJsonObject
+public class RespJsonObject
 {
 	private RespConstants.Status status = null;
 	private Response response = new Response();
@@ -26,15 +26,13 @@ public class CustomRespJsonObject
 		{
 			this.response = new Response();
 		}
-		customRespJsonObject.put(RespConstants.Key.RESPONSE.getKey(),
-				this.response.toJson());
+		customRespJsonObject.put(RespConstants.Key.RESPONSE.getKey(), this.response.toJson());
 
 		if (this.status == null)
 		{
 			this.status = RespConstants.Status.ERROR;
 		}
-		customRespJsonObject.put(RespConstants.Key.STATUS.getKey(),
-				this.status.getStatus());
+		customRespJsonObject.put(RespConstants.Key.STATUS.getKey(), this.status.getStatus());
 
 		return customRespJsonObject;
 

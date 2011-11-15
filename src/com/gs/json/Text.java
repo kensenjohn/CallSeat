@@ -20,7 +20,7 @@ public abstract class Text
 		JSONObject jsonMessageObject = new JSONObject();
 
 		jsonMessageObject.put(RespConstants.Key.TEXT_LOC_ID.getKey(), textLocationId);
-		jsonMessageObject.put(RespConstants.Key.TEXT_LOC_ID.getKey(), text);
+		jsonMessageObject.put(RespConstants.Key.TEXT.getKey(), text);
 
 		return jsonMessageObject;
 

@@ -1,10 +1,12 @@
-<%@page import="com.gs.json.CustomRespJsonObject"%>
+<%@page import="com.gs.json.RespJsonObject"%>
 <%@page import="com.gs.json.Response"%>
 <%@page import="com.gs.json.Payload"%>
 <%@page import="com.gs.json.OkText"%>
+<%@page import="com.gs.json.ErrorText"%>
 <%@page import="com.gs.json.Text"%>
 <%@page import="com.gs.json.Messages"%>
 <%@page import="com.gs.json.RespConstants"%>
+<%@page import="com.gs.json.RespObjectProc"%>
 <%@page import="com.gs.manager.event.*" %>
 <%@page import="com.gs.manager.*" %>
 <%@page import="com.gs.bean.*" %>
@@ -21,6 +23,12 @@ JSONObject jsonResponseObj = new JSONObject();
 Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 Logger appLogging = LoggerFactory.getLogger("AppLogging");
 response.setContentType("application/json");
+
+ArrayList<Text> arrOkText = new ArrayList<Text>();
+ArrayList<Text> arrErrorText = new ArrayList<Text>();
+RespConstants.Status responseStatus = RespConstants.Status.ERROR;
+
+RespObjectProc responseObject = new RespObjectProc();
 try
 {
 	String sEventId =  ParseUtil.checkNull(request.getParameter("event_id"));
@@ -32,7 +40,7 @@ try
 	guestTableMetaData.setAdminId(sAdminId);
 	guestTableMetaData.setTableId(sTableId);
 	
-	CustomRespJsonObject custRespJson = new CustomRespJsonObject();
+	RespJsonObject custRespJson = new RespJsonObject();
 	
 	if(sEventId!=null && !"".equalsIgnoreCase(sEventId) && sAdminId!=null && !"".equalsIgnoreCase(sAdminId)
 		&& sTableId!=null && !"".equalsIgnoreCase(sTableId))
@@ -59,12 +67,11 @@ try
 		
 		//jsonResponseObj.put(Constants.J_RESP_SUCCESS, true);
 		
-		Text okText = new OkText("Loading Data Complete ","my_id");
-		ArrayList<Text> arrOkText = new ArrayList<Text>();
+		Text okText = new OkText("Loading Data Complete ","my_id");		
 		arrOkText.add(okText);
+		responseStatus = RespConstants.Status.OK;
 		
-		
-		Messages messages = new Messages();
+		/*Messages messages = new Messages();
 		messages.setArrOkText(arrOkText);
 		
 		
@@ -76,7 +83,7 @@ try
 		
 		
 		custRespJson.setStatus( RespConstants.Status.OK);
-		custRespJson.setResponse( processResponse );
+		custRespJson.setResponse( processResponse );*/
 		
 		
 		//jsonResponseObj.put("new_stuff" , custRespJson.toJson());
@@ -86,15 +93,28 @@ try
 	}
 	else
 	{
-		jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
+		Text errorText = new ErrorText("Oops!! Your request could not be processed at this time.","my_id") ;		
+		arrErrorText.add(errorText);
+		
+		responseStatus = RespConstants.Status.ERROR;
+		//jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
 	}
-	out.println(custRespJson.toJson());
+	responseObject.setErrorMessages(arrErrorText);
+	responseObject.setOkMessages(arrOkText);
+	responseObject.setResponseStatus(responseStatus);
+	responseObject.setJsonResponseObj(jsonResponseObj);
+	
+	out.println(responseObject.getRespJsonObject());
 }
 catch(Exception e)
 {
-	jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
-	jsonResponseObj.put("message", "Your request to add guest was lost. Please try again later.");
-	appLogging.error("Error creating guest " );
-	out.println(jsonResponseObj);
+	Text errorText = new ErrorText("Oops!! Your request could not be processed at this time.","my_id") ;		
+	arrErrorText.add(errorText);
+	
+	responseObject.setErrorMessages(arrErrorText);
+	responseObject.setResponseStatus(RespConstants.Status.ERROR);
+	responseObject.setJsonResponseObj(jsonResponseObj);
+	
+	out.println(responseObject.getRespJsonObject());
 }
 %>

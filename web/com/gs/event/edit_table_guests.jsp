@@ -106,54 +106,107 @@
 		
 		function saveTableGuestList( jsonResult )
 		{
-			if(!jsonResult.success)
+			if(jsonResult!=undefined)
 			{
-				var varResponse = jsonResult.response;
-				if(varResponse!=undefined)
+				var varResponseObj = jsonResult.response;
+				if(jsonResult.status == 'error' && varResponseObj!=undefined)
 				{
-					var varMessage = varResponse.error_message;
-					if(varMessage!=undefined && varMessage!= '' )
+					var varIsMessageExist = varResponseObj.is_message_exist;
+					if(varIsMessageExist == true)
 					{
-						$("#err_mssg").text(varMessage);
+						var jsonResponseMessage = varResponseObj.messages;
+						var varArrErrorMssg = jsonResponseMessage.error_mssg
+						displayMessages( varArrErrorMssg );
 					}
+				}
+				else if( jsonResult.status == 'ok' && varResponseObj!=undefined)
+				{
+					$("#div_unassinged_guests").children().detach();
+					loadTableGuests();	
+				}
+				else
+				{
+					alert("Please try again later.");
 				}
 			}
 			else
 			{
-				//alert('Guest assignment was completed successful. Refreshing the list.');
-				$("#div_unassinged_guests").children().detach();
-				loadTableGuests();	
+				alert("Please try again later.");
 			}
+						
 		}
 		
 		function createTableGuestList(jsonResult)
 		{
-			if(!jsonResult.success)
+			if(jsonResult!=undefined)
 			{
-				
+				var varResponseObj = jsonResult.response;
+				if(jsonResult.status == 'error'  && varResponseObj !=undefined )
+				{
+					
+					var varIsMessageExist = varResponseObj.is_message_exist;
+					if(varIsMessageExist == true)
+					{
+						var jsonResponseMessage = varResponseObj.messages;
+						var varArrErrorMssg = jsonResponseMessage.error_mssg
+						displayMessages( varArrErrorMssg );
+					}
+					
+				}
+				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+				{
+					var varIsPayloadExist = varResponseObj.is_payload_exist;
+					
+					if(varIsPayloadExist == true)
+					{
+						var jsonResponseObj = varResponseObj.payload;
+						processAssignedSeating( jsonResponseObj );
+					}
+				}
+				else
+				{
+					alert("Please try again later.");
+				}
 			}
 			else
 			{
-				var varAssignedGuests = jsonResult.assigned_guests;
-				var varUnAssignedGuests = jsonResult.un_assigned_guests;
-				var varCurrentTable = jsonResult.this_table;
-				var varAllTableGuests = jsonResult.all_tables_assigned;
-				if(varUnAssignedGuests!=undefined)
+				alert("Please try again later.");
+			}
+			
+		}
+		
+		function displayMessages(varArrMessages)
+		{
+			if(varArrMessages!=undefined)
+			{
+				for(var i = 0; i<varArrMessages.length; i++)
 				{
-					var unAssignedDD = generateGuestDropDown(varUnAssignedGuests);
-					
-					$("#div_unassinged_guests").append(unAssignedDD);
-					
+					alert( varArrMessages[i].text );
 				}
+			}
+		}
+		
+		function processAssignedSeating(jsonResponseObj)
+		{
+			var varAssignedGuests = jsonResponseObj.assigned_guests;
+			var varUnAssignedGuests = jsonResponseObj.un_assigned_guests;
+			var varCurrentTable = jsonResponseObj.this_table;
+			var varAllTableGuests = jsonResponseObj.all_tables_assigned;
+			if(varUnAssignedGuests!=undefined)
+			{
+				var unAssignedDD = generateGuestDropDown(varUnAssignedGuests);
 				
-				if( varCurrentTable!=undefined)
-				{
-					generateTableDetail(varCurrentTable);
-				}
-				if(varAssignedGuests!=undefined)
-				{
-					generateAssignedGuests(varAssignedGuests , varAllTableGuests);
-				}
+				$("#div_unassinged_guests").append(unAssignedDD);
+				
+			}
+			
+			if( varCurrentTable!=undefined)
+			{
+				generateTableDetail(varCurrentTable);
+			}
+			if(varAssignedGuests!=undefined)
+			{
+				generateAssignedGuests(varAssignedGuests , varAllTableGuests);
 			}
 		}
 		
