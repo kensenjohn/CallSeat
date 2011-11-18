@@ -29,7 +29,7 @@ public class TableData
 
 			ArrayList<Object> arrParams = DBDAO.createConstraint(sTableId);
 
-			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData("admin", sQuery,
+			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(ADMIN_DB, sQuery,
 					arrParams, false, "TableData.java", "getTableData()");
 
 			for (HashMap<String, String> hmResult : arrResult)

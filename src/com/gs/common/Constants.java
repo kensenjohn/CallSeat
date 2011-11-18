@@ -50,4 +50,60 @@ public class Constants
 	}
 
 	public static String EMPTY = "";
+
+	public static String PROP_CALL_SERVICE = "call_service";
+	public static String PROP_SMS_SERVICE = "sms_service";
+
+	public enum CALL_SERVICE
+	{
+		TWILIO("twilio");
+
+		private String callService = "";
+
+		CALL_SERVICE(String callService)
+		{
+			this.callService = callService;
+		}
+
+		public String getCallService()
+		{
+			return this.callService;
+		}
+
+	}
+
+	public enum SMS_SERVICE
+	{
+		TWILIO("twilio");
+
+		private String smsService = "";
+
+		SMS_SERVICE(String smsService)
+		{
+			this.smsService = smsService;
+		}
+
+		public String getSmsService()
+		{
+			return this.smsService;
+		}
+
+	}
+
+	public enum EVENT_TASK
+	{
+		RSVP("RSVP_TEL"), SEATING("SEATING_TEL");
+
+		private String sTask = "";
+
+		EVENT_TASK(String sTask)
+		{
+			this.sTask = sTask;
+		}
+
+		public String getTask()
+		{
+			return this.sTask;
+		}
+	}
 }

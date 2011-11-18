@@ -1,61 +1,12 @@
 package com.gs.bean.twilio;
 
-public class IncomingCallBean
+public abstract class IncomingCallBean
 {
-
-	private String callSid = "";
-	private String accountSid = "";
-	private String from = "";
-	private String to = "";
-	private String callStatus = "";
-	private String apiVersion = "";
-	private String direction = "";
-	private String forwardFrom = "";
-
-	private String fromCity = "";
-	private String fromState = "";
-	private String fromZip = "";
-	private String fromCountry = "";
-
-	private String toZip = "";
-	private String toCity = "";
-	private String toCountry = "";
-	private String toState = "";
-
-	private String callDuration = "";
-
-	private String calledState = "";
-	private String calledCountry = "";
-	private String calledCity = "";
-	private String calledZip = "";
-
-	private String duration = "";
-
-	private String caller = "";
-	private String callerCity = "";
-	private String callerState = "";
-	private String callerCountry = "";
-	private String callerZip = "";
-
-	public String getCallSid()
-	{
-		return callSid;
-	}
-
-	public void setCallSid(String callSid)
-	{
-		this.callSid = callSid;
-	}
-
-	public String getAccountSid()
-	{
-		return accountSid;
-	}
-
-	public void setAccountSid(String accountSid)
-	{
-		this.accountSid = accountSid;
-	}
+	protected String from = "";
+	protected String to = "";
+	protected String callStatus = "";
+	protected String callid = "";
+	protected String accountid = "";
 
 	public String getFrom()
 	{
@@ -87,244 +38,23 @@ public class IncomingCallBean
 		this.callStatus = callStatus;
 	}
 
-	public String getApiVersion()
+	public String getCallid()
 	{
-		return apiVersion;
+		return callid;
 	}
 
-	public void setApiVersion(String apiVersion)
+	public void setCallid(String callid)
 	{
-		this.apiVersion = apiVersion;
+		this.callid = callid;
 	}
 
-	public String getDirection()
+	public String getAccountid()
 	{
-		return direction;
+		return accountid;
 	}
 
-	public void setDirection(String direction)
+	public void setAccountid(String accountid)
 	{
-		this.direction = direction;
+		this.accountid = accountid;
 	}
-
-	public String getForwardFrom()
-	{
-		return forwardFrom;
-	}
-
-	public void setForwardFrom(String forwardFrom)
-	{
-		this.forwardFrom = forwardFrom;
-	}
-
-	public String getFromCity()
-	{
-		return fromCity;
-	}
-
-	public void setFromCity(String fromCity)
-	{
-		this.fromCity = fromCity;
-	}
-
-	public String getFromState()
-	{
-		return fromState;
-	}
-
-	public void setFromState(String fromState)
-	{
-		this.fromState = fromState;
-	}
-
-	public String getFromZip()
-	{
-		return fromZip;
-	}
-
-	public void setFromZip(String fromZip)
-	{
-		this.fromZip = fromZip;
-	}
-
-	public String getFromCountry()
-	{
-		return fromCountry;
-	}
-
-	public void setFromCountry(String fromCountry)
-	{
-		this.fromCountry = fromCountry;
-	}
-
-	public String getToZip()
-	{
-		return toZip;
-	}
-
-	public void setToZip(String toZip)
-	{
-		this.toZip = toZip;
-	}
-
-	public String getToCity()
-	{
-		return toCity;
-	}
-
-	public void setToCity(String toCity)
-	{
-		this.toCity = toCity;
-	}
-
-	public String getToCountry()
-	{
-		return toCountry;
-	}
-
-	public void setToCountry(String toCountry)
-	{
-		this.toCountry = toCountry;
-	}
-
-	public String getToState()
-	{
-		return toState;
-	}
-
-	public void setToState(String toState)
-	{
-		this.toState = toState;
-	}
-
-	public String getCallDuration()
-	{
-		return callDuration;
-	}
-
-	public void setCallDuration(String callDuration)
-	{
-		this.callDuration = callDuration;
-	}
-
-	public String getCalledState()
-	{
-		return calledState;
-	}
-
-	public void setCalledState(String calledState)
-	{
-		this.calledState = calledState;
-	}
-
-	public String getCalledCountry()
-	{
-		return calledCountry;
-	}
-
-	public void setCalledCountry(String calledCountry)
-	{
-		this.calledCountry = calledCountry;
-	}
-
-	public String getCalledCity()
-	{
-		return calledCity;
-	}
-
-	public void setCalledCity(String calledCity)
-	{
-		this.calledCity = calledCity;
-	}
-
-	public String getCalledZip()
-	{
-		return calledZip;
-	}
-
-	public void setCalledZip(String calledZip)
-	{
-		this.calledZip = calledZip;
-	}
-
-	public String getDuration()
-	{
-		return duration;
-	}
-
-	public void setDuration(String duration)
-	{
-		this.duration = duration;
-	}
-
-	public String getCaller()
-	{
-		return caller;
-	}
-
-	public void setCaller(String caller)
-	{
-		this.caller = caller;
-	}
-
-	public String getCallerCity()
-	{
-		return callerCity;
-	}
-
-	public void setCallerCity(String callerCity)
-	{
-		this.callerCity = callerCity;
-	}
-
-	public String getCallerState()
-	{
-		return callerState;
-	}
-
-	public void setCallerState(String callerState)
-	{
-		this.callerState = callerState;
-	}
-
-	public String getCallerCountry()
-	{
-		return callerCountry;
-	}
-
-	public void setCallerCountry(String callerCountry)
-	{
-		this.callerCountry = callerCountry;
-	}
-
-	public String getCallerZip()
-	{
-		return callerZip;
-	}
-
-	public void setCallerZip(String callerZip)
-	{
-		this.callerZip = callerZip;
-	}
-
-	@Override
-	public String toString()
-	{
-		StringBuilder builder = new StringBuilder();
-		builder.append("IncomingCallBean [callSid=");
-		builder.append(callSid);
-		builder.append(", accountSid=");
-		builder.append(accountSid);
-		builder.append(", from=");
-		builder.append(from);
-		builder.append(", to=");
-		builder.append(to);
-		builder.append(", callStatus=");
-		builder.append(callStatus);
-		builder.append(", direction=");
-		builder.append(direction);
-		builder.append("]");
-		return builder.toString();
-	}
-
 }

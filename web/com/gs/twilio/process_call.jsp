@@ -12,7 +12,7 @@
 	Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 	Logger appLogging = LoggerFactory.getLogger("AppLogging");
 	
-	IncomingCallBean incomingCallBean = IncomingCallManager.getIncomingCallRequest(request);
+	TwilioIncomingCallBean incomingCallBean = IncomingCallManager.getIncomingCallRequest(request);
 	appLogging.info(incomingCallBean.toString());
 	
 	IncomingCallManager incomingCallManager = new IncomingCallManager();
@@ -20,5 +20,4 @@
 	
 	response.setContentType("text/xml");
 	out.println(incomingCallManager.processCall(incomingCallBean));
-	
 %>

@@ -13,6 +13,7 @@ import com.gs.common.Configuration;
 import com.gs.common.Constants;
 import com.gs.common.ParseUtil;
 import com.gs.common.db.DBDAO;
+import com.gs.manager.event.TelNumberMetaData;
 
 public class GuestData
 {
@@ -256,4 +257,116 @@ public class GuestData
 		}
 		return arrEventGuestBean;
 	}
+
+	public ArrayList<GuestBean> getGuestsByTelNumber(TelNumberMetaData telNumMetaData)
+	{
+		ArrayList<GuestBean> arrGuestBean = new ArrayList<GuestBean>();
+		if (telNumMetaData != null && telNumMetaData.getGuestTelNumber() != null
+				&& !"".equalsIgnoreCase(telNumMetaData.getGuestTelNumber()))
+		{
+			String sQuery = "SELECT GG.GUESTID, GG.FK_USERINFOID, GG.FK_ADMINID, GG.CREATEDATE, "
+					+ " GG.TOTAL_SEATS, GG.RSVP_SEATS, GG.IS_TMP, GG.DEL_ROW, GG.HUMANCREATEDATE, "
+					+ " GU.FIRST_NAME, GU.LAST_NAME, GU.ADDRESS_1, GU.ADDRESS_2, GU.CITY, "
+					+ " GU.STATE, GU.COUNTRY, GU.IP_ADDRESS, GU.CELL_PHONE, GU.PHONE_NUM, GU.EMAIL, "
+					+ " GU.IS_TMP AS USER_IS_TMP , GU.DEL_ROW AS USER_DEL_ROW, GU.CREATEDATE AS USER_CREATEDATE "
+					+ " FROM GTGUESTS GG ,  GTUSERINFO GU  where "
+					+ " GG.FK_USERINFOID = GU.USERINFOID AND ( GU.CELL_PHONE =?  OR GU.PHONE_NUM = ? )";
+			ArrayList<Object> aParams = DBDAO.createConstraint(telNumMetaData.getGuestTelNumber());
+
+			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(ADMIN_DB, sQuery,
+					aParams, false, "GuestData.java", "getGuestsByTelNumber()");
+
+			if (arrResult != null && !arrResult.isEmpty())
+			{
+				for (HashMap<String, String> hmGuests : arrResult)
+				{
+					GuestBean guestBean = new GuestBean();
+
+					guestBean.setGuestId(ParseUtil.checkNull(hmGuests.get("GUESTID")));
+					guestBean.setUserInfoId(ParseUtil.checkNull(hmGuests.get("FK_USERINFOID")));
+					guestBean.setAdminId(ParseUtil.checkNull(hmGuests.get("FK_ADMINID")));
+					guestBean.setCreateDate(ParseUtil.sToL(hmGuests.get("CREATEDATE")));
+					guestBean.setTotalSeat(ParseUtil.checkNull(hmGuests.get("TOTAL_SEATS")));
+					guestBean.setRsvpSeat(ParseUtil.checkNull(hmGuests.get("RSVP_SEATS")));
+					guestBean.setIsTemporary(ParseUtil.checkNull(hmGuests.get("IS_TMP")));
+					guestBean.setDeleteRow(ParseUtil.checkNull(hmGuests.get("DEL_ROW")));
+
+					UserInfoBean userInfoBean = new UserInfoBean();
+
+					userInfoBean.setFirstName(ParseUtil.checkNull(hmGuests.get("FIRST_NAME")));
+					userInfoBean.setLastName(ParseUtil.checkNull(hmGuests.get("LAST_NAME")));
+					userInfoBean.setAddress1(ParseUtil.checkNull(hmGuests.get("ADDRESS_1")));
+					userInfoBean.setAddress2(ParseUtil.checkNull(hmGuests.get("ADDRESS_2")));
+					userInfoBean.setCity(ParseUtil.checkNull(hmGuests.get("CITY")));
+					userInfoBean.setState(ParseUtil.checkNull(hmGuests.get("STATE")));
+					userInfoBean.setCountry(ParseUtil.checkNull(hmGuests.get("COUNTRY")));
+					userInfoBean.setIpAddress(ParseUtil.checkNull(hmGuests.get("IP_ADDRESS")));
+					userInfoBean.setCellPhone(ParseUtil.checkNull(hmGuests.get("CELL_PHONE")));
+					userInfoBean.setPhoneNum(ParseUtil.checkNull(hmGuests.get("PHONE_NUM")));
+					userInfoBean.setEmail(ParseUtil.checkNull(hmGuests.get("EMAIL")));
+					userInfoBean.setIsTemporary(ParseUtil.checkNull(hmGuests.get("USER_ISTMP")));
+					userInfoBean.setDeleteRow(ParseUtil.checkNull(hmGuests.get("USER_DELROW")));
+
+					guestBean.setUserInfoBean(userInfoBean);
+
+					arrGuestBean.add(guestBean);
+				}
+			}
+
+		}
+		return arrGuestBean;
+	}
+
+	public EventGuestBean getGuest(String sEventId, ArrayList<String> arrGuestId)
+	{
+		EventGuestBean eventGuestBean = new EventGuestBean();
+		if (sEventId != null && !"".equalsIgnoreCase(sEventId) && arrGuestId != null
+				&& !arrGuestId.isEmpty())
+		{
+			ArrayList<Object> arrParams = new ArrayList<Object>();
+			String sGuestParam = "";
+			boolean isFirstGuest = true;
+			for (String sGuestId : arrGuestId)
+			{
+				if (!isFirstGuest)
+				{
+					sGuestParam = sGuestParam + ",";
+				}
+				sGuestParam = sGuestParam + "?";
+				arrParams.add(sGuestId);
+			}
+
+			arrParams.add(sEventId);
+
+			String sQuery = "SELECT  GU.CELL_PHONE, GU.PHONE_NUM, GEG.EVENTGUESTID, GEG.FK_EVENTID, "
+					+ " GEG.FK_GUESTID , GEG.IS_TMP , GEG.DEL_ROW, GEG.RSVP_SEATS, "
+					+ " GEG.TOTAL_INVITED_SEATS FROM GTEVENTGUESTS GEG , GTUSERINFO GU, GTGUEST GG WHERE GEG.FK_GUESTID in ("
+					+ sGuestParam
+					+ ") AND GEG.FK_EVENTID = ? AND GG.GUESTID = GEG.FK_GUESTID AND GG.FK_USERINFOID = GU.USERINFOID ";
+
+			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(ADMIN_DB, sQuery,
+					arrParams, false, "GuestData.java", "getGuest()");
+
+			if (arrResult != null && !arrResult.isEmpty())
+			{
+				for (HashMap<String, String> hmResult : arrResult)
+				{
+					eventGuestBean
+							.setEventGuestId(ParseUtil.checkNull(hmResult.get("EVENTGUESTID")));
+					eventGuestBean.setEventId(ParseUtil.checkNull(hmResult.get("FK_EVENTID")));
+					eventGuestBean.setGuestId(ParseUtil.checkNull(hmResult.get("FK_GUESTID")));
+					eventGuestBean.setIsTemporary(ParseUtil.checkNull(hmResult.get("IS_TMP")));
+					eventGuestBean.setDeleteRow(ParseUtil.checkNull(hmResult.get("DEL_ROW")));
+					eventGuestBean.setRsvpSeats(ParseUtil.checkNull(hmResult.get("RSVP_SEATS")));
+					eventGuestBean.setTotalNumberOfSeats(ParseUtil.checkNull(hmResult
+							.get("TOTAL_INVITED_SEATS")));
+
+				}
+			}
+
+		}
+
+		return eventGuestBean;
+	}
+
 }
