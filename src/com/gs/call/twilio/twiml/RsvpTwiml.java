@@ -31,7 +31,7 @@ public class RsvpTwiml
 
 			Say sayThankYou = new Say("Your RSVP reponse of " + eventGuestBean.getRsvpSeats()
 					+ " has been accepted.");
-			sayThankYou.setVoice("woman");
+			sayThankYou.setVoice(VOICE_ACTOR);
 
 			Gather gatherRsvp = new Gather();
 
@@ -42,7 +42,7 @@ public class RsvpTwiml
 					"Enter a new RSVP number if you would like to change your previous selection. Enter a number from 0 to "
 							+ eventGuestBean.getTotalNumberOfSeats()
 							+ " seats to RSVP followed by the pound or hash key.");
-			sayInfo.setVoice("woman");
+			sayInfo.setVoice(VOICE_ACTOR);
 
 			Hangup hangup = new Hangup();
 
@@ -77,7 +77,7 @@ public class RsvpTwiml
 					|| Constants.RSVP_STATUS.RSVP_UPDATE_FAIL.equals(rsvpStaus))
 			{
 				Say saySorry = new Say("I am sorry, " + sMessage + ".");
-				saySorry.setVoice("woman");
+				saySorry.setVoice(VOICE_ACTOR);
 				Gather gatherRsvp = new Gather();
 
 				gatherRsvp.setMethod("POST");
@@ -87,10 +87,11 @@ public class RsvpTwiml
 						"Please try again or hang up and try later. Enter a number from from zero to "
 								+ eventGuestBean.getTotalNumberOfSeats()
 								+ " seats to RSVP for this invite. When you are done press the pound sign");
-				sayInfo.setVoice("woman");
+				sayInfo.setVoice(VOICE_ACTOR);
 
 				Say sayThankYou = new Say(
 						"Thank You for your response. Please hold while I process the RSVP seats.");
+				sayThankYou.setVoice(VOICE_ACTOR);
 
 				try
 				{
@@ -126,7 +127,7 @@ public class RsvpTwiml
 			TwiMLResponse response = new TwiMLResponse();
 
 			Say sayWelcome = new Say("Welcome to the automated RSVP for");
-			sayWelcome.setVoice("woman");
+			sayWelcome.setVoice(VOICE_ACTOR);
 
 			Gather gatherRsvp = new Gather();
 
@@ -142,7 +143,7 @@ public class RsvpTwiml
 			// sayInfo.setLoop(3);
 
 			Say sayThankYou = new Say("Thank You.");
-			sayThankYou.setVoice("woman");
+			sayThankYou.setVoice(VOICE_ACTOR);
 
 			try
 			{
