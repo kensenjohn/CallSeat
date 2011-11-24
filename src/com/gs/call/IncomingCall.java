@@ -67,7 +67,14 @@ public class IncomingCall extends HttpServlet
 			if (incomingCallBean != null && incomingCallBean.getTo() != null
 					&& !"".equalsIgnoreCase(incomingCallBean.getTo()))
 			{
-				incomingCallBean.setCallType(Constants.CALL_TYPE.RSVP_FIRST_REQUEST);
+				if ("rsvp_first_request".equalsIgnoreCase(sCallType))
+				{
+					incomingCallBean.setCallType(Constants.CALL_TYPE.RSVP_FIRST_REQUEST);
+				} else if ("seating_first_request".equalsIgnoreCase(sCallType))
+				{
+					incomingCallBean.setCallType(Constants.CALL_TYPE.SEATING_FIRST_REQUEST);
+				}
+
 				callResponse = incominManager.processCall(incomingCallBean);
 			}
 		}
