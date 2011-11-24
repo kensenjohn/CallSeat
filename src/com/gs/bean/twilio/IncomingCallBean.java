@@ -1,5 +1,7 @@
 package com.gs.bean.twilio;
 
+import com.gs.common.Constants;
+
 public abstract class IncomingCallBean
 {
 	protected String from = "";
@@ -7,6 +9,8 @@ public abstract class IncomingCallBean
 	protected String callStatus = "";
 	protected String callid = "";
 	protected String accountid = "";
+
+	protected Constants.CALL_TYPE callType = null;
 
 	public String getFrom()
 	{
@@ -57,4 +61,15 @@ public abstract class IncomingCallBean
 	{
 		this.accountid = accountid;
 	}
+
+	public Constants.CALL_TYPE getCallType()
+	{
+		return callType;
+	}
+
+	public void setCallType(Constants.CALL_TYPE callType)
+	{
+		this.callType = callType;
+	}
+
 }

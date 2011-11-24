@@ -29,7 +29,7 @@ public abstract class ProcessCalls
 
 			TelNumberMetaData telNumMetaData = new TelNumberMetaData();
 			telNumMetaData.setGuestTelNumber(sGuestTelNumber);
-			telNumMetaData.setGuestTelNumber(sEventTelNumber);
+			telNumMetaData.setEventTaskTelNumber(sEventTelNumber);
 
 			TelNumberManager telNumManager = new TelNumberManager();
 			TelNumberResponse telNumberResponse = telNumManager.getTelNumberDetails(telNumMetaData);
@@ -60,5 +60,5 @@ public abstract class ProcessCalls
 		return task;
 	}
 
-	public abstract void process();
+	public abstract CallResponse process();
 }

@@ -52,6 +52,29 @@ public class EventGuestManager
 		return iNumOfRecs;
 	}
 
+	public void setGuestRsvpForEvent(EventGuestMetaData eventGuestMetaData)
+	{
+
+		GuestData guestData = new GuestData();
+
+		EventGuestBean eventGuestBean = new EventGuestBean();
+		eventGuestBean.setEventId(eventGuestMetaData.getEventId());
+		eventGuestBean.setRsvpSeats(eventGuestMetaData.getRsvpDigits());
+
+		ArrayList<String> arrGuestId = eventGuestMetaData.getArrGuestId();
+
+		if (arrGuestId != null && !arrGuestId.isEmpty())
+		{
+			for (String sGuestId : arrGuestId)
+			{
+				eventGuestBean.setGuestId(sGuestId);
+			}
+
+			guestData.updateGuestRsvpEvent(eventGuestBean);
+		}
+
+	}
+
 	public ArrayList<EventGuestBean> getGuestsByEvent(EventGuestMetaData eventGuestMetaData)
 	{
 		ArrayList<EventGuestBean> arrEventGuestBean = new ArrayList<EventGuestBean>();

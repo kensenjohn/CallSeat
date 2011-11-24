@@ -1,6 +1,7 @@
 package com.gs.task;
 
 import com.gs.bean.twilio.IncomingCallBean;
+import com.gs.call.CallResponse;
 
 public class SeatingTask extends Task
 {
@@ -12,9 +13,9 @@ public class SeatingTask extends Task
 	}
 
 	@Override
-	public void processTask(IncomingCallBean incomingCallBean)
+	public CallResponse processTask(IncomingCallBean incomingCallBean)
 	{
-		// TODO Auto-generated method stub
+		return null;
 
 	}
 

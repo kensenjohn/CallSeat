@@ -6,6 +6,7 @@ public class EventGuestMetaData
 {
 	private String eventId = "";
 	private ArrayList<String> arrGuestId = new ArrayList<String>();
+	private String rsvpDigits = "";
 
 	public String getEventId()
 	{
@@ -25,6 +26,16 @@ public class EventGuestMetaData
 	public void setArrGuestId(ArrayList<String> arrGuestId)
 	{
 		this.arrGuestId = arrGuestId;
+	}
+
+	public String getRsvpDigits()
+	{
+		return rsvpDigits;
+	}
+
+	public void setRsvpDigits(String rsvpDigits)
+	{
+		this.rsvpDigits = rsvpDigits;
 	}
 
 }

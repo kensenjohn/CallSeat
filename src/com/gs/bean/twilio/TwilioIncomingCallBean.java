@@ -3,6 +3,7 @@ package com.gs.bean.twilio;
 public class TwilioIncomingCallBean extends IncomingCallBean
 {
 
+	private String rsvpDigits = "";
 	private String apiVersion = "";
 	private String direction = "";
 	private String forwardFrom = "";
@@ -300,6 +301,16 @@ public class TwilioIncomingCallBean extends IncomingCallBean
 	public void setCallerZip(String callerZip)
 	{
 		this.callerZip = callerZip;
+	}
+
+	public String getRsvpDigits()
+	{
+		return rsvpDigits;
+	}
+
+	public void setRsvpDigits(String rsvpDigits)
+	{
+		this.rsvpDigits = rsvpDigits;
 	}
 
 	@Override

@@ -162,6 +162,7 @@
 				
 		function getResult(jsonResult)
 		{
+			alert(jsonResult.success)
 			if(!jsonResult.success)
 			{
 				var varResponse = jsonResult.response;

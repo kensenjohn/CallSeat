@@ -160,6 +160,23 @@ public class GuestData
 		return arrGuestBean;
 	}
 
+	public Integer updateGuestRsvpEvent(EventGuestBean eventGuestBean)
+	{
+		int numOfRowsInserted = 0;
+		if (eventGuestBean != null && eventGuestBean.getEventId() != null
+				&& eventGuestBean.getGuestId() != null
+				&& !"".equalsIgnoreCase(eventGuestBean.getEventId())
+				&& !"".equalsIgnoreCase(eventGuestBean.getGuestId()))
+		{
+			String sQuery = "UPDATE GTEVENTGUESTS SET RSVP_SEATS = ? WHERE FK_EVENTID = ? AND FK_GUESTID = ?";
+			ArrayList<Object> aParams = DBDAO.createConstraint(eventGuestBean.getRsvpSeats(),
+					eventGuestBean.getEventId(), eventGuestBean.getGuestId());
+			numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB, "GuestData.java",
+					"updateGuestRsvpEvent()");
+		}
+		return numOfRowsInserted;
+	}
+
 	public Integer assignGuestToEvent(EventGuestBean eventGuestBean)
 	{
 		/*
@@ -271,7 +288,8 @@ public class GuestData
 					+ " GU.IS_TMP AS USER_IS_TMP , GU.DEL_ROW AS USER_DEL_ROW, GU.CREATEDATE AS USER_CREATEDATE "
 					+ " FROM GTGUESTS GG ,  GTUSERINFO GU  where "
 					+ " GG.FK_USERINFOID = GU.USERINFOID AND ( GU.CELL_PHONE =?  OR GU.PHONE_NUM = ? )";
-			ArrayList<Object> aParams = DBDAO.createConstraint(telNumMetaData.getGuestTelNumber());
+			ArrayList<Object> aParams = DBDAO.createConstraint(telNumMetaData.getGuestTelNumber(),
+					telNumMetaData.getGuestTelNumber());
 
 			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(ADMIN_DB, sQuery,
 					aParams, false, "GuestData.java", "getGuestsByTelNumber()");
@@ -340,7 +358,7 @@ public class GuestData
 
 			String sQuery = "SELECT  GU.CELL_PHONE, GU.PHONE_NUM, GEG.EVENTGUESTID, GEG.FK_EVENTID, "
 					+ " GEG.FK_GUESTID , GEG.IS_TMP , GEG.DEL_ROW, GEG.RSVP_SEATS, "
-					+ " GEG.TOTAL_INVITED_SEATS FROM GTEVENTGUESTS GEG , GTUSERINFO GU, GTGUEST GG WHERE GEG.FK_GUESTID in ("
+					+ " GEG.TOTAL_INVITED_SEATS FROM GTEVENTGUESTS GEG , GTUSERINFO GU, GTGUESTS GG WHERE GEG.FK_GUESTID in ("
 					+ sGuestParam
 					+ ") AND GEG.FK_EVENTID = ? AND GG.GUESTID = GEG.FK_GUESTID AND GG.FK_USERINFOID = GU.USERINFOID ";
 

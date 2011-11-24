@@ -22,9 +22,9 @@ public class IncomingCallManager
 
 	private String SELECTED_CALL_SERVICE = applicationConfig.get(Constants.PROP_CALL_SERVICE);
 
-	public String processCall(IncomingCallBean incomingCallBean)
+	public CallResponse processCall(IncomingCallBean incomingCallBean)
 	{
-		String sResponse = "";
+		CallResponse callResponse = new CallResponse();
 		if (incomingCallBean != null)
 		{
 			ProcessCalls processCalls = null;
@@ -38,21 +38,11 @@ public class IncomingCallManager
 
 			if (processCalls != null)
 			{
-				processCalls.process();
+				callResponse = processCalls.process();
 			}
-			/*
-			 * if (Constants.TWILIO_CALL_STATUS.IN_PROGRESS.getCallStatus().
-			 * equalsIgnoreCase( incomingCallBean.getCallStatus())) { Response
-			 * response = new Response();
-			 * response.setSay("Hello, You are calling from " +
-			 * Utility.convertTelNumToDigits(incomingCallBean.getFrom()) +
-			 * ". The time is now " + DateSupport.getUTCDateTime()); try {
-			 * sResponse = Utility.getXmlFromBean(Response.class, response); }
-			 * catch (JAXBException e) {
-			 * appLogging.error("There was a telephony error."); } }
-			 */
+
 		}
-		return sResponse;
+		return callResponse;
 	}
 
 	private TwilioIncomingCallBean getTwilioIncomingCallBean(HttpServletRequest httpRequest)
@@ -76,10 +66,19 @@ public class IncomingCallManager
 						twilioIncomingCallBean.setAccountid(value);
 					} else if ("from".equalsIgnoreCase(paramKey))
 					{
+						if (value != null && value.startsWith("+"))
+						{
+							value = value.substring(1);
+						}
 						twilioIncomingCallBean.setFrom(value);
 					} else if ("to".equalsIgnoreCase(paramKey))
 					{
+						if (value != null && value.startsWith("+"))
+						{
+							value = value.substring(1);
+						}
 						twilioIncomingCallBean.setTo(value);
+
 					} else if ("callStatus".equalsIgnoreCase(paramKey))
 					{
 						twilioIncomingCallBean.setCallStatus(value);
@@ -149,6 +148,12 @@ public class IncomingCallManager
 					} else if ("callerZip".equalsIgnoreCase(paramKey))
 					{
 						twilioIncomingCallBean.setCallerZip(value);
+					} else if ("callerZip".equalsIgnoreCase(paramKey))
+					{
+						twilioIncomingCallBean.setCallerZip(value);
+					} else if ("Digits".equalsIgnoreCase(paramKey))
+					{
+						twilioIncomingCallBean.setRsvpDigits(value);
 					}
 				}
 			}

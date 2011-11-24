@@ -54,6 +54,8 @@ public class Constants
 	public static String PROP_CALL_SERVICE = "call_service";
 	public static String PROP_SMS_SERVICE = "sms_service";
 
+	public static String PROP_TWILIO_VOICE = "twilio_voice";
+
 	public enum CALL_SERVICE
 	{
 		TWILIO("twilio");
@@ -106,4 +108,16 @@ public class Constants
 			return this.sTask;
 		}
 	}
+
+	public enum CALL_TYPE
+	{
+		RSVP_FIRST_REQUEST, RSVP_DIGIT_RESP;
+
+	}
+
+	public enum RSVP_STATUS
+	{
+		RSVP_UPDATE_SUCCESS, RSVP_UPDATE_FAIL, RSVP_EXCEED_TOTAL_SEATS;
+	}
+
 }

@@ -6,6 +6,7 @@ public class TelNumberMetaData
 	private String eventTaskTelNumber = "";
 	private String eventId = "";
 	private String adminId = "";
+	private String digits = "";
 
 	public String getGuestTelNumber()
 	{
@@ -45,6 +46,16 @@ public class TelNumberMetaData
 	public void setAdminId(String adminId)
 	{
 		this.adminId = adminId;
+	}
+
+	public String getDigits()
+	{
+		return digits;
+	}
+
+	public void setDigits(String digits)
+	{
+		this.digits = digits;
 	}
 
 }

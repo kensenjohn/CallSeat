@@ -1,6 +1,7 @@
 package com.gs.task;
 
 import com.gs.bean.twilio.IncomingCallBean;
+import com.gs.call.CallResponse;
 
 public abstract class Task
 {
@@ -13,5 +14,5 @@ public abstract class Task
 		this.adminId = adminId;
 	}
 
-	public abstract void processTask(IncomingCallBean incomingCallBean);
+	public abstract CallResponse processTask(IncomingCallBean incomingCallBean);
 }
