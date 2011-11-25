@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gs.bean.EventBean;
 import com.gs.bean.EventGuestBean;
 import com.gs.bean.twilio.IncomingCallBean;
 import com.gs.bean.twilio.TwilioIncomingCallBean;
@@ -12,6 +13,7 @@ import com.gs.call.CallResponse;
 import com.gs.call.twilio.twiml.RsvpTwiml;
 import com.gs.common.Constants;
 import com.gs.common.ParseUtil;
+import com.gs.data.event.EventData;
 import com.gs.manager.event.EventGuestManager;
 import com.gs.manager.event.EventGuestMetaData;
 import com.gs.manager.event.TelNumberManager;
@@ -35,7 +37,7 @@ public class RsvpTask extends Task
 
 			RsvpTwiml rsvpTwiml = new RsvpTwiml();
 
-			if (Constants.CALL_TYPE.RSVP_FIRST_REQUEST.equals(incomingCallBean.getCallType()))
+			if (Constants.CALL_TYPE.FIRST_REQUEST.equals(incomingCallBean.getCallType()))
 			{
 				callResponse = processFirstResponseTask(incomingCallBean);
 				callResponse = rsvpTwiml.getFirstResponse(callResponse);
@@ -131,7 +133,11 @@ public class RsvpTask extends Task
 		TelNumberManager telNumManager = new TelNumberManager();
 		EventGuestBean eventGuestBean = telNumManager.getTelNumGuestDetails(telNumMetaData);
 
+		EventData eventData = new EventData();
+		EventBean eventBean = eventData.getEvent(eventGuestBean.getEventId());
+
 		callResponse.setEventGuestBean(eventGuestBean);
+		callResponse.setEventBean(eventBean);
 
 		return callResponse;
 	}
