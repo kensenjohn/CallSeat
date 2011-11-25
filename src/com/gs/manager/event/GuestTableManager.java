@@ -413,8 +413,15 @@ public class GuestTableManager
 
 	}
 
-	public void getTableGuests(String sEventId)
+	public ArrayList<TableGuestsBean> getGuestsAssignments(GuestTableMetaData guestTableMetaData)
 	{
-
+		ArrayList<TableGuestsBean> arrTableGuestBean = new ArrayList<TableGuestsBean>();
+		if (guestTableMetaData != null && guestTableMetaData.getGuestId() != null
+				&& !"".equalsIgnoreCase(guestTableMetaData.getGuestId()))
+		{
+			GuestTableData guestTableData = new GuestTableData();
+			arrTableGuestBean = guestTableData.getGuestAssgnments(guestTableMetaData.getGuestId());
+		}
+		return arrTableGuestBean;
 	}
 }

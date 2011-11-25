@@ -139,7 +139,7 @@ public class RsvpTwiml
 							+ eventGuestBean.getTotalNumberOfSeats()
 							+ " seats. Please enter the number of seats you would like to RSVP to after the beep. "
 							+ " Enter a the number of seats you would like to RSVP for followed by the pound sign.");
-			sayInfo.setVoice("woman");
+			sayInfo.setVoice(VOICE_ACTOR);
 			// sayInfo.setLoop(3);
 
 			Say sayThankYou = new Say("Thank You.");
