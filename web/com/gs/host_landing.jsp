@@ -1,6 +1,29 @@
+<%@ page import="org.json.JSONObject"%>
+<%@ page import="com.gs.common.*" %>
+
+<%
+String sUserId = "";
+Cookie[] cookies = request.getCookies();
+
+if(cookies!=null)
+{
+	for(int cookieCount = 0; cookieCount < cookies.length; cookieCount++) 
+	{ 
+		Cookie cookie1 = cookies[cookieCount];
+        if (Constants.COOKIE_APP_USERID.equals(cookie1.getName())) {
+        	sUserId = cookie1.getValue();
+        }
+	}
+}
+%>
+
 <jsp:include page="common/header_top.jsp"/>
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 
-<jsp:include page="common/header_bottom.jsp"/>
+<jsp:include page="common/header_bottom.jsp">
+	<jsp:param name="u_id" value="<%=sUserId %>" />
+	<jsp:param name="from_cookie" value="true" />
+</jsp:include>
+
 
 <body>
    <div class="page_setup">

@@ -67,6 +67,13 @@ background: -moz-linear-gradient(top, #dc3921, #ffb36a);
 filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#dc3921', endColorstr='#ffb36a');
 }
 
+table.cred_table
+{
+	text-align: left;
+	align:center;
+	border: 0px;
+}
+
 table.addtabledetail
 {
 	font-family:arial;

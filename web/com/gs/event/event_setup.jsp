@@ -80,6 +80,7 @@
 						<jsp:param name="admin_id" value="<%=sAdminId %>"/>
 						<jsp:param name="event_id" value="<%=sEventId %>"/>
 						<jsp:param name="select_action_nav" value="table_tab"/>
+						<jsp:param name="logged_in" value="false"/>
 					</jsp:include>
 				</div>
 				<div  class="clear_both" style="width: 100%;  text-align: center;">
@@ -116,6 +117,15 @@
 			'type'				: 'iframe'
 		});
 		$("#add_guest").fancybox({
+			'width'				: '75%',
+			'height'			: '75%',
+			'autoScale'			: false,
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			'type'				: 'iframe'
+		});
+		
+		$("#credentials").fancybox({
 			'width'				: '75%',
 			'height'			: '75%',
 			'autoScale'			: false,
@@ -179,44 +189,61 @@
 	var varHashTableId = '';
 	var varHashTables = '';
 	
-	function getTableGuestResult(jsonResult)
+	function processTableGuest( jsonResponseObj )
 	{
-		//alert(jsonResult.value);
+		var tableDetails = jsonResponseObj.table_detail;
 		
-		if(!jsonResult.success)
+		if(tableDetails!=undefined)
 		{
-			var varResponse = jsonResult.response;
-			if(varResponse!=undefined)
-			{
-				var varMessage = varResponse.error_message;
-				if(varMessage!=undefined && varMessage!= '' )
-				{
-					$("#err_mssg").text(varMessage);
-				}
-			}
+			var numOfRows = tableDetails.num_of_rows;
+			var allTables = tableDetails.tables;
+			
+			$("#div_table_details").tableformatter({
+				varTableDetails : tableDetails,
+				varDeleteTableURL : '/web/com/gs/event/proc_delete_table.jsp',
+				var_event_id : varEventID,
+				var_admin_id : varAdminID
+			});
+			applyActionEvents(tableDetails);
 			
 		}
-		else
+	}
+	function displayMessages(varArrMessages)
+	{
+		if(varArrMessages!=undefined)
 		{
-			//alert(jsonResult.success);
-			
-			var tableDetails = jsonResult.table_detail;
-			
-			if(tableDetails!=undefined)
+			for(var i = 0; i<varArrMessages.length; i++)
 			{
-				var numOfRows = tableDetails.num_of_rows;
-				var allTables = tableDetails.tables;
-				
-				$("#div_table_details").tableformatter({
-					varTableDetails : tableDetails,
-					varDeleteTableURL : '/web/com/gs/event/proc_delete_table.jsp',
-					var_event_id : varEventID,
-					var_admin_id : varAdminID
-				});
-				applyActionEvents(tableDetails);
-				
+				alert( varArrMessages[i].text );
 			}
-			
+		}
+	}
+	
+	function getTableGuestResult(jsonResult)
+	{
+		if(jsonResult!=undefined)
+		{
+			var varResponseObj = jsonResult.response;
+			if(jsonResult.status == 'error'  && varResponseObj !=undefined )
+			{
+				var varIsMessageExist = varResponseObj.is_message_exist;
+				if(varIsMessageExist == true)
+				{
+					var jsonResponseMessage = varResponseObj.messages;
+					var varArrErrorMssg = jsonResponseMessage.error_mssg
+					displayMessages( varArrErrorMssg );
+				}
+			}
+			else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+			{
+				var varIsPayloadExist = varResponseObj.is_payload_exist;
+				
+				if(varIsPayloadExist == true)
+				{
+					var jsonResponseObj = varResponseObj.payload;
+					processTableGuest( jsonResponseObj );
+				}
+			}
 		}
 	}
 	
