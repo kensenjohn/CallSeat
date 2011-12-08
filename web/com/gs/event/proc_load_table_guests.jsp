@@ -104,7 +104,7 @@ try
 	responseObject.setResponseStatus(responseStatus);
 	responseObject.setJsonResponseObj(jsonResponseObj);
 	
-	out.println(responseObject.getRespJsonObject());
+	out.println(responseObject.getJson());
 }
 catch(Exception e)
 {
@@ -115,6 +115,6 @@ catch(Exception e)
 	responseObject.setResponseStatus(RespConstants.Status.ERROR);
 	responseObject.setJsonResponseObj(jsonResponseObj);
 	
-	out.println(responseObject.getRespJsonObject());
+	out.println(responseObject.getJson());
 }
 %>
