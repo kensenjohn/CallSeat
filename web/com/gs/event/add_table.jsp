@@ -57,17 +57,17 @@
 			var methodType = "POST";
 			
 			dataString = dataString + '&save_data=y';
-			submitTableData(actionUrl,dataString,methodType);
+			submitTableData(actionUrl,dataString,methodType,getResult);
 		}
 		
-		function submitTableData(actionUrl,dataString,methodType)
+		function submitTableData(actionUrl,dataString,methodType, callBackMethod)
 		{
 			$.ajax({
 				  url: actionUrl ,
 				  type: methodType ,
 				  dataType: "json",
 				  data: dataString ,
-				  success: getResult,
+				  success: callBackMethod,
 				  error:function(a,b,c)
 				  {
 					  alert(a.responseText + ' = ' + b + " = " + c);
@@ -75,30 +75,47 @@
 				});
 		}
 		
+		function displayMessages(varArrMessages)
+		{
+			if(varArrMessages!=undefined)
+			{
+				for(var i = 0; i<varArrMessages.length; i++)
+				{
+					alert( varArrMessages[i].text );
+				}
+			}
+		}
+		
 		function getResult(jsonResult)
 		{
 			//alert(jsonResult.value);
-			
-			if(!jsonResult.success)
+			if(jsonResult!=undefined)
 			{
-				var varResponse = jsonResult.response;
-				if(varResponse!=undefined)
+				var varResponseObj = jsonResult.response;
+				if(jsonResult.status == 'error'  && varResponseObj !=undefined )
 				{
-					var varMessage = varResponse.error_message;
-					if(varMessage!=undefined && varMessage!= '' )
+					var varIsMessageExist = varResponseObj.is_message_exist;
+					if(varIsMessageExist == true)
 					{
-						$("#err_mssg").text(varMessage);
+						var jsonResponseMessage = varResponseObj.messages;
+						var varArrErrorMssg = jsonResponseMessage.error_mssg
+						displayMessages( varArrErrorMssg );
 					}
 				}
-				
+				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+				{
+					var varIsPayloadExist = varResponseObj.is_payload_exist;
+					
+					if(varIsPayloadExist == true)
+					{
+						//var jsonResponseObj = varResponseObj.payload;
+						//processTableGuest( jsonResponseObj );
+						
+						parent.loadTables();
+						parent.$.fancybox.close();
+					}
+				}
 			}
-			else
-			{
-				parent.loadTables();
-				parent.$.fancybox.close();
-				
-			}
-			
 		}
 	</script>
 </html>

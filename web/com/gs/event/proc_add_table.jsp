@@ -4,12 +4,21 @@
 <%@page import="org.json.*" %>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
+<%@ page import="java.util.*"%>
+<%@page import="com.gs.json.*"%>
 <%
 JSONObject jsonResponseObj = new JSONObject();
 
 Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 Logger appLogging = LoggerFactory.getLogger("AppLogging");
 response.setContentType("application/json");
+
+ArrayList<Text> arrOkText = new ArrayList<Text>();
+ArrayList<Text> arrErrorText = new ArrayList<Text>();
+RespConstants.Status responseStatus = RespConstants.Status.ERROR;
+
+RespObjectProc responseObject = new RespObjectProc();
+
 try
 {
 
@@ -31,12 +40,19 @@ try
 
 		appLogging.warn("Error in data to create Table for event " + sEventId );
 		
-		jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
+		//jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
 		
+		/*
 		JSONObject jsonErrMessage = new JSONObject();
 		jsonErrMessage.put(Constants.J_RESP_ERR_MSSG, "Please fill in all the fields" );
 		
-		jsonResponseObj.put(Constants.J_RESP_RESPONSE,jsonErrMessage);
+		jsonResponseObj.put(Constants.J_RESP_RESPONSE,jsonErrMessage);*/
+		
+		
+		Text errorText = new ErrorText("Please fill in all the fields.","my_id") ;		
+		arrErrorText.add(errorText);
+		
+		responseStatus = RespConstants.Status.ERROR;
 		
 	}
 	
@@ -74,47 +90,80 @@ try
 				
 				if(eventTableBean!=null && !"".equalsIgnoreCase(eventTableBean.getEventTableId()))
 				{
-					jsonResponseObj.put(Constants.J_RESP_SUCCESS, true);
+					//jsonResponseObj.put(Constants.J_RESP_SUCCESS, true);
 					jsonResponseObj.put("value","1");
+					
+					Text okText = new OkText("Loading Data Complete ","my_id");		
+					arrOkText.add(okText);
+					responseStatus = RespConstants.Status.OK;
 				}
 				else
 				{
 					appLogging.error("Error assigning table : " + tableBean.getTableId() + "  to event : " + sEventId);
-					jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
+					/*jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
 					
 					JSONObject jsonErrMessage = new JSONObject();
 
 					jsonErrMessage.put(Constants.J_RESP_ERR_MSSG, "The table could not be assigned to the event." );
 					
-					jsonResponseObj.put(Constants.J_RESP_RESPONSE,jsonErrMessage);
+					jsonResponseObj.put(Constants.J_RESP_RESPONSE,jsonErrMessage);*/
+					
+					Text errorText = new ErrorText("The table could not be assigned to the event.","my_id") ;		
+					arrErrorText.add(errorText);
+					
+					responseStatus = RespConstants.Status.ERROR;
 				}
 			}
 			else
 			{
 				appLogging.error("Error creating table for " + sEventId + " table : " + tableBean.getTableId() );
 				
-				jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
+				/*jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
 				
 				JSONObject jsonErrMessage = new JSONObject();
 				jsonErrMessage.put(Constants.J_RESP_ERR_MSSG, "Please try again later." );
 				
-				jsonResponseObj.put(Constants.J_RESP_RESPONSE,jsonErrMessage);
+				jsonResponseObj.put(Constants.J_RESP_RESPONSE,jsonErrMessage);*/
+				
+				Text errorText = new ErrorText("Please try again later.","my_id") ;		
+				arrErrorText.add(errorText);
+				
+				responseStatus = RespConstants.Status.ERROR;
 			}
 		}
 		
 	}
 	else
 	{
-		jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
+		//jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
+		
+		Text errorText = new ErrorText("Oops!! Your request could not be processed at this time.","my_id") ;		
+		arrErrorText.add(errorText);
+		
+		responseStatus = RespConstants.Status.ERROR;
 	}
+	
 	appLogging.error("Response " + sEventId + " table : " + jsonResponseObj.toString());
-	out.println(jsonResponseObj);
+	responseObject.setErrorMessages(arrErrorText);
+	responseObject.setOkMessages(arrOkText);
+	responseObject.setResponseStatus(responseStatus);
+	responseObject.setJsonResponseObj(jsonResponseObj);
+	
+	out.println(responseObject.getJson());
 }
 catch(Exception e)
 {
-	jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
+	//jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
 	appLogging.error("Error creating table " );
-	out.println(jsonResponseObj);
+	
+	Text errorText = new ErrorText("Oops!! Your request could not be processed at this time.","my_id") ;		
+	arrErrorText.add(errorText);
+	
+	responseObject.setErrorMessages(arrErrorText);
+	responseObject.setResponseStatus(RespConstants.Status.ERROR);
+	responseObject.setJsonResponseObj(jsonResponseObj);
+	
+	out.println(responseObject.getJson());
 	
 }
 %>

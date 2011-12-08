@@ -5,15 +5,13 @@ import java.util.ArrayList;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class RespObjectProc
-{
+public class RespObjectProc {
 	ArrayList<Text> arrOkText = new ArrayList<Text>();
 	ArrayList<Text> arrErrorText = new ArrayList<Text>();
 	JSONObject jsonResponseObj = new JSONObject();
 	RespConstants.Status responseStatus = RespConstants.Status.ERROR;
 
-	public JSONObject getRespJsonObject() throws JSONException
-	{
+	public JSONObject getJson() throws JSONException {
 		Messages messages = new Messages();
 		messages.setArrOkText(this.arrOkText);
 		messages.setArrErrorText(this.arrErrorText);
@@ -30,23 +28,19 @@ public class RespObjectProc
 		return respJsonObj.toJson();
 	}
 
-	public void setErrorMessages(ArrayList<Text> arrErrorText)
-	{
+	public void setErrorMessages(ArrayList<Text> arrErrorText) {
 		this.arrErrorText = arrErrorText;
 	}
 
-	public void setOkMessages(ArrayList<Text> arrOkText)
-	{
+	public void setOkMessages(ArrayList<Text> arrOkText) {
 		this.arrOkText = arrOkText;
 	}
 
-	public void setJsonResponseObj(JSONObject jsonResponseObj)
-	{
+	public void setJsonResponseObj(JSONObject jsonResponseObj) {
 		this.jsonResponseObj = jsonResponseObj;
 	}
 
-	public void setResponseStatus(RespConstants.Status responseStatus)
-	{
+	public void setResponseStatus(RespConstants.Status responseStatus) {
 		this.responseStatus = responseStatus;
 	}
 }

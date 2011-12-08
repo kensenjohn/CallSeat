@@ -4,6 +4,7 @@ String sEventDate = ParseUtil.checkNull(request.getParameter("hid_event_date"));
 String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 String sSelectTab = ParseUtil.checkNull(request.getParameter("select_action_nav"));
+boolean isLoggedIn = ParseUtil.sTob(request.getParameter("logged_in"));
 
 
 %>
@@ -44,14 +45,28 @@ String sSelectTab = ParseUtil.checkNull(request.getParameter("select_action_nav"
 <%
 	if("table_tab".equalsIgnoreCase(sSelectTab))
 	{
+		if( isLoggedIn==true )
+		{
 %>
-		<li   style="width:25%;" >
-			<a class="action_button" href="../event/get_a_number.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" id="add_guest">Get a Phone Number</a>
-		</li>
-		<li style="width:5%">
-			<span>&nbsp;</span>
-		</li>
+			<li   style="width:25%;" >
+				<a class="action_button" href="../event/get_a_number.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" id="add_guest">Get a Phone Number</a>
+			</li>
+			<li style="width:5%">
+				<span>&nbsp;</span>
+			</li>
+<%	
+		}
+		else
+		{
+%>
+			<li   style="width:25%;" >
+				<a class="action_button" href="../common/credential.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" id="credentials">Get a Phone Number</a>
+			</li>
+			<li style="width:5%">
+				<span>&nbsp;</span>
+			</li>
 <%
+		}
 	}
 %>
 
