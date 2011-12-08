@@ -1,3 +1,8 @@
+#Query to update a number for the event
+
+update GTTELNUMBERS SET TELNUMBER = '14155992671', FK_EVENTID='8f337e98-714e-4249-b1e0-aeed47741b7c',FK_ADMINID='11d12027-e1b2-495b-8f74-ab5a16a3cd0c' WHERE TELNUMBERID='0b5d55ae-049f-4ec9-906a-a11b58dd4be7';
+
+
 #command to create the database
 #create database guestadmin;
 

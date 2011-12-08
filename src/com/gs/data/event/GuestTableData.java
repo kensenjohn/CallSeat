@@ -221,4 +221,56 @@ public class GuestTableData
 		return iNumOfRows;
 	}
 
+	public ArrayList<TableGuestsBean> getGuestAssgnments(String sGuestId)
+	{
+		ArrayList<TableGuestsBean> arrTableGuestBean = new ArrayList<TableGuestsBean>();
+		if (sGuestId != null && !"".equalsIgnoreCase(sGuestId))
+		{
+			String sQuery = "select GTB.TABLEID,GTB.TABLENAME,GTB.TABLENUM,GTB.NUMOFSEATS,GTB.IS_TMP,GTB.DEL_ROW, "
+					+ " GTB.CREATEDATE,GTB.FK_ADMINID,GTB.MODIFYDATE,GTB.MODIFIEDBY,GTB.HUMAN_CREATEDATE,GTB.HUMAN_MODIFYDATE, "
+					+ " GTG.TABLEGUESTID,GTG.FK_TABLEID,GTG.FK_GUESTID,GTG.IS_TMP,GTG.DEL_ROW,GTG.ASSIGNED_SEATS FROM GTTABLE GTB, "
+					+ " GTTABLEGUESTS GTG WHERE GTG.FK_GUESTID=? "
+					+ " and GTG.FK_TABLEID = GTB.TABLEID";
+
+			ArrayList<Object> aParams = DBDAO.createConstraint(sGuestId);
+
+			ArrayList<HashMap<String, String>> arrGuestAssignment = DBDAO.getDBData(ADMIN_DB,
+					sQuery, aParams, false, "GuestTableData.java", "getGuestAssgnments()");
+
+			if (arrGuestAssignment != null && !arrGuestAssignment.isEmpty())
+			{
+				for (HashMap<String, String> hmGuestAssignment : arrGuestAssignment)
+				{
+					TableGuestsBean tableGuestsBean = new TableGuestsBean();
+					tableGuestsBean.setGuestAssignedSeats(ParseUtil.checkNull(hmGuestAssignment
+							.get("ASSIGNED_SEATS")));
+
+					tableGuestsBean.setGuestId(ParseUtil.checkNull(hmGuestAssignment
+							.get("FK_GUESTID")));
+
+					tableGuestsBean.setAdminId(ParseUtil.checkNull(hmGuestAssignment
+							.get("FK_ADMINID")));
+
+					tableGuestsBean.setCreateDate(ParseUtil.sToL(hmGuestAssignment
+							.get("CREATEDATE")));
+					tableGuestsBean
+							.setTableId(ParseUtil.checkNull(hmGuestAssignment.get("TABLEID")));
+					tableGuestsBean.setTableName(ParseUtil.checkNull(hmGuestAssignment
+							.get("TABLENAME")));
+					tableGuestsBean.setTableNum(ParseUtil.checkNull(hmGuestAssignment
+							.get("TABLENUM")));
+					tableGuestsBean.setNumOfSeats(ParseUtil.checkNull(hmGuestAssignment
+							.get("NUMOFSEATS")));
+					tableGuestsBean.setIsTemporary(ParseUtil.checkNull(hmGuestAssignment
+							.get("IS_TMP")));
+					tableGuestsBean.setDelelteRow(ParseUtil.checkNull(hmGuestAssignment
+							.get("DEL_ROW")));
+
+					arrTableGuestBean.add(tableGuestsBean);
+				}
+			}
+
+		}
+		return arrTableGuestBean;
+	}
 }
