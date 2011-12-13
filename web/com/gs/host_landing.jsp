@@ -24,8 +24,31 @@ if(cookies!=null)
 	<jsp:param name="from_cookie" value="true" />
 </jsp:include>
 
+<body >
+	<div class="container rounded-corners">
+		<jsp:include page="common/top_nav.jsp"/>
+		
+		<div class="main_body">
+			<div>
+						<h2>Seating your Guests, with a phone call.</h2>
+			</div>
+			<div class="landing_when">
+				<h3>When is the Event?</h3><br>
+				<form id="frm_event_dt" name="frm_event_dt">
+					<input type="text" id="event_date" class="span4" placeholder="Event Date" name="event_date">
+				</form>
+				<br>
+				<button id="event_dt_sbt" name="event_dt_sbt" class="action_button primary large ">Submit</button>
+							<form id="call_forward" name="call_forward"  method="POST">
+								<input type="hidden" id="hid_event_date" name="hid_event_date" value="">
+								<input type="hidden" id="from_landing" name="from_landing" value="">
+							</form>
+			</div>
+		</div>
+	</div>
+</body>
 
-<body>
+<!-- <body class="container">
    <div class="page_setup">
 		<div class="container rounded-corners">
 			<jsp:include page="common/top_nav.jsp"/>
@@ -53,7 +76,7 @@ if(cookies!=null)
 		</div>
 		
 	</div>
-</body>
+</body>  -->
 <script type="text/javascript" src="/web/js/jquery.datepick.js"></script> 
 
 <jsp:include page="common/footer_top.jsp"/>
