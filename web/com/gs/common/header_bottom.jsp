@@ -12,13 +12,13 @@
 
 <%
 	boolean isFromCookie = ParseUtil.sTob(request.getParameter("from_cookie"));
-	
+	boolean isSignedIn = false;
 	HttpSession  reqSession = request.getSession(false);
 	if(reqSession!=null)
 	{
 		AdminBean adminBean = (AdminBean) reqSession.getAttribute(Constants.USER_SESSION);
 		
-		boolean isSignedIn = false;
+		
 		String sFirstName = "";
 		if( adminBean!=null && adminBean.isAdminExists() )
 		{
