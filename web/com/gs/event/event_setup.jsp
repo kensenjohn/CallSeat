@@ -8,6 +8,7 @@
 
 <jsp:include page="../common/header_top.jsp"/>
 <jsp:include page="../common/header_bottom.jsp"/>
+<%@include file="../common/header_bottom.jsp"%>
 
 <%
 	Logger jspLogging = LoggerFactory.getLogger("JspLogging");
@@ -80,7 +81,7 @@
 						<jsp:param name="admin_id" value="<%=sAdminId %>"/>
 						<jsp:param name="event_id" value="<%=sEventId %>"/>
 						<jsp:param name="select_action_nav" value="table_tab"/>
-						<jsp:param name="logged_in" value="false"/>
+						<jsp:param name="logged_in" value="<%=isSignedIn %>"/>
 					</jsp:include>
 				</div>
 				<div  class="clear_both" style="width: 100%;  text-align: center;">
@@ -192,7 +193,6 @@
 	function processTableGuest( jsonResponseObj )
 	{
 		var tableDetails = jsonResponseObj.table_detail;
-		
 		if(tableDetails!=undefined)
 		{
 			var numOfRows = tableDetails.num_of_rows;

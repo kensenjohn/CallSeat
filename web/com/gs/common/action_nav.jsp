@@ -49,7 +49,7 @@ boolean isLoggedIn = ParseUtil.sTob(request.getParameter("logged_in"));
 		{
 %>
 			<li   style="width:25%;" >
-				<a class="action_button" href="../event/get_a_number.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" id="add_guest">Get a Phone Number</a>
+				<a class="action_button" href="../event/phone_number.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" id="add_guest">Phone Number</a>
 			</li>
 			<li style="width:5%">
 				<span>&nbsp;</span>
