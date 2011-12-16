@@ -9,58 +9,43 @@
 <%
 
 	String sSelectedTab = ParseUtil.checkNull(request.getParameter("select_tab"));
+	String sHeaderTxt = ParseUtil.checkNull(request.getParameter("lobby_header"));
+	String sSecHeaderTxt = ParseUtil.checkNull(request.getParameter("lobby_sec_header"));
+	
+	int iSpanNum = 5;
+
 %>
-<div style="width:100%;">
-	<ul class="lobby_tabs">
-		<li class="blank show_base select">&nbsp;</li>
-<%
-	if( "event_tab".equalsIgnoreCase(sSelectedTab) )
-	{
-%>
-		<li id="lnk_event_id" class="event_button select rounded">New Event</li>
-<%
-	}
-	else
-	{
-%>
-		<li id="lnk_event_id" class="event_button unselect rounded show_base">New Event</li>
-<%
-	}
-%>
-		<li class="blank show_base select">&nbsp;</li>	
-<%
-	if( "guest_tab".equalsIgnoreCase(sSelectedTab) )
-	{
-%>
-		<li id="lnk_guest_id" class="normal_button select rounded">Guests</li>
-<%
-	}
-	else
-	{
-%>
-		<li id="lnk_guest_id" class="normal_button unselect rounded show_base">Guests</li>
-<%
-	}
-%>			
+<div style="width:100%;clear:both;margin-left:5px;margin-right:5px;">
+	
+	<section id="lobby_section">
+		<div class="row">
 		
-		<li class="blank show_base select">&nbsp;</li>	
+			<div class="span6">
+				<div class="row">
+					<div class="span4">
+						<h2 class="txt" id="primary_header"><%=sHeaderTxt%></h2>
+					</div>
+					<div class="span2">
+						<h4 class="txt" id="secondary_header">(<%=sSecHeaderTxt%>)</h4>
+					</div>
+				</div>
+			</div>
+			<div class="span10">
+				<div class="row">
+					<div class="span3 txt_center">
+						&nbsp;
+					</div>
+					<div class="span3 txt_center">
+						<button id="lnk_guest_id" name="lnk_guest_id" class="action_button primary large ">All Guests</button>
+					</div>
+					<div class="span3 txt_center">
+						<button id="event_dt_sbt" name="event_dt_sbt" class="action_button primary large ">Lobby</button>
+					</div>
+				</div>			
+			</div>
+		</div>
 		
-<%
-	if( "dashboard_tab".equalsIgnoreCase(sSelectedTab) )
-	{
-%>
-		<li id="lnk_dashboard_id" class="normal_button select rounded">Dashboard</li>
-<%
-	}
-	else
-	{
-%>
-		<li id="lnk_dashboard_id" class="normal_button unselect rounded show_base">Dashboard</li>
-<%
-	}
-%>	
-		<li class="blank show_base select">&nbsp;</li>	
-	</ul>
+	</section>
 </div>
 <form id="frm_lobby_tab" method="POST" action="">
 	<input type="hidden" id="lobby_event_id"  name="lobby_event_id" value=""/>

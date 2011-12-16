@@ -18,6 +18,7 @@ if(cookies!=null)
 %>
 
 <jsp:include page="common/header_top.jsp"/>
+<jsp:include page="common/security.jsp"/>
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 
 <jsp:include page="common/header_bottom.jsp">
 	<jsp:param name="u_id" value="<%=sUserId %>" />

@@ -8,114 +8,37 @@ boolean isLoggedIn = ParseUtil.sTob(request.getParameter("logged_in"));
 
 
 %>
-<div class="horiz_nav" style="padding:1px;">
-	
-	<ul class="action_tabs">
+<div class="horiz_nav" style="padding:1px;" id='action_nav_div'>
+		<div class="row" id="table_action_nav"  style="display:none;">
+			<div class="span7">
+				<div class="row">
+					<div class="span2 txt_center">
+						<button id="add_table" name="add_table" href="../event/add_table.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="action_button default small ">Add Table</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
+		<div class="row" id="invite_guest_action_nav" style="display:none;">
+			<div class="span7">
+				<div class="row">
+					<div class="span2 txt_center">
+						<button id="add_guest" name="add_guest" href="../event/add_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="action_button default small ">Add Guest</button>
+					</div>
+					<div class="span2 txt_center">
+						<button id="invite_guest" name="invite_guest" href="../event/add_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="action_button default small ">Invite Guest</button>
+					</div>
+					<div class="span2 txt_center">
+						<button id="assign_seats" name="assign_seats" href="../event/add_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="action_button default small ">Assign Seats</button>
+					</div>
+				</div>
+			</div>
+		</div>
 
-<%
-	if("table_tab".equalsIgnoreCase(sSelectTab))
-	{
-%>
-		<li>
-			<a class="action_button" href="../event/add_table.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" id="add_table">Add Table</a>
-		</li>
-		<li style="width:5%">
-			<span>&nbsp;</span>
-		</li>
-<%
-	}
-%>
-
-<%
-	if("table_tab".equalsIgnoreCase(sSelectTab))
-	{
-%>
-		<li  style="width:15%;">
-			<a class="action_button" href="../event/add_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" id="add_guest">Add Guest</a>
-		</li>
-		<li style="width:5%">
-			<span>&nbsp;</span>
-		</li>
-<%
-	}
-%> 
+	<ul>
 
 
 
-<%
-	if("table_tab".equalsIgnoreCase(sSelectTab))
-	{
-		if( isLoggedIn==true )
-		{
-%>
-			<li   style="width:25%;" >
-				<a class="action_button" href="../event/phone_number.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" id="add_guest">Phone Number</a>
-			</li>
-			<li style="width:5%">
-				<span>&nbsp;</span>
-			</li>
-<%	
-		}
-		else
-		{
-%>
-			<li   style="width:25%;" >
-				<a class="action_button" href="../common/credential.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" id="credentials">Get a Phone Number</a>
-			</li>
-			<li style="width:5%">
-				<span>&nbsp;</span>
-			</li>
-<%
-		}
-	}
-%>
-
-<%
-	if("table_tab".equalsIgnoreCase(sSelectTab))
-	{
-%>		<li style="width:25%">
-			<span>&nbsp;</span>
-		</li>
-		<li  >
-			<span class="action_link" id="event_config"  name="event_config"">Event Configuration</span>
-		</li>
-		<li style="width:5%">
-			<span>&nbsp;</span>
-		</li>
-<%
-	}
-%>
-
-<%
-	if("table_tab".equalsIgnoreCase(sSelectTab))
-	{
-%>
-		<li style="width:15%">
-			<span>&nbsp;</span>
-		</li>
-		<li>
-			<select id="dd_view">
-				<option id="opt_table_view"  value="table_view">Table View</option>
-				<option id="opt_guest_view"  value="guest_view">Guest View</option>
-			</select>
-		</li>
-		<li style="width:5%">
-			<span>&nbsp;</span>
-		</li>
-<%
-	}
-%>
-
-<%
-	if("all_guest_tab".equalsIgnoreCase(sSelectTab))
-	{
-%>
-		<li>
-			<a class="action_button" href="../event/add_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>&all_guest_tab=true" id="add_all_guests">Add Guest</a>
-		</li>
-<%
-	}
-%>
 
 	<!-- 	<li>
 			<a class="action_button" href="http://blog.uber.com" id="">Save</a>

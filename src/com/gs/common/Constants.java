@@ -128,4 +128,6 @@ public class Constants {
 	public static String PROP_TWILIO_REST_API_VERSION = "twilio_rest_api_version";
 	public static String PROP_TWILIO_API_DOMAIN = "twilio_api_domain";
 
+	public static String OWSAPI_POLICY_FILE = "owsapi_policy";
+
 }

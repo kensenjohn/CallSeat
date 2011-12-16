@@ -37,7 +37,8 @@
 		{
 			create_table : function()
 			{
-				return '<table cellspacing="1" class="addtabledetail" id="table_details"> '+this.create_header()+''+this.create_rows()+'</table>';
+				return '<table cellspacing="1" id="table_details" class="bordered-table zebra-striped"> '+this.create_header()+''+this.create_rows()+'</table>';
+				
 			},
 			create_header : function ()
 			{
@@ -56,14 +57,14 @@
 				var varOddClass = '';
 				for( i=0; i<numOfRows; i++ )
 				{
-					if(i%2==0)
+					/*if(i%2==0)
 					{
 						varOddClass = '';
 					}
 					else 
 					{
-						varOddClass = 'class="odd"';
-					}
+						varOddClass = 'class="odd"'; 
+					}*/
 					var tmpTable = allTables[i];
 					
 					if(tmpTable.table_id != '')
@@ -99,7 +100,7 @@
 				actionLinks = actionLinks + this.create_guest_table( single_table_detail ) + '&nbsp;&nbsp;&nbsp;';
 				actionLinks = actionLinks + this.create_delete_table( single_table_detail );
 				
-				actionLinks = '<div class="action_column">' + actionLinks + '</div>';
+				actionLinks = '<div>' + actionLinks + '</div>';
 				
 				return actionLinks;
 			},

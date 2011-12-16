@@ -1,21 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 <%@ page import="com.gs.common.*"%>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	
-	
-  	<link type="text/css" rel="stylesheet" href="/web/css/style.css" /> 
-  	   
-    <!--[if lte IE 8]>
-      <script type="text/javascript" src="/web/js/html5.js"></script>
-    <![endif]--> 
-    
-     <script type="text/javascript" src="/web/js/jquery-1.6.1.js"></script> 
-     
-	</head>
+
+<jsp:include page="../common/header_top.jsp"/>
+<jsp:include page="../common/security.jsp"/>
+<%@include file="../common/header_bottom.jsp"%>
 	<body>
 	<%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
@@ -24,21 +13,39 @@
 		
 		jspLogging.info("Add Table for event : " + sEventId + " by : " + sAdminId);
 	%>
-		<div class="box_container rounded-corners fill_box">
+		<div class="container-filler rounded-corners" >
 			<div style="padding:20px">
-				<div style="text-align:center;" ><span class="l_txt" style="padding:10px;" >Table Details</span></div><br/>
-				<div>
-				<form id="frm_add_table" name="frm_add_table">
-				<span>Table Name :</span> <input type="text" id="table_name" name="table_name"/><br>
-				Table Number : <input type="text" id="table_num" name="table_num"/><br>
-				Number of Seats : <input type="text" id="num_of_seats" name="num_of_seats"/><br/><br/>
-				<div>
-					<a class="action_button"  id="add_table" name="add_table">Add Table</a>
-				</div>
-				
-				<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
-				<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
-				</form>
+				<h2 class="txt txt_center">Add a Table</h2>
+				<div class="row">
+					<div class="span7">
+						<form id="frm_add_table" >
+							<fieldset>
+								<div class="clearset">
+									<label for="table_name">Table Name :</label>
+									<div class="input">
+										<input type="text" id="table_name" name="table_name"/>
+									</div>
+								</div>
+								<div class="clearset">
+									<label for="table_name">Table Number :</label>
+									<div class="input">
+										<input type="text" id="table_num" name="table_num"/>
+									</div>
+								</div>
+								<div class="clearset">
+									<label for="table_name">Number of Seats :</label>
+									<div class="input">
+										<input type="text" id="num_of_seats" name="num_of_seats"/>
+									</div>
+								</div>	
+								<div class="actions">									
+						            <button id="add_table" name="add_table" type="button" class="action_button primary small">Add Table</button>
+						        </div>							
+							</fieldset>
+							<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+							<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
+						</form>
+					</div>			
 				</div>
 				<span id="err_mssg"></span>
 			</div>
@@ -57,13 +64,14 @@
 			var methodType = "POST";
 			
 			dataString = dataString + '&save_data=y';
+			alert(dataString);
 			submitTableData(actionUrl,dataString,methodType,getResult);
 		}
 		
 		function submitTableData(actionUrl,dataString,methodType, callBackMethod)
 		{
 			$.ajax({
-				  url: actionUrl ,
+				  url: actionUrl,
 				  type: methodType ,
 				  dataType: "json",
 				  data: dataString ,

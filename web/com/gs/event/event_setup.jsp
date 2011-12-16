@@ -7,8 +7,9 @@
 
 
 <jsp:include page="../common/header_top.jsp"/>
+
+<%@include file="../common/security.jsp"%>
 <jsp:include page="../common/header_bottom.jsp"/>
-<%@include file="../common/header_bottom.jsp"%>
 
 <%
 	Logger jspLogging = LoggerFactory.getLogger("JspLogging");
@@ -62,6 +63,11 @@
 	
 	sEventId = eventBean.getEventId();
 	sAdminId = adminBean.getAdminId();
+	
+	String eventName = eventBean.getEventName();
+	String eventDate = "10/12/2011";
+	
+	eventDate = "10/12/2011";
 %>
 <link rel="stylesheet" type="text/css" href="/web/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="/web/css/blue/style.css" media="screen" />
@@ -70,25 +76,34 @@
 <body>
    <div class="page_setup">
 		<div class="container rounded-corners">
+			<div style="margin:5px;">
 			<jsp:include page="../common/top_nav.jsp"/>
 			<jsp:include page="lobby_tab.jsp">
 				<jsp:param name="select_tab" value="event_tab"/>
+				<jsp:param name="lobby_header" value="<%=eventName %>"/>
+				<jsp:param name="lobby_sec_header" value="<%=eventDate %>"/>
 			</jsp:include>
 			<div class="main_body">
 				<div class="clear_both landing_input">					
-											
+					<jsp:include page="../common/tab_view_nav.jsp">
+						<jsp:param name="admin_id" value="<%=sAdminId %>"/>
+					</jsp:include>	
 					<jsp:include page="../common/action_nav.jsp">
 						<jsp:param name="admin_id" value="<%=sAdminId %>"/>
 						<jsp:param name="event_id" value="<%=sEventId %>"/>
 						<jsp:param name="select_action_nav" value="table_tab"/>
 						<jsp:param name="logged_in" value="<%=isSignedIn %>"/>
-					</jsp:include>
+					</jsp:include> 
 				</div>
 				<div  class="clear_both" style="width: 100%;  text-align: center;">
+				<div  class="clear_both" id="tab_view_area">
+					
+				</div>
 				<div  class="clear_both" id="div_table_details">
 					
 				</div>
 				</div>
+			</div>
 			</div>
 		</div>
 	</div>
@@ -107,11 +122,33 @@
 	var varAdminID = '<%=sAdminId%>'
 	$(document).ready(function() {
 		
+		$("#event_summary_tab").click(function(){
+			displayTableView('li_event_summary');
+			toggleActionNavs('');
+		});
+		$("#table_view_tab").click(function(){
+			displayTableView('li_table_view');
+			toggleActionNavs('table_action_nav');
+		});
+		$("#guest_view_tab").click(function(){
+			displayGuestView('li_guest_view');
+
+			toggleActionNavs('invite_guest_action_nav');
+		});
+		$("#phone_num_tab").click(function(){
+			displayTableView('li_phone_num');
+
+			toggleActionNavs('');
+		});
+		$("#table_action_nav").show();
+		
+		
 		$("#sched_date").datepick();
+		
 		
 		$("#add_table").fancybox({
 			'width'				: '75%',
-			'height'			: '75%',
+			'height'			: '80%',
 			'autoScale'			: false,
 			'transitionIn'		: 'none',
 			'transitionOut'		: 'none',
@@ -119,7 +156,7 @@
 		});
 		$("#add_guest").fancybox({
 			'width'				: '75%',
-			'height'			: '75%',
+			'height'			: '90%',
 			'autoScale'			: false,
 			'transitionIn'		: 'none',
 			'transitionOut'		: 'none',
@@ -138,6 +175,41 @@
 		loadActions();
 		loadTables();
 	});
+	
+	function toggleActionNavs(action_nav_id)
+	{
+		$("#action_nav_div div").each(function(index){
+			$(this).hide();
+		});
+		if(action_nav_id!=undefined && action_nav_id!='')
+		{
+			$("#"+action_nav_id).show();
+		}
+		
+		
+		
+	}
+	
+	function switchTab(current_tab_id)
+	{
+		$('#div_tab_nav li').each(function(index) {
+		    $(this).removeClass('active');
+		});
+		$('#'+current_tab_id).addClass('active');
+		
+	}
+	
+	function displayTableView(tab_id)
+	{
+		switchTab(tab_id);
+		loadTables();
+	}
+	
+	function displayGuestView(tab_id)
+	{
+		switchTab(tab_id);
+		loadTables();
+	}
 	
 	function loadActions()
 	{
@@ -198,7 +270,7 @@
 			var numOfRows = tableDetails.num_of_rows;
 			var allTables = tableDetails.tables;
 			
-			$("#div_table_details").tableformatter({
+			$("#tab_view_area").tableformatter({
 				varTableDetails : tableDetails,
 				varDeleteTableURL : '/web/com/gs/event/proc_delete_table.jsp',
 				var_event_id : varEventID,
