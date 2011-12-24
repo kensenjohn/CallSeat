@@ -7,6 +7,9 @@ header nav a:hover { color:#184ABE; text-decoration:none}
 
 .rounded-corners {-moz-border-radius: 4px;-webkit-border-radius: 4px;-khtml-border-radius: 4px;border-radius: 8px;}
 
+html {
+	height:100%;	
+}
 body {
   background-color: #ffffff;
   margin: 0;
@@ -15,17 +18,20 @@ body {
   font-weight: normal;
   line-height: 18px;
   color: #404040;
+   height:100%;
 }
 .container {
   width: 960px;
   margin-left: auto;
   margin-right: auto;
   margin-top: 2px;
-  zoom: 1;
+  zoom: 1;  
+   height:100%;
   background-color:#FFFFDD;
 }
 .container-filler {
   background-color:#FFFFDD;
+   height:100%;
 }
 .main_body{width:100%; text-align:center; margin-top: 10px;  margin-bottom: 0px;  margin-left: 0px;  margin-right: 0px; padding:0px;clear:both}
 .clear_both{clear:both}
@@ -145,7 +151,7 @@ body {
 .action_button:focus {
   outline: 1px dotted #666;
 }
-.action_button.primary {
+.action_button.primary, .alert-message.primary {
   color: #ffffff;
   background-color: #0064cd;
   background-repeat: repeat-x;
@@ -159,6 +165,21 @@ body {
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#049cdb', endColorstr='#0064cd', GradientType=0);
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
   border-color: #0064cd #0064cd #003f81;
+  border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
+}
+.action_button.success, .alert-message.success {
+  background-color: #57a957;
+  background-repeat: repeat-x;
+  background-image: -khtml-gradient(linear, left top, left bottom, from(#62c462), to(#57a957));
+  background-image: -moz-linear-gradient(top, #62c462, #57a957);
+  background-image: -ms-linear-gradient(top, #62c462, #57a957);
+  background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #62c462), color-stop(100%, #57a957));
+  background-image: -webkit-linear-gradient(top, #62c462, #57a957);
+  background-image: -o-linear-gradient(top, #62c462, #57a957);
+  background-image: linear-gradient(top, #62c462, #57a957);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#62c462', endColorstr='#57a957', GradientType=0);
+  text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+  border-color: #57a957 #57a957 #3d773d;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
 }
 .action_button.active, .action_button :active {
@@ -232,6 +253,32 @@ label {
 }
 form .input {
   margin-left: 150px;
+}
+form .clearfix.error > label, form .clearfix.error .help-block, form .clearfix.error .help-inline,
+form .clearfix-tight.error > label, form .clearfix-tight.error .help-block, form .clearfix-tight.error .help-inline,
+form .clearfix-medium.error > label, form .clearfix-medium.error .help-block, form .clearfix-medium.error .help-inline {
+  color: #b94a48;
+}
+form .clearfix.error input, form .clearfix.error textarea,
+form .clearfix-tight.error input, form .clearfix-tight.error textarea,
+form .clearfix-medium.error input, form .clearfix-medium.error textarea {
+  color: #b94a48;
+  border-color: #ee5f5b;
+}
+form .clearfix.error input:focus, form .clearfix.error textarea:focus,
+form .clearfix-tight.error input:focus, form .clearfix-tight.error textarea:focus,
+form .clearfix-medium.error input:focus, form .clearfix-medium.error textarea:focus {
+  border-color: #e9322d;
+  -webkit-box-shadow: 0 0 6px #f8b9b7;
+  -moz-box-shadow: 0 0 6px #f8b9b7;
+  box-shadow: 0 0 6px #f8b9b7;
+}
+form .clearfix.error .input-prepend .add-on, form .clearfix.error .input-append .add-on,
+form .clearfix-tight.error .input-prepend .add-on, form .clearfix-tight.error .input-append .add-on,
+form .clearfix-medium.error .input-prepend .add-on, form .clearfix-medium.error .input-append .add-on {
+  color: #b94a48;
+  background-color: #fce6e6;
+  border-color: #b94a48;
 }
 input[type=checkbox], input[type=radio] {
   cursor: pointer;
@@ -632,6 +679,14 @@ form .clearfix {
   margin-bottom: 18px;
   zoom: 1;
 }
+form .clearfix-tight {
+  margin-bottom: 5px;
+  zoom: 1;
+}
+form .clearfix-medium {
+  margin-bottom: 11px;
+  zoom: 1;
+}
 form .clearfix:before, form .clearfix:after {
   display: table;
   content: "";
@@ -659,28 +714,28 @@ form .clearfix:after {
 .actions .secondary-action a:hover {
   text-decoration: underline;
 }
-table {
+.tbl{
   width: 100%;
   margin-bottom: 18px;
   padding: 0;
   font-size: 13px;
   border-collapse: collapse;
 }
-table th, table td {
+table th .tbl_th, table td .tbl_td{
   padding: 10px 10px 9px;
   line-height: 18px;
   text-align: left;
 }
-table th {
+table th .tbl_th{
   padding-top: 9px;
   font-weight: bold;
   vertical-align: middle;
 }
-table td {
+table td .tbl_td{
   vertical-align: top;
   border-top: 1px solid #ddd;
 }
-table tbody th {
+table tbody th .tbl_tbody_td{
   border-top: 1px solid #ddd;
   vertical-align: top;
 }
@@ -855,4 +910,20 @@ table .purple {
 }
 table .headerSortUp.purple, table .headerSortDown.purple {
   background-color: #e2d5f0;
+}
+.left
+{
+	text-align:left;
+}
+.right
+{
+	text-align:right;
+}
+.rquird
+{
+	color: #9d261d;
+}
+.bold_text
+{
+	font-weight:bold;
 }

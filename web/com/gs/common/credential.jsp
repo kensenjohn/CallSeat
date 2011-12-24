@@ -1,86 +1,103 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <%@ page import="com.gs.common.*"%>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	
-	
-  	<link type="text/css" rel="stylesheet" href="/web/css/style.css" /> 
-  	   
-    <!--[if lte IE 8]>
-      <script type="text/javascript" src="/web/js/html5.js"></script>
-    <![endif]--> 
-    
-     <script type="text/javascript" src="/web/js/jquery-1.6.1.js"></script> 
-     
-	</head>
+
+<jsp:include page="../common/header_top.jsp"/>
+<jsp:include page="../common/security.jsp"/>
+<%@include file="../common/header_bottom.jsp"%>
 	<body>
-	<%
+<%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 		String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
+		String sSource = ParseUtil.checkNull(request.getParameter("source"));
+		
 		
 		jspLogging.info("Add Table for event : " + sEventId + " by : " + sAdminId);
-	%>
-		<div class="box_container rounded-corners fill_box" style="overflow: auto;">
-			<div style="padding:20px;">
-				<div style="float:left; width:50%; " >
-					<div style="text-align:center;" ><span class="l_txt" style="padding:10px;" >Login</span></div>
-					<div>
-						<form id="frm_login" name="frm_login">
-							<table class="cred_table">
-								<tr>
-									<td>Email:</td><td><input id="login_email" name="login_email" type="text"/></td>
-								</tr>
-								<tr>
-									<td>Password:</td><td><input id="login_password" name="login_password" type="password"/></td>
-								</tr>
-								<tr>
-									<td>&nbsp;</td><td><a class="action_button"  id="login_user" name="login_user">Login</a></td>
-								</tr>
-							</table>
-							<span id="login_err_mssg"></span>
-							<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
-							<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
-						</form>
+%>
+
+		<div class="container-filler rounded-corners">
+			<div style="padding:20px">
+				<div class="row">
+					<div class="span16">
+						<div class="row">							
+							<div class="span8">
+								<h3 class="txt txt_center">Login</h3>
+								<form id="frm_login" >
+									<fieldset>
+										<div class="clearfix-tight">
+											<label for="login_email">Email :</label>
+											<div class="input">
+												<input type="text" id="login_email" name="login_email"/>
+											</div>
+										</div>
+										<div class="clearfix-tight">
+											<label for="login_password">Password :</label>
+											<div class="input">
+												<input type="password" id="login_password" name="login_password"/>
+											</div>
+										</div>
+										<div class="actions">									
+								            <button id="login_user" name="login_user" type="button" class="action_button primary large">Login</button>
+								            <br>
+								            <span id="err_mssg"></span>
+								        </div>
+									</fieldset>
+								</form>
+							</div>
+							
+							<div class="span8">
+								<h3  class="txt txt_center">Register</h3>
+								<form id="frm_register" >
+									<fieldset>
+										<div class="clearfix-tight">
+											<label for="register_email">Email :</label>
+											<div class="input">
+												<input type="text" id="register_email" name="register_email"/>
+											</div>
+										</div>
+										<div class="clearfix-tight">
+											<label for="register_fname">First Name :</label>
+											<div class="input">
+												<input type="text" id="register_fname" name="register_fname"/>
+											</div>
+										</div>
+										<div class="clearfix-tight">
+											<label for="register_lname">Last Name :</label>
+											<div class="input">
+												<input type="text" id="register_lname" name="register_lname"/>
+											</div>
+										</div>
+										<div class="clearfix-tight">
+											<label for="register_pass">Password :</label>
+											<div class="input">
+												<input type="password" id="register_pass" name="register_pass"/>
+											</div>
+										</div>
+										<div class="clearfix-tight">
+											<label for="register_pass_conf">Confirm Password :</label>
+											<div class="input">
+												<input type="password" id="register_pass_conf" name="register_pass_conf"/>
+											</div>
+										</div>
+										<div class="actions">									
+								            <button id="register_user" name="register_user" type="button" class="action_button primary large">Register</button>
+								            <br>
+								            <span id="register_err_mssg"></span>
+								        </div>
+									</fieldset>
+									<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+									<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>							
+								</form>
+							</div>
+						</div>
 					</div>
-				</div>
-				<div style="float:right;  width:50%;" >
-					<div style="text-align:center;" ><span class="l_txt" style="padding:10px;" >Register</span></div>
-					<div>
-						<form id="frm_register"  name="frm_register">
-							<table class="cred_table">
-								<tr>
-									<td>Email:</td><td><input id="register_email" name="register_email" type="text"/></td>
-								</tr>
-								<tr>
-									<td>First Name:</td><td><input id="register_fname" name="register_fname" type="text"/></td>
-								</tr>
-								<tr>
-									<td>Last Name:</td><td><input id="register_lname" name="register_lname" type="text"/></td>
-								</tr>
-								<tr>
-									<td>Password:</td><td><input id="register_pass" name="register_pass" type="password"/></td>
-								</tr>
-								<tr>
-									<td>Confirm Password:</td><td><input id="register_pass_conf" name="register_pass_conf" type="password"/></td>
-								</tr>
-								<tr>
-									<td>&nbsp;</td><td><a class="action_button"  id="register_user" name="register_user">Register</a></td>
-								</tr>
-							</table>
-							<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
-							<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
-							<span id="register_err_mssg"></span>
-						</form>
-					</div>
-				</div>
+				</div>		
 			</div>
 		</div>
 	</body>
 	<script type="text/javascript">
+	var varSource = '<%=sSource%>';
 	$(document).ready(function() {
 		$("#login_user").click(loginUser);
 		$("#register_user").click(registerUser);
@@ -98,7 +115,7 @@
 		var dataString = $("#frm_register").serialize();
 		var actionUrl = "proc_register_user.jsp";
 		var methodType = "POST";
-		alert(dataString);
+		//alert(dataString);
 		submitCredentials(actionUrl,dataString,methodType,getResult);
 	}
 	
@@ -140,10 +157,10 @@
 				{
 					var jsonResponseObj = varResponseObj.payload;
 					var varUserId = jsonResponseObj.user_id;
-					//processTableGuest( jsonResponseObj );
+					setUserCookie('<%=Constants.COOKIE_APP_USERID%>',varUserId);
 					
-					//parent.loadTables();
-					setUserCookie('<%=Constants.COOKIE_APP_USERID%>',varUserId)
+					var varFirstName = jsonResponseObj.first_name;
+					parent.credentialSuccess(varFirstName,varSource);
 					parent.$.fancybox.close();
 				}
 			}

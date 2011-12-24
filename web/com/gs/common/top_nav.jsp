@@ -2,15 +2,17 @@
 <%@page import="com.gs.bean.*"%>
 <%
 HttpSession  reqSession = request.getSession(false);
-boolean isSignedIn = false;
-
+boolean isTmpSignedIn = false;
+String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
+String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 String sFirstName = "";
 if(reqSession!=null)
 {
 	AdminBean adminBean = (AdminBean) reqSession.getAttribute(Constants.USER_SESSION);
 	if(adminBean!=null && adminBean.isAdminExists())
 	{
-		isSignedIn = true;
+		sAdminId = adminBean.getAdminId();
+		isTmpSignedIn = true;
 		UserInfoBean userInfoBean = adminBean.getAdminUserInfoBean();
 		if(userInfoBean!=null)
 		{
@@ -18,6 +20,10 @@ if(reqSession!=null)
 		}
 	}
 }
+
+
+
+
 %>
 <header>
 	<div style="padding:5px;">
@@ -25,11 +31,11 @@ if(reqSession!=null)
 	    <nav>
 	    	<ul>
 <%
-		if(isSignedIn)
+		if(isTmpSignedIn)
 		{
 %>
 				<li>
-	    			<a class="" href="/login" id=""><%=sFirstName %></a>
+	    			<a class="bold_text" href="#" id="login_name_display"><%=sFirstName %></a>
 	    		</li>
 <%
 		}
@@ -37,7 +43,7 @@ if(reqSession!=null)
 		{
 %>
 				<li>
-	    			<a class="" href="/login" id="">Login</a>
+	    			<a id="login_name_display" class="" href="/web/com/gs/common/credential.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>">Login</a>
 	    		</li>
 <%
 		}

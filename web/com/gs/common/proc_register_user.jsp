@@ -56,16 +56,19 @@ try
 			AdminManager adminManager = new AdminManager();
 			
 			Integer iNumOfUserRegistered = 0;
+			AdminBean adminBean = new AdminBean();
 			if(!adminManager.isUserExists(regAdminBean))
 			{
-				iNumOfUserRegistered = adminManager.registerUser(regAdminBean);
+				adminBean = adminManager.registerUser(regAdminBean);
 				
-				if(iNumOfUserRegistered>0)					
+				if(adminBean!=null && adminBean.getAdminId()!=null && !"".equalsIgnoreCase(adminBean.getAdminId()))					
 				{
 					Text okText = new OkText("Successfully registered user.","register_err_mssg") ;		
 					arrOkText.add(okText);
 					
 					responseStatus = RespConstants.Status.OK;
+					jsonResponseObj.put("first_name",sRegFirstName);
+					jsonResponseObj.put("user_id",adminBean.getAdminId());
 				}
 				else
 				{

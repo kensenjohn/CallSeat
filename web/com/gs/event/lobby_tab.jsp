@@ -26,7 +26,7 @@
 						<h2 class="txt" id="primary_header"><%=sHeaderTxt%></h2>
 					</div>
 					<div class="span2">
-						<h4 class="txt" id="secondary_header">(<%=sSecHeaderTxt%>)</h4>
+						<h4 class="txt" id="secondary_header"><%=sSecHeaderTxt%></h4>
 					</div>
 				</div>
 			</div>

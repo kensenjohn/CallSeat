@@ -111,7 +111,8 @@ public class AdminManager {
 		return isAdminExists;
 	}
 
-	public Integer registerUser(RegisterAdminBean regAdminBean) {
+	public AdminBean registerUser(RegisterAdminBean regAdminBean) {
+		AdminBean adminBean = new AdminBean();
 		int numOfAdminRegs = 0;
 		if (regAdminBean != null) {
 
@@ -126,7 +127,7 @@ public class AdminManager {
 
 			AdminData adminData = new AdminData();
 
-			AdminBean adminBean = adminData.getAdmin(regAdminBean.getAdminId());
+			adminBean = adminData.getAdmin(regAdminBean.getAdminId());
 
 			if (adminBean == null
 					|| (adminBean != null && !adminBean.isAdminExists())) {
@@ -135,7 +136,8 @@ public class AdminManager {
 
 			adminData.registerUser(regAdminBean, adminBean);
 
-			if (adminBean != null && adminBean.isAdminExists()) {
+			if (adminBean != null && adminBean.getAdminId() != null
+					&& !"".equalsIgnoreCase(adminBean.getAdminId())) {
 				numOfAdminRegs = adminData.toggleAdminTemp(true,
 						adminBean.getAdminId());
 			} else {
@@ -143,7 +145,7 @@ public class AdminManager {
 			}
 
 		}
-		return numOfAdminRegs;
+		return adminBean;
 	}
 
 	public AdminBean getAdminBeanFromEmail(RegisterAdminBean loginAdminBean) {
@@ -175,6 +177,9 @@ public class AdminManager {
 						&& !"".equalsIgnoreCase(sPasswordHashFromDB)) {
 					if (BCrypt.checkpw(sPasswordInput, sPasswordHashFromDB)) {
 						// logged in.
+						UserInfoBean userinfoBean = adminData
+								.getAdminUserInfo(adminBean.getAdminId());
+						adminBean.setAdminUserInfoBean(userinfoBean);
 					} else {
 						adminBean = new AdminBean();
 						appLogging.info("User was not authenticated - Email : "

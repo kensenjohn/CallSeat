@@ -22,7 +22,12 @@
   		}
   		
   		//This one checks to see whether the user was logged in.
-  		boolean isFromCookie = ParseUtil.sTob(request.getParameter("from_cookie"));
+  		boolean isFromCookie = ParseUtil.sTob(ParseUtil.checkNullObject(session.getAttribute("from_cookie")));
+  		if(isFromCookie)
+  		{
+  			session.removeAttribute("from_cookie");  //reset the session.
+  		}
+  		
   		boolean isSignedIn = false;
   		HttpSession  reqSession = request.getSession(false);
   		if(reqSession!=null)
@@ -38,10 +43,12 @@
   			
   			if(isFromCookie && !isSignedIn)
   			{
-  				String sUserId = request.getParameter("u_id");
+  				String sUserId = ParseUtil.checkNullObject(session.getAttribute("u_id"));
+  				
   				
   				if(sUserId!=null && !"".equalsIgnoreCase(sUserId))
   				{
+  					session.removeAttribute("u_id"); //reset the session.
   					 AdminManager adminManager = new AdminManager();
   					 adminBean = adminManager.getAdmin(sUserId);
   				}

@@ -4,7 +4,7 @@
 
 <jsp:include page="../common/header_top.jsp"/>
 <jsp:include page="../common/security.jsp"/>
-<%@include file="../common/header_bottom.jsp"%>
+<jsp:include page="../common/header_bottom.jsp"/>
 	<body>
 	<%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
@@ -20,19 +20,19 @@
 					<div class="span7">
 						<form id="frm_add_table" >
 							<fieldset>
-								<div class="clearset">
+								<div class="clearfix-tight">
 									<label for="table_name">Table Name :</label>
 									<div class="input">
 										<input type="text" id="table_name" name="table_name"/>
 									</div>
 								</div>
-								<div class="clearset">
+								<div class="clearfix-tight">
 									<label for="table_name">Table Number :</label>
 									<div class="input">
 										<input type="text" id="table_num" name="table_num"/>
 									</div>
 								</div>
-								<div class="clearset">
+								<div class="clearfix-tight">
 									<label for="table_name">Number of Seats :</label>
 									<div class="input">
 										<input type="text" id="num_of_seats" name="num_of_seats"/>
@@ -64,7 +64,6 @@
 			var methodType = "POST";
 			
 			dataString = dataString + '&save_data=y';
-			alert(dataString);
 			submitTableData(actionUrl,dataString,methodType,getResult);
 		}
 		

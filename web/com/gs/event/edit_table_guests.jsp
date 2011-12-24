@@ -21,26 +21,28 @@
 			<div style="padding:20px">
 				<h2 class="txt txt_center">Assign Guests <span id="table_name"></span></h2>
 				<div class="row">
-					<div class="span6">
+					<div class="span5">
 						<div class="row">
-							<div class="span2">
-								<h4>Total Seats : <span id="seat_per_table"></span> </h4>
+							<div class="span2 left">
+								<h5 class="txt">Total Seats : <span id="seat_per_table"></span> </h5>
 							</div>
-							<div class="span2">
-								<h4>Assigned seats : <span id="assigned_per_table"></span> </h4>
+							<div class="span3 left">
+								<h5 class="txt">Assigned seats : <span id="assigned_per_table"></span> </h5>
 							</div>
 						</div>
 					</div>
-					<div class="span10">
+					<div class="span13">
 						<div class="row">
-							<div class="span5">
-								<h4>Unassigned Guests :  <span id="div_unassinged_guests"></span> </h4>
+							<div class="span7">
+								<h5 class="txt right">Unassigned Guests :  <span id="div_unassinged_guests"></span> </h5>
 							</div>
 							<div class="span4">
-								<h4>Assign seats : <input type="text" id="new_assign_seats" name="new_assign_seats" class="span2"/> </h4>
+								<h5 class="txt">Assign seats : <input type="text" id="new_assign_seats" name="new_assign_seats" class="span2"/> </h5>
 							</div>
-							<div class="span1">
-								<button id="add_table_guest" name="add_table_guest" type="button" class="action_button primary small">Add and Save</button>
+							<div class="span2">
+								<div class="txt left">
+									<button id="add_table_guest" name="add_table_guest" type="button" class="action_button primary small">Add and Save</button>
+								</div>								
 							</div>
 						</div>
 					</div>

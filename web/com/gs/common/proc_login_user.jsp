@@ -52,6 +52,9 @@ try
 			responseStatus = RespConstants.Status.OK;
 			jsonResponseObj.put("user_id",adminBean.getAdminId());
 			
+			UserInfoBean userinfoBean = adminBean.getAdminUserInfoBean();
+			jsonResponseObj.put("first_name",userinfoBean.getFirstName());
+			
 			HttpSession httpSession = request.getSession(false);
 			httpSession.setAttribute(Constants.USER_SESSION,adminBean);
 			

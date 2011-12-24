@@ -3,8 +3,7 @@ package com.gs.bean;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class GuestBean
-{
+public class GuestBean {
 	/*
 	 * GUESTID VARCHAR(45) NOT NULL, FK_USERINFOID VARCHAR(45) NOT NULL,
 	 * FK_ADMINID VARCHAR(45) NOT NULL, CREATEDATE TIMESTAMP NOT NULL DEFAULT
@@ -22,122 +21,100 @@ public class GuestBean
 	private String delRow = "";
 	private String humanCreateDate = "";
 
-	public String getHumanCreateDate()
-	{
+	public String getHumanCreateDate() {
 		return humanCreateDate;
 	}
 
-	public void setHumanCreateDate(String humanCreateDate)
-	{
+	public void setHumanCreateDate(String humanCreateDate) {
 		this.humanCreateDate = humanCreateDate;
 	}
 
 	private UserInfoBean userInfoBean = null;
 
-	public String getGuestId()
-	{
+	public String getGuestId() {
 		return guestID;
 	}
 
-	public void setGuestId(String guestID)
-	{
+	public void setGuestId(String guestID) {
 		this.guestID = guestID;
 	}
 
-	public String getUserInfoId()
-	{
+	public String getUserInfoId() {
 		return userInfoId;
 	}
 
-	public void setUserInfoId(String userInfoId)
-	{
+	public void setUserInfoId(String userInfoId) {
 		this.userInfoId = userInfoId;
 	}
 
-	public String getAdminId()
-	{
+	public String getAdminId() {
 		return adminId;
 	}
 
-	public void setAdminId(String adminId)
-	{
+	public void setAdminId(String adminId) {
 		this.adminId = adminId;
 	}
 
-	public Long getCreateDate()
-	{
+	public Long getCreateDate() {
 		return createDate;
 	}
 
-	public void setCreateDate(Long createDate)
-	{
+	public void setCreateDate(Long createDate) {
 		this.createDate = createDate;
 	}
 
-	public String getTotalSeat()
-	{
+	public String getTotalSeat() {
 		return totalSeat;
 	}
 
-	public void setTotalSeat(String totalSeat)
-	{
+	public void setTotalSeat(String totalSeat) {
 		this.totalSeat = totalSeat;
 	}
 
-	public String getIsTemporary()
-	{
+	public String getIsTemporary() {
 		return isTmp;
 	}
 
-	public void setIsTemporary(String isTmp)
-	{
+	public void setIsTemporary(String isTmp) {
 		this.isTmp = isTmp;
 	}
 
-	public String getDeleteRow()
-	{
+	public String getDeleteRow() {
 		return delRow;
 	}
 
-	public void setDeleteRow(String delRow)
-	{
+	public void setDeleteRow(String delRow) {
 		this.delRow = delRow;
 	}
 
-	public String getRsvpSeat()
-	{
+	public String getRsvpSeat() {
 		return rsvpSeat;
 	}
 
-	public void setRsvpSeat(String rsvpSeat)
-	{
+	public void setRsvpSeat(String rsvpSeat) {
 		this.rsvpSeat = rsvpSeat;
 	}
 
-	public UserInfoBean getUserInfoBean()
-	{
+	public UserInfoBean getUserInfoBean() {
 		return userInfoBean;
 	}
 
-	public void setUserInfoBean(UserInfoBean userInfoBean)
-	{
+	public void setUserInfoBean(UserInfoBean userInfoBean) {
 		this.userInfoBean = userInfoBean;
 	}
 
 	@Override
-	public String toString()
-	{
-		return "GuestBean [guestID=" + guestID + ", userInfoId=" + userInfoId + ", adminId="
-				+ adminId + ", createDate=" + createDate + ", totalSeat=" + totalSeat
-				+ ", rsvpSeat=" + rsvpSeat + ", isTmp=" + isTmp + ", delRow=" + delRow + "]";
+	public String toString() {
+		return "GuestBean [guestID=" + guestID + ", userInfoId=" + userInfoId
+				+ ", adminId=" + adminId + ", createDate=" + createDate
+				+ ", totalSeat=" + totalSeat + ", rsvpSeat=" + rsvpSeat
+				+ ", isTmp=" + isTmp + ", delRow=" + delRow + "]";
 	}
 
-	public JSONObject toJson()
-	{
+	public JSONObject toJson() {
 
 		JSONObject jsonObject = new JSONObject();
-		try
-		{
+		try {
 			jsonObject.put("guest_id", guestID);
 			jsonObject.put("user_info_id", userInfoId);
 			jsonObject.put("admin_id", adminId);
@@ -147,16 +124,16 @@ public class GuestBean
 			jsonObject.put("is_tmp", isTmp);
 			jsonObject.put("del_row", delRow);
 
-			if (this.userInfoBean != null)
-			{
+			if (this.userInfoBean != null) {
 				JSONObject jsonUserInfoObject = new JSONObject();
+
+				jsonUserInfoObject.put("user_info", this.userInfoBean.toJson());
 
 				jsonObject.put("user_info", this.userInfoBean.toJson());
 
 			}
 
-		} catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

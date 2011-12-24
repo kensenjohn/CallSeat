@@ -1,21 +1,10 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 <%@ page import="com.gs.common.*"%>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	
-	
-  	<link type="text/css" rel="stylesheet" href="/web/css/style.css" /> 
-  	   
-    <!--[if lte IE 8]>
-      <script type="text/javascript" src="/web/js/html5.js"></script>
-    <![endif]--> 
-    
-     <script type="text/javascript" src="/web/js/jquery-1.6.1.js"></script> 
-     
-	</head>
+
+<jsp:include page="../common/header_top.jsp"/>
+<jsp:include page="../common/security.jsp"/>
+<%@include file="../common/header_bottom.jsp"%>
 	<body>
 <%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
@@ -27,26 +16,125 @@
 		jspLogging.info("Add Table for event : " + sEventId + " by : " + sAdminId);
 %>
 
-		<div class="box_container rounded-corners fill_box">
+		<div class="container-filler rounded-corners">
 			<div style="padding:20px">
-				<form id="frm_add_guest" >
-				<div style="text-align:left;" >
 <%
 					if(isAllGuestAdd)
 					{
 %>
-						<span class="l_txt" style="padding:10px;" >Add Guest to</span> <div id="div_event_list"></div>
+						<h2 class="txt txt_center">Create a Guest</h2>
+						<!-- <span class="l_txt" style="padding:10px;" >Add Guest to</span> <div id="div_event_list"></div> -->
 <%	
 					}
 					else
 					{
 %>
-						<span class="l_txt" style="padding:10px;" >Guest for</span> <div id="div_event_list"></div>
+						<h2 class="txt txt_center">Guest for <span id="div_event_list"></span></h2>
 <%
 					}
 %>
-					
+				<div class="row">
+					<div class="span10">
+						<form id="frm_add_guest" >
+							<fieldset>
+								<div class="clearfix-tight required" id="first_name_div">
+									<label for="table_name" id="first_name_label">First Name :</label>
+									<div class="input">
+										<input type="text" id="first_name" name="first_name"/>
+										<span class="help-inline" id="first_name_msg"></span>
+									</div>
+								</div>
+								<div class="clearfix-tight required"  id="last_name_div">
+									<label for="table_name"  id="last_name_label">Last Name :</label>
+									<div class="input">
+										<input type="text" id="last_name" name="last_name"/>
+										<span class="help-inline" id="last_name_msg"></span>
+									</div>
+								</div>
+								<div class="clearfix-tight required" id="cell_num_div">
+									<label for="table_name" id="cell_num_label">Cell Number :</label>
+									<div class="input">
+										<input type="text" id="cell_num" name="cell_num"/>										
+										<span class="help-inline" id="cell_num_msg"></span>
+									</div>
+								</div>
+								<div class="clearfix-tight">
+									<label for="table_name">Home Number :</label>
+									<div class="input">
+										<input type="text" id="home_num" name="home_num"/>
+									</div>
+								</div>
+								<div class="clearfix-tight">
+									<label for="table_name">Email :</label>
+									<div class="input">
+										<input type="text" id="email_addr" name="email_addr"/>
+									</div>
+								</div>
+<%
+					if(!isAllGuestAdd)
+					{
+%>								
+								<div class="clearfix-tight" id="invited_num_of_seats_div">
+									<label for="table_name" id="invited_num_of_seats_label" >Invited seats :</label>
+									<div class="input">
+										<input type="text" id="invited_num_of_seats" name="invited_num_of_seats"/>
+										<span class="help-inline" id="invited_num_of_seats_msg">(Number of seats.)</span>
+									</div>
+								</div>
+								<div class="clearfix-tight" id="rsvp_num_of_seats_div">
+									<label for="table_name" id="rsvp_num_of_seats_label" >Guest's RSVP :</label>
+									<div class="input">
+										<input type="text" id="rsvp_num_of_seats" name="rsvp_num_of_seats"/>
+										<span class="help-inline" id="rsvp_num_of_seats_msg">(RSVP from the guest.)</span>
+									</div>									
+								</div>
+<%
+					}
+%>
+
+<%
+//isAllGuestAdd = true;
+					if(isAllGuestAdd)
+					{
+%>
+								<div class="actions">									
+						            <button id="add_guest" name="add_guest" type="button" class="action_button primary small">Create Guest</button>
+						            <br>
+						            <span id="err_mssg"></span>
+						        </div>
+						        <input type="hidden" id="invited_num_of_seats" name="invited_num_of_seats" value="0"/>
+						        <input type="hidden" id="rsvp_num_of_seats" name="rsvp_num_of_seats" value="0"/>
+						        <input type="hidden" id="is_guest_create" name="is_guest_create" value="true"/>
+<%
+					}
+					else
+					{
+%>
+								<div class="actions">									
+						            <button id="add_guest" name="add_guest" type="button" class="action_button primary small">Add Guest</button>
+						            <br>
+						            <span id="err_mssg"></span>
+						        </div>
+						        
+						        <input type="hidden" id="is_guest_add_event" name="is_guest_add_event" value="true"/>
+<%
+					}
+%>
+							</fieldset>
+							<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
+							<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+						</form>
+					</div>
 				</div>
+				<form id="frm_event_assign" id="frm_event_assign">
+					<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
+					<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>					
+					<input type="hidden" id="guest_id" name="guest_id" value=""/>										
+					<input type="hidden" id="guest_first_name" name="guest_first_name" value=""/>										
+					<input type="hidden" id="guest_last_name" name="guest_last_name" value=""/>
+				</form>
+					
+				<!-- <form id="frm_add_guest" >
 				<br/>
 				<div>
 				
@@ -73,8 +161,7 @@
 				</div>
 				
 				</div>	
-				</form>			
-				<span id="err_mssg"></span>
+				</form>			 -->
 			</div>
 		</div>
 	</body>
@@ -162,35 +249,89 @@
 				
 		function getResult(jsonResult)
 		{
-			alert(jsonResult.success)
-			if(!jsonResult.success)
+			
+			if(jsonResult!=undefined)
 			{
-				var varResponse = jsonResult.response;
-				if(varResponse!=undefined)
+				var varResponseObj = jsonResult.response;
+				if(jsonResult.status == 'error'  && varResponseObj !=undefined )
 				{
-					var varMessage = varResponse.error_message;
-					if(varMessage!=undefined && varMessage!= '' )
+					var varIsMessageExist = varResponseObj.is_message_exist;
+					if(varIsMessageExist == true)
 					{
-						$("#err_mssg").text(varMessage);
+						var jsonResponseMessage = varResponseObj.messages;
+						var varArrErrorMssg = jsonResponseMessage.error_mssg
+						displayMessages( varArrErrorMssg );
 					}
 				}
-				
+				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+				{
+					var varIsPayloadExist = varResponseObj.is_payload_exist;
+					if(varIsPayloadExist == true)
+					{
+						var jsonResponseObj = varResponseObj.payload;
+						//processTableGuest( jsonResponseObj );
+						var varGuestId = jsonResponseObj.guest_id;
+						alert(varGuestId)
+						createAssignmentButton(varGuestId);
+						
+						
+						parent.loadGuests();
+						
+						//parent.$.fancybox.close();
+					}
+				}
 			}
-			else
+		}
+		
+		function createAssignmentButton(varGuestId)
+		{
+			$("#add_guest").unbind();
+			
+			$("#add_guest").removeClass("primary");
+			$("#add_guest").removeClass("small");
+			$("#add_guest").addClass("success");
+			$("#add_guest").addClass("large");
+			
+			var varFirstName = $("#first_name").val();
+			var varLastName = $("#last_name").val();
+			
+			$("#add_guest").text("Assign " + varFirstName + " " + varLastName + " to an Event");
+			
+			$("#guest_first_name").val(varFirstName);
+			$("#guest_last_name").val(varLastName);
+			$("#guest_id").val(varGuestId);
+			
+			$("#add_guest").click(function(){
+				submitPassThruButton();
+			});
+			//alert('berfore load');
+		}
+		function submitPassThruButton()
+		{
+			//alert('submit passthru load' + varGuestId);
+			$("#frm_event_assign").attr("action","assign_guests_events.jsp");
+			$("#frm_event_assign").attr("method","POST");
+			$("#frm_event_assign").submit();
+		}
+		function displayMessages(varArrMessages)
+		{
+			if(varArrMessages!=undefined)
 			{
-				alert('is all guest added = ' + varIsAllGuestAdd);
-				if(varIsAllGuestAdd == true)
+				for(var i = 0; i<varArrMessages.length; i++)
 				{
-					alert('cam to if');
-					parent.loadGuests();
+					//alert( varArrMessages[i].text +  '-' + varArrMessages[i].txt_loc_id );
+					if(varArrMessages[i].txt_loc_id == 'err_mssg')
+					{
+						$("#err_mssg").text(varArrMessages[i].text);
+					}
+					else
+					{
+						
+						$("#"+varArrMessages[i].txt_loc_id+"_msg").text(varArrMessages[i].text);
+						$("#"+varArrMessages[i].txt_loc_id+"_div").addClass('error');
+						$("#"+varArrMessages[i].txt_loc_id).addClass('error');
+					}
 				}
-				else
-				{
-					alert('cam to else');
-					//parent.loadTables();
-				}
-				parent.$.fancybox.close();
-				
 			}
 		}
 	</script>

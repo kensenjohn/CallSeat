@@ -1,54 +1,58 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> 
 <%@ page import="com.gs.common.*"%>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
-<html xmlns="http://www.w3.org/1999/xhtml">
-	<head>
-	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-	
-	
-  	<link type="text/css" rel="stylesheet" href="/web/css/style.css" /> 
-  	   
-    <!--[if lte IE 8]>
-      <script type="text/javascript" src="/web/js/html5.js"></script>
-    <![endif]--> 
-    
-     <script type="text/javascript" src="/web/js/jquery-1.6.1.js"></script> 
-     
-	</head>
+
+<jsp:include page="../common/header_top.jsp"/>
+<jsp:include page="../common/security.jsp"/>
+<jsp:include page="../common/header_bottom.jsp"/>
 	<body>
 	<%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 		String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 		
-		jspLogging.info("Phone number for event : " + sEventId + " by : " + sAdminId);
+		jspLogging.info("Add Table for event : " + sEventId + " by : " + sAdminId);
 	%>
-			<div class="box_container rounded-corners fill_box">
+			<div class="container-filler rounded-corners">
 			<div style="padding:20px">
-				<div style="text-align:center;" ><span class="l_txt" style="padding:10px;" >Phone Numbers</span></div><br/>
-				<form id="frm_tel_numbers">
-					<div>
-						<span class="m_txt" style="padding:10px;" >Seating Number</span></br>
-						<input type="text" name="seating_gen_num" id="seating_gen_num" value=""/></br></br>
-						<span>Bonus Customization</span></br>
-							Area Code : <input type="text" name="seating_area_code" id="seating_area_code" value=""/></br>
-							Text Pattern(Enter Text): <input type="text" name="seating_text_pattern" id="seating_text_pattern" value=""/></br>
-							<input type="button" name="bt_custom_seating_num" id="bt_custom_seating_num" value="Show me the Numbers"/>
+				<div class="row">
+					<div class="span12">
+						<form id="frm_tel_numbers" >
+							<fieldset>
+								<div class="clearfix-tight">
+									<label for="table_name">Seating Number :</label>
+									<div class="input">
+										<input type="text" id="seating_gen_num" name="seating_gen_num"/>
+									</div>
+								</div>
+								<!-- <div class="clearfix-tight">
+									<label for="table_name">Area Code :</label>
+									<div class="input">
+										<input type="text" id="seating_area_code" name="seating_area_code"/>
+									</div>
+								</div>
+								<div class="clearfix-tight">
+									<label for="table_name">Text Pattern :</label>
+									<div class="input">
+										<input type="text" id="seating_text_pattern" name="seating_text_pattern"/>
+									</div>
+								</div> -->
+								<div class="clearfix-tight">
+									<label for="table_name">RSVP Number :</label>
+									<div class="input">
+										<input type="text" id="rsvp_gen_num" name="rsvp_gen_num"/>
+									</div>
+								</div>
+								<div class="actions">									
+						            <button id="bt_save_tel_num" name="bt_save_tel_num" type="button" class="action_button primary small">Save Phone Numbers</button>
+						        </div>	
+							</fieldset>
+							<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
+							<input type="hidden" name="event_id" id="event_id" value="<%=sEventId%>"/>
+						</form>
 					</div>
-					<div style="clear:both;">&nbsp;</div>
-					<div style="clear:both;">&nbsp;</div>
-					<div>
-						<span  class="m_txt" style="padding:10px;" >RSVP Number</span>
-						<input type="text" name="rsvp_gen_num" id="rsvp_gen_num" value=""/>
-					</div>
-					</br>
-					</br>
-					<input type="button" name="bt_save_tel_num" id="bt_save_tel_num" value="Save"/>
-					
-					<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
-					<input type="hidden" name="event_id" id="event_id" value="<%=sEventId%>"/>
-				</form>
+				</div>
+			
 				<span id="err_mssg"></span>
 			</div>
 		</div>
@@ -59,6 +63,7 @@
 	var varSeatingNumType = '<%=Constants.EVENT_TASK.SEATING.getTask()%>';
 	var varRsvpNumType = '<%=Constants.EVENT_TASK.RSVP.getTask()%>';
 	$(document).ready(function() {
+		
 		loadPhoneNumber();
 		$("#bt_custom_seating_num").click(getCustomSeatingNums);
 		$("#bt_save_tel_num").click(saveChanges);
@@ -67,7 +72,12 @@
 	
 	function saveChanges()
 	{
+		var actionUrl = "proc_save_phone_numbers.jsp";
+		var methodType = "POST";
+		var dataString = $("#frm_tel_numbers").serialize();
+		dataString = dataString + "&num_type="+numType +"&custom_num_gen=true";
 		
+		phoneNumberData(actionUrl,dataString,methodType,callbackmethod);
 	}
 	
 	function getCustomSeatingNums()
@@ -199,7 +209,6 @@
 	function processTelNumbers( jsonResponseObj )
 	{
 		var varTelNumbers= jsonResponseObj.telnumbers;
-		alert(varTelNumbers.num_of_rows);
 		var totalRows = varTelNumbers.num_of_rows;
 		if(totalRows!=undefined)
 		{

@@ -2,7 +2,7 @@
 <%@ page import="com.gs.common.*" %>
 
 <%
-String sUserId = "";
+String sTmpUserId = "";
 Cookie[] cookies = request.getCookies();
 
 if(cookies!=null)
@@ -11,19 +11,18 @@ if(cookies!=null)
 	{ 
 		Cookie cookie1 = cookies[cookieCount];
         if (Constants.COOKIE_APP_USERID.equals(cookie1.getName())) {
-        	sUserId = cookie1.getValue();
+        	sTmpUserId = cookie1.getValue();
+        	session.setAttribute("u_id",sTmpUserId);
+        	session.setAttribute("from_cookie","true");
         }
 	}
 }
 %>
 
 <jsp:include page="common/header_top.jsp"/>
-<jsp:include page="common/security.jsp"/>
+<%@include file="common/security.jsp"%>
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 
-<jsp:include page="common/header_bottom.jsp">
-	<jsp:param name="u_id" value="<%=sUserId %>" />
-	<jsp:param name="from_cookie" value="true" />
-</jsp:include>
+<jsp:include page="common/header_bottom.jsp"/>
 
 <body >
 	<div class="container rounded-corners">

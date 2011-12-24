@@ -67,24 +67,23 @@
 	String eventName = eventBean.getEventName();
 	String eventDate = "10/12/2011";
 	
-	eventDate = "10/12/2011";
+	eventDate = "(10/12/2011)";
 %>
 <link rel="stylesheet" type="text/css" href="/web/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
-<link rel="stylesheet" type="text/css" href="/web/css/blue/style.css" media="screen" />
+
 
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 
 <body>
-   <div class="page_setup">
 		<div class="container rounded-corners">
 			<div style="margin:5px;">
 			<jsp:include page="../common/top_nav.jsp"/>
 			<jsp:include page="lobby_tab.jsp">
 				<jsp:param name="select_tab" value="event_tab"/>
 				<jsp:param name="lobby_header" value="<%=eventName %>"/>
-				<jsp:param name="lobby_sec_header" value="<%=eventDate %>"/>
+				<jsp:param name="lobby_sec_header" value="<%=eventDate%>"/>
 			</jsp:include>
 			<div class="main_body">
-				<div class="clear_both landing_input">					
+				<div class="clear_both">					
 					<jsp:include page="../common/tab_view_nav.jsp">
 						<jsp:param name="admin_id" value="<%=sAdminId %>"/>
 					</jsp:include>	
@@ -106,20 +105,19 @@
 			</div>
 			</div>
 		</div>
-	</div>
 	<div id="action_fancy_box">
 		
 	</div>
 </body>
-<script>
-	!window.jQuery && document.write('<script src="/web/js/fancybox/jquery-1.4.3.min.js"><\/script>');
-</script>
-<script type="text/javascript" src="/web/js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
+
 <script type="text/javascript" src="/web/js/jquery.tableformatter.1.0.0.js"></script>
 <script type="text/javascript" src="/web/js/jquery.datepick.js"></script> 
+<script type="text/javascript" src="/web/js/jquery.tablesorter.js"></script> 
+
 <script type="text/javascript">
-	var varEventID = '<%=sEventId%>'
-	var varAdminID = '<%=sAdminId%>'
+	var varEventID = '<%=sEventId%>';
+	var varAdminID = '<%=sAdminId%>';
+	var varIsSignedIn = <%=isSignedIn%>;
 	$(document).ready(function() {
 		
 		$("#event_summary_tab").click(function(){
@@ -127,19 +125,40 @@
 			toggleActionNavs('');
 		});
 		$("#table_view_tab").click(function(){
-			displayTableView('li_table_view');
+
 			toggleActionNavs('table_action_nav');
+			displayTableView('li_table_view');
 		});
 		$("#guest_view_tab").click(function(){
 			displayGuestView('li_guest_view');
 
 			toggleActionNavs('invite_guest_action_nav');
 		});
-		$("#phone_num_tab").click(function(){
-			displayTableView('li_phone_num');
+		if(!varIsSignedIn)
+		{
+			$("#phone_num_tab").attr("href","/web/com/gs/common/credential.jsp?admin_id="+varAdminID
+					+"&event_id"+varEventID+"&source=phone_tab");
+			
+			$("#phone_num_tab").fancybox({
+				'width'				: '80%',
+				'height'			: '80%',
+				'autoScale'			: false,
+				'transitionIn'		: 'none',
+				'transitionOut'		: 'none',
+				'type'				: 'iframe',
+				'padding'			: 0,
+				'margin'			: 0
+			});
+		}
+		else
+		{
+			$("#phone_num_tab").click(function(){
 
-			toggleActionNavs('');
-		});
+				toggleActionNavs('li_phone_num');			
+				displayPhoneNumberView('li_phone_num');
+			});
+		}
+		
 		$("#table_action_nav").show();
 		
 		
@@ -152,7 +171,9 @@
 			'autoScale'			: false,
 			'transitionIn'		: 'none',
 			'transitionOut'		: 'none',
-			'type'				: 'iframe'
+			'type'				: 'iframe',
+				'padding'			: 0,
+				'margin'			: 0
 		});
 		$("#add_guest").fancybox({
 			'width'				: '75%',
@@ -160,16 +181,20 @@
 			'autoScale'			: false,
 			'transitionIn'		: 'none',
 			'transitionOut'		: 'none',
-			'type'				: 'iframe'
+			'type'				: 'iframe',
+				'padding'			: 0,
+				'margin'			: 0
 		});
 		
-		$("#credentials").fancybox({
-			'width'				: '75%',
-			'height'			: '75%',
+		$("#get_phone_num").fancybox({
+			'width'				: '80%',
+			'height'			: '80%',
 			'autoScale'			: false,
 			'transitionIn'		: 'none',
 			'transitionOut'		: 'none',
-			'type'				: 'iframe'
+			'type'				: 'iframe',
+			'padding'			: 0,
+			'margin'			: 0
 		});
 		
 		loadActions();
@@ -178,16 +203,20 @@
 	
 	function toggleActionNavs(action_nav_id)
 	{
-		$("#action_nav_div div").each(function(index){
+		$("#action_nav_div div.row").each(function(index){
 			$(this).hide();
 		});
 		if(action_nav_id!=undefined && action_nav_id!='')
 		{
 			$("#"+action_nav_id).show();
+			$("#"+action_nav_id + " div.row").show();
 		}
-		
-		
-		
+		toggleTabViewArea();	
+	}
+	
+	function toggleTabViewArea()
+	{
+		$('#tab_view_area').empty();
 	}
 	
 	function switchTab(current_tab_id)
@@ -208,7 +237,23 @@
 	function displayGuestView(tab_id)
 	{
 		switchTab(tab_id);
-		loadTables();
+		//loadTables();
+	}
+	
+	function displayPhoneNumberView(tab_id)
+	{
+		switchTab(tab_id);
+		loadPhoneNumberFrame();
+	}
+	
+	function loadPhoneNumberFrame()
+	{
+		$('<iframe id="phone_number_frame"/>').load(function(){
+		}).appendTo("#tab_view_area");
+		 $('#phone_number_frame').attr('src','/web/com/gs/event/phone_number.jsp?admin_id='+varAdminID+'&event_id='+varEventID);
+		    $('#phone_number_frame').attr('height','100%');
+		    $('#phone_number_frame').attr('width','100%');
+		    $('#phone_number_frame').attr('frameborder','0');
 	}
 	
 	function loadActions()
@@ -276,7 +321,15 @@
 				var_event_id : varEventID,
 				var_admin_id : varAdminID
 			});
+			
 			applyActionEvents(tableDetails);
+			if(numOfRows>0)
+			{	// code to sort the table if there is any data.. the last column containing the action
+				// links should not be sortable.
+			
+				$('#table_details').tablesorter({ headers: { 3: { sorter: false} } });
+				
+			}
 			
 		}
 	}
@@ -400,6 +453,27 @@
 			//var varTa
 			loadTables();
 		}
+	}
+	
+	function credentialSuccess(varFirstName,varSource)
+	{
+		$("#get_phone_num_div").hide();
+		$("#login_name_display").text(varFirstName);
+		$("#login_name_display").addClass("bold_text");
+		
+	}
+	
+	function resetPhoneNumber()
+	{
+		$("#phone_num_tab").unbind();
+		$("#phone_num_tab").removeAttr("href");
+		$("#phone_num_tab").click(function(){
+
+			toggleActionNavs('li_phone_num');			
+			displayPhoneNumberView('li_phone_num');
+		});
+		toggleActionNavs('li_phone_num');
+		displayPhoneNumberView('li_phone_num');
 	}
 	
 	

@@ -7,6 +7,8 @@
 
 
 <jsp:include page="../common/header_top.jsp"/>
+
+<%@include file="../common/security.jsp"%>
 <jsp:include page="../common/header_bottom.jsp"/>
 
 <%
@@ -15,29 +17,32 @@
 	String sAdminId = ParseUtil.checkNull(request.getParameter("lobby_admin_id"));
 %>
 <link rel="stylesheet" type="text/css" href="/web/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
-<link rel="stylesheet" type="text/css" href="/web/css/blue/style.css" media="screen" />
 
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 
 <body>
    <div class="page_setup">
 		<div class="container rounded-corners">
+			<div style="margin:5px;">
 			<jsp:include page="../common/top_nav.jsp"/>
-			<jsp:include page="lobby_tab.jsp">
-				<jsp:param name="select_tab" value="guest_tab"/>
-			</jsp:include>
-			<div class="main_body">
-				<div class="clear_both landing_input">					
-											
-					<jsp:include page="../common/action_nav.jsp">
-						<jsp:param name="admin_id" value="<%=sAdminId %>"/>
-						<jsp:param name="event_id" value="<%=sEventId %>"/>
-						<jsp:param name="select_action_nav" value="all_guest_tab"/>
-					</jsp:include>
-				</div>
-				<div  class="clear_both" style="width: 100%;  text-align: center;">
-				<div  class="clear_both" id="div_guests_details">
-					
-				</div>
+				<jsp:include page="lobby_tab.jsp">
+					<jsp:param name="select_tab" value="guest_tab"/>
+					<jsp:param name="lobby_header" value="All Guests"/>
+					<jsp:param name="lobby_sec_header" value=""/>
+				</jsp:include>
+				<div class="main_body">
+					<div class="clear_both">					
+												
+						<jsp:include page="../common/action_nav.jsp">
+							<jsp:param name="admin_id" value="<%=sAdminId %>"/>
+							<jsp:param name="event_id" value="<%=sEventId %>"/>
+							<jsp:param name="select_action_nav" value="all_guest_tab"/> 
+						</jsp:include>
+					</div>
+					<div  class="clear_both" style="width: 100%;  text-align: center;">
+					<div  class="clear_both" id="div_guests_details">
+						
+					</div>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -64,6 +69,7 @@
 			'padding'			: 0,
 			'margin'			: 0
 		});
+		$("#all_guests_action_nav").show();
 		loadActions();
 		loadGuests();
 	});

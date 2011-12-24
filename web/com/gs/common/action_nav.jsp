@@ -9,12 +9,27 @@ boolean isLoggedIn = ParseUtil.sTob(request.getParameter("logged_in"));
 
 %>
 <div class="horiz_nav" style="padding:1px;" id='action_nav_div'>
+<%
+	if("table_tab".equalsIgnoreCase(sSelectTab))
+	{
+%>
 		<div class="row" id="table_action_nav"  style="display:none;">
 			<div class="span7">
 				<div class="row">
 					<div class="span2 txt_center">
 						<button id="add_table" name="add_table" href="../event/add_table.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="action_button default small ">Add Table</button>
 					</div>
+				
+<%
+				if(!isLoggedIn)
+				{
+%>
+					<div class="span5 txt_center" id="get_phone_num_div">
+						<button id="get_phone_num" name="get_phone_num" href="../common/credential.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="action_button success large ">Get Phone Number!!</button>
+					</div>
+<%
+				}
+%>
 				</div>
 			</div>
 		</div>
@@ -35,13 +50,22 @@ boolean isLoggedIn = ParseUtil.sTob(request.getParameter("logged_in"));
 			</div>
 		</div>
 
-	<ul>
+	<%
+	}
+	else if("all_guest_tab".equalsIgnoreCase(sSelectTab))
+	{
+%>
+		<div class="row" id="all_guests_action_nav"  style="display:none;">
+			<div class="span7">
+				<div class="row">
+					<div class="span2 txt_center">
+						<button id="add_all_guests" name="add_all_guests" href="../event/add_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>&all_guest_tab=true" class="action_button default small ">Create Guest</button>
+					</div>
+				</div>
+			</div>
+		</div>
+<%
+	}
+	%>
 
-
-
-
-	<!-- 	<li>
-			<a class="action_button" href="http://blog.uber.com" id="">Save</a>
-		</li>  -->
-	</ul>
 </div>

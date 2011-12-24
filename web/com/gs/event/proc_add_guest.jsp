@@ -5,12 +5,21 @@
 <%@page import="org.json.*" %>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
+<%@ page import="java.util.*"%>
+<%@page import="com.gs.json.*"%>
 <%
 JSONObject jsonResponseObj = new JSONObject();
 
 Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 Logger appLogging = LoggerFactory.getLogger("AppLogging");
 response.setContentType("application/json");
+
+ArrayList<Text> arrOkText = new ArrayList<Text>();
+ArrayList<Text> arrErrorText = new ArrayList<Text>();
+RespConstants.Status responseStatus = RespConstants.Status.ERROR;
+
+RespObjectProc responseObject = new RespObjectProc();
+
 try
 {
 	String sEventId =  ParseUtil.checkNull(request.getParameter("event_id"));
@@ -23,18 +32,69 @@ try
 	String sCellNumber =  ParseUtil.checkNull(request.getParameter("cell_num"));
 	String sHomeNumber =  ParseUtil.checkNull(request.getParameter("home_num"));
 	String sEventIdSelected =  ParseUtil.checkNull(request.getParameter("dd_event_list"));
+
+	boolean isGuestCreate =  ParseUtil.sTob(request.getParameter("is_guest_create"));
+	boolean isGuestAddToEvent =  ParseUtil.sTob(request.getParameter("is_guest_add_event"));
 	
-	String sMessage = "";
-	if(sFirstName==null || "".equalsIgnoreCase(sFirstName) || sCellNumber==null 
-			|| "".equalsIgnoreCase(sCellNumber)
-			|| sInvitedNumOfSeats==null || "".equalsIgnoreCase(sInvitedNumOfSeats) 
-			|| sRsvpNumOfSeats==null || "".equalsIgnoreCase(sRsvpNumOfSeats)
-			|| sHomeNumber==null || "".equalsIgnoreCase(sHomeNumber))
+	boolean isError = false;
+	if(sFirstName==null || "".equalsIgnoreCase(sFirstName))
 	{
-		jsonResponseObj.put(Constants.J_RESP_SUCCESS,false);
-		sMessage = "Please fill all the parameters before adding a guest.";
+		Text errorText = new ErrorText("Please enter the First Name.","first_name") ;		
+		arrErrorText.add(errorText);
+		
+		responseStatus = RespConstants.Status.ERROR;
+		isError = true;
 	}
-	else
+	if(sLastName==null || "".equalsIgnoreCase(sLastName))
+	{
+		Text errorText = new ErrorText("Please enter the Last Name.","last_name") ;		
+		arrErrorText.add(errorText);
+		
+		responseStatus = RespConstants.Status.ERROR;
+		isError = true;
+	}
+	if(sCellNumber==null || "".equalsIgnoreCase(sCellNumber))
+	{
+		Text errorText = new ErrorText("Please enter the Cell Number.","cell_num") ;		
+		arrErrorText.add(errorText);
+		
+		responseStatus = RespConstants.Status.ERROR;
+		isError = true;
+	}
+	
+	if(isGuestAddToEvent)
+	{
+		int iNumInvited =  ParseUtil.sToI(sInvitedNumOfSeats);
+		if(sInvitedNumOfSeats==null || "".equalsIgnoreCase(sInvitedNumOfSeats) || iNumInvited<=0)
+		{
+			appLogging.warn("Invited number of guests was invalid : " + sInvitedNumOfSeats );
+			
+			Text errorText = new ErrorText("Enter a number more than 0.","invited_num_of_seats") ;		
+			arrErrorText.add(errorText);
+			
+			responseStatus = RespConstants.Status.ERROR;
+			isError = true;
+		}
+		
+		
+		
+		int iNumRsvp =  ParseUtil.sToI(sRsvpNumOfSeats);
+		if(sRsvpNumOfSeats==null || "".equalsIgnoreCase(sRsvpNumOfSeats) || iNumRsvp<0)
+		{
+			appLogging.warn("RSVP number of guests was invalid : " + sRsvpNumOfSeats );
+			
+			Text errorText = new ErrorText("Enter 0 if no RSVP.","rsvp_num_of_seats") ;		
+			arrErrorText.add(errorText);
+			
+			responseStatus = RespConstants.Status.ERROR;
+			isError = true;
+		}
+		
+		
+	}
+	String sMessage = "";
+
+	if(!isError)
 	{
 		if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId))
 		{
@@ -74,9 +134,12 @@ try
 				
 				if (guestBean!=null && guestBean.getGuestId() !=null && !"".equalsIgnoreCase(guestBean.getGuestId()))
 				{
+					jsonResponseObj.put("guest_id",guestBean.getGuestId());
 					
 					if(sEventIdSelected!=null && !"".equalsIgnoreCase(sEventIdSelected) && !"all".equalsIgnoreCase(sEventIdSelected))
 					{
+						
+						
 						EventGuestBean eventGuestBean = new EventGuestBean();
 						eventGuestBean.setEventGuestId(Utility.getNewGuid());
 						eventGuestBean.setEventId(sEventIdSelected);
@@ -93,21 +156,41 @@ try
 						{
 							sMessage = "The guest could not be added to Event";
 							jsonResponseObj.put(Constants.J_RESP_SUCCESS,false);
+							
+							appLogging.warn("The guest could not be added to Event");
+							
+							Text errorText = new ErrorText("The guest could not be added to Event","err_mssg") ;		
+							arrErrorText.add(errorText);
+							
+							responseStatus = RespConstants.Status.ERROR;
+							isError = true;
 						}
 						else
 						{
+							Text okText = new OkText("The guest was assigned successfully to the event successfully.","err_mssg") ;		
+							arrErrorText.add(okText);
+							
+							responseStatus = RespConstants.Status.OK;
+							
+							jsonResponseObj.put("event_id",guestBean.getGuestId());
 							jsonResponseObj.put(Constants.J_RESP_SUCCESS,true);
 						}
 					}
+					else if( "all".equalsIgnoreCase(sEventIdSelected) || "".equalsIgnoreCase(sEventIdSelected) )
+					{
+						appLogging.info("Guest creation was successful : " + guestBean.getGuestId());
+						Text okText = new OkText("The guest was created successfully.","err_mssg") ;		
+						arrErrorText.add(okText);
+						
+						responseStatus = RespConstants.Status.OK;
+					}
 					
 					
-					appLogging.info("Guest creation was successful : " + guestBean.getGuestId());
-					jsonResponseObj.put(Constants.J_RESP_SUCCESS,true);
 				} else
 				{
 					sMessage = "The guest could not be created at this time. Please try again later.";
 					appLogging.error("Error creating Guest " + guestBean.getGuestId());
-					jsonResponseObj.put(Constants.J_RESP_SUCCESS,false);
+					
 				}
 				
 			}
@@ -119,7 +202,16 @@ try
 			jsonResponseObj.put(Constants.J_RESP_SUCCESS,false);
 		}
 	}
-	out.println(jsonResponseObj.toString());
+	
+	appLogging.error("Response " + sEventId + " table : " + jsonResponseObj.toString());
+	responseObject.setErrorMessages(arrErrorText);
+	responseObject.setOkMessages(arrOkText);
+	responseObject.setResponseStatus(responseStatus);
+	responseObject.setJsonResponseObj(jsonResponseObj);
+	
+	out.println(responseObject.getJson());
+	
+	//out.println(jsonResponseObj.toString());
 }
 catch(Exception e)
 {

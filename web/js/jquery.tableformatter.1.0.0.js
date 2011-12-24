@@ -37,15 +37,15 @@
 		{
 			create_table : function()
 			{
-				return '<table cellspacing="1" id="table_details" class="bordered-table zebra-striped"> '+this.create_header()+''+this.create_rows()+'</table>';
+				return '<table cellspacing="1" id="table_details" class="bordered-table zebra-striped tbl"> '+this.create_header()+''+this.create_rows()+'</table>';
 				
 			},
 			create_header : function ()
 			{
 				var valHeader = '<thead><tr> ' + 
-				'<th style="width:30%">Table Name</th><th style="width:10%">Number</th>'+
-				'<th style="width:20%">Assigned Seats</th>'+
-				'<th style="width:35%"></th>'
+				'<th style="width:30%" class="tbl_th">Table Name</th><th style="width:10%" class="tbl_th">Number</th>'+
+				'<th style="width:20%" class="tbl_th">Assigned Seats</th>'+
+				'<th style="width:35%" class="tbl_th"></th>'
 				+'</tr></thead>';
 				return valHeader; 
 			},
@@ -75,17 +75,17 @@
 							assignments = tmpTable.guest_assigned_seats > 0 ? tmpTable.guest_assigned_seats + ' of ' + tmpTable.num_of_seats : '0' + ' of ' + tmpTable.num_of_seats;
 						}
 						
-						valRows = valRows + '<tr id="table_'+tmpTable.table_id+'" '+varOddClass+'><td>'+tmpTable.table_name+'</td>'+
-											'<td>'+tmpTable.table_num+'</td>'+
-											'<td>'+ assignments +'</td>'+
-											'<td>'+ this.create_action_urls( tmpTable ) +'</td>' + '</tr>';
+						valRows = valRows + '<tr id="table_'+tmpTable.table_id+'" '+varOddClass+'><td class="tbl_td">'+tmpTable.table_name+'</td>'+
+											'<td class="tbl_td">'+tmpTable.table_num+'</td>'+
+											'<td class="tbl_td">'+ assignments +'</td>'+
+											'<td class="tbl_td">'+ this.create_action_urls( tmpTable ) +'</td>' + '</tr>';
 					}
 					else
 					{
-						valRows = valRows + '<tr id="table_dummy_row"><td>Add table for your guests.</td>'+
-											'<td>&nbsp;</td>'+
-											'<td>&nbsp;</td>'+
-											'<td>&nbsp;</td>' + '</tr>';
+						valRows = valRows + '<tr id="table_dummy_row"><td class="tbl_td">Add table for your guests.</td>'+
+											'<td class="tbl_td">&nbsp;</td>'+
+											'<td class="tbl_td">&nbsp;</td>'+
+											'<td class="tbl_td">&nbsp;</td>' + '</tr>';
 					}
 					
 					
