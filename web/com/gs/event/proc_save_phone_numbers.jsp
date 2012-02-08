@@ -3,6 +3,7 @@
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="java.util.*"%>
 <%@page import="com.gs.json.*"%>
+<%@page import="com.gs.manager.event.*"%>
 <%@page import="com.gs.common.*" %>
 <%@include file="../common/security.jsp" %>
 <%
@@ -29,16 +30,41 @@ try
 	{
 		if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId)  && sEventId!=null && !"".equalsIgnoreCase(sEventId))
 		{
-			
+			if(sSeatingNumber!=null && !"".equalsIgnoreCase(sSeatingNumber)
+					&& sRsvpNumber!=null && !"".equalsIgnoreCase(sRsvpNumber) )
+			{
+				TelNumberMetaData telNumberMetaData = new TelNumberMetaData();
+				telNumberMetaData.setAdminId(sAdminId);
+				telNumberMetaData.setEventId(sEventId);
+				telNumberMetaData.setRsvpTelNumDigit(sRsvpNumber);
+				telNumberMetaData.setSeatingTelNumDigit(sSeatingNumber);
+				
+				TelNumberManager telNumManager = new TelNumberManager();
+				telNumManager.saveTelNumbers(telNumberMetaData);
+			}
+			else
+			{
+				Text errorText = new ErrorText("Please fill in at least a one phone number.","my_id") ;
+				arrErrorText.add(errorText);
+				
+				responseStatus = RespConstants.Status.ERROR;
+				//jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
+				jspLogging.error("Missing paramteres in request Admin Id : " + sAdminId  + " Event ID : " +  sEventId );
+			}
 		}
 		else
 		{
+			Text errorText = new ErrorText("Oops!! Please try again later. Your request was not completed.","my_id") ;		
+			arrErrorText.add(errorText);
 			
+			responseStatus = RespConstants.Status.ERROR;
+			//jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
+			jspLogging.error("Missing paramteres in request Admin Id : " + sAdminId  + " Event ID : " +  sEventId );
 		}
 	}
 	else
 	{
-		Text errorText = new ErrorText("Oops!! Your request could not be processed at this time.","my_id") ;		
+		Text errorText = new ErrorText("Please log in or register before trying to save the phone numbers","my_id") ;		
 		arrErrorText.add(errorText);
 		
 		responseStatus = RespConstants.Status.ERROR;

@@ -16,44 +16,39 @@ import com.gs.common.ExceptionHandler;
 import com.gs.common.ParseUtil;
 import com.gs.data.GuestData;
 
-public class EventGuestManager
-{
-	private static final Logger appLogging = LoggerFactory.getLogger("AppLogging");
+public class EventGuestManager {
+	private static final Logger appLogging = LoggerFactory
+			.getLogger("AppLogging");
 
-	public Integer assignGuestToEvent(EventGuestBean eventGuestBean)
-	{
+	public Integer assignGuestToEvent(EventGuestBean eventGuestBean) {
 		int iNumOfRecs = 0;
 		if (eventGuestBean != null && eventGuestBean.getGuestId() != null
 				&& eventGuestBean.getEventId() != null
 				&& !"".equalsIgnoreCase(eventGuestBean.getGuestId())
-				&& !"".equalsIgnoreCase(eventGuestBean.getEventId()))
-		{
+				&& !"".equalsIgnoreCase(eventGuestBean.getEventId())) {
 
 			GuestData guestData = new GuestData();
 
 			iNumOfRecs = guestData.assignGuestToEvent(eventGuestBean);
 
-			if (iNumOfRecs > 0)
-			{
+			if (iNumOfRecs > 0) {
 				appLogging.info("Event Guest assignment successful for  : "
 						+ eventGuestBean.getGuestId() + " Event Id = "
 						+ eventGuestBean.getEventId());
-			} else
-			{
-				appLogging.error("Error assigning Event Guest " + eventGuestBean.getGuestId()
-						+ " Event Id = " + eventGuestBean.getEventId());
+			} else {
+				appLogging.error("Error assigning Event Guest "
+						+ eventGuestBean.getGuestId() + " Event Id = "
+						+ eventGuestBean.getEventId());
 				eventGuestBean = null;
 			}
-		} else
-		{
+		} else {
 			appLogging.error("There was an error in input : " + eventGuestBean);
 		}
 
 		return iNumOfRecs;
 	}
 
-	public void setGuestRsvpForEvent(EventGuestMetaData eventGuestMetaData)
-	{
+	public void setGuestRsvpForEvent(EventGuestMetaData eventGuestMetaData) {
 
 		GuestData guestData = new GuestData();
 
@@ -63,10 +58,8 @@ public class EventGuestManager
 
 		ArrayList<String> arrGuestId = eventGuestMetaData.getArrGuestId();
 
-		if (arrGuestId != null && !arrGuestId.isEmpty())
-		{
-			for (String sGuestId : arrGuestId)
-			{
+		if (arrGuestId != null && !arrGuestId.isEmpty()) {
+			for (String sGuestId : arrGuestId) {
 				eventGuestBean.setGuestId(sGuestId);
 			}
 
@@ -75,29 +68,30 @@ public class EventGuestManager
 
 	}
 
-	public ArrayList<EventGuestBean> getGuestsByEvent(EventGuestMetaData eventGuestMetaData)
-	{
+	public ArrayList<EventGuestBean> getGuestsByEvent(
+			EventGuestMetaData eventGuestMetaData) {
 		ArrayList<EventGuestBean> arrEventGuestBean = new ArrayList<EventGuestBean>();
-		if (eventGuestMetaData != null && eventGuestMetaData.getEventId() != null
-				&& !"".equalsIgnoreCase(eventGuestMetaData.getEventId()))
-		{
+		if (eventGuestMetaData != null
+				&& eventGuestMetaData.getEventId() != null
+				&& !"".equalsIgnoreCase(eventGuestMetaData.getEventId())) {
 			GuestData guestData = new GuestData();
-			arrEventGuestBean = guestData.getEventAllGuests(eventGuestMetaData.getEventId());
+			arrEventGuestBean = guestData.getEventAllGuests(eventGuestMetaData
+					.getEventId());
 		}
 
 		return arrEventGuestBean;
 	}
 
-	public EventGuestBean getGuest(EventGuestMetaData eventGuestMetaData)
-	{
+	public EventGuestBean getGuest(EventGuestMetaData eventGuestMetaData) {
 		EventGuestBean eventGuestBean = new EventGuestBean();
-		if (eventGuestMetaData != null && eventGuestMetaData.getEventId() != null
+		if (eventGuestMetaData != null
+				&& eventGuestMetaData.getEventId() != null
 				&& !"".equalsIgnoreCase(eventGuestMetaData.getEventId())
 				&& eventGuestMetaData.getArrGuestId() != null
-				&& !eventGuestMetaData.getArrGuestId().isEmpty())
-		{
+				&& !eventGuestMetaData.getArrGuestId().isEmpty()) {
 			GuestData guestData = new GuestData();
-			eventGuestBean = guestData.getGuest(eventGuestMetaData.getEventId(),
+			eventGuestBean = guestData.getGuest(
+					eventGuestMetaData.getEventId(),
 					eventGuestMetaData.getArrGuestId());
 		}
 
@@ -105,50 +99,69 @@ public class EventGuestManager
 	}
 
 	public HashMap<String, ArrayList<EventGuestBean>> getEventGuests(
-			ArrayList<GuestBean> arrGuestBean)
-	{
+			ArrayList<GuestBean> arrGuestBean) {
 		HashMap<String, ArrayList<EventGuestBean>> hmEventGuestBean = new HashMap<String, ArrayList<EventGuestBean>>();
-		if (arrGuestBean != null && !arrGuestBean.isEmpty())
-		{
+		if (arrGuestBean != null && !arrGuestBean.isEmpty()) {
 			GuestData guestData = new GuestData();
-			for (GuestBean guestBean : arrGuestBean)
-			{
-				ArrayList<EventGuestBean> arrEventGuestsBean = guestData.getEventGuests(guestBean
-						.getGuestId());
+			for (GuestBean guestBean : arrGuestBean) {
+				ArrayList<EventGuestBean> arrEventGuestsBean = guestData
+						.getEventGuests(guestBean.getGuestId());
 
-				hmEventGuestBean.put(guestBean.getGuestId(), arrEventGuestsBean);
+				hmEventGuestBean
+						.put(guestBean.getGuestId(), arrEventGuestsBean);
 			}
 		}
 		return hmEventGuestBean;
 	}
 
-	public JSONObject getEventGuestsJson(HashMap<String, ArrayList<EventGuestBean>> hmEventGuestBean)
-	{
-		JSONObject jsonObject = new JSONObject();
-		try
-		{
+	private JSONArray getEventGuestsJsonArray(
+			ArrayList<EventGuestBean> arrEventGuestBean) {
+		JSONArray jsonEventGuestArray = new JSONArray();
+		try {
 
-			if (hmEventGuestBean != null && !hmEventGuestBean.isEmpty())
-			{
+			int numOfRows = 0;
+			if (arrEventGuestBean != null && !arrEventGuestBean.isEmpty()) {
+				int iIndex = 0;
+				for (EventGuestBean eventGuestBean : arrEventGuestBean) {
+					jsonEventGuestArray.put(iIndex, eventGuestBean.toJson());
+					iIndex++;
+				}
+				numOfRows++;
+			}
+		} catch (JSONException e) {
+			appLogging.error(ExceptionHandler.getStackTrace(e));
+		}
+		return jsonEventGuestArray;
+	}
+
+	public JSONObject getEventGuestsJson(
+			HashMap<String, ArrayList<EventGuestBean>> hmEventGuestBean) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+
+			if (hmEventGuestBean != null && !hmEventGuestBean.isEmpty()) {
 				Set<String> setGuestId = hmEventGuestBean.keySet();
 				int numOfGuests = 0;
-				for (String sGuestId : setGuestId)
-				{
-					ArrayList<EventGuestBean> arrEventGuestBean = hmEventGuestBean.get(sGuestId);
-					JSONArray jsonEventGuestArray = new JSONArray();
+				for (String sGuestId : setGuestId) {
+					ArrayList<EventGuestBean> arrEventGuestBean = hmEventGuestBean
+							.get(sGuestId);
+					JSONArray jsonEventGuestArray = getEventGuestsJsonArray(arrEventGuestBean);
 					int numOfRows = 0;
-					if (arrEventGuestBean != null && !arrEventGuestBean.isEmpty())
-					{
-						int iIndex = 0;
-						for (EventGuestBean eventGuestBean : arrEventGuestBean)
-						{
-							jsonEventGuestArray.put(iIndex, eventGuestBean.toJson());
-							iIndex++;
-						}
-						numOfRows++;
+					if (arrEventGuestBean != null) {
+						numOfRows = arrEventGuestBean.size();
 					}
+					/*
+					 * JSONArray jsonEventGuestArray = new JSONArray();
+					 * 
+					 * if (arrEventGuestBean != null &&
+					 * !arrEventGuestBean.isEmpty()) { int iIndex = 0; for
+					 * (EventGuestBean eventGuestBean : arrEventGuestBean) {
+					 * jsonEventGuestArray.put(iIndex, eventGuestBean.toJson());
+					 * iIndex++; } numOfRows++; }
+					 */
 					JSONObject jsonGuestObject = new JSONObject();
-					jsonGuestObject.put("num_of_event_guest_rows", ParseUtil.iToI(numOfRows));
+					jsonGuestObject.put("num_of_event_guest_rows",
+							ParseUtil.iToI(numOfRows));
 					jsonGuestObject.put("event_guests", jsonEventGuestArray);
 
 					jsonObject.put(sGuestId, jsonGuestObject);
@@ -157,8 +170,7 @@ public class EventGuestManager
 
 			}
 
-		} catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			appLogging.error(ExceptionHandler.getStackTrace(e));
 		}
 		return jsonObject;

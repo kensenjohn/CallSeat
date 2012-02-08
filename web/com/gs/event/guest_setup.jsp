@@ -134,7 +134,42 @@
 	
 	function getEventGuestResult(jsonResult)
 	{
-		if(!jsonResult.success)
+		
+		var varResponseObj = jsonResult.response;
+		if(jsonResult.status == 'error'  && varResponseObj !=undefined )
+		{
+			var varIsMessageExist = varResponseObj.is_message_exist;
+			if(varIsMessageExist == true)
+			{
+				var jsonResponseMessage = varResponseObj.messages;
+				var varArrErrorMssg = jsonResponseMessage.error_mssg
+				displayMessages( varArrErrorMssg );
+			}
+		}
+		else  if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+		{
+			var varIsPayloadExist = varResponseObj.is_payload_exist;
+			if(varIsPayloadExist == true)
+			{
+				var jsonResponseObj = varResponseObj.payload;	
+				
+				var guestRows = jsonResponseObj.guest_rows;
+				var eventGuestRows = jsonResponseObj.event_guest_rows;
+				
+				if(guestRows!=undefined)
+				{
+					var numOfRows = guestRows.num_of_rows;
+					var allTables = guestRows.guests;
+					
+					$("#div_guests_details").guestformatter({
+						varGuestDetails : guestRows,
+						varEventGuestDetails : eventGuestRows,
+						varDeleteTableURL : '/web/com/gs/event/proc_delete_table.jsp'
+					});
+				}
+			}
+		}
+		/*if(!jsonResult.success)
 		{
 			var varResponse = jsonResult.response;
 			if(varResponse!=undefined)
@@ -168,7 +203,7 @@
 				
 			}
 		
-		}
+		}*/
 	}
 	
 </script>

@@ -29,7 +29,7 @@
 					else
 					{
 %>
-						<h2 class="txt txt_center">Guest for <span id="div_event_list"></span></h2>
+						<h2 class="txt txt_center">Add guest to <span id="div_event_list"></span></h2>
 <%
 					}
 %>
@@ -167,15 +167,29 @@
 	</body>
 	<script type="text/javascript">
 		var varAdminId = '<%=sAdminId%>';
+		var varEventId = '<%=sEventId%>'
 		var varIsAllGuestAdd = <%=isAllGuestAdd%>;
 		$(document).ready(function() 
 		{	if(varIsAllGuestAdd)
 			{
 				loadEvents(); //load all events only if there are guests.
 			}
+			else
+			{
+				getEventName();
+			}
 			
 			$("#add_guest").click(addGuest);
 		});
+		
+		function getEventName()
+		{
+			var actionUrl = "proc_load_events.jsp";
+			var methodType = "GET";
+			var dataString = "&admin_id="+varAdminId+"&event_id="+varEventId+"&single_event=true";
+			//alert(dataString);
+			makeAjaxCall(actionUrl,dataString,methodType,createEventName);
+		}
 		function loadEvents()
 		{
 			var actionUrl = "proc_load_events.jsp";
@@ -192,6 +206,10 @@
 			var methodType = "POST";
 			
 			dataString = dataString + '&save_data=y';
+			if(!varIsAllGuestAdd)
+			{
+				dataString = dataString + '&dd_event_list='+varEventId;
+			}
 			makeAjaxCall(actionUrl,dataString,methodType,getResult);
 		}
 		
@@ -208,6 +226,24 @@
 					  alert(a.responseText + ' = ' + b + " = " + c);
 				  }
 				});
+		}
+		
+		function createEventName(jsonResult)
+		{
+			if(!jsonResult.success)
+			{
+				
+			}
+			else
+			{
+				var eventDetails = jsonResult.event_detail;
+				if(eventDetails!=undefined)
+				{
+					var varEventDD = generateEventName(eventDetails);
+					
+					$("#div_event_list").append(varEventDD);
+				}
+			}
 		}
 		
 		function createEventList(jsonResult)
@@ -228,6 +264,19 @@
 					
 				}
 			}
+		}
+		
+		function generateEventName(eventDetails)
+		{
+			var varNumOfEvents = eventDetails.num_of_rows;
+			var varEventList = eventDetails.events;
+			
+			var varEventDD = '';
+			for(i=0; i<varNumOfEvents ; i++ )
+			{
+				varEventDD = varEventList[i].event_name;
+			}
+			return varEventDD;
 		}
 		
 		function generateEventDropDown(eventDetails)
@@ -271,12 +320,15 @@
 						var jsonResponseObj = varResponseObj.payload;
 						//processTableGuest( jsonResponseObj );
 						var varGuestId = jsonResponseObj.guest_id;
-						alert(varGuestId)
 						createAssignmentButton(varGuestId);
 						
 						
 						parent.loadGuests();
 						
+						if(!varIsAllGuestAdd)
+						{
+							parent.$.fancybox.close();
+						}
 						//parent.$.fancybox.close();
 					}
 				}

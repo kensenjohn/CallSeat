@@ -91,4 +91,29 @@ public class TelNumberData {
 
 		return telNumberBean;
 	}
+
+	public ArrayList<TelNumberBean> createTelNumber(
+			TelNumberMetaData telNumMetaData) {
+		/*
+		 * -------------------+-------------+------+-----+---------+-------+ |
+		 * TELNUMBERID | varchar(45) | NO | PRI | NULL | | | TELNUMBER |
+		 * varchar(45) | NO | | NULL | | | FK_TELNUMBERTYPEID | varchar(45) | NO
+		 * | | NULL | | | FK_EVENTID | varchar(45) | NO | | NULL | | |
+		 * FK_ADMINID | varchar(45) | NO | | NULL | | | DEL_ROW | int(1) | NO |
+		 * | 0 | | | IS_ACTIVE | int(1) | YES | | 0 | | | IS_PURCHASED
+		 */
+		String sQuery = "INSERT INTO GTTELNUMBERS (TELNUMBERID,TELNUMBER,FK_TELNUMBERTYPEID,FK_EVENTID,"
+				+ " FK_ADMINID,DEL_ROW,IS_ACTIVE,IS_PURCHASED) VALUES(?,?,?,   ?,?,?   ,?,?)";
+
+		// ArrayList<Object> aParams = DBDAO.createConstraint(params);
+
+		// DBDAO.putCommitRowsQuesry(sQuery, aParams, ADMIN_DB, sInvokingClass,
+		// sInvokingMethod);
+
+		return null;
+	}
+
+	public ArrayList<TelNumberBean> updateTelNumber() {
+		return null;
+	}
 }

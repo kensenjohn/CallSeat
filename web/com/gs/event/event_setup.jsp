@@ -65,9 +65,7 @@
 	sAdminId = adminBean.getAdminId();
 	
 	String eventName = eventBean.getEventName();
-	String eventDate = "10/12/2011";
-	
-	eventDate = "(10/12/2011)";
+	String eventDate = "("+sEventDate+")";
 %>
 <link rel="stylesheet" type="text/css" href="/web/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 
@@ -101,6 +99,75 @@
 				<div  class="clear_both" id="div_table_details">
 					
 				</div>
+				<div  class="clear_both" id="div_guests_details">
+					
+				</div>
+				<div  class="clear_both" id="div_event_summary" style="display:none;">
+				<div class="row">
+					<div class="span7">
+					<form id="frm_event_update" >
+					<fieldset>
+								<div class="clearfix-tight">
+									<label for="table_name">Event Name :</label>
+									<div class="input">
+										<input type="text"  class="span4" value="" id="e_summ_event_name" name = "e_summ_event_name"/>
+									</div>
+								</div>
+								<div class="clearfix-tight">
+									<label for="table_name">Event Date : </label>
+									<div class="input">
+										<input type="text" class="span4" value="" id="e_summ_event_date" name = "e_summ_event_date"/>
+									</div>
+								</div>
+								<div class="actions">									
+						            <button id="save_event" name="save_event" type="button" class="action_button primary small">Save Changes</button>
+						        </div>
+						        
+					</fieldset>	
+					</form>	
+					</div>
+				</div>
+				<div class="row">
+					<div class="span2">
+						&nbsp;
+					</div>
+					<div class="span5">
+					 <table>
+						<tr>
+							<td align="right">Tables created : </td>
+							<td><span id="e_summ_total_table" > 0 </span></td>
+						</tr>
+						<tr>
+							<td  align="right">Seats created : </td>
+							<td><span id="e_summ_total_seats"> 0 </span></td>
+						</tr>
+						<tr>
+							<td  align="right">Seats assigned : </td>
+							<td><span id="e_summ_assigned_seats"> 0 </span></td>
+						</tr>
+						<tr>
+							<td  align="right">Guest parties : </td>
+							<td><span id="e_summ_guest_parties"  > 0 </span></td>
+						</tr>
+						<tr>
+							<td  align="right">Total invited : </td>
+							<td><span id="e_summ_total_invited" > 0 </span></td>
+						</tr>
+						<tr>
+							<td  align="right">Total rsvp : </td>
+							<td><span id="e_summ_total_rsvp"> 0 </span></td>
+						</tr>
+						<tr>
+							<td  align="right">Rsvp Telephone : </td>
+							<td><span id="e_summ_rsvp_telnum" > 0 </span></td>
+						</tr>
+						<tr>
+							<td  align="right">Seating Telephone : </td>
+							<td><span id="e_summ_seating_telnum"> 0 </span></td>
+						</tr>
+					</table>
+					</div>
+				</div>
 				</div>
 			</div>
 			</div>
@@ -113,16 +180,26 @@
 <script type="text/javascript" src="/web/js/jquery.tableformatter.1.0.0.js"></script>
 <script type="text/javascript" src="/web/js/jquery.datepick.js"></script> 
 <script type="text/javascript" src="/web/js/jquery.tablesorter.js"></script> 
+<script type="text/javascript" src="/web/js/jquery.eventguests.1.0.0.js"></script>
 
 <script type="text/javascript">
 	var varEventID = '<%=sEventId%>';
 	var varAdminID = '<%=sAdminId%>';
 	var varIsSignedIn = <%=isSignedIn%>;
 	$(document).ready(function() {
-		
+		$("#e_summ_event_date").datepick();
 		$("#event_summary_tab").click(function(){
-			displayTableView('li_event_summary');
-			toggleActionNavs('');
+
+			toggleActionNavs('li_event_summary');
+			displayEventSummaryView('li_event_summary');
+			
+			
+		});
+		$("#save_event").click(function(){
+			alert('save event');
+			//$("#primary_header").text( $("#e_summ_event_name").val() );
+			
+			saveEvent();
 		});
 		$("#table_view_tab").click(function(){
 
@@ -217,6 +294,8 @@
 	function toggleTabViewArea()
 	{
 		$('#tab_view_area').empty();
+		$("#div_guests_details").empty();
+		$('#div_event_summary').hide();
 	}
 	
 	function switchTab(current_tab_id)
@@ -228,6 +307,13 @@
 		
 	}
 	
+	function displayEventSummaryView(tab_id)
+	{		
+		switchTab(tab_id);
+		$('#div_event_summary').show();
+		loadEventSummary();
+	}
+	
 	function displayTableView(tab_id)
 	{
 		switchTab(tab_id);
@@ -237,7 +323,7 @@
 	function displayGuestView(tab_id)
 	{
 		switchTab(tab_id);
-		//loadTables();
+		loadGuests();
 	}
 	
 	function displayPhoneNumberView(tab_id)
@@ -277,6 +363,16 @@
 		});
 	}
 	
+	function loadEventSummary()
+	{
+
+		var dataString =  '&event_id='+ varEventID + '&admin_id='+ varAdminID;
+		var actionUrl = "proc_load_event_summary.jsp";
+		var methodType = "POST";
+		
+		getDataAjax(actionUrl,dataString,methodType, getEventSummaryResult);
+	}
+	
 	function loadTables()
 	{
 		//alert("table lolad");
@@ -287,6 +383,89 @@
 		
 		getDataAjax(actionUrl,dataString,methodType, getTableGuestResult);
 		
+	}
+	
+	function loadGuests()
+	{
+		var dataString = '&event_id='+ varEventID + '&admin_id='+ varAdminID + '&for_event=true';
+		var actionUrl = "proc_load_guests.jsp";
+		var methodType = "POST";
+		
+		getDataAjax(actionUrl,dataString,methodType, getEventGuestResult);
+	}
+	
+	function saveEvent()
+	{
+		var dataString = '&event_id='+ varEventID + '&admin_id='+ varAdminID;
+		dataString = dataString + '&'+$("#frm_event_update").serialize();
+		var actionUrl = "proc_save_event.jsp";
+		var methodType = "POST";
+		
+		getDataAjax(actionUrl,dataString,methodType, getUpdatedEvent);
+	}
+	
+	function getUpdatedEvent(jsonResult)
+	{
+		if(jsonResult!=undefined)
+		{
+			var varResponseObj = jsonResult.response;
+			if(jsonResult.status == 'error'  && varResponseObj !=undefined )
+			{
+				var varIsMessageExist = varResponseObj.is_message_exist;
+				if(varIsMessageExist == true)
+				{
+					var jsonResponseMessage = varResponseObj.messages;
+					var varArrErrorMssg = jsonResponseMessage.error_mssg
+					displayMessages( varArrErrorMssg );
+				}
+			}
+			else  if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+			{
+				$("#primary_header").text( $("#e_summ_event_name").val() );
+				$("#secondary_header").text( '('+$("#e_summ_event_date").val()+')' );
+				
+				alert('Changes to event was successful.');
+				
+			}
+		}
+	}
+	
+	function getEventGuestResult(jsonResult)
+	{
+		if(jsonResult!=undefined)
+		{
+			var varResponseObj = jsonResult.response;
+			if(jsonResult.status == 'error'  && varResponseObj !=undefined )
+			{
+				var varIsMessageExist = varResponseObj.is_message_exist;
+				if(varIsMessageExist == true)
+				{
+					var jsonResponseMessage = varResponseObj.messages;
+					var varArrErrorMssg = jsonResponseMessage.error_mssg
+					displayMessages( varArrErrorMssg );
+				}
+			}
+			else  if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+			{
+				var varIsPayloadExist = varResponseObj.is_payload_exist;
+				if(varIsPayloadExist == true)
+				{
+					var jsonResponseObj = varResponseObj.payload;
+					
+					var eventGuestRows = jsonResponseObj.event_guest_rows;
+					
+					
+					if(eventGuestRows!=undefined)
+					{
+						var eventGuestDetail = eventGuestRows[varEventID];
+						
+						$("#div_guests_details").eventguests({
+							varEventGuestDetails : eventGuestDetail
+						});
+					}
+				}
+			}
+		}
 	}
 	
 	function getDataAjax(actionUrl,dataString,methodType, callBackMethod)
@@ -304,6 +483,24 @@
 			});
 	}
 	
+	function processEventSummary( jsonResponseObj )
+	{
+		var eventSummary = jsonResponseObj.event_summary;
+		if(eventSummary!=undefined)
+		{
+			$("#e_summ_event_name").val(eventSummary.event_name);
+			$("#e_summ_event_date").val(eventSummary.event_date);
+			$("#e_summ_total_table").text(eventSummary.total_table);
+			$("#e_summ_total_seats").text(eventSummary.total_seats);
+			$("#e_summ_assigned_seats").text(eventSummary.assigned_seats);
+			$("#e_summ_guest_parties").text(eventSummary.total_guest_party);
+			$("#e_summ_total_invited").text(eventSummary.total_guest_invited);
+			$("#e_summ_total_rsvp").text(eventSummary.total_guest_rsvp);
+			$("#e_summ_rsvp_telnum").text(eventSummary.rsvp_tel_number);
+			$("#e_summ_seating_telnum").text(eventSummary.seating_tel_number);
+		}
+		//div_event_summary
+	}
 	var varHashTableId = '';
 	var varHashTables = '';
 	
@@ -340,6 +537,34 @@
 			for(var i = 0; i<varArrMessages.length; i++)
 			{
 				alert( varArrMessages[i].text );
+			}
+		}
+	}
+	
+	function getEventSummaryResult(jsonResult)
+	{
+		if(jsonResult!=undefined)
+		{
+			var varResponseObj = jsonResult.response;
+			if(jsonResult.status == 'error'  && varResponseObj !=undefined )
+			{
+				var varIsMessageExist = varResponseObj.is_message_exist;
+				if(varIsMessageExist == true)
+				{
+					var jsonResponseMessage = varResponseObj.messages;
+					var varArrErrorMssg = jsonResponseMessage.error_mssg
+					displayMessages( varArrErrorMssg );
+				}
+			}
+			else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+			{
+				var varIsPayloadExist = varResponseObj.is_payload_exist;
+				
+				if(varIsPayloadExist == true)
+				{
+					var jsonResponseObj = varResponseObj.payload;
+					processEventSummary( jsonResponseObj );
+				}
 			}
 		}
 	}
@@ -396,6 +621,8 @@
 				'transitionIn'		: 'none',
 				'transitionOut'		: 'none',
 				'type'				: 'iframe',
+				'padding'			: 0,
+				'margin'			: 0,
 				'onClosed'			: function() {
 										loadTables();
 										}

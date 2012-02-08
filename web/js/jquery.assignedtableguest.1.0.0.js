@@ -31,7 +31,7 @@
 			{
 				create_table : function()
 				{
-					return '<table cellspacing="1" class="addtabledetail" id="assigned_guests"> '+this.create_header()+''+this.create_rows()+'</table>';
+					return '<table  cellspacing="1"  class="bordered-table zebra-striped tbl" id="assigned_guests"> '+this.create_header()+''+this.create_rows()+'</table>';
 				},
 				create_header : function ()
 				{

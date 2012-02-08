@@ -6,6 +6,24 @@ public class TelNumberMetaData {
 	private String eventId = "";
 	private String adminId = "";
 	private String digits = "";
+	private String seatingTelNumDigit = "";
+	private String rsvpTelNumDigit = "";
+
+	public String getSeatingTelNumDigit() {
+		return seatingTelNumDigit;
+	}
+
+	public void setSeatingTelNumDigit(String seatingTelNumDigit) {
+		this.seatingTelNumDigit = seatingTelNumDigit;
+	}
+
+	public String getRsvpTelNumDigit() {
+		return rsvpTelNumDigit;
+	}
+
+	public void setRsvpTelNumDigit(String rsvpTelNumDigit) {
+		this.rsvpTelNumDigit = rsvpTelNumDigit;
+	}
 
 	private String areaCodeSearch = "";
 	private String textPatternSearch = "";

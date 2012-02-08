@@ -125,9 +125,6 @@ public class GuestBean {
 			jsonObject.put("del_row", delRow);
 
 			if (this.userInfoBean != null) {
-				JSONObject jsonUserInfoObject = new JSONObject();
-
-				jsonUserInfoObject.put("user_info", this.userInfoBean.toJson());
 
 				jsonObject.put("user_info", this.userInfoBean.toJson());
 

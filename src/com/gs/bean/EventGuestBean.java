@@ -7,8 +7,7 @@ import org.json.JSONObject;
 
 import com.gs.common.ParseUtil;
 
-public class EventGuestBean
-{
+public class EventGuestBean {
 	private String eventGuestId = "";
 	private String eventId = "";
 	private String guestId = "";
@@ -17,102 +16,96 @@ public class EventGuestBean
 	private String totalNumberOfSeats = "";
 	private String rsvpSeats = "";
 
-	public EventGuestBean()
-	{
+	private GuestBean guestBean = null;
+
+	public EventGuestBean() {
 
 	}
 
-	public EventGuestBean(HashMap<String, String> hmGuestEvents)
-	{
-		if (hmGuestEvents != null)
-		{
-			this.eventGuestId = ParseUtil.checkNull(hmGuestEvents.get("EVENTGUESTID"));
+	public EventGuestBean(HashMap<String, String> hmGuestEvents) {
+		if (hmGuestEvents != null) {
+			this.eventGuestId = ParseUtil.checkNull(hmGuestEvents
+					.get("EVENTGUESTID"));
 			this.eventId = ParseUtil.checkNull(hmGuestEvents.get("FK_EVENTID"));
 			this.guestId = ParseUtil.checkNull(hmGuestEvents.get("FK_GUESTID"));
 			this.isTemporary = ParseUtil.checkNull(hmGuestEvents.get("IS_TMP"));
 			this.deleteRow = ParseUtil.checkNull(hmGuestEvents.get("DEL_ROW"));
-			this.totalNumberOfSeats = ParseUtil.checkNull(hmGuestEvents.get("TOTAL_INVITED_SEATS"));
-			this.rsvpSeats = ParseUtil.checkNull(hmGuestEvents.get("RSVP_SEATS"));
+			this.totalNumberOfSeats = ParseUtil.checkNull(hmGuestEvents
+					.get("TOTAL_INVITED_SEATS"));
+			this.rsvpSeats = ParseUtil.checkNull(hmGuestEvents
+					.get("RSVP_SEATS"));
 		}
 
 	}
 
-	public String getEventGuestId()
-	{
+	public String getEventGuestId() {
 		return eventGuestId;
 	}
 
-	public void setEventGuestId(String eventGuestId)
-	{
+	public void setEventGuestId(String eventGuestId) {
 		this.eventGuestId = eventGuestId;
 	}
 
-	public String getEventId()
-	{
+	public String getEventId() {
 		return eventId;
 	}
 
-	public void setEventId(String eventId)
-	{
+	public void setEventId(String eventId) {
 		this.eventId = eventId;
 	}
 
-	public String getGuestId()
-	{
+	public String getGuestId() {
 		return guestId;
 	}
 
-	public void setGuestId(String guestId)
-	{
+	public void setGuestId(String guestId) {
 		this.guestId = guestId;
 	}
 
-	public String getIsTemporary()
-	{
+	public String getIsTemporary() {
 		return isTemporary;
 	}
 
-	public void setIsTemporary(String isTemporary)
-	{
+	public void setIsTemporary(String isTemporary) {
 		this.isTemporary = isTemporary;
 	}
 
-	public String getDeleteRow()
-	{
+	public String getDeleteRow() {
 		return deleteRow;
 	}
 
-	public void setDeleteRow(String deleteRow)
-	{
+	public void setDeleteRow(String deleteRow) {
 		this.deleteRow = deleteRow;
 	}
 
-	public String getTotalNumberOfSeats()
-	{
+	public String getTotalNumberOfSeats() {
 		return totalNumberOfSeats;
 	}
 
-	public void setTotalNumberOfSeats(String totalNumberOfSeats)
-	{
+	public void setTotalNumberOfSeats(String totalNumberOfSeats) {
 		this.totalNumberOfSeats = totalNumberOfSeats;
 	}
 
-	public String getRsvpSeats()
-	{
+	public String getRsvpSeats() {
 		return rsvpSeats;
 	}
 
-	public void setRsvpSeats(String rsvpSeats)
-	{
+	public void setRsvpSeats(String rsvpSeats) {
 		this.rsvpSeats = rsvpSeats;
 	}
 
-	public JSONObject toJson()
-	{
+	public GuestBean getGuestBean() {
+		return guestBean;
+	}
+
+	public void setGuestBean(GuestBean guestBean) {
+		this.guestBean = guestBean;
+	}
+
+	public JSONObject toJson() {
 
 		JSONObject jsonObject = new JSONObject();
-		try
-		{
+		try {
 			jsonObject.put("event_guest_id", this.eventGuestId);
 			jsonObject.put("event_id", this.eventId);
 			jsonObject.put("guest_id", this.guestId);
@@ -121,8 +114,12 @@ public class EventGuestBean
 			jsonObject.put("total_seats", this.totalNumberOfSeats);
 			jsonObject.put("rsvp_seats", this.rsvpSeats);
 
-		} catch (JSONException e)
-		{
+			if (guestBean != null) {
+
+				jsonObject.put("guest_bean", this.guestBean.toJson());
+			}
+
+		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

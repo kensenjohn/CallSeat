@@ -19,11 +19,11 @@
 %>
 		<div class="container-filler rounded-corners">
 			<div style="padding:20px">
-				<h2 class="txt txt_center">Assign Guests <span id="table_name"></span></h2>
+				<h2 class="txt txt_center">Assign seats at table <span id="table_name"></span></h2>
 				<div class="row">
-					<div class="span5">
+					<div class="span6">
 						<div class="row">
-							<div class="span2 left">
+							<div class="span3 left">
 								<h5 class="txt">Total Seats : <span id="seat_per_table"></span> </h5>
 							</div>
 							<div class="span3 left">
@@ -229,7 +229,7 @@
 		function generateTableDetail(currentTable)
 		{
 			$("#seat_per_table").text(currentTable.num_of_seats);
-			$("#table_name").text('to ' + currentTable.table_name);
+			$("#table_name").text(currentTable.table_name);
 
 			$("#assigned_per_table").text('0');
 			

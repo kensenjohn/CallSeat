@@ -39,7 +39,7 @@ public class TelNumberManager {
 		return telNumberResponse;
 	}
 
-	public ArrayList<TelNumberBean> getTelNumEventDetails(
+	public ArrayList<TelNumberBean> getTelNumbersByEvent(
 			TelNumberMetaData telNumberMetaData) {
 		ArrayList<TelNumberBean> arrTelNumberBean = new ArrayList<TelNumberBean>();
 
@@ -49,6 +49,19 @@ public class TelNumberManager {
 				&& !"".equalsIgnoreCase(telNumberMetaData.getEventId())) {
 			TelNumberData telNumData = new TelNumberData();
 			arrTelNumberBean = telNumData.getEventTelNumbers(telNumberMetaData);
+		}
+		return arrTelNumberBean;
+	}
+
+	public ArrayList<TelNumberBean> getTelNumEventDetails(
+			TelNumberMetaData telNumberMetaData) {
+		ArrayList<TelNumberBean> arrTelNumberBean = new ArrayList<TelNumberBean>();
+
+		if (telNumberMetaData != null && telNumberMetaData.getAdminId() != null
+				&& telNumberMetaData.getEventId() != null
+				&& !"".equalsIgnoreCase(telNumberMetaData.getAdminId())
+				&& !"".equalsIgnoreCase(telNumberMetaData.getEventId())) {
+			arrTelNumberBean = getTelNumbersByEvent(telNumberMetaData);
 		}
 
 		boolean isSeatingNumberExists = false;
@@ -201,6 +214,10 @@ public class TelNumberManager {
 		return arrTelNumBean;
 	}
 
+	public void saveTelNumbers(TelNumberMetaData telNumMetaData) {
+
+	}
+
 	public JSONObject getTelNumberBeanJson(
 			ArrayList<TelNumberBean> arrTelNumberBean) {
 		JSONObject jsonObject = new JSONObject();
@@ -220,4 +237,5 @@ public class TelNumberManager {
 		}
 		return jsonObject;
 	}
+
 }

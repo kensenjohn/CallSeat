@@ -9,25 +9,50 @@
 <%
 JSONObject jsonResponseObj = new JSONObject();
 String sAdminID = ParseUtil.checkNull(request.getParameter("admin_id"));
+String sEventID = ParseUtil.checkNull(request.getParameter("event_id"));
+boolean isSingleEvent = ParseUtil.sTob(request.getParameter("single_event"));
 Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 Logger appLogging = LoggerFactory.getLogger("AppLogging");
 response.setContentType("application/json");
 try
 {
-	if(sAdminID!=null && !"".equalsIgnoreCase(sAdminID))
+	if(isSingleEvent)
 	{
-		EventManager eventManager = new EventManager();
-		ArrayList<EventBean> arrEventBean = eventManager.getAllEvents(sAdminID);
-		
-		jsonResponseObj.put("event_detail",eventManager.getEventJson(arrEventBean));
-		
-		jsonResponseObj.put(Constants.J_RESP_SUCCESS, true);
+		if(sEventID!=null && !"".equalsIgnoreCase(sEventID))
+		{
+			EventManager eventManager = new EventManager();
+			EventBean eventBean = eventManager.getEvent(sEventID);
+			
+			ArrayList<EventBean> arrEventBean = new ArrayList<EventBean>();
+			arrEventBean.add(eventBean);
+			jsonResponseObj.put("event_detail",eventManager.getEventJson(arrEventBean));
+			
+			jsonResponseObj.put(Constants.J_RESP_SUCCESS, true);
+		}
+		else
+		{
+			jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
+			appLogging.error("Invalid Event ID used to retrieve event details" + sAdminID );
+		}
 	}
 	else
 	{
-		jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
-		appLogging.error("Invalid Admin ID used to retrieve event details" + sAdminID );
+		if(sAdminID!=null && !"".equalsIgnoreCase(sAdminID))
+		{
+			EventManager eventManager = new EventManager();
+			ArrayList<EventBean> arrEventBean = eventManager.getAllEvents(sAdminID);
+			
+			jsonResponseObj.put("event_detail",eventManager.getEventJson(arrEventBean));
+			
+			jsonResponseObj.put(Constants.J_RESP_SUCCESS, true);
+		}
+		else
+		{
+			jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
+			appLogging.error("Invalid Admin ID used to retrieve event details" + sAdminID );
+		}
 	}
+	
 	out.println(jsonResponseObj);
 }
 catch(Exception e)
