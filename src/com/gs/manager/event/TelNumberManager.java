@@ -192,7 +192,7 @@ public class TelNumberManager {
 	}
 
 	public ArrayList<TelNumberBean> searchTelNumber(
-			TelNumberMetaData telNumMetaData) {
+			TelNumberMetaData telNumMetaData, String sNumType) {
 
 		HashMap<String, String> hmFilter = new HashMap<String, String>();
 
@@ -206,6 +206,7 @@ public class TelNumberManager {
 				TelNumberBean telNumberBean = new TelNumberBean();
 				telNumberBean.setTelNumber(availableTelNum.getPhoneNumber());
 
+				telNumberBean.setTelNumberType(sNumType);
 				arrTelNumBean.add(telNumberBean);
 
 			}

@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import com.gs.common.ExceptionHandler;
 import com.gs.common.ParseUtil;
 
-public class EventBean
-{
-	private static final Logger appLogging = LoggerFactory.getLogger("AppLogging");
+public class EventBean {
+	private static final Logger appLogging = LoggerFactory
+			.getLogger("AppLogging");
 	private String eventId = "";
 	private String eventNum = "";
 	private String eventName = "";
@@ -26,155 +26,135 @@ public class EventBean
 	private String humanEventDate = "";
 	private String humanCreateDate = "";
 
-	public EventBean()
-	{
+	public EventBean() {
 
 	}
 
-	public EventBean(HashMap<String, String> hmEventBean)
-	{
+	public EventBean(HashMap<String, String> hmEventBean) {
 		this.eventId = ParseUtil.checkNull(hmEventBean.get("EVENTID"));
 		this.eventNum = ParseUtil.checkNull(hmEventBean.get("EVENTNUM"));
 		this.eventName = ParseUtil.checkNull(hmEventBean.get("EVENTNAME"));
-		this.eventFolderId = ParseUtil.checkNull(hmEventBean.get("FK_FOLDERID"));
+		this.eventFolderId = ParseUtil
+				.checkNull(hmEventBean.get("FK_FOLDERID"));
 		this.eventCreateDate = ParseUtil.sToL(hmEventBean.get("CREATEDATE"));
 		this.eventAdminId = ParseUtil.checkNull(hmEventBean.get("FK_ADMINID"));
 		this.isTmp = ParseUtil.checkNull(hmEventBean.get("IS_TMP"));
 		this.delRow = ParseUtil.checkNull(hmEventBean.get("DEL_ROW"));
 		this.eventDate = ParseUtil.sToL(hmEventBean.get("EVENTDATE"));
+		this.humanEventDate = ParseUtil.checkNull(hmEventBean
+				.get("HUMANEVENTDATE"));
+		this.humanCreateDate = ParseUtil.checkNull(hmEventBean
+				.get("HUMANCREATEDATE"));
 	}
 
-	public String getEventNum()
-	{
+	public String getEventNum() {
 		return eventNum;
 	}
 
-	public void setEventNum(String eventNum)
-	{
+	public void setEventNum(String eventNum) {
 		this.eventNum = eventNum;
 	}
 
-	public String getEventId()
-	{
+	public String getEventId() {
 		return eventId;
 	}
 
-	public void setEventId(String eventId)
-	{
+	public void setEventId(String eventId) {
 		this.eventId = eventId;
 	}
 
-	public String getEventName()
-	{
+	public String getEventName() {
 		return eventName;
 	}
 
-	public void setEventName(String eventName)
-	{
+	public void setEventName(String eventName) {
 		this.eventName = eventName;
 	}
 
-	public String getEventFolderId()
-	{
+	public String getEventFolderId() {
 		return eventFolderId;
 	}
 
-	public void setEventFolderId(String eventFolderId)
-	{
+	public void setEventFolderId(String eventFolderId) {
 		this.eventFolderId = eventFolderId;
 	}
 
-	public Long getEventCreateDate()
-	{
+	public Long getEventCreateDate() {
 		return eventCreateDate;
 	}
 
-	public void setEventCreateDate(Long eventCreateDate)
-	{
+	public void setEventCreateDate(Long eventCreateDate) {
 		this.eventCreateDate = eventCreateDate;
 	}
 
-	public String getEventAdminId()
-	{
+	public String getEventAdminId() {
 		return eventAdminId;
 	}
 
-	public void setEventAdminId(String eventAdminId)
-	{
+	public void setEventAdminId(String eventAdminId) {
 		this.eventAdminId = eventAdminId;
 	}
 
-	public String getIsTmp()
-	{
+	public String getIsTmp() {
 		return isTmp;
 	}
 
-	public void setIsTmp(String isTmp)
-	{
+	public void setIsTmp(String isTmp) {
 		this.isTmp = isTmp;
 	}
 
-	public String getDelRow()
-	{
+	public String getDelRow() {
 		return delRow;
 	}
 
-	public void setDelRow(String delRow)
-	{
+	public void setDelRow(String delRow) {
 		this.delRow = delRow;
 	}
 
-	public Long getEventDate()
-	{
+	public Long getEventDate() {
 		return eventDate;
 	}
 
-	public void setEventDate(Long eventDate)
-	{
+	public void setEventDate(Long eventDate) {
 		this.eventDate = eventDate;
 	}
 
-	public String getHumanEventDate()
-	{
+	public String getHumanEventDate() {
 		return humanEventDate;
 	}
 
-	public void setHumanEventDate(String humanEventDate)
-	{
+	public void setHumanEventDate(String humanEventDate) {
 		this.humanEventDate = humanEventDate;
 	}
 
-	public String getHumanCreateDate()
-	{
+	public String getHumanCreateDate() {
 		return humanCreateDate;
 	}
 
-	public void setHumanCreateDate(String humanCreateDate)
-	{
+	public void setHumanCreateDate(String humanCreateDate) {
 		this.humanCreateDate = humanCreateDate;
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("EventBean [eventId=").append(eventId).append(", eventNum=")
-				.append(eventNum).append(", eventName=").append(eventName)
-				.append(", eventFolderId=").append(eventFolderId).append(", eventCreateDate=")
-				.append(eventCreateDate).append(", eventAdminId=").append(eventAdminId)
-				.append(", eventDate=").append(eventDate).append(", isTmp=").append(isTmp)
-				.append(", delRow=").append(delRow).append(", humanEventDate=")
-				.append(humanEventDate).append(", humanCreateDate=").append(humanCreateDate)
-				.append("]");
+		builder.append("EventBean [eventId=").append(eventId)
+				.append(", eventNum=").append(eventNum).append(", eventName=")
+				.append(eventName).append(", eventFolderId=")
+				.append(eventFolderId).append(", eventCreateDate=")
+				.append(eventCreateDate).append(", eventAdminId=")
+				.append(eventAdminId).append(", eventDate=").append(eventDate)
+				.append(", isTmp=").append(isTmp).append(", delRow=")
+				.append(delRow).append(", humanEventDate=")
+				.append(humanEventDate).append(", humanCreateDate=")
+				.append(humanCreateDate).append("]");
 		return builder.toString();
 	}
 
-	public JSONObject toJson()
-	{
+	public JSONObject toJson() {
 
 		JSONObject jsonObject = new JSONObject();
-		try
-		{
+		try {
 			jsonObject.put("event_id", eventId);
 			jsonObject.put("event_num", eventNum);
 			jsonObject.put("event_name", eventName);
@@ -188,8 +168,7 @@ public class EventBean
 
 			jsonObject.put("human_event_date", humanEventDate);
 			jsonObject.put("human_create_date", humanCreateDate);
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			appLogging.error("Error creating EventBean Object \n"
 					+ ExceptionHandler.getStackTrace(e));
 		}

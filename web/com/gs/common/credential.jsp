@@ -43,6 +43,9 @@
 								            <span id="err_mssg"></span>
 								        </div>
 									</fieldset>
+									
+									<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+									<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>	
 								</form>
 							</div>
 							
@@ -103,8 +106,8 @@
 		$("#register_user").click(registerUser);
 	});
 	function loginUser()
-	{
-		var dataString = $("#frm_login").serialize();
+	{ 	var dataString = $("#frm_login").serialize();
+		
 		var actionUrl = "proc_login_user.jsp";
 		var methodType = "POST";
 		
@@ -160,7 +163,8 @@
 					setUserCookie('<%=Constants.COOKIE_APP_USERID%>',varUserId);
 					
 					var varFirstName = jsonResponseObj.first_name;
-					parent.credentialSuccess(varFirstName,varSource);
+					//alert(varFirstName);
+					parent.credentialSuccess(jsonResponseObj,varSource);
 					parent.$.fancybox.close();
 				}
 			}

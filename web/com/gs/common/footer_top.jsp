@@ -17,20 +17,20 @@
 		});
 	 });
 	
-	function credentialSuccess(varFirstName,varSource)
+	/*function credentialSuccess(varFirstName,varSource)
 	{
 		//alert('credentialSuccess')
 		$("#get_phone_num_div").hide();
 		$("#login_name_display").text(varFirstName);
 		$("#login_name_display").addClass("bold_text");
 		
-
-		//alert(varSource)
+		alert('varSource = ' + varSource);
+		resetPhoneNumber();
 		if(varSource == 'phone_tab')
 		{
-			resetPhoneNumber();
+			viewPhoneNumberTab();
 		}
 		
-	}
+	}*/
 	
 </script>

@@ -39,7 +39,7 @@
 						<button id="lnk_guest_id" name="lnk_guest_id" class="action_button primary large ">All Guests</button>
 					</div>
 					<div class="span3 txt_center">
-						<button id="event_dt_sbt" name="event_dt_sbt" class="action_button primary large ">Lobby</button>
+						<button id="lnk_dashboard_id" name="lnk_dashboard_id" class="action_button primary large ">Lobby</button>
 					</div>
 				</div>			
 			</div>

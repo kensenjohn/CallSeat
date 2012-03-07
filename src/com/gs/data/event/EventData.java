@@ -106,7 +106,7 @@ public class EventData {
 		EventBean eventBean = new EventBean();
 		if (sEventId != null && !"".equalsIgnoreCase(sEventId)) {
 			String sQuery = "SELECT  EVENTID, EVENTNUM, EVENTNAME, FK_FOLDERID , CREATEDATE , FK_ADMINID , "
-					+ " IS_TMP , DEL_ROW , EVENTDATE FROM GTEVENT WHERE EVENTID = ?";
+					+ " IS_TMP , DEL_ROW , EVENTDATE,HUMANEVENTDATE, HUMANCREATEDATE FROM GTEVENT WHERE EVENTID = ?";
 
 			ArrayList<Object> aParams = DBDAO.createConstraint(sEventId);
 

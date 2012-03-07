@@ -36,6 +36,18 @@ public class ParseUtil {
 		return lOutput;
 	}
 
+	public static Double sToD(String sInput) {
+		Double dOutput = 0.0;
+		if (sInput != null && !"".equalsIgnoreCase(sInput)) {
+			try {
+				dOutput = new Double(sInput);
+			} catch (NumberFormatException e) {
+				e.printStackTrace();
+			}
+		}
+		return dOutput;
+	}
+
 	public static boolean sTob(String sInput) {
 		boolean bOutput = false;
 		if (sInput != null && !"".equalsIgnoreCase(sInput)) {

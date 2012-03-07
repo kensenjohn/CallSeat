@@ -42,6 +42,9 @@ if(cookies!=null)
 							<form id="call_forward" name="call_forward"  method="POST">
 								<input type="hidden" id="hid_event_date" name="hid_event_date" value="">
 								<input type="hidden" id="from_landing" name="from_landing" value="">
+								<input type="hidden" id="lobby_event_id" name="lobby_event_id" value="">
+								<input type="hidden" id="lobby_admin_id" name="lobby_admin_id" value="">
+								
 							</form>
 			</div>
 		</div>
@@ -118,6 +121,12 @@ if(cookies!=null)
 			$("#from_landing").val("true");
 			$("#call_forward").submit();
 		}
+	}
+	function credentialSuccess(jsonResponse,varSource)
+	{
+		$("#login_name_display").text(jsonResponse.first_name);
+		$("#login_name_display").addClass("bold_text");
+		$('#lobby_admin_id').val(jsonResponse.user_id);
 	}
 	</script>
 <jsp:include page="common/footer_bottom.jsp"/>

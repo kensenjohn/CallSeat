@@ -3,6 +3,7 @@
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="java.util.*"%>
 <%@page import="com.gs.json.*"%>
+<%@page import="com.gs.payment.*"%>
 <%@page import="com.gs.manager.event.*"%>
 <%@page import="com.gs.common.*" %>
 <%@include file="../common/security.jsp" %>
@@ -23,9 +24,21 @@ try
 {
 	String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 	String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
-	String sSeatingNumber = ParseUtil.checkNull(request.getParameter("seating_gen_num")); 
-	String sRsvpNumber = ParseUtil.checkNull(request.getParameter("rsvp_gen_num"));
-	
+	String sSeatingNumber = ParseUtil.checkNull(request.getParameter("seating_tel_num")); 
+	String sRsvpNumber = ParseUtil.checkNull(request.getParameter("rsvp_tel_num"));
+	String sPriceGroupId = ParseUtil.checkNull(request.getParameter("priceOption"));
+	String sBillFirstName = ParseUtil.checkNull(request.getParameter("bill_first_name"));
+	String sBillLastName = ParseUtil.checkNull(request.getParameter("bill_last_name"));
+	String sBillMiddleName = ParseUtil.checkNull(request.getParameter("bill_middle_name"));
+	String sBillAddress1 = ParseUtil.checkNull(request.getParameter("bill_addr_1"));
+	String sBillAddress2 = ParseUtil.checkNull(request.getParameter("bill_addr_2"));
+	String sBillZip = ParseUtil.checkNull(request.getParameter("bill_zip"));
+	String sBillCity = ParseUtil.checkNull(request.getParameter("bill_city"));
+	String sBillState = ParseUtil.checkNull(request.getParameter("bill_state"));
+	String sBillCountry = ParseUtil.checkNull(request.getParameter("bill_country"));
+	String sCreditCardNum = ParseUtil.checkNull(request.getParameter("cc_num"));
+	String sSecureNum = ParseUtil.checkNull(request.getParameter("cc_secure_num"));
+		
 	if(isSignedIn)
 	{
 		if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId)  && sEventId!=null && !"".equalsIgnoreCase(sEventId))
@@ -33,6 +46,37 @@ try
 			if(sSeatingNumber!=null && !"".equalsIgnoreCase(sSeatingNumber)
 					&& sRsvpNumber!=null && !"".equalsIgnoreCase(sRsvpNumber) )
 			{
+				EventPricingGroupManager eventPricingGroupManager = new EventPricingGroupManager();
+				PricingGroupBean pricingGroupBean = eventPricingGroupManager.getPricingGroups(sPriceGroupId);
+				
+				if(pricingGroupBean!=null )
+				{
+					BillingMetaData billingMetaData = new BillingMetaData();
+					billingMetaData.setAdminId(sAdminId);
+					billingMetaData.setEventId(sEventId);
+					billingMetaData.setFirstName(sBillFirstName);
+					billingMetaData.setLastName(sBillLastName);
+					billingMetaData.setMiddletName(sBillMiddleName);
+					billingMetaData.setAddress1(sBillAddress1);
+					billingMetaData.setAddress2(sBillAddress2);
+					billingMetaData.setZip(sBillZip);
+					billingMetaData.setCity(sBillCity);
+					billingMetaData.setState(sBillState);
+					billingMetaData.setCountry(sBillCountry);
+					billingMetaData.setCreditCardNum(sCreditCardNum);
+					billingMetaData.setSecureNum(sSecureNum);
+					billingMetaData.setPrice(pricingGroupBean.getPrice().toString());
+					
+					BillingManager billingManager = new BillingManager();
+					if(billingManager.isCreditCardAccepted(billingMetaData)){
+						billingManager.saveBillingInfo(billingMetaData);
+					}
+					
+					
+				}
+				
+				
+				
 				TelNumberMetaData telNumberMetaData = new TelNumberMetaData();
 				telNumberMetaData.setAdminId(sAdminId);
 				telNumberMetaData.setEventId(sEventId);

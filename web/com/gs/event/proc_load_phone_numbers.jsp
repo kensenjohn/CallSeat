@@ -29,6 +29,9 @@ try
 	String sNumberType = ParseUtil.checkNull(request.getParameter("num_type"));
 	String sAreaCode = ParseUtil.checkNull(request.getParameter("seating_area_code"));
 	String sTextPattern = ParseUtil.checkNull(request.getParameter("seating_text_pattern"));
+
+	String sRsvpAreaCode = ParseUtil.checkNull(request.getParameter("rsvp_area_code"));
+	String sRsvpTextPattern = ParseUtil.checkNull(request.getParameter("rsvp_text_pattern"));
 	
 	
 	if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId) && sEventId!=null && !"".equalsIgnoreCase(sEventId) )
@@ -41,15 +44,36 @@ try
 		ArrayList<TelNumberBean> arrTelNumberBean = new ArrayList<TelNumberBean>();
 		if(isCustomNumGen)
 		{
+			if(Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(sNumberType))
+			{
+				sAreaCode = sRsvpAreaCode;
+				sTextPattern = sRsvpTextPattern;
+			}
 			telNumberMetaData.setAreaCodeSearch(sAreaCode);
 			telNumberMetaData.setTextPatternSearch(sTextPattern);
 			
-			arrTelNumberBean = telNumManager.searchTelNumber(telNumberMetaData);
+			arrTelNumberBean = telNumManager.searchTelNumber(telNumberMetaData,sNumberType);
 		}
 		else
 		{
 			arrTelNumberBean = telNumManager.getTelNumEventDetails(telNumberMetaData);
 		}
+		
+		
+		if(arrTelNumberBean==null || (arrTelNumberBean!=null && arrTelNumberBean.isEmpty()))
+		{
+			
+			if(isCustomNumGen)
+			{
+				
+			}
+			else
+			{
+				
+			}
+		}
+		
+		
 		
 		
 		

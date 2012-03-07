@@ -18,6 +18,7 @@
 	boolean isFromLanding = ParseUtil.sTob(request.getParameter("from_landing"));
 	String sEventId = ParseUtil.checkNull(request.getParameter("lobby_event_id"));
 	String sAdminId = ParseUtil.checkNull(request.getParameter("lobby_admin_id"));
+	
 	jspLogging.info("Invoked by landing page : " + isFromLanding);
 	String sEventTitle = "New Event";
 	
@@ -29,8 +30,24 @@
 	EventBean eventBean = new EventBean();	
 	if(isFromLanding)
 	{
+
+		if(sAdminId==null || "".equalsIgnoreCase(sAdminId))
+		{
+			sAdminId = ParseUtil.checkNullObject(session.getAttribute("u_id"));
+		}
+		
 		AdminManager adminManager = new AdminManager();		
-		adminBean = adminManager.createAdmin();
+		if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId))
+		{
+			 adminBean = adminManager.getAdmin(sAdminId);
+		}
+		else
+		{
+			adminBean = adminManager.createAdmin();
+		}
+		
+		
+		
 		
 		if(adminBean!=null)
 		{
@@ -226,14 +243,13 @@
 				'padding'			: 0,
 				'margin'			: 0
 			});
+			
+			$("#login_name_display").removeAttr('href');
+			$("#login_name_display").attr('href','/web/com/gs/common/credential.jsp?admin_id='+varAdminID+'&event_id='+varEventID);
 		}
 		else
 		{
-			$("#phone_num_tab").click(function(){
-
-				toggleActionNavs('li_phone_num');			
-				displayPhoneNumberView('li_phone_num');
-			});
+			phoneNumTab();
 		}
 		
 		$("#table_action_nav").show();
@@ -277,6 +293,19 @@
 		loadActions();
 		loadTables();
 	});
+	
+	function phoneNumTab()
+	{
+		$("#phone_num_tab").unbind();
+		$("#phone_num_tab").removeAttr("href");
+		
+		
+		$("#phone_num_tab").click(function(){
+
+			toggleActionNavs('li_phone_num');			
+			displayPhoneNumberView('li_phone_num');
+		});
+	}
 	
 	function toggleActionNavs(action_nav_id)
 	{
@@ -348,18 +377,32 @@
 		{
 			
 		});
+		setAllGuestButtonClick();
+		setLobbyButtonClick();
+	}
+	function setAllGuestButtonClick()
+	{
+		$("#lnk_guest_id").unbind("click");
 		$("#lnk_guest_id").click(function() 
 		{
-			//window.location = 'guest_setup.jsp?event_id='+varEventID+'&admin_id='+varAdminID;
-			
 			$("#frm_lobby_tab").attr("action" , "guest_setup.jsp");
 			$("#lobby_event_id").val(varEventID);
 			$("#lobby_admin_id").val(varAdminID);
 			
 			$("#frm_lobby_tab").submit();
 		});
+	}
+	
+	function setLobbyButtonClick()
+	{
+		$("#lnk_dashboard_id").unbind("click");
+		
 		$("#lnk_dashboard_id").click(function() {
+			$("#frm_lobby_tab").attr("action" , "host_dashboard.jsp");
+			$("#lobby_event_id").val(varEventID);
+			$("#lobby_admin_id").val(varAdminID);
 			
+			$("#frm_lobby_tab").submit();
 		});
 	}
 	
@@ -682,12 +725,24 @@
 		}
 	}
 	
-	function credentialSuccess(varFirstName,varSource)
+	function credentialSuccess(jsonResponse,varSource)
 	{
 		$("#get_phone_num_div").hide();
-		$("#login_name_display").text(varFirstName);
+		$("#login_name_display").text(jsonResponse.first_name);
 		$("#login_name_display").addClass("bold_text");
+		varIsSignedIn = true;
+		phoneNumTab();
 		
+		resetAdminId(jsonResponse.user_id);
+	}
+	
+	function resetAdminId(tmpAdminId)
+	{
+		varAdminID = tmpAdminId;
+		$('#phone_number_frame').removeAttr('src')
+		$('#phone_number_frame').attr('src','/web/com/gs/event/phone_number.jsp?admin_id='+varAdminID+'&event_id='+varEventID);
+		setLobbyButtonClick();
+		setAllGuestButtonClick();
 	}
 	
 	function resetPhoneNumber()
@@ -699,6 +754,10 @@
 			toggleActionNavs('li_phone_num');			
 			displayPhoneNumberView('li_phone_num');
 		});
+	}
+	
+	function viewPhoneNumberTab()
+	{
 		toggleActionNavs('li_phone_num');
 		displayPhoneNumberView('li_phone_num');
 	}
