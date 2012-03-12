@@ -6,6 +6,8 @@
 <%@page import="com.gs.payment.*"%>
 <%@page import="com.gs.manager.event.*"%>
 <%@page import="com.gs.common.*" %>
+<%@page import="com.gs.phone.account.*" %>
+
 <%@include file="../common/security.jsp" %>
 <%
 JSONObject jsonResponseObj = new JSONObject();
@@ -68,23 +70,67 @@ try
 					billingMetaData.setPrice(pricingGroupBean.getPrice().toString());
 					
 					BillingManager billingManager = new BillingManager();
-					if(billingManager.isCreditCardAccepted(billingMetaData)){
-						billingManager.saveBillingInfo(billingMetaData);
+					
+
+					AdminTelephonyAccountMeta adminAccountMeta = new AdminTelephonyAccountMeta();
+					adminAccountMeta.setAdminId(sAdminId);
+					adminAccountMeta.setFriendlyName(sBillFirstName+sBillLastName+sBillZip);
+					
+					AdminTelephonyAccountManager accountManager = new AdminTelephonyAccountManager();
+					accountManager.createAccount(adminAccountMeta);
+					
+					TelNumberManager telNumManager = new TelNumberManager();
+					String sPurchasedRsvpNum = "678690589";
+					//sPurchasedRsvpNum = telNumManager.purchaseTelephoneNumber(adminAccountMeta,sRsvpNumber );
+					String sPurchasedSeatingNum = telNumManager.purchaseTelephoneNumber(adminAccountMeta,sSeatingNumber );
+					
+					if(sPurchasedRsvpNum!=null && !"".equalsIgnoreCase(sPurchasedRsvpNum) 
+							&& sPurchasedSeatingNum!=null && !"".equalsIgnoreCase(sPurchasedSeatingNum)){
+						
+						if( billingManager.isCreditCardAccepted(billingMetaData))
+						{
+
+							billingManager.saveBillingInfo(billingMetaData);
+							
+							
+							TelNumberMetaData telNumberMetaData = new TelNumberMetaData();
+							telNumberMetaData.setAdminId(sAdminId);
+							telNumberMetaData.setEventId(sEventId);
+							telNumberMetaData.setRsvpTelNumDigit(sRsvpNumber);
+							telNumberMetaData.setSeatingTelNumDigit(sSeatingNumber);
+							
+							
+							telNumManager.saveTelNumbers(telNumberMetaData);
+							
+							Text okText = new OkText("Tou purchase was completed successfully.","my_id");
+							arrOkText.add(okText);
+							
+							responseStatus = RespConstants.Status.OK;
+						}
+						else
+						{
+							jspLogging.error("Error Processing your credit card" );
+							
+							Text errorText = new ErrorText("There was an error processing your credit card.","my_id") ;
+							arrErrorText.add(errorText);
+							
+							responseStatus = RespConstants.Status.ERROR;
+						}
+						
 					}
-					
-					
+					else
+					{
+						Text errorText = new ErrorText("The telephone numbers selected could not be purchased at this time."+
+								"Please try again later.","my_id") ;
+						arrErrorText.add(errorText);
+						
+						responseStatus = RespConstants.Status.ERROR;
+						
+						jspLogging.error("Error purchasing your selected number from the telephony provider." );
+					}
 				}
 				
 				
-				
-				TelNumberMetaData telNumberMetaData = new TelNumberMetaData();
-				telNumberMetaData.setAdminId(sAdminId);
-				telNumberMetaData.setEventId(sEventId);
-				telNumberMetaData.setRsvpTelNumDigit(sRsvpNumber);
-				telNumberMetaData.setSeatingTelNumDigit(sSeatingNumber);
-				
-				TelNumberManager telNumManager = new TelNumberManager();
-				telNumManager.saveTelNumbers(telNumberMetaData);
 			}
 			else
 			{

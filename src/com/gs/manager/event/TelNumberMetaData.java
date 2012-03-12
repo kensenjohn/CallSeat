@@ -8,6 +8,10 @@ public class TelNumberMetaData {
 	private String digits = "";
 	private String seatingTelNumDigit = "";
 	private String rsvpTelNumDigit = "";
+	private boolean isActive = false;
+	private boolean isPurchased = false;
+	private String telNumberTypeId = "";
+	private boolean isDelRow = false;
 
 	public String getSeatingTelNumDigit() {
 		return seatingTelNumDigit;
@@ -82,6 +86,38 @@ public class TelNumberMetaData {
 
 	public void setTextPatternSearch(String textPatternSearch) {
 		this.textPatternSearch = textPatternSearch;
+	}
+
+	public boolean isActive() {
+		return isActive;
+	}
+
+	public void setActive(boolean isActive) {
+		this.isActive = isActive;
+	}
+
+	public boolean isPurchased() {
+		return isPurchased;
+	}
+
+	public void setPurchased(boolean isPurchased) {
+		this.isPurchased = isPurchased;
+	}
+
+	public String getTelNumberTypeId() {
+		return telNumberTypeId;
+	}
+
+	public void setTelNumberTypeId(String telNumberTypeId) {
+		this.telNumberTypeId = telNumberTypeId;
+	}
+
+	public boolean isDelRow() {
+		return isDelRow;
+	}
+
+	public void setDelRow(boolean isDelRow) {
+		this.isDelRow = isDelRow;
 	}
 
 }

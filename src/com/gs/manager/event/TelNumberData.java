@@ -7,9 +7,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gs.bean.TelNumberBean;
+import com.gs.bean.TelNumberTypeBean;
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
 import com.gs.common.ParseUtil;
+import com.gs.common.Utility;
 import com.gs.common.db.DBDAO;
 
 public class TelNumberData {
@@ -41,6 +43,45 @@ public class TelNumberData {
 
 		}
 		return telNumberBean;
+	}
+
+	public ArrayList<TelNumberTypeBean> getTelNumberTypes() {
+		ArrayList<TelNumberTypeBean> arrTelNumTypeBean = getTelNumberTypes(Constants.EVENT_TASK.ALL
+				.getTask());
+
+		return arrTelNumTypeBean;
+	}
+
+	public ArrayList<TelNumberTypeBean> getTelNumberTypes(String sTelNumberType) {
+
+		ArrayList<TelNumberTypeBean> arrTelNumTypeBean = new ArrayList<TelNumberTypeBean>();
+
+		ArrayList<Object> aParams = new ArrayList<Object>();
+		String sQuery = "SELECT * FROM GTTELNUMBERTYPE";
+		if (sTelNumberType != null
+				&& Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(
+						sTelNumberType)) {
+			sQuery = "SELECT * FROM GTTELNUMBERTYPE WHERE TELNUMTYPE = ?";
+			aParams.add(Constants.EVENT_TASK.RSVP.getTask());
+		} else if (sTelNumberType != null
+				&& Constants.EVENT_TASK.SEATING.getTask().equalsIgnoreCase(
+						sTelNumberType)) {
+			sQuery = "SELECT * FROM GTTELNUMBERTYPE WHERE TELNUMTYPE = ?";
+			aParams.add(Constants.EVENT_TASK.SEATING.getTask());
+		}
+
+		ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(
+				ADMIN_DB, sQuery, aParams, false, "TelNumberData.java",
+				"getTelNumberTypes()");
+
+		if (arrResult != null && !arrResult.isEmpty()) {
+			for (HashMap<String, String> hmResult : arrResult) {
+				TelNumberTypeBean telNumTypeBean = new TelNumberTypeBean(
+						hmResult);
+				arrTelNumTypeBean.add(telNumTypeBean);
+			}
+		}
+		return arrTelNumTypeBean;
 	}
 
 	public ArrayList<TelNumberBean> getEventTelNumbers(
@@ -92,8 +133,7 @@ public class TelNumberData {
 		return telNumberBean;
 	}
 
-	public ArrayList<TelNumberBean> createTelNumber(
-			TelNumberMetaData telNumMetaData) {
+	public int createTelNumber(TelNumberMetaData telNumMetaData) {
 		/*
 		 * -------------------+-------------+------+-----+---------+-------+ |
 		 * TELNUMBERID | varchar(45) | NO | PRI | NULL | | | TELNUMBER |
@@ -105,12 +145,19 @@ public class TelNumberData {
 		String sQuery = "INSERT INTO GTTELNUMBERS (TELNUMBERID,TELNUMBER,FK_TELNUMBERTYPEID,FK_EVENTID,"
 				+ " FK_ADMINID,DEL_ROW,IS_ACTIVE,IS_PURCHASED) VALUES(?,?,?,   ?,?,?   ,?,?)";
 
-		// ArrayList<Object> aParams = DBDAO.createConstraint(params);
+		String sTelNumberID = Utility.getNewGuid();
+		ArrayList<Object> aParams = DBDAO.createConstraint(sTelNumberID,
+				telNumMetaData.getDigits(),
+				telNumMetaData.getTelNumberTypeId(),
+				telNumMetaData.getEventId(), telNumMetaData.getAdminId(),
+				telNumMetaData.isDelRow() ? "1" : "0",
+				telNumMetaData.isActive() ? "1" : "0",
+				telNumMetaData.isPurchased() ? "1" : "0");
 
-		// DBDAO.putCommitRowsQuesry(sQuery, aParams, ADMIN_DB, sInvokingClass,
-		// sInvokingMethod);
+		int iNumOfRows = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
+				"TelNumberData.java", "createTelNumber()");
 
-		return null;
+		return iNumOfRows;
 	}
 
 	public ArrayList<TelNumberBean> updateTelNumber() {

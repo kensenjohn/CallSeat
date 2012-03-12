@@ -3,6 +3,7 @@ package com.gs.manager.event;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -10,16 +11,23 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gs.bean.AdminTelephonyAccountBean;
 import com.gs.bean.EventGuestBean;
 import com.gs.bean.GuestBean;
 import com.gs.bean.TelNumberBean;
+import com.gs.bean.TelNumberTypeBean;
 import com.gs.common.Constants;
 import com.gs.common.ExceptionHandler;
+import com.gs.common.ParseUtil;
 import com.gs.data.GuestData;
+import com.gs.phone.account.AdminTelephonyAccountManager;
+import com.gs.phone.account.AdminTelephonyAccountMeta;
 import com.gs.phone.account.TwilioAccount;
 import com.twilio.sdk.TwilioRestClient;
+import com.twilio.sdk.TwilioRestException;
 import com.twilio.sdk.resource.instance.Account;
 import com.twilio.sdk.resource.instance.AvailablePhoneNumber;
+import com.twilio.sdk.resource.instance.IncomingPhoneNumber;
 import com.twilio.sdk.resource.list.AvailablePhoneNumberList;
 
 public class TelNumberManager {
@@ -153,6 +161,43 @@ public class TelNumberManager {
 		return list;
 	}
 
+	public String purchaseTelephoneNumber(
+			AdminTelephonyAccountMeta adminAccountMeta, String sTelephoneNum)
+			throws TwilioRestException {
+
+		String sPurchasedPhoneNum = "";
+		if (adminAccountMeta != null
+				&& !"".equalsIgnoreCase(adminAccountMeta.getAdminId())) {
+
+			AdminTelephonyAccountManager adminTelAcMan = new AdminTelephonyAccountManager();
+			AdminTelephonyAccountBean adminTelephonyAccBean = adminTelAcMan
+					.getAdminAccount(adminAccountMeta);
+
+			if (adminTelephonyAccBean != null
+					&& !"".equalsIgnoreCase(adminTelephonyAccBean
+							.getAccountSid())
+					&& !"".equalsIgnoreCase(adminTelephonyAccBean
+							.getAuthToken())) {
+
+				TwilioRestClient client = new TwilioRestClient(
+						adminTelephonyAccBean.getAccountSid(),
+						adminTelephonyAccBean.getAuthToken());
+
+				Account mainAccount = client.getAccount();
+
+				// Buy the first number returned
+				Map<String, String> params = new HashMap<String, String>();
+				params.put("PhoneNumber", sTelephoneNum);
+				IncomingPhoneNumber purchasedNumber = mainAccount
+						.getIncomingPhoneNumberFactory().create(params);
+
+				sPurchasedPhoneNum = purchasedNumber.getPhoneNumber();
+
+			}
+		}
+		return sPurchasedPhoneNum;
+	}
+
 	private TelNumberBean createTelNumberBean(
 			TelNumberMetaData telNumberMetaData, String sTelephoneNum,
 			Constants.EVENT_TASK telNumType) {
@@ -217,6 +262,27 @@ public class TelNumberManager {
 
 	public void saveTelNumbers(TelNumberMetaData telNumMetaData) {
 
+		ArrayList<TelNumberTypeBean> arrTelNumTypeBean = getTelNumberTypeBeans(Constants.EVENT_TASK.ALL
+				.getTask());
+
+		if (arrTelNumTypeBean != null && !arrTelNumTypeBean.isEmpty()) {
+			TelNumberData telNumData = new TelNumberData();
+			for (TelNumberTypeBean telNumType : arrTelNumTypeBean) {
+				if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(
+						telNumType.getTelNumType())) {
+					telNumMetaData.setDigits(telNumMetaData
+							.getRsvpTelNumDigit());
+				} else if (Constants.EVENT_TASK.SEATING.getTask()
+						.equalsIgnoreCase(telNumType.getTelNumType())) {
+					telNumMetaData.setDigits(telNumMetaData
+							.getSeatingTelNumDigit());
+				}
+				telNumMetaData.setTelNumberTypeId(telNumType
+						.getTelNumberTypeId());
+
+				telNumData.createTelNumber(telNumMetaData);
+			}
+		}
 	}
 
 	public JSONObject getTelNumberBeanJson(
@@ -237,6 +303,17 @@ public class TelNumberManager {
 			appLogging.error(ExceptionHandler.getStackTrace(e));
 		}
 		return jsonObject;
+	}
+
+	public ArrayList<TelNumberTypeBean> getTelNumberTypeBeans(String telNumType) {
+
+		if (telNumType == null) {
+			telNumType = ParseUtil.checkNull(telNumType);
+		}
+		TelNumberData telNumData = new TelNumberData();
+		ArrayList<TelNumberTypeBean> arrTelNumTypeBean = telNumData
+				.getTelNumberTypes(telNumType);
+		return arrTelNumTypeBean;
 	}
 
 }

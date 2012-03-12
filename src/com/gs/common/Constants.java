@@ -87,7 +87,7 @@ public class Constants {
 	}
 
 	public enum EVENT_TASK {
-		RSVP("RSVP_TEL"), SEATING("SEATING_TEL");
+		RSVP("RSVP_TEL"), SEATING("SEATING_TEL"), ALL("ALL");
 
 		private String sTask = "";
 
