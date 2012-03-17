@@ -18,7 +18,7 @@
   	
   		if(isSecurityError)
   		{
-  			response.sendRedirect("error/error.jsp");
+  			response.sendRedirect("/web/com/gs/common/error/error.jsp");
   		}
   		
   		//This one checks to see whether the user was logged in.
@@ -62,4 +62,6 @@
   				reqSession.setAttribute(Constants.USER_SESSION,adminBean);
   			}
   		}
+  		
+  		
   	%>

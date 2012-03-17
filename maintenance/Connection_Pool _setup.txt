@@ -1,0 +1,71 @@
+Create the Resource under the context.xml
+
+/TOMCATHOME/conf/Catalina/localhost/ROOT.xml
+
+http://people.apache.org/~fhanik/tomcat/jdbc-pool.html
+
+<Resource name="jdbc/TestDB" 
+              auth="Container" 
+              type="javax.sql.DataSource" 
+              factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+              testWhileIdle="true"
+              testOnBorrow="true"
+              testOnReturn="false"
+              validationQuery="SELECT 1"
+              validationInterval="30000"
+              timeBetweenEvictionRunsMillis="30000"
+              maxActive="100" 
+              minIdle="10" 
+              maxWait="10000" 
+              initialSize="10"
+              removeAbandonedTimeout="60"
+              removeAbandoned="true"
+              logAbandoned="true"
+              minEvictableIdleTimeMillis="30000" 
+              jmxEnabled="true"
+              jdbcInterceptors="org.apache.tomcat.jdbc.pool.interceptor.ConnectionState;org.apache.tomcat.jdbc.pool.interceptor.StatementFinalizer"
+              username="root" 
+              password="password" 
+              driverClassName="com.mysql.jdbc.Driver"
+              url="jdbc:mysql://localhost:3306/mysql?autoReconnect=true"/>
+              
+ 
+ Add the resources in web.xml
+ 
+  <resource-ref>
+        <description>
+            Resource reference to a factory for java.sql.Connection
+            instances that may be used for talking to a particular
+            database that is configured in the
+            configurartion for the web application.
+        </description>
+        <res-ref-name>
+            jdbc/guestadmin
+        </res-ref-name>
+        <res-type>
+            javax.sql.DataSource
+        </res-type>
+        <res-auth>
+            Container
+        </res-auth>
+    </resource-ref>
+ 
+ 
+ To retrieve the connection from connection pool use the following code.
+ 
+ 
+ import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
+
+
+ 			Context initCtx = new InitialContext();
+			Context envCtx = (Context) initCtx.lookup("java:comp/env");
+			DataSource ds = (DataSource) envCtx.lookup("jdbc/guestadmin");
+
+			conn = ds.getConnection();
+			
+after using it,close the connection as follows.
+
+		conn.close();

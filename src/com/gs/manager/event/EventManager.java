@@ -71,6 +71,10 @@ public class EventManager {
 			eventBean.setEventFolderId(Constants.ROOT_FOLDER);
 			eventBean.setEventAdminId(eventMeta.getAdminBean().getAdminId());
 			eventBean.setEventName(Constants.DEFAULT_EVENT_NAME);
+			if (eventMeta != null && eventMeta.getEventName() != null
+					&& !"".equalsIgnoreCase(eventMeta.getEventName())) {
+				eventBean.setEventName(eventMeta.getEventName());
+			}
 			eventBean.setEventCreateDate(DateSupport.getEpochMillis());
 			eventBean.setHumanCreateDate(DateSupport.getUTCDateTime());
 			eventBean.setIsTmp("1");

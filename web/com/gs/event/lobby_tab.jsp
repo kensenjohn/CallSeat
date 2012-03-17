@@ -33,7 +33,7 @@
 			<div class="span10">
 				<div class="row">
 					<div class="span3 txt_center">
-						&nbsp;
+						<button id="lnk_new_event_id" name="lnk_new_event_id" class="action_button primary large ">New Event</button>
 					</div>
 					<div class="span3 txt_center">
 						<button id="lnk_guest_id" name="lnk_guest_id" class="action_button primary large ">All Guests</button>
@@ -50,4 +50,5 @@
 <form id="frm_lobby_tab" method="POST" action="">
 	<input type="hidden" id="lobby_event_id"  name="lobby_event_id" value=""/>
 	<input type="hidden" id="lobby_admin_id"  name="lobby_admin_id" value=""/>
+	<input type="hidden" id="lobby_create_new"  name="lobby_create_new" value=""/>
 </form>

@@ -18,6 +18,14 @@
 	boolean isFromLanding = ParseUtil.sTob(request.getParameter("from_landing"));
 	String sEventId = ParseUtil.checkNull(request.getParameter("lobby_event_id"));
 	String sAdminId = ParseUtil.checkNull(request.getParameter("lobby_admin_id"));
+	boolean isNewEventClicked= ParseUtil.sTob(request.getParameter("lobby_create_new"));
+	
+	if(!isFromLanding)
+	{
+	%>
+		<%@include file="/web/com/gs/common/gatekeeper.jsp"%>
+	<%
+	}
 	
 	jspLogging.info("Invoked by landing page : " + isFromLanding);
 	String sEventTitle = "New Event";
@@ -65,15 +73,25 @@
 	}
 	else
 	{
-		if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId) && sEventId!=null && !"".equalsIgnoreCase(sEventId))
+		if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId))
 		{
 			AdminManager adminManager = new AdminManager();		
 			adminBean = adminManager.getAdmin(sAdminId);
+		}
+		if(isNewEventClicked)
+		{
 			
-			EventManager eventManager = new EventManager();
-			eventBean = eventManager.getEvent(sEventId);
-			
-			sEventDate = eventBean.getHumanEventDate();
+		}
+		else
+		{
+			if(sEventId!=null && !"".equalsIgnoreCase(sEventId))
+			{
+				
+				EventManager eventManager = new EventManager();
+				eventBean = eventManager.getEvent(sEventId);
+				
+				sEventDate = eventBean.getHumanEventDate();
+			}
 		}
 		
 	}
@@ -81,8 +99,18 @@
 	sEventId = eventBean.getEventId();
 	sAdminId = adminBean.getAdminId();
 	
-	String eventName = eventBean.getEventName();
-	String eventDate = "("+sEventDate+")";
+	String eventName = "";
+	String eventDate = "";
+	if(isNewEventClicked)
+	{
+		eventName = "Create New";
+		eventDate = "";
+	}
+	else
+	{
+		eventName = eventBean.getEventName();
+		eventDate = "("+sEventDate+")";
+	}
 %>
 <link rel="stylesheet" type="text/css" href="/web/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 
@@ -136,8 +164,22 @@
 										<input type="text" class="span4" value="" id="e_summ_event_date" name = "e_summ_event_date"/>
 									</div>
 								</div>
-								<div class="actions">									
-						            <button id="save_event" name="save_event" type="button" class="action_button primary small">Save Changes</button>
+								<div class="actions">
+								<%
+										if(isNewEventClicked)
+										{
+								%>
+											<button id="create_event" name="create_event" type="button" class="action_button primary small">Create New Event</button>
+								<%
+										}
+										else
+										{
+								%>
+											<button id="save_event" name="save_event" type="button" class="action_button primary small">Save Changes</button>
+								<%			
+										}
+								%>								
+						            
 						        </div>
 						        
 					</fieldset>	
@@ -203,6 +245,7 @@
 	var varEventID = '<%=sEventId%>';
 	var varAdminID = '<%=sAdminId%>';
 	var varIsSignedIn = <%=isSignedIn%>;
+	var varIsNewEventCreateClicked = <%=isNewEventClicked%>;
 	$(document).ready(function() {
 		$("#e_summ_event_date").datepick();
 		$("#event_summary_tab").click(function(){
@@ -212,12 +255,13 @@
 			
 			
 		});
-		$("#save_event").click(function(){
-			alert('save event');
-			//$("#primary_header").text( $("#e_summ_event_name").val() );
-			
+		$("#save_event").click(function(){			
 			saveEvent();
 		});
+		$("#create_event").click(function(){
+			createEvent();
+		});
+		
 		$("#table_view_tab").click(function(){
 
 			toggleActionNavs('table_action_nav');
@@ -252,7 +296,15 @@
 			phoneNumTab();
 		}
 		
-		$("#table_action_nav").show();
+		if(varIsNewEventCreateClicked)
+		{
+			$('#div_event_summary').show();
+		}
+		else
+		{
+			$("#table_action_nav").show();
+		}
+		
 		
 		
 		$("#sched_date").datepick();
@@ -291,7 +343,16 @@
 		});
 		
 		loadActions();
-		loadTables();
+		if(varIsNewEventCreateClicked)
+		{
+			switchTab('li_event_summary');
+			$('#div_event_summary').show();
+		}
+		else
+		{
+			loadTables();
+		}
+		
 	});
 	
 	function phoneNumTab()
@@ -377,8 +438,21 @@
 		{
 			
 		});
+		setNewEventClick()
 		setAllGuestButtonClick();
 		setLobbyButtonClick();
+	}
+	function setNewEventClick()
+	{
+		$("#lnk_new_event_id").unbind("click");
+		$("#lnk_new_event_id").click(function() 
+		{
+			$("#frm_lobby_tab").attr("action" , "event_setup.jsp");
+			$("#lobby_create_new").val(true);
+			$("#lobby_admin_id").val(varAdminID);
+			
+			$("#frm_lobby_tab").submit();
+		});
 	}
 	function setAllGuestButtonClick()
 	{
@@ -447,6 +521,16 @@
 		getDataAjax(actionUrl,dataString,methodType, getUpdatedEvent);
 	}
 	
+	function createEvent()
+	{
+		var dataString = 'admin_id='+ varAdminID+'&create_event=true';
+		dataString = dataString + '&'+$("#frm_event_update").serialize();
+		var actionUrl = "proc_save_event.jsp";
+		var methodType = "POST";
+		
+		getDataAjax(actionUrl,dataString,methodType, getUpdatedEvent);
+	}
+	
 	function getUpdatedEvent(jsonResult)
 	{
 		if(jsonResult!=undefined)
@@ -467,7 +551,17 @@
 				$("#primary_header").text( $("#e_summ_event_name").val() );
 				$("#secondary_header").text( '('+$("#e_summ_event_date").val()+')' );
 				
-				alert('Changes to event was successful.');
+				var varIsPayloadExist = varResponseObj.is_payload_exist;
+				
+				if(varIsPayloadExist == true)
+				{
+					var jsonResponseObj = varResponseObj.payload;
+					if(jsonResponseObj.create_event == true)
+					{
+						//alert(jsonResponseObj.event_bean.event_id)
+						varEventID = jsonResponseObj.event_bean.event_id;
+					}
+				}
 				
 			}
 		}
