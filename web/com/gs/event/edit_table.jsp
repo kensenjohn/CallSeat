@@ -12,29 +12,11 @@
 		String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 		String sTableId = ParseUtil.checkNull(request.getParameter("table_id"));
 		
-		boolean isTableExists = false;
-		if(sTableId!=null && !"".equalsIgnoreCase(sTableId))
-		{
-			isTableExists = true;
-		}
-		String sTitle = "Add a Table";
-		if(isTableExists)
-		{
-			sTitle = "Edit Table";
-		}
-		
-		String sButtonName = "Add Table";
-		if(isTableExists)
-		{
-			sButtonName = "Save Changes";
-		}
-		
 		jspLogging.info("Add Table for event : " + sEventId + " by : " + sAdminId);
 	%>
 		<div class="container-filler rounded-corners" >
 			<div style="padding:20px">
-				
-				<h2 class="txt txt_center"><%=sTitle%> &nbsp; <span id='edit_table_name'></span></h2>
+				<h2 class="txt txt_center">Add a Table</h2>
 				<div class="row">
 					<div class="span7">
 						<form id="frm_add_table" >
@@ -58,12 +40,11 @@
 									</div>
 								</div>	
 								<div class="actions">									
-						            <button id="add_table" name="add_table" type="button" class="action_button primary small"><%=sButtonName %></button>
+						            <button id="add_table" name="add_table" type="button" class="action_button primary small">Add Table</button>
 						        </div>							
 							</fieldset>
 							<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
 							<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
-							<input type="hidden" id="admin_id" name="table_id"  value="<%=sTableId%>"/>
 						</form>
 					</div>			
 				</div>
@@ -72,40 +53,10 @@
 		</div>
 	</body>
 	<script type="text/javascript">
-		var varIsTableExists = <%=isTableExists%>;
 		$(document).ready(function() {
 			//oadTableData();
-			if(!varIsTableExists)
-			{
-				$("#add_table").click(addTable);
-			}
-			else
-			{
-				loadTableDetails();
-				$("#add_table").click(editTable);
-			}
-			
+			$("#add_table").click(addTable);
 		});
-		
-		function loadTableDetails()
-		{
-			var dataString = $("#frm_add_table").serialize();
-			var actionUrl = "proc_load_table.jsp";
-			var methodType = "POST";
-			
-			dataString = dataString + '&load_single_table=y';
-			submitTableData(actionUrl,dataString,methodType,getResult);
-		}
-		
-		function editTable()
-		{
-			var dataString = $("#frm_add_table").serialize();
-			var actionUrl = "proc_add_table.jsp";
-			var methodType = "POST";
-			
-			dataString = dataString + '&save_data=y&edit_table=y';
-			submitTableData(actionUrl,dataString,methodType,getResult);
-		}
 		
 		function addTable()
 		{
@@ -165,29 +116,14 @@
 					
 					if(varIsPayloadExist == true)
 					{
-						var varPayload = varResponseObj.payload;
+						//var jsonResponseObj = varResponseObj.payload;
+						//processTableGuest( jsonResponseObj );
 						
-						if(varPayload.load_table == true)
-						{
-							var varTableDetail = varPayload.table_detail;
-							displayTableDetail(varTableDetail);
-						}
-						else
-						{
-							parent.loadTables();
-							parent.$.fancybox.close();
-						}
-						
+						parent.loadTables();
+						parent.$.fancybox.close();
 					}
 				}
 			}
-		}
-		
-		function displayTableDetail(varTableDetail)
-		{
-			$('#table_name').val( varTableDetail.table_name);
-			$('#table_num').val( varTableDetail.table_num);
-			$('#num_of_seats').val( varTableDetail.num_of_seats);
 		}
 	</script>
 </html>

@@ -8,10 +8,14 @@
 <%@page import="com.gs.json.*"%>
 
 <%
-JSONObject jsonResponseObj = new JSONObject();
-String sEventID = ParseUtil.checkNull(request.getParameter("event_id"));
 Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 Logger appLogging = LoggerFactory.getLogger("AppLogging");
+
+JSONObject jsonResponseObj = new JSONObject();
+String sEventID = ParseUtil.checkNull(request.getParameter("event_id"));
+String sTableId = ParseUtil.checkNull(request.getParameter("table_id"));
+boolean isLoadSingleTable = ParseUtil.sTob(request.getParameter("load_single_table"));
+
 response.setContentType("application/json");
 
 ArrayList<Text> arrOkText = new ArrayList<Text>();
@@ -21,19 +25,43 @@ RespConstants.Status responseStatus = RespConstants.Status.ERROR;
 RespObjectProc responseObject = new RespObjectProc();
 try
 {
-	
 	if(sEventID!=null)
 	{
-		GuestTableManager guestTableManager = new GuestTableManager();
-		HashMap<Integer, TableGuestsBean> hmTables =  guestTableManager.getTablesAndGuest(sEventID);
-		
-		HashMap<String, TableGuestsBean> hmConsTableGuestBean = guestTableManager.consolidateTableAndGuest(hmTables);
-		jsonResponseObj.put("table_detail",guestTableManager.getTablesAndGuestJson(hmConsTableGuestBean));
-		
-		
-		Text okText = new OkText("Loading Data Complete ","my_id");		
-		arrOkText.add(okText);
-		responseStatus = RespConstants.Status.OK;
+		if(isLoadSingleTable)
+		{
+			if(sTableId!=null && !"".equalsIgnoreCase(sTableId))
+			{
+				TableManager tableManager = new TableManager();
+				TableBean tableBean = tableManager.getTable(sTableId);
+
+				jsonResponseObj.put("table_detail",tableBean.toJson());
+				jsonResponseObj.put("load_table",true);
+				
+				Text okText = new OkText("Loading Data Complete ","my_id");		
+				arrOkText.add(okText);
+				responseStatus = RespConstants.Status.OK;
+			}
+			else
+			{
+				Text errorText = new ErrorText("Table details were not loaded. Please try again.","my_id") ;		
+				arrErrorText.add(errorText);
+				
+				responseStatus = RespConstants.Status.ERROR;
+			}
+		}
+		else
+		{
+			GuestTableManager guestTableManager = new GuestTableManager();
+			HashMap<Integer, TableGuestsBean> hmTables =  guestTableManager.getTablesAndGuest(sEventID);
+			
+			HashMap<String, TableGuestsBean> hmConsTableGuestBean = guestTableManager.consolidateTableAndGuest(hmTables);
+			jsonResponseObj.put("table_detail",guestTableManager.getTablesAndGuestJson(hmConsTableGuestBean));
+			
+			Text okText = new OkText("Loading Data Complete ","my_id");		
+			arrOkText.add(okText);
+			responseStatus = RespConstants.Status.OK;
+		}
+				
 	}
 	else
 	{

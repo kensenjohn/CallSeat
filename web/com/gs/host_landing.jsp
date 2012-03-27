@@ -32,6 +32,17 @@ if(cookies!=null)
 			<div>
 						<h2>Seating your Guests, with a phone call.</h2>
 			</div>
+			<%
+			if(isSignedIn)
+			{
+			%>
+				<div>
+					<a href="event/host_dashboard.jsp?lobby_admin_id=<%=sAdminIdSecure%>">Goto lobby</a>
+				</div>
+			<%
+			}
+			%>
+
 			<div class="landing_when">
 				<h3>When is the Event?</h3><br>
 				<form id="frm_event_dt" name="frm_event_dt">
@@ -43,7 +54,8 @@ if(cookies!=null)
 								<input type="hidden" id="hid_event_date" name="hid_event_date" value="">
 								<input type="hidden" id="from_landing" name="from_landing" value="">
 								<input type="hidden" id="lobby_event_id" name="lobby_event_id" value="">
-								<input type="hidden" id="lobby_admin_id" name="lobby_admin_id" value="">
+								<input type="hidden" id="lobby_admin_id" name="lobby_admin_id" 
+									value="<%=isSignedIn?sAdminIdSecure:""%>">
 								
 							</form>
 			</div>

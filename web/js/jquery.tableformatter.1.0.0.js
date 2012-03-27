@@ -106,14 +106,15 @@
 			},
 			create_delete_table : function ( single_table_detail )
 			{
-				var varDeleteLink = '<span id="del_'+single_table_detail.table_id+'">Delete</span>';
+				var varDeleteLink = '<span id="del_'+single_table_detail.table_id+'">'+
+					'<a id="link_del_table_'+single_table_detail.table_id+'" >Delete</a></span>';
 				return varDeleteLink;
 			},
 			create_edit_table :  function ( single_table_detail )
 			{
 				var varEditLink = '<span id="edit_'+single_table_detail.table_id+'">'+
 						'<a id="link_table_'+single_table_detail.table_id+'" '+ 
-						' href="/web/com/gs/event/edit_table_guests.jsp?table_id='+single_table_detail.table_id+
+						' href="/web/com/gs/event/add_table.jsp?table_id='+single_table_detail.table_id+
 						'&event_id='+json_table_details.var_event_id+'&admin_id='+json_table_details.var_admin_id+'"> '+
 						' Edit Table </a></span>';
 				return varEditLink;

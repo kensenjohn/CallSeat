@@ -11,6 +11,8 @@
 <%@include file="../common/security.jsp"%>
 <jsp:include page="../common/header_bottom.jsp"/>
 
+<%@include file="/web/com/gs/common/gatekeeper.jsp"%>
+
 <%
 	Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 	String sEventId = ParseUtil.checkNull(request.getParameter("lobby_event_id"));

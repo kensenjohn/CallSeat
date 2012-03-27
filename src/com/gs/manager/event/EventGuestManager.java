@@ -2,6 +2,7 @@ package com.gs.manager.event;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -46,6 +47,16 @@ public class EventGuestManager {
 		}
 
 		return iNumOfRecs;
+	}
+
+	public Integer setGuestInviteRsvpForEvent(EventGuestBean eventGuestBean) {
+
+		Integer iNumOfRows = 0;
+		GuestData guestData = new GuestData();
+		if (eventGuestBean != null) {
+			iNumOfRows = guestData.updateGuestInviteRsvpEvent(eventGuestBean);
+		}
+		return iNumOfRows;
 	}
 
 	public void setGuestRsvpForEvent(EventGuestMetaData eventGuestMetaData) {
@@ -175,4 +186,27 @@ public class EventGuestManager {
 		}
 		return jsonObject;
 	}
+
+	public void saveEventGuestRequest(Map requestParamsMap) {
+		if (requestParamsMap != null) {
+			Set setKeys = requestParamsMap.keySet();
+			String sAdminId = (String) requestParamsMap.get("admin_id");
+		}
+
+	}
+
+	public Integer deleteGuestFromEvent(EventGuestMetaData eventGuestMetaData) {
+		Integer iNumOfRecs = 0;
+		if (eventGuestMetaData != null
+				&& eventGuestMetaData.getEventGuestId() != null
+				&& !"".equalsIgnoreCase(eventGuestMetaData.getEventGuestId())) {
+			GuestData guestData = new GuestData();
+			iNumOfRecs = guestData.deleteEventGuest(
+					eventGuestMetaData.getEventGuestId(),
+					eventGuestMetaData.getEventId(),
+					eventGuestMetaData.getGuestId());
+		}
+		return iNumOfRecs;
+	}
+
 }

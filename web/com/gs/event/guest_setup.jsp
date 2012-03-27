@@ -61,8 +61,8 @@
 	$(document).ready(function() {
 		
 		$("#add_all_guests").fancybox({
-			'width'				: '75%',
-			'height'			: '85%',
+			'width'				: '80%',
+			'height'			: '90%',
 			'autoScale'			: false,
 			'transitionIn'		: 'none',
 			'transitionOut'		: 'none',

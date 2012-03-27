@@ -33,9 +33,9 @@ public class TableData {
 
 			for (HashMap<String, String> hmResult : arrResult) {
 				tableBean.setTableId(hmResult.get("TABLEID"));
-				tableBean.setTableName(hmResult.get("TABLENUM"));
+				tableBean.setTableName(hmResult.get("TABLENAME"));
 				tableBean.setTableNum(ParseUtil.checkNull(hmResult
-						.get("NUMOFSEATS")));
+						.get("TABLENUM")));
 				tableBean.setNumOfSeats(ParseUtil.checkNull(hmResult
 						.get("NUMOFSEATS")));
 				tableBean.setIsTmp(ParseUtil.checkNull(hmResult.get("IS_TMP")));
@@ -55,6 +55,22 @@ public class TableData {
 		}
 
 		return tableBean;
+	}
+
+	public Integer updateTable(TableBean tableBean) {
+		int numOfRowsInserted = 0;
+		if (tableBean != null && !"".equalsIgnoreCase(tableBean.getTableId())) {
+			String sQuery = "UPDATE GTTABLE SET TABLENAME = ? , TABLENUM = ?, NUMOFSEATS = ?, MODIFYDATE = ?, MODIFIEDBY = ? WHERE TABLEID = ?";
+			ArrayList<Object> aParams = DBDAO.createConstraint(
+					tableBean.getTableName(), tableBean.getTableNum(),
+					tableBean.getNumOfSeats(), tableBean.getModifyDate(),
+					tableBean.getModifyBy(), tableBean.getTableId());
+
+			appLogging.error("Table Bean aParmas : " + aParams);
+			numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, "admin",
+					"TableData.java", "updateTable() ");
+		}
+		return numOfRowsInserted;
 	}
 
 	public Integer insertTable(TableBean tableBean) {

@@ -1,0 +1,48 @@
+MySQL compressed tar file binary distributions have names of the form mysql-VERSION-OS.tar.gz, 
+where VERSION is a number (for example, 5.5.23), and OS indicates the type of operating system 
+for which the distribution is intended (for example, pc-linux-i686 or winx64).
+
+
+make sure to download the tar.gz file
+To install MySQL from a compressed tar file binary distribution, your system must have GNU 
+gunzip to uncompress the distribution and a reasonable tar to unpack it. If your tar program 
+supports the z option, it can both uncompress and unpack the file.
+
+shell> groupadd mysql
+shell> useradd -r -g mysql mysql
+shell> cd /usr/local
+shell> tar zxvf /path/to/mysql-VERSION-OS.tar.gz
+shell> ln -s full-path-to-mysql-VERSION-OS mysql
+shell> cd mysql
+shell> chown -R mysql .
+shell> chgrp -R mysql .
+shell> scripts/mysql_install_db --user=mysql
+if you get the following error
+/usr/local/mysql/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+execute the following command
+sudo apt-get install libaio1 libaio-dev
+shell> chown -R root .
+shell> chown -R mysql data
+# Next command is optional
+shell> cp support-files/my-medium.cnf /etc/my.cnf
+shell> bin/mysqld_safe --user=mysql &
+# Next command is optional
+shell> cp support-files/mysql.server /etc/init.d/mysql.server
+
+
+create the mysql command
+shell>  cd /usr/bin
+shell> ln -s /usr/local/mysql/bin/mysql mysql
+
+create the log folder
+shell> cd /var/log/
+shell> mkdir mysql
+shell> cd mysql
+shell> create a file in mysql.log
+shell> chown mysql:mysql mysql.log
+shell> sudo nano /etc/my.cnf
+add the following line
+[mysqld]
+log=/var/log/mysql.log
+
+

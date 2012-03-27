@@ -231,6 +231,7 @@
 			</div>
 			</div>
 		</div>
+	</div>
 	<div id="action_fancy_box">
 		
 	</div>
@@ -745,15 +746,28 @@
 			
 			var varTableId = tmpTable.table_id;
 			
-			$('#del_'+varTableId).click(function() {
-				delete_table_action('/web/com/gs/event/proc_delete_table.jsp',varTableId);
-			});
 			$('#edit_'+varTableId).click(function() {
 				edit_table_action('/web/com/gs/event/proc_delete_table.jsp',varTableId);
 			});
+			$('#link_del_table_'+varTableId).click(function() {
+				delete_table_action('/web/com/gs/event/proc_delete_table.jsp',varTableId);
+			});
+			$("#link_table_"+varTableId).fancybox({
+				'width'				: '90%',
+				'height'			: '75%%',
+				'autoScale'			: false,
+				'transitionIn'		: 'none',
+				'transitionOut'		: 'none',
+				'type'				: 'iframe',
+				'padding'			: 0,
+				'margin'			: 0,
+				'onClosed'			: function() {
+										loadTables();
+										}
+			});
 			$("#link_guest_"+varTableId).fancybox({
-				'width'				: '98%',
-				'height'			: '98%',
+				'width'				: '90%',
+				'height'			: '75%',
 				'autoScale'			: false,
 				'transitionIn'		: 'none',
 				'transitionOut'		: 'none',

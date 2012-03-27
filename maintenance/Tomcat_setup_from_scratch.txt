@@ -1,0 +1,90 @@
+Source credited to this blog
+http://diegobenna.blogspot.com/2011/01/install-tomcat-7-in-ubuntu-1010.html
+
+Apache has officially launched version 7.0 of the servlet container for Java applications, Tomcat. 
+Major changes in this version, you can highlight support for Servlet 3.0 and JavaServer Pages 2.2.
+
+Install JDK
+See this post: Install JDK 6 update 23 in Ubuntu 10.10 
+
+Installation
+
+The first thing to do is download the package "apache-tomcat-7.0.6.tar.gz" from the NEXT link
+http://tomcat.apache.org/download-70.cgi [tar.gz]
+Now unpack it with the following command:
+tar xvzf apache-tomcat-7.0.8.tar.gz
+
+Then we let in a more appropriate directory, in our case in / usr/share/tomcat7, but can be in any directory. We do this with the command:
+sudo mv apache-tomcat-7.0.8/ /usr/share/tomcat7
+
+Now we define the environment variables JAVA_HOME and JRE_HOME. This file is in the "environment" in / etc. Command to edit the file:
+sudo gedit /etc/environment
+
+Here we record the routes where we have installed Java in my case this is as follows:
+
+JAVA_HOME="/usr/local/jdk1.6.0_23"
+JRE_HOME="/usr/local/jdk1.6.0_23/jre"
+PATH="...(other path):$JAVA_HOME:$JRE_HOME"
+
+IMPORTANT: Verify the routes where they have installed Java.
+
+I have had some problems in defining these environment variables, as sometimes tomcat does not recognize, 
+but a surefire way of recognizing that tomcat is to define the file paths inside "catalina.sh"located in tomcat7/bin.
+ To modify this file use the command:
+sudo gedit /usr/share/tomcat7/bin/catalina.sh
+
+Now just insert the JAVA_HOME and JRE_HOME after the first line, so the file is as follows:
+#!/bin/sh
+JAVA_HOME="/usr/local/jdk1.6.0_23"
+JRE_HOME="/usr/local/jdk1.6.0_23/jre"
+# Licensed to the Apache Software Foundation (ASF)...
+#...
+#...
+....
+
+Now let's configure Tomcat users, this is done in the file "tomcat-users.xml"directory tomcat7/conf. Command to edit the file:
+sudo gedit /usr/share/tomcat7/conf/tomcat-users.xml
+
+Unlike previous versions where the administrator should own role "manager" now it should be "manager-gui"to operate 
+on the web administration tomcat7. The file would be as follows:
+
+
+<?xml version='1.0' encoding='utf-8'?>
+
+<tomcat-users>
+<role rolename="manager-gui"/>
+<role rolename="manager-script"/>
+<role rolename="manager"/>
+<role rolename="admin-gui"/>
+<role rolename="admin-script"/>
+<role rolename="admin"/>
+
+<user username="usuario" password="contrasena" roles="manager-gui,admin-gui,manager,admin,manager-script,admin-script"/>
+</tomcat-users>
+
+
+
+Now you should be all ready to try tomcat7.
+
+First we must lift the server with the following command:
+sudo /usr/share/tomcat7/bin/startup.sh
+
+With this we get the following output on console:
+Using CATALINA_BASE: /usr/share/tomcat7
+Using CATALINA_HOME: /usr/share/tomcat7
+Using JRE_HOME: /usr/local/jdk1.6.0_20/jre
+Using CLASSPATH: /usr/share/tomcat7/bin/bootstrap.jar:/usr/share/tomcat7/bin/tomcat-juli.jar
+
+Verify that the JRE_HOME is where we define.
+
+Now open your web browser and type the following url:
+http://127.0.0.1:8080/
+
+So we get the following page:
+
+If we enter the administration Tomcat Manager we click on the menu or directly at URL:
+http://127.0.0.1:8080/manager/html
+
+Here we ask the user data from previous record in mind tomcat-users.xml.
+
+I recommend testing the sample to make sure everything works ok, they are in the section "Miscellaneous" from the side menu or at the URL:

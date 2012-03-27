@@ -12,6 +12,7 @@
 <% response.setDateHeader("Expires", 0); %>
 
 	<%
+		String sAdminIdSecure = "";
 		//This section will identify whether there was insecure params used in a request
   		String sErrorParam = com.gs.common.ParseUtil.checkNull( (String)request.getAttribute("INSECURE_PARAMS_ERROR") );
   		boolean isSecurityError = com.gs.common.ParseUtil.sTob(sErrorParam) ;
@@ -58,7 +59,7 @@
   			{
   				isSignedIn = true;
   				
-  				
+  				sAdminIdSecure = adminBean.getAdminId();
   				reqSession.setAttribute(Constants.USER_SESSION,adminBean);
   			}
   		}

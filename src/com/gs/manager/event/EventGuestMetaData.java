@@ -2,39 +2,50 @@ package com.gs.manager.event;
 
 import java.util.ArrayList;
 
-public class EventGuestMetaData
-{
+public class EventGuestMetaData {
 	private String eventId = "";
 	private ArrayList<String> arrGuestId = new ArrayList<String>();
 	private String rsvpDigits = "";
+	private String eventGuestId = "";
+	private String guestId = "";
 
-	public String getEventId()
-	{
+	public String getEventGuestId() {
+		return eventGuestId;
+	}
+
+	public void setEventGuestId(String eventGuestId) {
+		this.eventGuestId = eventGuestId;
+	}
+
+	public String getGuestId() {
+		return guestId;
+	}
+
+	public void setGuestId(String guestId) {
+		this.guestId = guestId;
+	}
+
+	public String getEventId() {
 		return eventId;
 	}
 
-	public void setEventId(String eventId)
-	{
+	public void setEventId(String eventId) {
 		this.eventId = eventId;
 	}
 
-	public ArrayList<String> getArrGuestId()
-	{
+	public ArrayList<String> getArrGuestId() {
 		return arrGuestId;
 	}
 
-	public void setArrGuestId(ArrayList<String> arrGuestId)
-	{
+	public void setArrGuestId(ArrayList<String> arrGuestId) {
 		this.arrGuestId = arrGuestId;
 	}
 
-	public String getRsvpDigits()
-	{
+	public String getRsvpDigits() {
 		return rsvpDigits;
 	}
 
-	public void setRsvpDigits(String rsvpDigits)
-	{
+	public void setRsvpDigits(String rsvpDigits) {
 		this.rsvpDigits = rsvpDigits;
 	}
 

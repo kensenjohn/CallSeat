@@ -198,6 +198,23 @@ public class GuestData {
 		return arrGuestBean;
 	}
 
+	public Integer updateGuestInviteRsvpEvent(EventGuestBean eventGuestBean) {
+		int numOfRowsInserted = 0;
+		if (eventGuestBean != null && eventGuestBean.getEventId() != null
+				&& eventGuestBean.getGuestId() != null
+				&& !"".equalsIgnoreCase(eventGuestBean.getEventId())
+				&& !"".equalsIgnoreCase(eventGuestBean.getGuestId())) {
+			String sQuery = "UPDATE GTEVENTGUESTS SET RSVP_SEATS = ? , TOTAL_INVITED_SEATS = ? WHERE FK_EVENTID = ? AND FK_GUESTID = ?";
+			ArrayList<Object> aParams = DBDAO.createConstraint(
+					eventGuestBean.getRsvpSeats(),
+					eventGuestBean.getTotalNumberOfSeats(),
+					eventGuestBean.getEventId(), eventGuestBean.getGuestId());
+			numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
+					"GuestData.java", "updateGuestInviteRsvpEvent()");
+		}
+		return numOfRowsInserted;
+	}
+
 	public Integer updateGuestRsvpEvent(EventGuestBean eventGuestBean) {
 		int numOfRowsInserted = 0;
 		if (eventGuestBean != null && eventGuestBean.getEventId() != null
@@ -464,4 +481,16 @@ public class GuestData {
 		return eventGuestBean;
 	}
 
+	public Integer deleteEventGuest(String sEventGuestId, String sEventId,
+			String sGuestId) {
+		Integer iNumOfRecs = 0;
+		if (sEventGuestId != null && !"".equalsIgnoreCase(sEventGuestId)) {
+			String sQuery = "DELETE FROM GTEVENTGUESTS WHERE EVENTGUESTID = ? AND FK_GUESTID = ? AND FK_EVENTID = ? ";
+			ArrayList<Object> aParams = DBDAO.createConstraint(sEventGuestId,
+					sGuestId, sEventId);
+			iNumOfRecs = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
+					"GuestData.java", "deleteEventGuest()");
+		}
+		return iNumOfRecs;
+	}
 }
