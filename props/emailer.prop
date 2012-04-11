@@ -1,4 +1,3 @@
-smtp_server=**************
-amazon_ses.iamusername=*******************
-amazon_ses.smtpusername=*******************
-amazon_ses.smtppassword=*******************
+enable_single_email_send=true
+enable_bulk_email_send=false
+
