@@ -6,11 +6,17 @@ public class Constants {
 
 	public static String DBCONN_PROP = PROP_FILE_PATH + "dbconnections.prop";
 	public static String APPLICATION_PROP = PROP_FILE_PATH + "application.prop";
+	public static String PROCESS_SCHEDULER_PROP = PROP_FILE_PATH
+			+ "process_scheduler.prop";
+	public static String EMAILER_PROP = PROP_FILE_PATH + "emailer.prop";
 
 	public static String ADMIN_DB = "admin_db";
 
 	public static String LOG_PATH = "/var/log/guests";
 	public static String DB_LOGS = "DBLogging";
+	public static String SCHEDULER_LOGS = "SchedulerLogging";
+	public static String EMAILER_LOGS = "EmailerLogging";
+
 	public static String DB_ERROR_LOGS = "DataBaseErrors";
 	public static String JSP_LOGS = "JspLogging";
 	public static String APP_LOGS = "AppLogging";
@@ -128,6 +134,43 @@ public class Constants {
 	public static String PROP_TWILIO_REST_API_VERSION = "twilio_rest_api_version";
 	public static String PROP_TWILIO_API_DOMAIN = "twilio_api_domain";
 
+	public static String PROP_STANNDARD_MAIL_INIT_DELAY = "standard_mail.initial_delay";
+	public static String PROP_STANNDARD_MAIL_PROC_DELAY = "standard_mail.delay_between_call";
+
+	public static String PROP_AMAZON_ACCESS_KEY = "amazon_access_key";
+	public static String PROP_AMAZON_ACCESS_SECRET = "amazon_secret_key";
+
+	public static String PROP_ENABLE_SINGLE_EMAIL_SEND = "enable_single_email_send";
+	public static String PROP_ENABLE_BULK_EMAIL_SEND = "enable_bulk_email_send";
+
 	public static String OWSAPI_POLICY_FILE = "owsapi_policy";
+
+	public enum EMAIL_STATUS {
+		NEW("NEW"), PICKED_TO_SEND("PICKED"), ERROR("ERROR"), SENT("SENT");
+
+		private String emailStatus = "";
+
+		EMAIL_STATUS(String emailStatus) {
+			this.emailStatus = emailStatus;
+		}
+
+		public String getStatus() {
+			return this.emailStatus;
+		}
+	}
+
+	public enum EMAIL_TEMPLATE {
+		REGISTRATION("REGISTRATION");
+
+		private String emailTemplate = "";
+
+		EMAIL_TEMPLATE(String emailTemplate) {
+			this.emailTemplate = emailTemplate;
+		}
+
+		public String getEmailTemplate() {
+			return this.emailTemplate;
+		}
+	}
 
 }

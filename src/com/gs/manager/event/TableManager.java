@@ -95,6 +95,20 @@ public class TableManager {
 		return numOfEventTablesDel;
 	}
 
+	public Integer deleteGuestEventTable(ArrayList<String> arrTableId,
+			String sGuestId) {
+		Integer numOfEventTablesDel = 0;
+
+		if (arrTableId != null && !arrTableId.isEmpty() && sGuestId != null
+				&& !"".equalsIgnoreCase(sGuestId)) {
+			GuestTableData guestTableData = new GuestTableData();
+			numOfEventTablesDel = guestTableData.deleteGuestEventTable(
+					arrTableId, sGuestId);
+		}
+
+		return numOfEventTablesDel;
+	}
+
 	public Integer deleteGuestEventTable(HashMap<Integer, TableBean> hmTables,
 			EventGuestMetaData eventGuestMeta) {
 
@@ -112,8 +126,8 @@ public class TableManager {
 
 			}
 			GuestTableData guestTableData = new GuestTableData();
-			numOfEventTablesDel = guestTableData.deleteGuestEventTable(
-					arrTables, eventGuestMeta.getGuestId());
+			numOfEventTablesDel = deleteGuestEventTable(arrTables,
+					eventGuestMeta.getGuestId());
 		}
 		return numOfEventTablesDel;
 	}

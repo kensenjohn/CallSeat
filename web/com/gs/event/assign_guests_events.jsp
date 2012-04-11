@@ -134,8 +134,13 @@
 					{
 						var varGuest = varEventGuests[i];
 						var varTmpEventId = varGuest.event_id;
+						$('#event_invite_status_'+varTmpEventId).text('Yes');
 						$('#event_invited_'+varTmpEventId).val(varGuest.total_seats);
-						$('#event_rsvp_'+varTmpEventId).val(varGuest.total_seats);
+						$('#event_rsvp_'+varTmpEventId).val(varGuest.rsvp_seats);
+						$('#event_assign_'+varTmpEventId).text('Update');
+						$('#event_remove_'+varTmpEventId).show();
+						$('#event_guest_id_'+varTmpEventId).val(varGuest.event_guest_id);
+						
 					}
 				}
 			}
@@ -218,11 +223,31 @@
 						var varResponseEventId = varPayload.response_event_id;
 						var varResponseGuestId = varPayload.response_guest_id;
 						var varEventGuestId = varPayload.event_guest_id;
+						var varIsUnInvited = varPayload.un_invite;
+						var varIsInvited = varPayload.invite;
 						
-						if(varEventGuestId!=undefined && varEventGuestId!='')
+						
+						if(varIsUnInvited == true)
 						{
-							$('#event_guest_id_'+varResponseEventId).val(varEventGuestId);
+							$('#event_guest_id_'+varResponseEventId).val('');
+							$('#event_invite_status_'+varResponseEventId).text('No');
+							$('#event_invited_'+varResponseEventId).val('');
+							$('#event_rsvp_'+varResponseEventId).val('');
+							$('#event_remove_'+varResponseEventId).hide();
+							$('#event_assign_'+varResponseEventId).text('Invite to event');
 						}
+						
+						if(varIsInvited == true)
+						{
+							if(varEventGuestId!=undefined && varEventGuestId!='')
+							{
+								$('#event_guest_id_'+varResponseEventId).val(varEventGuestId);
+							}
+							$('#event_invite_status_'+varResponseEventId).text('Yes');
+							$('#event_assign_'+varResponseEventId).text('Update');
+							$('#event_remove_'+varResponseEventId).show();
+						}
+						
 						parent.loadGuests();
 						var varIsMessageExist = varResponseObj.is_message_exist;
 						if(varIsMessageExist == true)
@@ -239,9 +264,10 @@
 		function create_header()
 		{
 			var valHeader = '<thead><tr> ' + 
-			'<th style="width:30%" class="tbl_th">Event Name</th>'+
-			'<th style="width:20%" class="tbl_th">Invited for seats</th>'+
-			'<th style="width:20%" class="tbl_th">RSVP to seats</th><th style="width:30%" class="tbl_th"></th>'+
+			'<th style="width:7%" class="tbl_th">Invited</th>'+
+			'<th style="width:27%" class="tbl_th">Event Name</th>'+
+			'<th style="width:18%" class="tbl_th">Invited for seats</th>'+
+			'<th style="width:18%" class="tbl_th">RSVP to seats</th><th style="width:30%" class="tbl_th"></th>'+
 			'</tr></thead>';
 			return valHeader; 
 		}
@@ -251,13 +277,14 @@
 			for(var i = 0; i<varArrEvents.length; i++)
 			{
 				var varTmpEvent = varArrEvents[i];
-				valRows = valRows + '<tr id="event_'+varTmpEvent.event_id+'">'+					
+				valRows = valRows + '<tr id="event_'+varTmpEvent.event_id+'">'+
+					'<td  class="tbl_td"><span style="text-align:center;" id="event_invite_status_'+varTmpEvent.event_id+'">No</span></td>'+
 					'<td  class="tbl_td">'+varTmpEvent.event_name+'</td>'+
 					'<td  class="tbl_td txt_center"><input id="event_invited_'+varTmpEvent.event_id+'" name="event_invited_'+varTmpEvent.event_id+'" class="span3"  type="textbox"></td>' +
 					'<td  class="tbl_td txt_center"><input id="event_rsvp_'+varTmpEvent.event_id+'" name="event_rsvp_'+varTmpEvent.event_id+'" class="span3" type="textbox" ></td>'+
 					'<td  class="tbl_td txt_center">'+
 					'<button id="event_assign_'+varTmpEvent.event_id+'" name="event_assign_'+varTmpEvent.event_id+'" type="button" class="action_button primary small" >Invite to event</button>'+
-					'<button id="event_remove_'+varTmpEvent.event_id+'" name="event_remove_'+varTmpEvent.event_id+'" type="button" class="action_button primary small" >Uninvite</button>'+
+					'<button id="event_remove_'+varTmpEvent.event_id+'" name="event_remove_'+varTmpEvent.event_id+'" type="button" class="action_button primary small" style="display:none;">Uninvite</button>'+
 					'</td><input type="hidden" value="" id="event_guest_id_'+varTmpEvent.event_id+'" name="event_guest_id_'+varTmpEvent.event_id+'"></tr>'
 					;
 			}

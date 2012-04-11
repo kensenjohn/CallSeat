@@ -1,0 +1,4 @@
+smtp_server=**************
+amazon_ses.iamusername=*******************
+amazon_ses.smtpusername=*******************
+amazon_ses.smtppassword=*******************

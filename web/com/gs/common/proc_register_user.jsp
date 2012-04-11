@@ -69,6 +69,8 @@ try
 					responseStatus = RespConstants.Status.OK;
 					jsonResponseObj.put("first_name",sRegFirstName);
 					jsonResponseObj.put("user_id",adminBean.getAdminId());
+					
+					adminManager.sendNewRegUserEmail(regAdminBean);
 				}
 				else
 				{

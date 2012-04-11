@@ -7,8 +7,7 @@ import org.json.JSONObject;
 
 import com.gs.common.ParseUtil;
 
-public class UserInfoBean
-{
+public class UserInfoBean {
 	/*
 	 * USERINFOID | varchar(45) | NO | PRI | NULL | | | FIRST_NAME |
 	 * varchar(256) | NO | | NULL | | | LAST_NAME | varchar(256) | YES | | NULL
@@ -36,13 +35,11 @@ public class UserInfoBean
 	private String humanCreateDate = "";
 	private String timezone = "";
 
-	public UserInfoBean()
-	{
+	public UserInfoBean() {
 
 	}
 
-	public UserInfoBean(HashMap<String, String> hmUserInfo)
-	{
+	public UserInfoBean(HashMap<String, String> hmUserInfo) {
 		/*
 		 * | USERINFOID | varchar(45) | NO | PRI | NULL | | | FIRST_NAME |
 		 * varchar(256) | NO | | NULL | | | LAST_NAME | varchar(256) | YES | |
@@ -72,200 +69,162 @@ public class UserInfoBean
 		this.email = ParseUtil.checkNull(hmUserInfo.get("EMAIL"));
 		this.cellPhone = ParseUtil.checkNull(hmUserInfo.get("CELL_PHONE"));
 		this.phoneNum = ParseUtil.checkNull(hmUserInfo.get("PHONE_NUM"));
-		this.humanCreateDate = ParseUtil.checkNull(hmUserInfo.get("HUMAN_CREATEDATE"));
+		this.humanCreateDate = ParseUtil.checkNull(hmUserInfo
+				.get("HUMAN_CREATEDATE"));
 		this.timezone = ParseUtil.checkNull(hmUserInfo.get("TIMEZONE"));
 	}
 
-	public String getTimezone()
-	{
+	public String getTimezone() {
 		return timezone;
 	}
 
-	public void setTimezone(String timezone)
-	{
+	public void setTimezone(String timezone) {
 		this.timezone = timezone;
 	}
 
-	public String getUserInfoId()
-	{
+	public String getUserInfoId() {
 		return userInfoId;
 	}
 
-	public void setUserInfoId(String userInfoId)
-	{
-		if (userInfoId != null && !"".equalsIgnoreCase(userInfoId))
-		{
+	public void setUserInfoId(String userInfoId) {
+		if (userInfoId != null && !"".equalsIgnoreCase(userInfoId)) {
 			isUserInfoExists = true;
 		}
 		this.userInfoId = userInfoId;
 	}
 
-	public String getFirstName()
-	{
+	public String getFirstName() {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName)
-	{
+	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-	public String getLastName()
-	{
+	public String getLastName() {
 		return lastName;
 	}
 
-	public void setLastName(String lastName)
-	{
+	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
-	public String getAddress1()
-	{
+	public String getAddress1() {
 		return address1;
 	}
 
-	public void setAddress1(String address1)
-	{
+	public void setAddress1(String address1) {
 		this.address1 = address1;
 	}
 
-	public String getAddress2()
-	{
+	public String getAddress2() {
 		return address2;
 	}
 
-	public void setAddress2(String address2)
-	{
+	public void setAddress2(String address2) {
 		this.address2 = address2;
 	}
 
-	public String getCity()
-	{
+	public String getCity() {
 		return city;
 	}
 
-	public void setCity(String city)
-	{
+	public void setCity(String city) {
 		this.city = city;
 	}
 
-	public String getState()
-	{
+	public String getState() {
 		return state;
 	}
 
-	public void setState(String state)
-	{
+	public void setState(String state) {
 		this.state = state;
 	}
 
-	public String getCountry()
-	{
+	public String getCountry() {
 		return country;
 	}
 
-	public void setCountry(String country)
-	{
+	public void setCountry(String country) {
 		this.country = country;
 	}
 
-	public String getIpAddress()
-	{
+	public String getIpAddress() {
 		return ipAddress;
 	}
 
-	public void setIpAddress(String ipAddress)
-	{
+	public void setIpAddress(String ipAddress) {
 		this.ipAddress = ipAddress;
 	}
 
-	public String getIsTemporary()
-	{
+	public String getIsTemporary() {
 		return isTemporary;
 	}
 
-	public void setIsTemporary(String isTemporary)
-	{
+	public void setIsTemporary(String isTemporary) {
 		this.isTemporary = isTemporary;
 	}
 
-	public String getDeleteRow()
-	{
+	public String getDeleteRow() {
 		return deleteRow;
 	}
 
-	public void setDeleteRow(String deleteRow)
-	{
+	public void setDeleteRow(String deleteRow) {
 		this.deleteRow = deleteRow;
 	}
 
-	public Long getCreateDate()
-	{
+	public Long getCreateDate() {
 		return createDate;
 	}
 
-	public void setCreateDate(Long createDate)
-	{
+	public void setCreateDate(Long createDate) {
 		this.createDate = createDate;
 	}
 
-	public String getEmail()
-	{
+	public String getEmail() {
 		return email;
 	}
 
-	public void setEmail(String email)
-	{
+	public void setEmail(String email) {
 		this.email = email;
 	}
 
-	public String getCellPhone()
-	{
+	public String getCellPhone() {
 		return cellPhone;
 	}
 
-	public void setCellPhone(String cellPhone)
-	{
+	public void setCellPhone(String cellPhone) {
 		this.cellPhone = cellPhone;
 	}
 
-	public String getPhoneNum()
-	{
+	public String getPhoneNum() {
 		return phoneNum;
 	}
 
-	public void setPhoneNum(String phoneNum)
-	{
+	public void setPhoneNum(String phoneNum) {
 		this.phoneNum = phoneNum;
 	}
 
-	public String getHumanCreateDate()
-	{
+	public String getHumanCreateDate() {
 		return humanCreateDate;
 	}
 
-	public void setHumanCreateDate(String humanCreateDate)
-	{
+	public void setHumanCreateDate(String humanCreateDate) {
 		this.humanCreateDate = humanCreateDate;
 	}
 
-	public boolean isUserInfoExists()
-	{
+	public boolean isUserInfoExists() {
 		return isUserInfoExists;
 	}
 
-	public void setUserInfoExists(boolean isUserInfoExists)
-	{
+	public void setUserInfoExists(boolean isUserInfoExists) {
 		this.isUserInfoExists = isUserInfoExists;
 	}
 
-	public JSONObject toJson()
-	{
+	public JSONObject toJson() {
 
 		JSONObject jsonObject = new JSONObject();
-		try
-		{
+		try {
 			jsonObject.put("first_name", this.firstName);
 			jsonObject.put("last_name", this.lastName);
 			jsonObject.put("address1", this.address1);
@@ -280,8 +239,9 @@ public class UserInfoBean
 			jsonObject.put("cell_phone", this.cellPhone);
 			jsonObject.put("phone_num", this.phoneNum);
 			jsonObject.put("time_zone", this.timezone);
-		} catch (JSONException e)
-		{
+			jsonObject.put("userinfo_id", this.userInfoId);
+
+		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

@@ -12,11 +12,12 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gs.common.Constants;
 import com.gs.common.ExceptionHandler;
 
 public class DBDAO {
 	private static final Logger dbLogging = LoggerFactory
-			.getLogger("DBLogging");
+			.getLogger(Constants.DB_LOGS);
 
 	public static ArrayList<HashMap<String, String>> get(String sResource,
 			String sQuery, ArrayList<Object> aParams, boolean bUseCache) {

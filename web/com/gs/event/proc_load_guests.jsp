@@ -13,6 +13,9 @@ JSONObject jsonResponseObj = new JSONObject();
 String sEventID = ParseUtil.checkNull(request.getParameter("event_id"));
 String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 boolean isEventSpecific = ParseUtil.sTob(request.getParameter("for_event"));
+String sGuestId = ParseUtil.checkNull(request.getParameter("guest_id"));
+boolean isSingleGuest = ParseUtil.sTob(request.getParameter("single_guest"));
+boolean isSingleEventGuest = ParseUtil.sTob(request.getParameter("single_event_guest"));
 Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 Logger appLogging = LoggerFactory.getLogger("AppLogging");
 response.setContentType("application/json");
@@ -55,6 +58,44 @@ try
 			appLogging.error("Invalid event Id used to retrieve table details");
 		}
 	}
+	else if(isSingleGuest || isSingleEventGuest)
+	{
+		if(sGuestId!=null && !"".equalsIgnoreCase(sGuestId))
+		{
+			GuestManager guestManager = new GuestManager();
+			GuestBean guestBean = guestManager.getGuest(sGuestId);
+			
+			jsonResponseObj.put("guest_data",guestBean.toJson());
+			
+			responseStatus = RespConstants.Status.OK;
+		}
+		else
+		{
+			Text errorText = new ErrorText("Error loading data for specified guest.","err_msg") ;		
+			arrErrorText.add(errorText);
+			
+			responseStatus = RespConstants.Status.ERROR;
+			
+			appLogging.error("Invalid guest Id used to retrieve guest details : " + sGuestId);
+		}
+		
+		if(isSingleEventGuest)
+		{
+			EventGuestMetaData eventGuestMetaData = new EventGuestMetaData();
+			eventGuestMetaData.setEventId(sEventID);
+			
+			ArrayList<String> arrGuestId = new ArrayList<String>();
+			arrGuestId.add(sGuestId);
+			eventGuestMetaData.setArrGuestId(arrGuestId);
+			
+			EventGuestManager eventGuestManager = new EventGuestManager();
+			EventGuestBean eventGuestBean = eventGuestManager.getGuest(eventGuestMetaData);
+			
+			jsonResponseObj.put("guest_event_data",eventGuestBean.toJson());
+			jsonResponseObj.put("is_guest_event_data_present",true);
+			
+		}
+	}	
 	else
 	{
 		if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId))

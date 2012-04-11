@@ -43,6 +43,16 @@ public class GuestManager {
 		return guestBean;
 	}
 
+	public GuestBean getGuest(String sGuestId) {
+
+		GuestBean guestBean = new GuestBean();
+		if (sGuestId != null && !"".equalsIgnoreCase(sGuestId)) {
+			GuestData guestData = new GuestData();
+			guestBean = guestData.getGuest(sGuestId);
+		}
+		return guestBean;
+	}
+
 	public ArrayList<GuestBean> getGuestsByAdmin(String sAdminId) {
 		ArrayList<GuestBean> arrGuestBean = new ArrayList<GuestBean>();
 		if (sAdminId != null && !"".equalsIgnoreCase(sAdminId)) {
@@ -73,6 +83,17 @@ public class GuestManager {
 			appLogging.error(ExceptionHandler.getStackTrace(e));
 		}
 		return jsonObject;
+	}
+
+	public ArrayList<GuestBean> getUnInvitedEventGuests(String sAdminId,
+			String sEventId) {
+		ArrayList<GuestBean> arrGuestBean = new ArrayList<GuestBean>();
+		if (sAdminId != null && !"".equalsIgnoreCase(sAdminId)) {
+			GuestData guestData = new GuestData();
+			arrGuestBean = guestData
+					.getUninvitedEventGuests(sAdminId, sEventId);
+		}
+		return arrGuestBean;
 	}
 
 }

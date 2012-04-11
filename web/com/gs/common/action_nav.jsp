@@ -41,10 +41,7 @@ boolean isLoggedIn = ParseUtil.sTob(request.getParameter("logged_in"));
 						<button id="add_guest" name="add_guest" href="../event/add_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="action_button default small ">Add Guest</button>
 					</div>
 					<div class="span2 txt_center">
-						<button id="invite_guest" name="invite_guest" href="../event/add_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="action_button default small ">Invite Guest</button>
-					</div>
-					<div class="span2 txt_center">
-						<button id="assign_seats" name="assign_seats" href="../event/add_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="action_button default small ">Assign Seats</button>
+						<button id="invite_guest" name="invite_guest" href="../event/invite_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="action_button default small ">Invite Guest</button>
 					</div>
 				</div>
 			</div>

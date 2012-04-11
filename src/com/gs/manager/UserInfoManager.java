@@ -9,32 +9,29 @@ import com.gs.common.DateSupport;
 import com.gs.common.Utility;
 import com.gs.data.UserInfoData;
 
-public class UserInfoManager
-{
+public class UserInfoManager {
 
-	private static final Logger appLogging = LoggerFactory.getLogger("AppLogging");
+	private static final Logger appLogging = LoggerFactory
+			.getLogger("AppLogging");
 
 	// private static final Logger logger2 = Logger.g
 
-	public UserInfoBean createUserInfoBean(UserInfoBean userInfoBean)
-	{
+	public UserInfoBean createUserInfoBean(UserInfoBean userInfoBean) {
 		if (userInfoBean == null || userInfoBean.getUserInfoId() == null
-				|| "".equalsIgnoreCase(userInfoBean.getUserInfoId()))
-		{
+				|| "".equalsIgnoreCase(userInfoBean.getUserInfoId())) {
 			appLogging.error("There is no user info to create." + userInfoBean);
 			userInfoBean = null;
 		} else if (userInfoBean != null && userInfoBean.getUserInfoId() != null
-				&& !"".equalsIgnoreCase(userInfoBean.getUserInfoId()))
-		{
+				&& !"".equalsIgnoreCase(userInfoBean.getUserInfoId())) {
 			UserInfoData userinfoData = new UserInfoData();
 			int iNumOfRecords = userinfoData.insertUserInfo(userInfoBean);
 
-			if (iNumOfRecords > 0)
-			{
-				appLogging.info("Create User Info Bean : " + userInfoBean.getUserInfoId());
-			} else
-			{
-				appLogging.error("Error creating User Info Bean : " + userInfoBean);
+			if (iNumOfRecords > 0) {
+				appLogging.info("Create User Info Bean : "
+						+ userInfoBean.getUserInfoId());
+			} else {
+				appLogging.error("Error creating User Info Bean : "
+						+ userInfoBean);
 				userInfoBean = null; // so that this will not be used again.
 			}
 
@@ -42,8 +39,7 @@ public class UserInfoManager
 		return userInfoBean;
 	}
 
-	public UserInfoBean createUserInfoBean()
-	{
+	public UserInfoBean createUserInfoBean() {
 		UserInfoBean userInfoBean = getTemporaryUserInfo();
 
 		userInfoBean = createUserInfoBean(userInfoBean);
@@ -51,8 +47,7 @@ public class UserInfoManager
 		return userInfoBean;
 	}
 
-	private UserInfoBean getTemporaryUserInfo()
-	{
+	private UserInfoBean getTemporaryUserInfo() {
 		UserInfoBean userInfoBean = new UserInfoBean();
 
 		userInfoBean.setUserInfoId(Utility.getNewGuid());
@@ -65,6 +60,16 @@ public class UserInfoManager
 		userInfoBean.setTimezone(Constants.DEFAULT_TIMEZONE);
 
 		return userInfoBean;
+	}
+
+	public Integer updateGuestUserInfo(UserInfoBean userInfoBean) {
+		Integer iNumOfRecs = 0;
+		if (userInfoBean != null && userInfoBean.getUserInfoId() != null
+				&& !"".equalsIgnoreCase(userInfoBean.getUserInfoId())) {
+			UserInfoData userinfoData = new UserInfoData();
+			iNumOfRecs = userinfoData.updateGuestUserInfo(userInfoBean);
+		}
+		return iNumOfRecs;
 	}
 
 }

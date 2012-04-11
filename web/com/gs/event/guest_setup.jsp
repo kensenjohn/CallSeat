@@ -182,8 +182,50 @@
 					$("#div_guests_details").guestformatter({
 						varGuestDetails : guestRows,
 						varEventGuestDetails : eventGuestRows,
+						varAdminId : varAdminID,
 						varDeleteTableURL : '/web/com/gs/event/proc_delete_table.jsp'
 					});
+					applyActionEvents(guestRows);
+				}
+			}
+		}
+	}
+	
+	function applyActionEvents(guestRows)
+	{
+		var numOfRows = guestRows.num_of_rows;
+		
+		if(numOfRows > 0)
+		{
+			var allGuests = guestRows.guests;
+			for( i=0; i<numOfRows; i++ )
+			{
+				var tmpGuest = allGuests[i];
+				
+				if(tmpGuest!=undefined && tmpGuest.guest_id != '')
+				{
+					$("#link_edit_guest_"+tmpGuest.guest_id).fancybox({
+						'width'				: '80%',
+						'height'			: '90%',
+						'autoScale'			: false,
+						'transitionIn'		: 'none',
+						'transitionOut'		: 'none',
+						'type'				: 'iframe',
+						'padding'			: 0,
+						'margin'			: 0
+					});
+					
+					$("#link_edit_event_assign_"+tmpGuest.guest_id).fancybox({
+						'width'				: '80%',
+						'height'			: '90%',
+						'autoScale'			: false,
+						'transitionIn'		: 'none',
+						'transitionOut'		: 'none',
+						'type'				: 'iframe',
+						'padding'			: 0,
+						'margin'			: 0
+					});
+					$('#link_del_'+tmpGuest.guest_id).click(function(){ $( "#dialog-confirm" ).show(); });
 				}
 			}
 		}

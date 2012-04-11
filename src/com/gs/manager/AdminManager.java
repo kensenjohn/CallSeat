@@ -6,10 +6,15 @@ import org.slf4j.LoggerFactory;
 import com.gs.bean.AdminBean;
 import com.gs.bean.RegisterAdminBean;
 import com.gs.bean.UserInfoBean;
+import com.gs.bean.email.EmailQueueBean;
+import com.gs.bean.email.EmailTemplateBean;
 import com.gs.common.BCrypt;
 import com.gs.common.Constants;
 import com.gs.common.DateSupport;
 import com.gs.common.Utility;
+import com.gs.common.mail.MailCreator;
+import com.gs.common.mail.MailingServiceData;
+import com.gs.common.mail.SingleEmailCreator;
 import com.gs.data.AdminData;
 
 public class AdminManager {
@@ -146,6 +151,30 @@ public class AdminManager {
 
 		}
 		return adminBean;
+	}
+
+	public void sendNewRegUserEmail(RegisterAdminBean regAdminBean) {
+		if (regAdminBean != null) {
+			MailingServiceData mailingServiceData = new MailingServiceData();
+			EmailTemplateBean emailTemplate = mailingServiceData
+					.getEmailTemplate(Constants.EMAIL_TEMPLATE.REGISTRATION);
+
+			EmailQueueBean emailQueueBean = new EmailQueueBean();
+			emailQueueBean.setEmailSubject(emailTemplate.getEmailSubject());
+			emailQueueBean.setFromAddress(emailTemplate.getFromAddress());
+			emailQueueBean.setFromAddressName(emailTemplate
+					.getFromAddressName());
+			emailQueueBean.setToAddress(regAdminBean.getEmail());
+			emailQueueBean.setToAddressName(regAdminBean.getFirstName() + " "
+					+ regAdminBean.getLastName());
+			emailQueueBean.setHtmlBody(emailTemplate.getHtmlBody());
+			emailQueueBean.setTextBody(emailTemplate.getTextBody());
+			emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
+
+			MailCreator mailCreator = new SingleEmailCreator();
+			mailCreator.create(emailQueueBean);
+		}
+
 	}
 
 	public AdminBean getAdminBeanFromEmail(RegisterAdminBean loginAdminBean) {

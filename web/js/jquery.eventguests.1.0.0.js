@@ -16,7 +16,9 @@
 	
 	 $.fn.eventguests.defaults = 
      {
-			varEventGuestDetails: ''
+			varEventGuestDetails: '',
+			varAdminId : '',
+			varEventId : ''
      };
 	
 	var json_guest_details = '';
@@ -77,7 +79,7 @@
 									'<td class="tbl_td">' + tmpGuest.guest_bean.user_info.cell_phone + '</td>' +
 									'<td class="tbl_td">' + tmpGuest.total_seats + '</td>' +
 									'<td class="tbl_td">' + tmpGuest.rsvp_seats + '</td>' +
-									'<td class="tbl_td"> &nbsp; </td>';
+									'<td class="tbl_td">' + this.create_action_urls( tmpGuest ) + ' </td>';
 						}
 						
 						
@@ -86,25 +88,33 @@
 				//alert(valRows);
 				return valRows;
 			},
-			create_action_urls : function( single_guest_detail )
+			create_action_urls : function( tmpGuest )
 			{
+				
 				var actionLinks = '';
 				 
-				actionLinks = actionLinks + this.create_edit_guest( single_guest_detail ) + '&nbsp;&nbsp;&nbsp;';
-				actionLinks = actionLinks + this.create_delete_guest( single_guest_detail );
+				actionLinks = actionLinks + this.create_edit_guest( tmpGuest ) + '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+				actionLinks = actionLinks + this.create_uninvite_guest( tmpGuest );
 				
 				actionLinks = '<div class="action_column">' + actionLinks + '</div>';
 				
 				return actionLinks;
 			},
-			create_edit_guest :  function ( single_guest_detail )
+			create_edit_guest :  function ( tmpGuest )
 			{
-				var varEditLink = '<span id="edit_'+single_guest_detail.guest_id+'">Edit</span>';
+				var varEditLink = '<span id="edit_'+tmpGuest.guest_id+'">'+
+				'<a id="link_edit_event_guest_'+tmpGuest.guest_id+'" '+ 
+				' href="/web/com/gs/event/add_guest.jsp?guest_id='+tmpGuest.guest_id+
+				'&admin_id='+json_guest_details.varAdminId+'&event_id='+json_guest_details.varEventId+'&single_event_guest_edit=true"> '+
+				' Edit</a></span>';
 				return varEditLink;
 			},
-			create_delete_guest :  function ( single_guest_detail )
+			create_uninvite_guest :  function ( tmpGuest )
 			{
-				var varEditLink = '<span id="del_'+single_guest_detail.guest_id+'">Delete</span>';
+				var varEditLink = '<span id="del_'+tmpGuest.guest_id+'">'+
+				'<a id="link_uninvite_event_guest_'+tmpGuest.guest_id+'" href="#" >'+
+				'Uninvite</a>'
+				+'</span>';
 				return varEditLink;
 			}
 			

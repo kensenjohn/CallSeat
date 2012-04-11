@@ -215,9 +215,17 @@ try
 }
 catch(Exception e)
 {
-	jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
-	jsonResponseObj.put("message", "Your request to add guest was lost. Please try again later.");
-	appLogging.error("Error creating guest " );
-	out.println(jsonResponseObj);
+	Text errorText = new ErrorText("Your request to add guest was lost. Please try again later.","err_mssg") ;		
+	arrErrorText.add(errorText);
+	
+	responseStatus = RespConstants.Status.ERROR;
+	
+	responseObject.setErrorMessages(arrErrorText);
+	responseObject.setOkMessages(arrOkText);
+	responseObject.setResponseStatus(responseStatus);
+	responseObject.setJsonResponseObj(jsonResponseObj);
+	
+	out.println(responseObject.getJson());
+	appLogging.error("Error creating guest " + ExceptionHandler.getStackTrace(e) );
 }
 %>

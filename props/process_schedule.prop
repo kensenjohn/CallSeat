@@ -1,0 +1,4 @@
+#all time in seconds
+standard_mail.initial_delay=0
+standard_mail.interval_delay=30
+

@@ -12,7 +12,7 @@
 <jsp:include page="../common/header_bottom.jsp"/>
 
 <%
-	Logger jspLogging = LoggerFactory.getLogger("JspLogging");
+	Logger jspLogging = LoggerFactory.getLogger(Constants.JSP_LOGS);
 
 	String sEventDate = ParseUtil.checkNull(request.getParameter("hid_event_date"));
 	boolean isFromLanding = ParseUtil.sTob(request.getParameter("from_landing"));
@@ -331,6 +331,16 @@
 				'padding'			: 0,
 				'margin'			: 0
 		});
+		$("#invite_guest").fancybox({
+			'width'				: '75%',
+			'height'			: '90%',
+			'autoScale'			: false,
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			'type'				: 'iframe',
+				'padding'			: 0,
+				'margin'			: 0
+		});		
 		
 		$("#get_phone_num").fancybox({
 			'width'				: '80%',
@@ -598,10 +608,99 @@
 						var eventGuestDetail = eventGuestRows[varEventID];
 						
 						$("#div_guests_details").eventguests({
-							varEventGuestDetails : eventGuestDetail
+							varEventGuestDetails : eventGuestDetail,
+							varAdminId : varAdminID,
+							varEventId : varEventID
 						});
+						applyInvitedGuestActionEvents(eventGuestDetail);
 					}
 				}
+			}
+		}
+	}
+	
+	function applyInvitedGuestActionEvents(guestRows)
+	{
+		var numOfRows = Number(guestRows.num_of_event_guest_rows);
+		
+		if(numOfRows > 0)
+		{
+			
+			
+			var allGuests = guestRows.event_guests;
+			
+			
+			for( i=0; i<numOfRows; i++ )
+			{
+				var tmpGuest = allGuests[i];
+				if(tmpGuest!=undefined && tmpGuest.guest_id != '')
+				{
+					$("#link_edit_event_guest_"+tmpGuest.guest_id).fancybox({
+						'width'				: '80%',
+						'height'			: '90%',
+						'autoScale'			: false,
+						'transitionIn'		: 'none',
+						'transitionOut'		: 'none',
+						'type'				: 'iframe',
+						'padding'			: 0,
+						'margin'			: 0
+					});
+					$("#link_uninvite_event_guest_"+tmpGuest.guest_id).bind('click',
+							{'tmp_guest_id':tmpGuest.guest_id,'tmp_event_id':varEventID,
+								'tmp_event_guest_id':tmpGuest.event_guest_id},function(event)
+							{
+								if(confirm('Do you want to uninvite this guest?'))
+								{
+									uninvite_event_guest_action(event.data.tmp_guest_id , event.data.tmp_event_id , event.data.tmp_event_guest_id  );
+								}
+								else 
+								{
+									alert('close dialog');
+								}
+							});
+					
+				}
+			}
+		}
+	}
+	
+	function uninvite_event_guest_action(varTmpGuestId,varTmpEventId,varTmpEventGuestId)
+	{
+		var confirmDelete = confirm('Do you want to delete this table?');
+		
+		if(confirmDelete == true)
+		{
+			//$("#table_"+tableid).remove();
+			
+			var dataString = '&event_id='+ varTmpEventId + '&guest_id='+varTmpGuestId + '&event_guest_id=' + varTmpEventGuestId;
+			var actionUrl = "proc_uninvite_guest.jsp";
+			var methodType = "POST";
+			
+			//getAllTablesData(actionUrl,dataString,methodType);
+			
+			getDataAjax(actionUrl,dataString,methodType, uninviteGuest);
+		}
+		
+	}
+	
+	function uninviteGuest(jsonResult)
+	{
+		if(jsonResult!=undefined)
+		{
+			var varResponseObj = jsonResult.response;
+			if(jsonResult.status == 'error'  && varResponseObj !=undefined )
+			{
+				var varIsMessageExist = varResponseObj.is_message_exist;
+				if(varIsMessageExist == true)
+				{
+					var jsonResponseMessage = varResponseObj.messages;
+					var varArrErrorMssg = jsonResponseMessage.error_mssg
+					displayMessages( varArrErrorMssg );
+				}
+			}
+			else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+			{
+				loadGuests();
 			}
 		}
 	}

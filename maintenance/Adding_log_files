@@ -1,0 +1,19 @@
+We are using sdl4j along with log4j.
+
+Therefore it will be using the log4j config style.
+
+Make changes in following file.
+/usr/local/apache-tomcat/webapps/ROOT/WEB-INF/classes/log4j.properties
+
+Add in Constants.java
+	public static String SCHEDULER_LOGS = "SchedulerLogging";
+	
+
+	use the value above in the log4j.properties
+	log4j.category.SchedulerLogging=DEBUG,SchedulerLog
+		this will also hold the level of Logging,
+			ex: DEBUG, INFO, etc
+		This will also create and alias which will be used by other parameters.
+			ex: SchedulerLog
+			
+	Then create rest of the parameters using the alias "SchedulerLog"

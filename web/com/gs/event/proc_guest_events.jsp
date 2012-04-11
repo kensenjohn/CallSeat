@@ -86,7 +86,12 @@ try
 							
 				if(iNumOfRecsDeleted>0)
 				{
-					Text okText = new OkText("The guest was un invited from the event.","success_mssg");		
+
+					jsonResponseObj.put("response_guest_id",sGuestID);
+					jsonResponseObj.put("response_event_id",sEventId);
+					jsonResponseObj.put("un_invite",true);
+					
+					Text okText = new OkText("The guest was removed from the event's guest list.","success_mssg");		
 					arrOkText.add(okText);
 					responseStatus = RespConstants.Status.OK;
 				}
@@ -154,6 +159,8 @@ try
 					jsonResponseObj.put("event_guest_id",sEventGuestId);
 					jsonResponseObj.put("response_guest_id",sGuestID);
 					jsonResponseObj.put("response_event_id",sEventId);
+
+					jsonResponseObj.put("invite",true);
 					
 					Text okText = new OkText("The changes were updated successfully.","success_mssg");		
 					arrOkText.add(okText);

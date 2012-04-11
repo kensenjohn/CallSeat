@@ -316,4 +316,30 @@ public class GuestTableData {
 		}
 		return iNumOfRecs;
 	}
+
+	public ArrayList<String> getEventGuestTables(String sGuestId,
+			String sEventId) {
+
+		ArrayList<String> arrTableId = new ArrayList<String>();
+		if (sGuestId != null && !"".equalsIgnoreCase(sGuestId)
+				&& sEventId != null && !"".equalsIgnoreCase(sEventId)) {
+			String sQuery = "select * from GTEVENTTABLES ET, GTTABLEGUESTS TG WHERE ET.FK_EVENTID = ? "
+					+ " AND TG.FK_TABLEID = ET.FK_TABLEID AND TG.FK_GUESTID=? ";
+			ArrayList<Object> aParams = DBDAO.createConstraint(sEventId,
+					sGuestId);
+
+			ArrayList<HashMap<String, String>> arrGuestTables = DBDAO
+					.getDBData(ADMIN_DB, sQuery, aParams, false,
+							"GuestTableData.java", "getEventGuestTables()");
+
+			if (arrGuestTables != null && !arrGuestTables.isEmpty()) {
+				for (HashMap<String, String> hmResult : arrGuestTables) {
+					arrTableId.add(ParseUtil.checkNull(hmResult
+							.get("FK_TABLEID")));
+				}
+			}
+		}
+		return arrTableId;
+
+	}
 }
