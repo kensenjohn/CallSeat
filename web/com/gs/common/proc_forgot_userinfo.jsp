@@ -21,53 +21,39 @@ RespConstants.Status responseStatus = RespConstants.Status.ERROR;
 RespObjectProc responseObject = new RespObjectProc();
 try
 {
-	String sEventId =  ParseUtil.checkNull(request.getParameter("event_id"));
-	String sAdminId =  ParseUtil.checkNull(request.getParameter("admin_id"));
-	String sLoginEmails =  ParseUtil.checkNull(request.getParameter("login_email"));
-	String sLoginPass =  ParseUtil.checkNull(request.getParameter("login_password"));
+	// we need a security check around here. to make sure this page does not get pounded by DDOS
 	
-	if( sLoginEmails==null || "".equalsIgnoreCase(sLoginEmails)
-			|| sLoginPass==null || "".equalsIgnoreCase(sLoginPass) )
+	String sEmailId =  ParseUtil.checkNull(request.getParameter("reg_email_id"));
+	
+	if(sEmailId!=null && !"".equalsIgnoreCase(sEmailId))
 	{
-		Text errorText = new ErrorText("Please fill all the fields.","login_err_mssg") ;		
-		arrErrorText.add(errorText);
 		
-		responseStatus = RespConstants.Status.ERROR;
-	}
-	else
-	{
-		RegisterAdminBean loginAdminBean = new RegisterAdminBean();
-		loginAdminBean.setEmail(sLoginEmails);
-		loginAdminBean.setPassword(sLoginPass);
 		
 		AdminManager adminManager = new AdminManager();
-		AdminBean adminBean = adminManager.authenticateUser( loginAdminBean );
+		boolean isSuccess = adminManager.resetPasswordAndEmail(sEmailId);
 		
-		
-		if( adminBean!=null && adminBean.isAdminExists() )
-		{
-			Text okText = new ErrorText("Successfully authenticated user.","login_success_mssg") ;		
+		if(isSuccess)
+		{ 
+			Text okText = new ErrorText("An email with your new password has been sent to the email address specified.","success_mssg") ;		
 			arrOkText.add(okText);
 			
 			responseStatus = RespConstants.Status.OK;
-			jsonResponseObj.put("user_id",adminBean.getAdminId());
-			
-			UserInfoBean userinfoBean = adminBean.getAdminUserInfoBean();
-			jsonResponseObj.put("first_name",userinfoBean.getFirstName());
-			
-			HttpSession httpSession = request.getSession(false);
-			httpSession.setAttribute(Constants.USER_SESSION,adminBean);
-			
-			adminManager.assignTmpToPermAdmin(sAdminId,adminBean.getAdminId());
+			jsonResponseObj.put("email_id",sEmailId);
 		}
 		else
 		{
-			Text errorText = new ErrorText("Wrong username or password used for login.","login_err_mssg") ;		
+			Text errorText = new ErrorText("There was an error processing your request. Please try again later. If problems persists please call ","err_mssg") ;	 	
 			arrErrorText.add(errorText);
 			
 			responseStatus = RespConstants.Status.ERROR;
 		}
+	}
+	else
+	{
+		Text errorText = new ErrorText("Please use  a valid email address.","err_mssg") ;	 	
+		arrErrorText.add(errorText);
 		
+		responseStatus = RespConstants.Status.ERROR;
 	}
 	responseObject.setErrorMessages(arrErrorText);
 	responseObject.setOkMessages(arrOkText);
@@ -75,13 +61,12 @@ try
 	responseObject.setJsonResponseObj(jsonResponseObj);
 	
 	out.println(responseObject.getJson());
-
 }
 catch(Exception e)
 {
 	appLogging.error("General Error logging in user." );
 	
-	Text errorText = new ErrorText("Oops!! Your request could not be processed at this time.","my_id") ;		
+	Text errorText = new ErrorText("Oops!! Your request could not be processed at this time.","err_mssg") ;		
 	arrErrorText.add(errorText);
 	
 	responseObject.setErrorMessages(arrErrorText);

@@ -32,16 +32,10 @@ if(cookies!=null)
 			<div>
 						<h2>Seating your Guests, with a phone call.</h2>
 			</div>
-			<%
-			if(isSignedIn)
-			{
-			%>
-				<div>
-					<a href="event/host_dashboard.jsp?lobby_admin_id=<%=sAdminIdSecure%>">Goto lobby</a>
+			
+				<div id="div_goto_lobby" style="<%=!isSignedIn?"display:none;":""%>">
+					<h3><a id="link_goto_lobby" href="<%=isSignedIn ? "event/host_dashboard.jsp?lobby_admin_id="+sAdminIdSecure:""%>">Goto lobby</a></h3>
 				</div>
-			<%
-			}
-			%>
 
 			<div class="landing_when">
 				<h3>When is the Event?</h3><br>
@@ -139,6 +133,22 @@ if(cookies!=null)
 		$("#login_name_display").text(jsonResponse.first_name);
 		$("#login_name_display").addClass("bold_text");
 		$('#lobby_admin_id').val(jsonResponse.user_id);
+		
+		$("#li_user_my_account").show();
+		$("#login_user_account").removeAttr("href");
+		$("#login_user_account").attr('href','event/host_dashboard.jsp?lobby_admin_id='+jsonResponse.user_id);
+		
+		
+		$("#li_user_sign_out").show();
+		$("#sign_out_user").removeAttr("href");
+		$("#sign_out_user").attr('href','common/sign_out.jsp?admin_id='+jsonResponse.user_id);
+		
+		
+		$('#div_goto_lobby').show();
+		$('#link_goto_lobby').removeAttr("href");
+		$('#link_goto_lobby').attr('href','event/host_dashboard.jsp?lobby_admin_id='+jsonResponse.user_id);
+		
+		
 	}
 	</script>
 <jsp:include page="common/footer_bottom.jsp"/>

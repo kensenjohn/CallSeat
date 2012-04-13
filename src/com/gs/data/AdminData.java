@@ -185,6 +185,21 @@ public class AdminData {
 		return sPasswordHash;
 	}
 
+	public Integer deactivateOldPassword(AdminBean adminBean) {
+		int numOfRowsInserted = 0;
+		if (adminBean != null && adminBean.getAdminId() != null
+				&& !"".equalsIgnoreCase(adminBean.getAdminId())) {
+			String sQuery = "UPDATE GTPASSWORD SET PASSWORD_STATUS = ? WHERE FK_ADMINID = ?";
+
+			ArrayList<Object> aParams = DBDAO.createConstraint(
+					Constants.PASSWORD_STATUS.OLD.getStatus(),
+					adminBean.getAdminId());
+			numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
+					"AdminData.java", "deactivateOldPassword()");
+		}
+		return numOfRowsInserted;
+	}
+
 	public Integer createPassword(RegisterAdminBean regAdminBean) {
 
 		appLogging.debug("Create password invoked.");

@@ -40,10 +40,11 @@
 										<div class="actions">									
 								            <button id="login_user" name="login_user" type="button" class="action_button primary large">Login</button>
 								            <br>
-								            <span id="err_mssg"></span>
+											<a id="link_forgot_password" href="#">Forgot Password?</a><br>
+								            <span id="login_err_mssg"  style="color: #9d261d;" ></span><br>
+								             <span id="login_success_mssg"  style="color: #46a546;" ></span>
 								        </div>
 									</fieldset>
-									
 									<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
 									<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>	
 								</form>
@@ -85,8 +86,9 @@
 										</div>
 										<div class="actions">									
 								            <button id="register_user" name="register_user" type="button" class="action_button primary large">Register</button>
-								            <br>
-								            <span id="register_err_mssg"></span>
+								            <br>								            
+								            <span id="reg_err_mssg"  style="color: #9d261d;" ></span><br>
+								            <span id="reg_success_mssg"  style="color: #46a546;" ></span>
 								        </div>
 									</fieldset>
 									<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
@@ -98,13 +100,22 @@
 				</div>		
 			</div>
 		</div>
+		<form id="frm_forgot_password" id="frm_forgot_password" action="forgotuserinfo.jsp">
+		</form>
 	</body>
 	<script type="text/javascript">
 	var varSource = '<%=sSource%>';
 	$(document).ready(function() {
 		$("#login_user").click(loginUser);
 		$("#register_user").click(registerUser);
+		$("#link_forgot_password").click(submitForgotPassword);
 	});
+	function submitForgotPassword()
+	{
+
+		$("#frm_forgot_password").attr("method","POST");
+		$("#frm_forgot_password").submit();
+	}
 	function loginUser()
 	{ 	var dataString = $("#frm_login").serialize();
 		

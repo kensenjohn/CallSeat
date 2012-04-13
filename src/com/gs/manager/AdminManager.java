@@ -5,15 +5,18 @@ import org.slf4j.LoggerFactory;
 
 import com.gs.bean.AdminBean;
 import com.gs.bean.RegisterAdminBean;
+import com.gs.bean.RestPasswordResponseBean;
 import com.gs.bean.UserInfoBean;
 import com.gs.bean.email.EmailQueueBean;
 import com.gs.bean.email.EmailTemplateBean;
 import com.gs.common.BCrypt;
 import com.gs.common.Constants;
 import com.gs.common.DateSupport;
+import com.gs.common.ParseUtil;
 import com.gs.common.Utility;
 import com.gs.common.mail.MailCreator;
 import com.gs.common.mail.MailingServiceData;
+import com.gs.common.mail.QuickMailSendThread;
 import com.gs.common.mail.SingleEmailCreator;
 import com.gs.data.AdminData;
 
@@ -159,6 +162,13 @@ public class AdminManager {
 			EmailTemplateBean emailTemplate = mailingServiceData
 					.getEmailTemplate(Constants.EMAIL_TEMPLATE.REGISTRATION);
 
+			String sHtmlBody = emailTemplate.getHtmlBody();
+			String sTxtBody = emailTemplate.getTextBody();
+			sHtmlBody = sHtmlBody.replaceAll("__USERNAME__",
+					ParseUtil.checkNull(regAdminBean.getEmail()));
+			sTxtBody = sTxtBody.replaceAll("__USERNAME__",
+					ParseUtil.checkNull(regAdminBean.getEmail()));
+
 			EmailQueueBean emailQueueBean = new EmailQueueBean();
 			emailQueueBean.setEmailSubject(emailTemplate.getEmailSubject());
 			emailQueueBean.setFromAddress(emailTemplate.getFromAddress());
@@ -167,8 +177,8 @@ public class AdminManager {
 			emailQueueBean.setToAddress(regAdminBean.getEmail());
 			emailQueueBean.setToAddressName(regAdminBean.getFirstName() + " "
 					+ regAdminBean.getLastName());
-			emailQueueBean.setHtmlBody(emailTemplate.getHtmlBody());
-			emailQueueBean.setTextBody(emailTemplate.getTextBody());
+			emailQueueBean.setHtmlBody(sHtmlBody);
+			emailQueueBean.setTextBody(sTxtBody);
 			emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
 
 			MailCreator mailCreator = new SingleEmailCreator();
@@ -239,6 +249,120 @@ public class AdminManager {
 			adminData.assignGuestToPermAdmin(sTmpAdminId, sPermAdminId);
 			adminData.assignTableToPermAdmin(sTmpAdminId, sPermAdminId);
 
+		}
+
+	}
+
+	public RestPasswordResponseBean resetPassword(String sEmailId) {
+
+		RestPasswordResponseBean resetPasswordRespBean = new RestPasswordResponseBean();
+		if (sEmailId != null && !"".equalsIgnoreCase(sEmailId)) {
+			RegisterAdminBean regAdminBean = new RegisterAdminBean();
+			regAdminBean.setEmail(sEmailId);
+
+			AdminData adminData = new AdminData();
+			AdminBean adminBean = adminData.isAdminEmailExists(regAdminBean);
+
+			if (adminBean != null) {
+
+				String sNewPassword = ParseUtil.checkNull(Utility.getNewGuid()
+						.substring(0, 8));
+
+				if (sNewPassword != null && !"".equalsIgnoreCase(sNewPassword)) {
+					adminData.deactivateOldPassword(adminBean);
+					String sPasswordHash = BCrypt.hashpw(sNewPassword,
+							BCrypt.gensalt(5));
+
+					regAdminBean.setPasswordHash(sPasswordHash);
+					regAdminBean.setAdminId(adminBean.getAdminId());
+					regAdminBean.setCreateDate(DateSupport.getEpochMillis());
+					regAdminBean.setHumanCreateDate(DateSupport
+							.getUTCDateTime());
+
+					Integer iNumOfRecs = adminData.createPassword(regAdminBean);
+					if (iNumOfRecs > 0) {
+						resetPasswordRespBean.setAdminBean(adminBean);
+						resetPasswordRespBean.setNewPassword(sNewPassword);
+					}
+				}
+			}
+		}
+		return resetPasswordRespBean;
+	}
+
+	public boolean resetPasswordAndEmail(String sEmailId) {
+		boolean isSuccess = false;
+		if (sEmailId != null && !"".equalsIgnoreCase(sEmailId)) {
+			RestPasswordResponseBean resetPasswordRespBean = resetPassword(sEmailId);
+			if (resetPasswordRespBean != null
+					&& resetPasswordRespBean.getAdminBean() != null
+					&& resetPasswordRespBean.getNewPassword() != null) {
+				isSuccess = true;
+				sendPasswordResetEmail(resetPasswordRespBean);
+			}
+		}
+		return isSuccess;
+	}
+
+	private void sendPasswordResetEmail(
+			RestPasswordResponseBean resetPasswordRespBean) {
+		if (resetPasswordRespBean != null
+				&& resetPasswordRespBean.getAdminBean() != null
+				&& resetPasswordRespBean.getAdminBean().getAdminUserInfoBean() != null
+				&& resetPasswordRespBean.getNewPassword() != null
+				&& !"".equalsIgnoreCase(resetPasswordRespBean.getNewPassword())) {
+
+			AdminBean adminBean = resetPasswordRespBean.getAdminBean();
+			String sNewPassword = resetPasswordRespBean.getNewPassword();
+			MailingServiceData mailingServiceData = new MailingServiceData();
+			EmailTemplateBean emailTemplate = mailingServiceData
+					.getEmailTemplate(Constants.EMAIL_TEMPLATE.NEWPASSWORD);
+
+			String sHtmlTemplate = emailTemplate.getHtmlBody();
+			String sTxtTemplate = emailTemplate.getTextBody();
+
+			EmailQueueBean emailQueueBean = new EmailQueueBean();
+			emailQueueBean.setEmailSubject(emailTemplate.getEmailSubject());
+			emailQueueBean.setFromAddress(emailTemplate.getFromAddress());
+			emailQueueBean.setFromAddressName(emailTemplate
+					.getFromAddressName());
+			emailQueueBean.setToAddress(adminBean.getAdminUserInfoBean()
+					.getEmail());
+			emailQueueBean.setToAddressName(adminBean.getAdminUserInfoBean()
+					.getFirstName()
+					+ " "
+					+ adminBean.getAdminUserInfoBean().getLastName());
+			emailQueueBean.setHtmlBody(sHtmlTemplate);
+			emailQueueBean.setTextBody(sTxtTemplate);
+			// mark it as sent so that it wont get picked up by email service.
+			emailQueueBean.setStatus(Constants.EMAIL_STATUS.SENT.getStatus());
+
+			// We are just creating a record in the database with this action.
+			// The new password will be sent separately.
+			// This must be changed so that user will have to click link to
+			// generate the new password.
+			MailCreator dummeEailCreator = new SingleEmailCreator();
+			dummeEailCreator.create(emailQueueBean);
+
+			// Now here we will be putting the correct password in the email
+			// text and
+			// send it out directly.
+			// This needs to be changed. Warning bells are rining.
+			// Lots of potential to fail.
+			sTxtTemplate = sTxtTemplate.replaceAll("__NEW__PASSWORD__",
+					sNewPassword);
+			sHtmlTemplate = sHtmlTemplate.replaceAll("__NEW__PASSWORD__",
+					sNewPassword);
+			emailQueueBean.setHtmlBody(sHtmlTemplate);
+			emailQueueBean.setTextBody(sTxtTemplate);
+
+			emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
+
+			// This will actually send the email. Spawning a thread and continue
+			// execution.
+			Thread quickEmail = new Thread(new QuickMailSendThread(
+					emailQueueBean), "Quick Email Password Reset");
+			quickEmail.start();
 		}
 
 	}

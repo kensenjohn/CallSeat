@@ -160,7 +160,7 @@ public class Constants {
 	}
 
 	public enum EMAIL_TEMPLATE {
-		REGISTRATION("REGISTRATION");
+		REGISTRATION("REGISTRATION"), NEWPASSWORD("NEWPASSWORD");
 
 		private String emailTemplate = "";
 

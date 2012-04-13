@@ -35,7 +35,7 @@ if(reqSession!=null)
 		{
 %>
 				<li>
-	    			<a class="bold_text" href="#" id="login_name_display"><%=sFirstName %></a>
+	    			<span class="bold_text"><%=sFirstName %>&nbsp;&nbsp;&nbsp;</span>
 	    		</li>
 <%
 		}
@@ -43,19 +43,27 @@ if(reqSession!=null)
 		{
 %>
 				<li>
-	    			<a id="login_name_display" class="" href="/web/com/gs/common/credential.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>">Login</a>
+	    			<a id="login_name_display" class="" href="/web/com/gs/common/credential.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>">&nbsp;&nbsp;&nbsp;Login&nbsp;</a>
 	    		</li>
 <%
 		}
 %>
-	    		
+
+				<li id="li_user_my_account" style="<%=!isTmpSignedIn? "display:none" : "" %>">
+	    			<a class="" id="login_user_account" class="" href="/web/com/gs/common/credential.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>">&nbsp;&nbsp;&nbsp;My Account&nbsp;</a>
+	    		</li>
+   		
 	    		<li>
-	    			<a class="" href="/learn" id="">Learn More</a>
+	    			<a class="" href="#" id="">&nbsp;&nbsp;&nbsp;Learn More&nbsp;</a>
 	    		</li>
 	    		<li>
-	    			<a class="" href="http://blog.uber.com" id="">Blog</a>
+	    			<a class="" href="#" id="">&nbsp;&nbsp;&nbsp;Blog&nbsp;</a>
 	    		</li> 
+
+				<li  id="li_user_sign_out" style="<%=!isTmpSignedIn? "display:none" : "" %>">
+	    			<a class="" id="sign_out_user" class="" href="/web/com/gs/common/sign_out.jsp?admin_id=<%=sAdminId %>">&nbsp;&nbsp;&nbsp;Sign Out&nbsp;</a>
+	    		</li>
 	    	</ul>
 	    </nav>
 	    </div>
-</header> 
+</header>
