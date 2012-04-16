@@ -98,8 +98,11 @@
 			
 		});
 		setNewEventClick();
+		setAllGuestButtonClick();
 		setLobbyButtonClick();
 	}
+	
+	// This should be acopied everywhere.
 	function setNewEventClick()
 	{
 		$("#lnk_new_event_id").unbind("click");
@@ -107,6 +110,19 @@
 		{
 			$("#frm_lobby_tab").attr("action" , "event_setup.jsp");
 			$("#lobby_create_new").val(true);
+			$("#lobby_admin_id").val(varAdminID);
+			
+			$("#frm_lobby_tab").submit();
+		});
+	}
+	// This should be acopied everywhere.
+	function setAllGuestButtonClick()
+	{
+		$("#lnk_guest_id").unbind("click");
+		$("#lnk_guest_id").click(function() 
+		{
+			$("#frm_lobby_tab").attr("action" , "guest_setup.jsp");
+			$("#lobby_event_id").val(varEventID);
 			$("#lobby_admin_id").val(varAdminID);
 			
 			$("#frm_lobby_tab").submit();

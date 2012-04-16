@@ -453,6 +453,7 @@
 		setAllGuestButtonClick();
 		setLobbyButtonClick();
 	}
+	// This should be acopied everywhere.
 	function setNewEventClick()
 	{
 		$("#lnk_new_event_id").unbind("click");
@@ -465,6 +466,7 @@
 			$("#frm_lobby_tab").submit();
 		});
 	}
+	// This should be acopied everywhere.
 	function setAllGuestButtonClick()
 	{
 		$("#lnk_guest_id").unbind("click");
