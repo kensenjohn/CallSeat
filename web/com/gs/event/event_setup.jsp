@@ -466,6 +466,7 @@
 			$("#frm_lobby_tab").submit();
 		});
 	}
+	// This should be acopied everywhere.
 	function setAllGuestButtonClick()
 	{
 		$("#lnk_guest_id").unbind("click");
