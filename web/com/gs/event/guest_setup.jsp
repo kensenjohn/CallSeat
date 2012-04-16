@@ -97,7 +97,20 @@
 			
 			
 		});
+		setNewEventClick();
 		setLobbyButtonClick();
+	}
+	function setNewEventClick()
+	{
+		$("#lnk_new_event_id").unbind("click");
+		$("#lnk_new_event_id").click(function() 
+		{
+			$("#frm_lobby_tab").attr("action" , "event_setup.jsp");
+			$("#lobby_create_new").val(true);
+			$("#lobby_admin_id").val(varAdminID);
+			
+			$("#frm_lobby_tab").submit();
+		});
 	}
 	
 	function setLobbyButtonClick()

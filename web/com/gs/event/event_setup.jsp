@@ -449,7 +449,7 @@
 		{
 			
 		});
-		setNewEventClick()
+		setNewEventClick();
 		setAllGuestButtonClick();
 		setLobbyButtonClick();
 	}
