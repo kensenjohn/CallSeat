@@ -453,6 +453,7 @@
 		setAllGuestButtonClick();
 		setLobbyButtonClick();
 	}
+	// This should be acopied everywhere.
 	function setNewEventClick()
 	{
 		$("#lnk_new_event_id").unbind("click");
