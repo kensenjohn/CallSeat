@@ -26,6 +26,7 @@ try
 	String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 	String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 	boolean isCustomNumGen = ParseUtil.sTob(request.getParameter("custom_num_gen"));
+	boolean isGetNewNum = ParseUtil.sTob(request.getParameter("get_new_phone_num"));
 	String sNumberType = ParseUtil.checkNull(request.getParameter("num_type"));
 	String sAreaCode = ParseUtil.checkNull(request.getParameter("seating_area_code"));
 	String sTextPattern = ParseUtil.checkNull(request.getParameter("seating_text_pattern"));
@@ -53,6 +54,10 @@ try
 			telNumberMetaData.setTextPatternSearch(sTextPattern);
 			
 			arrTelNumberBean = telNumManager.searchTelNumber(telNumberMetaData,sNumberType);
+		}
+		else if(isGetNewNum)
+		{
+			arrTelNumberBean = telNumManager.getGeneratedTelNumbers(false,false,telNumberMetaData, arrTelNumberBean);
 		}
 		else
 		{

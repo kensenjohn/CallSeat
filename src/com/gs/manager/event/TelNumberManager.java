@@ -12,6 +12,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gs.bean.AdminTelephonyAccountBean;
+import com.gs.bean.DemoTelNumber;
 import com.gs.bean.EventGuestBean;
 import com.gs.bean.GuestBean;
 import com.gs.bean.TelNumberBean;
@@ -19,6 +20,7 @@ import com.gs.bean.TelNumberTypeBean;
 import com.gs.common.Constants;
 import com.gs.common.ExceptionHandler;
 import com.gs.common.ParseUtil;
+import com.gs.common.Utility;
 import com.gs.data.GuestData;
 import com.gs.phone.account.AdminTelephonyAccountManager;
 import com.gs.phone.account.AdminTelephonyAccountMeta;
@@ -78,10 +80,16 @@ public class TelNumberManager {
 			for (TelNumberBean telNumBer : arrTelNumberBean) {
 				if (telNumBer != null) {
 					if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(
-							telNumBer.getTelNumberType())) {
+							telNumBer.getTelNumberType())
+							|| Constants.EVENT_TASK.DEMO_RSVP.getTask()
+									.equalsIgnoreCase(
+											telNumBer.getTelNumberType())) {
 						isRsvpNumberExists = true;
 					} else if (Constants.EVENT_TASK.SEATING.getTask()
-							.equalsIgnoreCase(telNumBer.getTelNumberType())) {
+							.equalsIgnoreCase(telNumBer.getTelNumberType())
+							|| Constants.EVENT_TASK.DEMO_SEATING.getTask()
+									.equalsIgnoreCase(
+											telNumBer.getTelNumberType())) {
 						isSeatingNumberExists = true;
 					}
 				}
@@ -93,45 +101,80 @@ public class TelNumberManager {
 		boolean isRsvpNumSet = false;
 		if (!isSeatingNumberExists || !isRsvpNumberExists) {
 
-			List<AvailablePhoneNumber> listAvailablePhone = generateTelephoneNumber();
-
-			if (listAvailablePhone != null && !listAvailablePhone.isEmpty()) {
-
-				for (AvailablePhoneNumber availTelNum : listAvailablePhone) {
-					if (!isSeatingNumberExists && !isSeatingNumSet) {
-						TelNumberBean seatingBean = createTelNumberBean(
-								telNumberMetaData,
-								availTelNum.getPhoneNumber(),
-								Constants.EVENT_TASK.SEATING);
-						arrTelNumberBean.add(seatingBean);
-						isSeatingNumSet = true;
-						continue;
-					} else {
-						isSeatingNumSet = true;
-					}
-
-					if (!isRsvpNumberExists && !isRsvpNumSet) {
-						TelNumberBean rsvpBean = createTelNumberBean(
-								telNumberMetaData,
-								availTelNum.getPhoneNumber(),
-								Constants.EVENT_TASK.RSVP);
-						arrTelNumberBean.add(rsvpBean);
-						isRsvpNumSet = true;
-						continue;
-					} else {
-						isRsvpNumSet = true;
-					}
-
-					if (isRsvpNumSet && isSeatingNumSet) {
-						break;
-					}
-				}
-
-			}
+			arrTelNumberBean = getGeneratedTelNumbers(isSeatingNumberExists,
+					isRsvpNumberExists, telNumberMetaData, arrTelNumberBean);
+			/*
+			 * List<AvailablePhoneNumber> listAvailablePhone =
+			 * generateTelephoneNumber();
+			 * 
+			 * if (listAvailablePhone != null && !listAvailablePhone.isEmpty())
+			 * {
+			 * 
+			 * for (AvailablePhoneNumber availTelNum : listAvailablePhone) { if
+			 * (!isSeatingNumberExists && !isSeatingNumSet) { TelNumberBean
+			 * seatingBean = createTelNumberBean( telNumberMetaData,
+			 * availTelNum.getPhoneNumber(), Constants.EVENT_TASK.SEATING);
+			 * arrTelNumberBean.add(seatingBean); isSeatingNumSet = true;
+			 * continue; } else { isSeatingNumSet = true; }
+			 * 
+			 * if (!isRsvpNumberExists && !isRsvpNumSet) { TelNumberBean
+			 * rsvpBean = createTelNumberBean( telNumberMetaData,
+			 * availTelNum.getPhoneNumber(), Constants.EVENT_TASK.RSVP);
+			 * arrTelNumberBean.add(rsvpBean); isRsvpNumSet = true; continue; }
+			 * else { isRsvpNumSet = true; }
+			 * 
+			 * if (isRsvpNumSet && isSeatingNumSet) { break; } }
+			 * 
+			 * }
+			 */
 		}
 
 		return arrTelNumberBean;
 
+	}
+
+	public ArrayList<TelNumberBean> getGeneratedTelNumbers(
+			boolean isSeatingNumberExists, boolean isRsvpNumberExists,
+			TelNumberMetaData telNumberMetaData,
+			ArrayList<TelNumberBean> arrTelNumberBean) {
+		boolean isSeatingNumSet = false;
+		boolean isRsvpNumSet = false;
+
+		List<AvailablePhoneNumber> listAvailablePhone = generateTelephoneNumber();
+
+		if (listAvailablePhone != null && !listAvailablePhone.isEmpty()) {
+
+			for (AvailablePhoneNumber availTelNum : listAvailablePhone) {
+				if (!isSeatingNumberExists && !isSeatingNumSet) {
+					TelNumberBean seatingBean = createTelNumberBean(
+							telNumberMetaData, availTelNum.getPhoneNumber(),
+							Constants.EVENT_TASK.SEATING);
+					arrTelNumberBean.add(seatingBean);
+					isSeatingNumSet = true;
+					continue;
+				} else {
+					isSeatingNumSet = true;
+				}
+
+				if (!isRsvpNumberExists && !isRsvpNumSet) {
+					TelNumberBean rsvpBean = createTelNumberBean(
+							telNumberMetaData, availTelNum.getPhoneNumber(),
+							Constants.EVENT_TASK.RSVP);
+					arrTelNumberBean.add(rsvpBean);
+					isRsvpNumSet = true;
+					continue;
+				} else {
+					isRsvpNumSet = true;
+				}
+
+				if (isRsvpNumSet && isSeatingNumSet) {
+					break;
+				}
+			}
+
+		}
+
+		return arrTelNumberBean;
 	}
 
 	private List<AvailablePhoneNumber> generateTelephoneNumber() {
@@ -202,11 +245,27 @@ public class TelNumberManager {
 			TelNumberMetaData telNumberMetaData, String sTelephoneNum,
 			Constants.EVENT_TASK telNumType) {
 		TelNumberBean telNumberBean = new TelNumberBean();
-		telNumberBean.setTelNumber(sTelephoneNum);
+		telNumberBean.setTelNumber(sTelephoneNum.substring(1));
 		telNumberBean.setAdminId(telNumberMetaData.getAdminId());
 		telNumberBean.setEventId(telNumberMetaData.getEventId());
 		telNumberBean.setTelNumberType(telNumType.getTask());
+		telNumberBean.setHumanTelNumber(getHumanFormTelNum(sTelephoneNum));
 		return telNumberBean;
+	}
+
+	private String getHumanFormTelNum(String sTelephoneNum) {
+		String sTmpTelNum = "";
+		if (sTelephoneNum != null && !"".equalsIgnoreCase(sTelephoneNum)) {
+			if (sTelephoneNum.length() == 12) {
+				String sAreaCode = sTelephoneNum.substring(2, 5);
+				String sFirstSetNumber = sTelephoneNum.substring(5, 8);
+				String sLastSetNumber = sTelephoneNum.substring(9);
+
+				sTmpTelNum = "(" + sAreaCode + ")" + " " + sFirstSetNumber
+						+ " " + sLastSetNumber;
+			}
+		}
+		return sTmpTelNum;
 	}
 
 	public EventGuestBean getTelNumGuestDetails(
@@ -250,6 +309,9 @@ public class TelNumberManager {
 			for (AvailablePhoneNumber availableTelNum : listAvailableNum) {
 				TelNumberBean telNumberBean = new TelNumberBean();
 				telNumberBean.setTelNumber(availableTelNum.getPhoneNumber());
+				telNumberBean
+						.setHumanTelNumber(getHumanFormTelNum(availableTelNum
+								.getPhoneNumber()));
 
 				telNumberBean.setTelNumberType(sNumType);
 				arrTelNumBean.add(telNumberBean);
@@ -314,6 +376,98 @@ public class TelNumberManager {
 		ArrayList<TelNumberTypeBean> arrTelNumTypeBean = telNumData
 				.getTelNumberTypes(telNumType);
 		return arrTelNumTypeBean;
+	}
+
+	public ArrayList<DemoTelNumber> getDemoTelNumber() {
+		TelNumberData telNumData = new TelNumberData();
+		ArrayList<DemoTelNumber> arrDemoTelNumBean = telNumData
+				.getDemoTelNumberList();
+		return arrDemoTelNumBean;
+	}
+
+	public DemoTelNumber getRandomDemoNumber(
+			ArrayList<DemoTelNumber> arrDemoTelNumBean,
+			Constants.EVENT_TASK eventTask) {
+		DemoTelNumber demoTelNumber = new DemoTelNumber();
+		if (arrDemoTelNumBean != null && !arrDemoTelNumBean.isEmpty()
+				&& eventTask != null
+				&& !"".equalsIgnoreCase(eventTask.getTask())) {
+			TelNumberData telNumData = new TelNumberData();
+			ArrayList<TelNumberTypeBean> arrTelNumTypeBean = telNumData
+					.getTelNumberTypes(eventTask.getTask());
+
+			String sDemoTelNumTypeId = "";
+			if (arrTelNumTypeBean != null && !arrTelNumTypeBean.isEmpty()) {
+				for (TelNumberTypeBean telNumTypeBean : arrTelNumTypeBean) {
+					sDemoTelNumTypeId = telNumTypeBean.getTelNumberTypeId();
+					break;
+				}
+			}
+
+			ArrayList<DemoTelNumber> arrTmpDemoTelNumBean = new ArrayList<DemoTelNumber>();
+			if (sDemoTelNumTypeId != null
+					&& !"".equalsIgnoreCase(sDemoTelNumTypeId)) {
+
+				for (DemoTelNumber tmpDemoTelNumber : arrDemoTelNumBean) {
+					if (tmpDemoTelNumber != null
+							&& sDemoTelNumTypeId
+									.equalsIgnoreCase(tmpDemoTelNumber
+											.getDemoTelNumberTypeId())) {
+						arrTmpDemoTelNumBean.add(tmpDemoTelNumber);
+					}
+				}
+
+			}
+
+			if (arrTmpDemoTelNumBean != null && !arrTmpDemoTelNumBean.isEmpty()) {
+				Integer iRandomIndex = Utility
+						.getRandomInteger(arrTmpDemoTelNumBean.size());
+				demoTelNumber = arrTmpDemoTelNumBean.get(iRandomIndex);
+			}
+
+		}
+		return demoTelNumber;
+	}
+
+	public void setEventDemoNumber(String sEventId, String sAdmin) {
+		if (sEventId != null && !"".equalsIgnoreCase(sEventId)) {
+			ArrayList<DemoTelNumber> arrDemoTelNumBean = getDemoTelNumber();
+
+			DemoTelNumber rsvpDemoNumber = getRandomDemoNumber(
+					arrDemoTelNumBean, Constants.EVENT_TASK.DEMO_RSVP);
+			DemoTelNumber seatingDemoNumber = getRandomDemoNumber(
+					arrDemoTelNumBean, Constants.EVENT_TASK.DEMO_SEATING);
+
+			String sEventIdentifier = Utility.generateSecretKey(5);
+			String sRsvpEventSecretKey = Utility.generateSecretKey(5);
+			String sSeatingEventSecretKey = Utility.generateSecretKey(5);
+
+			TelNumberMetaData telNumberMetaData = new TelNumberMetaData();
+			telNumberMetaData.setActive(true);
+			telNumberMetaData.setAdminId(sAdmin);
+			telNumberMetaData.setEventId(sEventId);
+			telNumberMetaData.setDelRow(false);
+			telNumberMetaData.setPurchased(true);
+			telNumberMetaData.setSecretEventIdentifier(sEventIdentifier);
+
+			TelNumberData telNumData = new TelNumberData();
+			telNumberMetaData.setTelNumberTypeId(seatingDemoNumber
+					.getDemoTelNumberTypeId());
+			telNumberMetaData.setSecretEventSecretKey(sSeatingEventSecretKey);
+			telNumberMetaData.setDigits(seatingDemoNumber.getDemoTelNumber());
+			telNumberMetaData.setHumanTelNumber(seatingDemoNumber
+					.getDemoHumanTelNumber());
+			telNumData.createTelNumber(telNumberMetaData);
+
+			telNumberMetaData.setTelNumberTypeId(rsvpDemoNumber
+					.getDemoTelNumberTypeId());
+			telNumberMetaData.setSecretEventSecretKey(sRsvpEventSecretKey);
+			telNumberMetaData.setDigits(rsvpDemoNumber.getDemoTelNumber());
+			telNumberMetaData.setHumanTelNumber(rsvpDemoNumber
+					.getDemoHumanTelNumber());
+			telNumData.createTelNumber(telNumberMetaData);
+
+		}
 	}
 
 }

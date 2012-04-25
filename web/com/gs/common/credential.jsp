@@ -10,7 +10,7 @@
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 		String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
-		String sSource = ParseUtil.checkNull(request.getParameter("source"));
+		String sRefferrerSource = ParseUtil.checkNull(request.getParameter("referrer_source"));
 		
 		
 		jspLogging.info("Add Table for event : " + sEventId + " by : " + sAdminId);
@@ -104,7 +104,7 @@
 		</form>
 	</body>
 	<script type="text/javascript">
-	var varSource = '<%=sSource%>';
+	var varSource = '<%=sRefferrerSource%>';
 	$(document).ready(function() {
 		$("#login_user").click(loginUser);
 		$("#register_user").click(registerUser);

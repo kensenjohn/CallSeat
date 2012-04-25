@@ -248,6 +248,7 @@ public class AdminManager {
 			adminData.assignEventToPermAdmin(sTmpAdminId, sPermAdminId);
 			adminData.assignGuestToPermAdmin(sTmpAdminId, sPermAdminId);
 			adminData.assignTableToPermAdmin(sTmpAdminId, sPermAdminId);
+			adminData.assignTelNumberToPermAdmin(sTmpAdminId, sPermAdminId);
 
 		}
 

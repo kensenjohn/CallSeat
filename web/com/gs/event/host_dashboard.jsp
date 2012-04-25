@@ -25,7 +25,9 @@
    <div class="page_setup">
 		<div class="container rounded-corners">
 			<div style="margin:5px;">
-			<jsp:include page="../common/top_nav.jsp"/>
+			<jsp:include page="../common/top_nav.jsp">
+				<jsp:param name="referrer_source" value="host_dashboard.jsp"/>
+			</jsp:include>
 				<jsp:include page="lobby_tab.jsp">
 					<jsp:param name="select_tab" value="guest_tab"/>
 					<jsp:param name="lobby_header" value="My Lobby"/>
@@ -181,21 +183,17 @@
 			});
 	}
 	
-	function credentialSuccess(jsonResponse,varSource)
+	/*function credentialSuccess(jsonResponse,varSource)
 	{
 		$("#login_name_display").text(jsonResponse.first_name);
 		$("#login_name_display").addClass("bold_text");
 		resetAdminId(jsonResponse.user_id);
-		/*varIsSignedIn = true;
-		phoneNumTab();
-		
-		resetAdminId(jsonResponse.user_id);*/
 	}
 	function resetAdminId(tmpAdminId)
 	{
 		varAdminID = tmpAdminId;
 		setAllGuestButtonClick();
-	}
+	}*/
 	//TODO: load the lobby after login with current admin's user.
 </script>
 <jsp:include page="../common/footer_top.jsp"/>

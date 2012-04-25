@@ -71,8 +71,13 @@ try
 				
 				EventBean eventBean = eventManager.createEvent(eventMeta);
 				
+				
 				if(eventBean!=null && eventBean.getEventId()!=null && !"".equalsIgnoreCase(eventBean.getEventId()))
 				{
+					TelNumberManager telNumberManager = new TelNumberManager();
+					telNumberManager.setEventDemoNumber(eventBean.getEventId(),adminBean.getAdminId());
+					
+					
 					responseStatus = RespConstants.Status.OK;
 					
 					jsonResponseObj.put("event_bean",eventBean.toJson());

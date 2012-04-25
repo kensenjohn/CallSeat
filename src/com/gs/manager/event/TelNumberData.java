@@ -6,6 +6,7 @@ import java.util.HashMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.gs.bean.DemoTelNumber;
 import com.gs.bean.TelNumberBean;
 import com.gs.bean.TelNumberTypeBean;
 import com.gs.common.Configuration;
@@ -58,16 +59,23 @@ public class TelNumberData {
 
 		ArrayList<Object> aParams = new ArrayList<Object>();
 		String sQuery = "SELECT * FROM GTTELNUMBERTYPE";
-		if (sTelNumberType != null
-				&& Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(
-						sTelNumberType)) {
+
+		if (sTelNumberType != null && !"".equalsIgnoreCase(sTelNumberType)) {
 			sQuery = "SELECT * FROM GTTELNUMBERTYPE WHERE TELNUMTYPE = ?";
-			aParams.add(Constants.EVENT_TASK.RSVP.getTask());
-		} else if (sTelNumberType != null
-				&& Constants.EVENT_TASK.SEATING.getTask().equalsIgnoreCase(
-						sTelNumberType)) {
-			sQuery = "SELECT * FROM GTTELNUMBERTYPE WHERE TELNUMTYPE = ?";
-			aParams.add(Constants.EVENT_TASK.SEATING.getTask());
+
+			if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(
+					sTelNumberType)) {
+				aParams.add(Constants.EVENT_TASK.RSVP.getTask());
+			} else if (Constants.EVENT_TASK.SEATING.getTask().equalsIgnoreCase(
+					sTelNumberType)) {
+				aParams.add(Constants.EVENT_TASK.SEATING.getTask());
+			} else if (Constants.EVENT_TASK.DEMO_RSVP.getTask()
+					.equalsIgnoreCase(sTelNumberType)) {
+				aParams.add(Constants.EVENT_TASK.DEMO_RSVP.getTask());
+			} else if (Constants.EVENT_TASK.DEMO_SEATING.getTask()
+					.equalsIgnoreCase(sTelNumberType)) {
+				aParams.add(Constants.EVENT_TASK.DEMO_SEATING.getTask());
+			}
 		}
 
 		ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(
@@ -88,8 +96,10 @@ public class TelNumberData {
 			TelNumberMetaData telNumberMetaData) {
 		ArrayList<TelNumberBean> arrTelNumberBean = new ArrayList<TelNumberBean>();
 		if (telNumberMetaData != null) {
-			String sQuery = "SELECT TELNUMBERID, TELNUMBER, FK_TELNUMBERTYPEID, FK_EVENTID ,FK_ADMINID ,DEL_ROW, "
-					+ " TELNUMBERTYPEID,DESCRIPTION,TELNUMTYPE from GTTELNUMBERS GTT, GTTELNUMBERTYPE GTN WHERE "
+			String sQuery = "SELECT GTT.TELNUMBERID,  GTT.TELNUMBER,  GTT.FK_TELNUMBERTYPEID,  "
+					+ " GTT.FK_EVENTID , GTT.FK_ADMINID , GTT.DEL_ROW, GTT.SECRET_EVENT_NUMBER, "
+					+ " GTT.SECRET_KEY , GTT.HUMAN_TELNUMBER, "
+					+ "  GTN.TELNUMBERTYPEID,GTN.DESCRIPTION,GTN.TELNUMTYPE from GTTELNUMBERS GTT, GTTELNUMBERTYPE GTN WHERE "
 					+ " GTT.FK_TELNUMBERTYPEID = GTN.TELNUMBERTYPEID AND GTT.FK_EVENTID = ? AND  GTT.FK_ADMINID = ? ";
 
 			ArrayList<Object> aParams = DBDAO.createConstraint(
@@ -130,6 +140,13 @@ public class TelNumberData {
 		telNumberBean
 				.setPurchased(ParseUtil.sTob(hmResult.get("IS_PURCHASED")));
 
+		telNumberBean.setSecretEventIdentity(ParseUtil.checkNull(hmResult
+				.get("SECRET_EVENT_NUMBER")));
+		telNumberBean.setSecretEventKey(ParseUtil.checkNull(hmResult
+				.get("SECRET_KEY")));
+		telNumberBean.setHumanTelNumber(ParseUtil.checkNull(hmResult
+				.get("HUMAN_TELNUMBER")));
+
 		return telNumberBean;
 	}
 
@@ -143,16 +160,33 @@ public class TelNumberData {
 		 * | 0 | | | IS_ACTIVE | int(1) | YES | | 0 | | | IS_PURCHASED
 		 */
 		String sQuery = "INSERT INTO GTTELNUMBERS (TELNUMBERID,TELNUMBER,FK_TELNUMBERTYPEID,FK_EVENTID,"
-				+ " FK_ADMINID,DEL_ROW,IS_ACTIVE,IS_PURCHASED) VALUES(?,?,?,   ?,?,?   ,?,?)";
+				+ " FK_ADMINID,DEL_ROW,IS_ACTIVE,IS_PURCHASED, SECRET_EVENT_NUMBER, SECRET_KEY, HUMAN_TELNUMBER ) "
+				+ " VALUES(?,?,?,   ?,?,?,	 ?,?,?,  ?,?)";
 
 		String sTelNumberID = Utility.getNewGuid();
-		ArrayList<Object> aParams = DBDAO.createConstraint(sTelNumberID,
-				telNumMetaData.getDigits(),
-				telNumMetaData.getTelNumberTypeId(),
-				telNumMetaData.getEventId(), telNumMetaData.getAdminId(),
-				telNumMetaData.isDelRow() ? "1" : "0",
-				telNumMetaData.isActive() ? "1" : "0",
-				telNumMetaData.isPurchased() ? "1" : "0");
+		ArrayList<Object> aParams = DBDAO
+				.createConstraint(
+						sTelNumberID,
+						telNumMetaData.getDigits(),
+						telNumMetaData.getTelNumberTypeId(),
+						telNumMetaData.getEventId(),
+						telNumMetaData.getAdminId(),
+						telNumMetaData.isDelRow() ? "1" : "0",
+						telNumMetaData.isActive() ? "1" : "0",
+						telNumMetaData.isPurchased() ? "1" : "0",
+						(telNumMetaData.getSecretEventIdentifier() != null && !""
+								.equalsIgnoreCase(telNumMetaData
+										.getSecretEventIdentifier())) ? telNumMetaData
+								.getSecretEventIdentifier() : "-",
+						(telNumMetaData.getSecretEventSecretKey() != null && !""
+								.equalsIgnoreCase(telNumMetaData
+										.getSecretEventSecretKey())) ? telNumMetaData
+								.getSecretEventSecretKey() : "-",
+						(telNumMetaData.getHumanTelNumber() != null && !""
+								.equalsIgnoreCase(telNumMetaData
+										.getHumanTelNumber())) ? telNumMetaData
+								.getHumanTelNumber() : telNumMetaData
+								.getDigits());
 
 		int iNumOfRows = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
 				"TelNumberData.java", "createTelNumber()");
@@ -162,5 +196,26 @@ public class TelNumberData {
 
 	public ArrayList<TelNumberBean> updateTelNumber() {
 		return null;
+	}
+
+	public ArrayList<DemoTelNumber> getDemoTelNumberList() {
+
+		ArrayList<DemoTelNumber> arrDemoTelNumber = new ArrayList<DemoTelNumber>();
+
+		String sQuery = "SELECT * FROM GTDEMOTELNUMBERS";
+		ArrayList<Object> aParams = new ArrayList<Object>();
+
+		ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(
+				ADMIN_DB, sQuery, aParams, false, "TelNumberData.java",
+				"getDemoTelNumberList()");
+
+		if (arrResult != null && !arrResult.isEmpty()) {
+			for (HashMap<String, String> hmResult : arrResult) {
+				DemoTelNumber demoTelNumber = new DemoTelNumber(hmResult);
+
+				arrDemoTelNumber.add(demoTelNumber);
+			}
+		}
+		return arrDemoTelNumber;
 	}
 }

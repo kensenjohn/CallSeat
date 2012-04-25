@@ -65,3 +65,5 @@ if(cookies!=null)
 		document.cookie=cookieName + "=" + c_value;
 	}
 	</script>
+	<jsp:include page="footer_top.jsp"/>
+<jsp:include page="footer_bottom.jsp"/>
