@@ -45,7 +45,7 @@ try
 				jsonResponseObj.put("uninvited_guest_exists",true);
 				jsonResponseObj.put("uninvited_guest_detail",guestManger.getGuestsJson(arrGuestBean));
 				
-				Text okText = new OkText("All guests without invitation have been loaded.","success_mssg");		
+				Text okText = new OkText("","success_mssg");		
 				arrOkText.add(okText);
 				responseStatus = RespConstants.Status.OK;
 			}
@@ -53,7 +53,7 @@ try
 			{
 				jsonResponseObj.put("uninvited_guest_exists",false);
 				
-				Text okText = new OkText("All your guests from the list have been invited.","success_mssg");		
+				Text okText = new OkText("Please add at least one guest before inviting them to the event.","success_mssg");		
 				arrOkText.add(okText);
 				responseStatus = RespConstants.Status.OK;
 			}
@@ -163,7 +163,7 @@ try
 
 					jsonResponseObj.put("invite",true);
 					
-					Text okText = new OkText("The changes were updated successfully.","success_mssg");		
+					Text okText = new OkText("The guest has been invited to the event.","success_mssg");		
 					arrOkText.add(okText);
 					responseStatus = RespConstants.Status.OK;
 					

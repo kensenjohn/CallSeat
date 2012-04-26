@@ -19,7 +19,8 @@ function credentialSuccess(jsonResponse,varSource)
 	$('#link_goto_lobby').removeAttr("href");
 	$('#link_goto_lobby').attr('href','/web/com/gs/event/host_dashboard.jsp?lobby_admin_id='+jsonResponse.user_id);
 	
-	if(varSource == 'event_setup.jsp' || varSource == 'guest_setup.jsp')
+	if(varSource == 'event_setup.jsp' || varSource == 'guest_setup.jsp' || varSource == 'host_dashboard.jsp'
+		|| varSource == 'search_phone_number.jsp')
 	{
 		//phoneNumTab();
 		resetAdminId(jsonResponse.user_id);
@@ -29,6 +30,11 @@ function credentialSuccess(jsonResponse,varSource)
 	if(varSource == 'guest_setup.jsp')
 	{
 		loadGuests(varCredEventID,jsonResponse.user_id);
+	}
+	
+	if(varSource == 'host_dashboard.jsp')
+	{
+		loadDashboard(varCredEventID,jsonResponse.user_id);
 	}
 	
 }
@@ -88,7 +94,7 @@ function setCredentialEventId(varEventId)
 }
 
 function setTopNavLogin(varAdminId, varEventId, varSource)
-{
+{	
 	$("#login_name_display").attr("href","/web/com/gs/common/credential.jsp?admin_id="+varAdminId
 			+"&event_id="+varEventId+"&referrer_source="+varSource);
 }

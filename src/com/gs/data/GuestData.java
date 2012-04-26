@@ -373,7 +373,10 @@ public class GuestData {
 
 		if (sAdminId != null && !"".equalsIgnoreCase(sAdminId)
 				&& sEventId != null && !"".equalsIgnoreCase(sEventId)) {
-			String sQuery = " select G.GUESTID,  G.FK_USERINFOID ,  G.FK_ADMINID , U.* FROM GTUSERINFO U, GTGUESTS G WHERE NOT EXISTS ( SELECT * FROM GTEVENTGUESTS EG WHERE EG.FK_GUESTID  = G.GUESTID AND FK_EVENTID='fe366ca5-d234-4464-b22a-b77166bd69bf' ) AND G.FK_ADMINID = '8755be3d-8fc4-4953-9192-66c58b0ebe5c' AND U.USERINFOID = G.FK_USERINFOID";
+			String sQuery = " select G.GUESTID,  G.FK_USERINFOID ,  G.FK_ADMINID , U.* "
+					+ " FROM GTUSERINFO U, GTGUESTS G WHERE NOT EXISTS "
+					+ " ( SELECT * FROM GTEVENTGUESTS EG WHERE EG.FK_GUESTID  = G.GUESTID "
+					+ " AND FK_EVENTID= ? ) AND G.FK_ADMINID = ? AND U.USERINFOID = G.FK_USERINFOID";
 
 			ArrayList<Object> arrParams = DBDAO.createConstraint(sEventId,
 					sAdminId);

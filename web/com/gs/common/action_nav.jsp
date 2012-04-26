@@ -56,3 +56,12 @@ String sRefererSource = ParseUtil.checkNull(request.getParameter("referrer_sourc
 	%>
 
 </div>
+<script>
+	function assignNewEventId(varNewEventId, varTmpAdminId)
+	{
+		$('#add_table').attr('href','../event/add_table.jsp?admin_id='+varTmpAdminId+'&event_id='+varNewEventId);
+		$('#add_guest').attr('href','../event/add_guest.jsp?admin_id='+varTmpAdminId+'&event_id='+varNewEventId);
+		$('#invite_guest').attr('href','../event/invite_guest.jsp?admin_id='+varTmpAdminId+'&event_id='+varNewEventId);
+		$('#add_all_guests').attr('href','../event/add_guest.jsp?admin_id='+varTmpAdminId+'&event_id='+varNewEventId);
+	}
+</script>

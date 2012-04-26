@@ -6,9 +6,8 @@
 <%@ page import="org.slf4j.LoggerFactory" %>
 
 <jsp:include page="../common/header_top.jsp"/>
-<jsp:include page="../common/security.jsp"/>
+<%@include file="../common/security.jsp"%>
 <jsp:include page="../common/header_bottom.jsp"/>
-
 <body>
 	<%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
@@ -89,13 +88,23 @@
 				  <div class="span8">
 				  	<div class="row">
 				  		<div class="span8" style="text-align:center;">
-				  			<button id="bt_get_own_phone" name="bt_get_own_phone" type="button" href="search_phone_number.jsp?ei=<%=sEventId%>&admin_id=<%=sAdminId%>" class="action_button primary big">Get direct line.</button>
+				  			<button id="bt_get_pricing_option" name="bt_get_pricing_option" type="button" class="action_button primary big">Step 2: Show me the pricing options. </button>
 				  		</div>
 				   	</div>
 				  </div>
 				</div>
 			</div>
 			</div>
+			<form id="frm_telnum_bill_address" id="frm_telnum_bill_address">
+					<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
+					<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+					
+					<input type="hidden" id="pass_thru_rsvp_num" name="pass_thru_rsvp_num" value=""/>
+					<input type="hidden" id="pass_thru_seating_num" name="pass_thru_seating_num" value=""/>
+					<input type="hidden" id="referrer_source" name="referrer_source" value="search_phone_number.jsp"/>
+					<input type="hidden" id="pass_thru_action" name="pass_thru_action" value="true"/>
+					
+			</form>
 			
 </body>
 <script type="text/javascript">
@@ -105,6 +114,9 @@ var varAdminId = '<%=sAdminId%>';
 
 var varSeatingNumType = '<%=Constants.EVENT_TASK.SEATING.getTask()%>';
 var varRsvpNumType = '<%=Constants.EVENT_TASK.RSVP.getTask()%>';
+
+var varIsSignedIn = <%=isSignedIn%>;
+
 	$(document).ready(function() {
 		loadPhoneNumber();
 		
@@ -126,7 +138,27 @@ var varRsvpNumType = '<%=Constants.EVENT_TASK.RSVP.getTask()%>';
 		}, function() {
 				$("#seating_numbers_gen").slideUp();
 		});
+		
+		$('#bt_get_pricing_option').click( passthruForm );
 	});
+	
+	function passthruForm()
+	{
+		$('#pass_thru_rsvp_num').val( $("#rsvp_gen_num").text() );
+		$('#pass_thru_seating_num').val( $("#seating_gen_num").text() );
+		
+		if( varIsSignedIn )
+		{
+			$("#frm_telnum_bill_address").attr('action','/web/com/gs/event/pricing_plan.jsp');
+			$("#frm_telnum_bill_address").attr('method','POST');
+		}
+		else
+		{
+			$("#frm_telnum_bill_address").attr('action',"/web/com/gs/common/credential.jsp");
+			$("#frm_telnum_bill_address").attr('method','POST');
+		}
+		$("#frm_telnum_bill_address").submit();
+	}
 	function getCustomSeatingNums()
 	{
 		searchMoreNumbers(varSeatingNumType,customSeatingNumResult);

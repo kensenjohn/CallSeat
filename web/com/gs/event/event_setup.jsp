@@ -22,13 +22,7 @@
 	String sAdminId = ParseUtil.checkNull(request.getParameter("lobby_admin_id"));
 	boolean isNewEventClicked= ParseUtil.sTob(request.getParameter("lobby_create_new"));
 	
-	if(!isFromLanding)
-	{
-	%>
-		<%@include file="/web/com/gs/common/gatekeeper.jsp"%>
-	<%
-	}
-	
+		
 	jspLogging.info("Invoked by landing page : " + isFromLanding);
 	String sEventTitle = "New Event";
 	
@@ -670,6 +664,8 @@
 					{
 						//alert(jsonResponseObj.event_bean.event_id)
 						varEventID = jsonResponseObj.event_bean.event_id;
+						
+						assignNewEventId(varEventID, varAdminID);//this is defined in action_nav.jsp
 					}
 				}
 				
