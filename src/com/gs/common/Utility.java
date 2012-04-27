@@ -76,4 +76,19 @@ public class Utility {
 		return pin;
 	}
 
+	public static String getMultipleParamsList(Integer iNumber) {
+		StringBuilder strParamQuestions = new StringBuilder();
+		if (iNumber > 0) {
+			boolean isFirst = true;
+			for (int i = 0; i < iNumber; i++) {
+				if (!isFirst) {
+					strParamQuestions.append(",");
+				}
+				strParamQuestions.append("?");
+				isFirst = false;
+			}
+		}
+		return strParamQuestions.toString();
+	}
+
 }
