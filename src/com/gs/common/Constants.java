@@ -93,7 +93,8 @@ public class Constants {
 	}
 
 	public enum EVENT_TASK {
-		RSVP("RSVP_TEL"), SEATING("SEATING_TEL"), ALL("ALL");
+		RSVP("RSVP_TEL"), SEATING("SEATING_TEL"), DEMO_RSVP("DEMO_RSVP_TEL"), DEMO_SEATING(
+				"DEMO_SEATING_TEL"), ALL("ALL");
 
 		private String sTask = "";
 
@@ -170,6 +171,23 @@ public class Constants {
 
 		public String getEmailTemplate() {
 			return this.emailTemplate;
+		}
+	}
+
+	public final static String PROP_ENVIRONMENT = "environment";
+
+	public enum ENVIRONMENT {
+		VIRTUAL_MACHINE("vm"), SANDBOX("sandbox"), ALPHA("alpha"), BETA("beta"), PROD(
+				"prod");
+
+		private String environment = "";
+
+		ENVIRONMENT(String environment) {
+			this.environment = environment;
+		}
+
+		public String getEnv() {
+			return this.environment;
 		}
 	}
 

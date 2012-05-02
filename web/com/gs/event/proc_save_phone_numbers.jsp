@@ -9,6 +9,7 @@
 <%@page import="com.gs.phone.account.*" %>
 
 <%@include file="../common/security.jsp" %>
+<%@include file="/www/com/gs/common/gatekeeper.jsp" %>
 <%
 JSONObject jsonResponseObj = new JSONObject();
 
@@ -28,7 +29,7 @@ try
 	String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 	String sSeatingNumber = ParseUtil.checkNull(request.getParameter("seating_tel_num")); 
 	String sRsvpNumber = ParseUtil.checkNull(request.getParameter("rsvp_tel_num"));
-	String sPriceGroupId = ParseUtil.checkNull(request.getParameter("priceOption"));
+	String sPriceGroupId = ParseUtil.checkNull(request.getParameter("pricing_plan_id"));
 	String sBillFirstName = ParseUtil.checkNull(request.getParameter("bill_first_name"));
 	String sBillLastName = ParseUtil.checkNull(request.getParameter("bill_last_name"));
 	String sBillMiddleName = ParseUtil.checkNull(request.getParameter("bill_middle_name"));
@@ -80,8 +81,8 @@ try
 					accountManager.createAccount(adminAccountMeta);
 					
 					TelNumberManager telNumManager = new TelNumberManager();
-					String sPurchasedRsvpNum = "678690589";
-					//sPurchasedRsvpNum = telNumManager.purchaseTelephoneNumber(adminAccountMeta,sRsvpNumber );
+					//String sPurchasedRsvpNum = "678690589";
+					String sPurchasedRsvpNum =  telNumManager.purchaseTelephoneNumber(adminAccountMeta,sRsvpNumber );
 					String sPurchasedSeatingNum = telNumManager.purchaseTelephoneNumber(adminAccountMeta,sSeatingNumber );
 					
 					if(sPurchasedRsvpNum!=null && !"".equalsIgnoreCase(sPurchasedRsvpNum) 
@@ -99,7 +100,7 @@ try
 							telNumberMetaData.setRsvpTelNumDigit(sRsvpNumber);
 							telNumberMetaData.setSeatingTelNumDigit(sSeatingNumber);
 							
-							
+							telNumberMetaData.setTelNumDigit(sRsvpNumber);
 							telNumManager.saveTelNumbers(telNumberMetaData);
 							
 							Text okText = new OkText("Tou purchase was completed successfully.","my_id");

@@ -2,6 +2,8 @@
 <%@ page import="com.gs.manager.event.EventManager" %>
 <%@ page import="com.gs.bean.*" %>
 <%@ page import="com.gs.common.*" %>
+<%@ page import="com.gs.manager.*" %>
+<%@ page import="com.gs.manager.event.*" %>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
 
@@ -20,13 +22,7 @@
 	String sAdminId = ParseUtil.checkNull(request.getParameter("lobby_admin_id"));
 	boolean isNewEventClicked= ParseUtil.sTob(request.getParameter("lobby_create_new"));
 	
-	if(!isFromLanding)
-	{
-	%>
-		<%@include file="/web/com/gs/common/gatekeeper.jsp"%>
-	<%
-	}
-	
+		
 	jspLogging.info("Invoked by landing page : " + isFromLanding);
 	String sEventTitle = "New Event";
 	
@@ -67,6 +63,12 @@
 			
 			EventManager eventManager = new EventManager();
 			eventBean = eventManager.createEvent(eventMeta);
+			
+			if(eventBean!=null && eventBean.getEventId()!=null && !"".equalsIgnoreCase(eventBean.getEventId()))
+			{
+				TelNumberManager telNumberManager = new TelNumberManager();
+				telNumberManager.setEventDemoNumber(eventBean.getEventId(),adminBean.getAdminId());
+			}
 		}
 		
 		jspLogging.debug("Admin Bean : " + adminBean);
@@ -119,7 +121,9 @@
 <body>
 		<div class="container rounded-corners">
 			<div style="margin:5px;">
-			<jsp:include page="../common/top_nav.jsp"/>
+			<jsp:include page="../common/top_nav.jsp">
+				<jsp:param name="referrer_source" value="event_setup.jsp"/>	
+			</jsp:include>
 			<jsp:include page="lobby_tab.jsp">
 				<jsp:param name="select_tab" value="event_tab"/>
 				<jsp:param name="lobby_header" value="<%=eventName %>"/>
@@ -135,6 +139,7 @@
 						<jsp:param name="event_id" value="<%=sEventId %>"/>
 						<jsp:param name="select_action_nav" value="table_tab"/>
 						<jsp:param name="logged_in" value="<%=isSignedIn %>"/>
+						<jsp:param name="referrer_source" value="event_setup.jsp"/>						
 					</jsp:include> 
 				</div>
 				<div  class="clear_both" style="width: 100%;  text-align: center;">
@@ -228,6 +233,99 @@
 					</div>
 				</div>
 				</div>
+				<div  class="clear_both" id="div_phone_numbers"  style="display:none;">
+					<div class="row">
+				  <div class="span8">
+				    <div class="row">
+				      <div class="span2"><label for="table_name">Seating Number :</label></div>
+				      <div class="span4"><label id="seating_gen_num"></label></div>
+				      <div class="span2" style="display:none;"><label id="seating_search">Advanced Search</label></div>
+				    </div>
+				    <div class="row"  style="display:none;"  id="seating_div_event_id">
+				    	<div class="span8"><label for="table_name" class="span3">Event ID :&nbsp;</label><span class="span1"></span><label id="seating_event_id"  style="text-align:left"></label></div>
+				    </div>
+				    <div class="row"  style="display:none;"  id="seating_div_secret_key">
+				    	<div class="span8"><label for="table_name" class="span3">Secret key :&nbsp;</label><span class="span1"></span><label id="seating_secret_key"  style="text-align:left"></label></div>
+				    </div>
+				    <div class="row" id="seating_numbers_gen" style="display:none;">
+				    	 <div class="span8">
+				    	 	<form id="frm_seating_numbers" >
+				    	 		<fieldset>
+									<div class="clearfix-tight">
+										<label for="table_name">Area Code :</label>
+										<div class="input">
+											<input type="text" id="seating_area_code" name="seating_area_code"/>
+										</div>
+									</div>								
+									<div class="clearfix-tight">
+										<label for="table_name">Contains :</label>
+										<div class="input">
+											<input type="text" id="seating_text_pattern" name="seating_text_pattern"/>
+										</div>
+									</div>
+									<div class="actions">									
+							            <button id="gen_seating_tel_num" name="gen_seating_tel_num" type="button" class="action_button primary small">Generate New Number</button>
+							        </div>	
+								</fieldset>
+								<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
+								<input type="hidden" name="event_id" id="event_id" value="<%=sEventId%>"/>
+				    	 	</form>
+				    	 </div>
+				    </div>
+				     <div class="row">
+				     	<div class="span2"><label for="table_name">RSVP Number :</label></div>
+				      	<div class="span4"><label id="rsvp_gen_num"></label></div>
+				      <div class="span2"  style="display:none;"><label id="rsvp_search">Advanced Search</label></div>
+				     </div>
+				     <div class="row"  style="display:none;"  id="rsvp_div_event_id">
+				    	<div class="span8"><label for="table_name" class="span3">Event ID : &nbsp;</label><span class="span1"></span><label id="rsvp_event_id" class="span4" style="text-align:left" ></label></div>
+				    </div>
+				    <div class="row"  style="display:none;"  id="rsvp_div_secret_key">
+				    	<div class="span8"><label for="table_name" class="span3">Secret key : &nbsp;</label><span class="span1"></span><label id="rsvp_secret_key" class="span4"  style="text-align:left"  ></label></div>
+				    </div>
+				     <div class="row" id="rsvp_numbers_gen"  style="display:none;">
+				     	<div class="span8">
+							<form id="frm_rsvp_numbers" >
+				    	 		<fieldset>
+									<div class="clearfix-tight">
+										<label for="table_name">Area Code :</label>
+										<div class="input">
+											<input type="text" id="rsvp_area_code" name="rsvp_area_code"/>
+										</div>
+									</div>								
+									<div class="clearfix-tight">
+										<label for="table_name">Contains :</label>
+										<div class="input">
+											<input type="text" id="rsvp_contains" name="rsvp_contains"/>
+										</div>
+									</div>
+									<div class="actions">									
+							            <button id="gen_rsvp_tel_num" name="gen_rsvp_tel_num" type="button" class="action_button primary small">Generate New Number</button>
+							        </div>	
+								</fieldset>
+								<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
+								<input type="hidden" name="event_id" id="event_id" value="<%=sEventId%>"/>
+				    	 	</form>
+				    	 </div>
+				     </div>
+				  </div>
+				 </div>
+				 	<div class="row">
+				  <div class="span8">
+				  	<div class="row">
+				  		&nbsp;
+				  	</div>
+				  </div>
+				  </div>
+				  	<div class="row">
+				  <div class="span8">
+				  	<div class="row">
+				  		<div class="span8" style="text-align:center;">
+				  			<button id="bt_get_own_phone" name="bt_get_own_phone" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="action_button primary big">Get direct line.</button>
+				  		</div>
+				   	</div>
+				  </div>
+				</div>
 			</div>
 			</div>
 		</div>
@@ -241,13 +339,26 @@
 <script type="text/javascript" src="/web/js/jquery.datepick.js"></script> 
 <script type="text/javascript" src="/web/js/jquery.tablesorter.js"></script> 
 <script type="text/javascript" src="/web/js/jquery.eventguests.1.0.0.js"></script>
+<script type="text/javascript" src="/web/js/credential.js"></script>
 
 <script type="text/javascript">
 	var varEventID = '<%=sEventId%>';
 	var varAdminID = '<%=sAdminId%>';
 	var varIsSignedIn = <%=isSignedIn%>;
 	var varIsNewEventCreateClicked = <%=isNewEventClicked%>;
+
+	var varSeatingNumType = '<%=Constants.EVENT_TASK.SEATING.getTask()%>';
+	var varDemoSeatingNumType = '<%=Constants.EVENT_TASK.DEMO_SEATING.getTask()%>';
+	var varRsvpNumType = '<%=Constants.EVENT_TASK.RSVP.getTask()%>';
+	var varDemoRsvpNumType = '<%=Constants.EVENT_TASK.DEMO_RSVP.getTask()%>';
+	
 	$(document).ready(function() {
+		setCredentialEventId(varEventID);
+		if(!varIsSignedIn)
+		{
+			setTopNavLogin(varAdminID,varEventID,'event_setup.jsp');
+			
+		}
 		$("#e_summ_event_date").datepick();
 		$("#event_summary_tab").click(function(){
 
@@ -273,7 +384,13 @@
 
 			toggleActionNavs('invite_guest_action_nav');
 		});
-		if(!varIsSignedIn)
+		
+		$("#phone_num_tab").click(function(){
+			toggleActionNavs('li_phone_num');
+			displayPhoneNumberView('li_phone_num');
+		});
+		
+		/*if(!varIsSignedIn)
 		{
 			$("#phone_num_tab").attr("href","/web/com/gs/common/credential.jsp?admin_id="+varAdminID
 					+"&event_id"+varEventID+"&source=phone_tab");
@@ -295,7 +412,7 @@
 		else
 		{
 			phoneNumTab();
-		}
+		}*/
 		
 		if(varIsNewEventCreateClicked)
 		{
@@ -353,6 +470,17 @@
 			'margin'			: 0
 		});
 		
+		$("#bt_get_own_phone").fancybox({
+			'width'				: '75%',
+			'height'			: '90%',
+			'autoScale'			: false,
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			'type'				: 'iframe',
+				'padding'			: 0,
+				'margin'			: 0
+		});
+		
 		loadActions();
 		if(varIsNewEventCreateClicked)
 		{
@@ -397,6 +525,8 @@
 		$('#tab_view_area').empty();
 		$("#div_guests_details").empty();
 		$('#div_event_summary').hide();
+		$('#div_phone_numbers').hide();
+		
 	}
 	
 	function switchTab(current_tab_id)
@@ -428,70 +558,31 @@
 	}
 	
 	function displayPhoneNumberView(tab_id)
-	{
+	{		
 		switchTab(tab_id);
-		loadPhoneNumberFrame();
+		$('#div_phone_numbers').show();
+		loadPhoneNumber();
+		//loadPhoneNumberFrame();
 	}
 	
-	function loadPhoneNumberFrame()
+	function loadPhoneNumber()
 	{
-		$('<iframe id="phone_number_frame"/>').load(function(){
-		}).appendTo("#tab_view_area");
-		 $('#phone_number_frame').attr('src','/web/com/gs/event/phone_number.jsp?admin_id='+varAdminID+'&event_id='+varEventID);
-		    $('#phone_number_frame').attr('height','100%');
-		    $('#phone_number_frame').attr('width','100%');
-		    $('#phone_number_frame').attr('frameborder','0');
+		//alert("proc_load_phone_numbers.jsp");
+		var actionUrl = "proc_load_phone_numbers.jsp";
+		var methodType = "POST";
+		var dataString = "admin_id="+varAdminID+"&event_id="+varEventID;
+		
+		
+		getDataAjax(actionUrl,dataString,methodType,displayPhoneNumbers);
 	}
 	
 	function loadActions()
 	{
-		$("#lnk_event_id").click(function() 
-		{
-			
-		});
 		setNewEventClick();
 		setAllGuestButtonClick();
 		setLobbyButtonClick();
 	}
-	// This should be acopied everywhere.
-	function setNewEventClick()
-	{
-		$("#lnk_new_event_id").unbind("click");
-		$("#lnk_new_event_id").click(function() 
-		{
-			$("#frm_lobby_tab").attr("action" , "event_setup.jsp");
-			$("#lobby_create_new").val(true);
-			$("#lobby_admin_id").val(varAdminID);
-			
-			$("#frm_lobby_tab").submit();
-		});
-	}
-	// This should be acopied everywhere.
-	function setAllGuestButtonClick()
-	{
-		$("#lnk_guest_id").unbind("click");
-		$("#lnk_guest_id").click(function() 
-		{
-			$("#frm_lobby_tab").attr("action" , "guest_setup.jsp");
-			$("#lobby_event_id").val(varEventID);
-			$("#lobby_admin_id").val(varAdminID);
-			
-			$("#frm_lobby_tab").submit();
-		});
-	}
-	
-	function setLobbyButtonClick()
-	{
-		$("#lnk_dashboard_id").unbind("click");
-		
-		$("#lnk_dashboard_id").click(function() {
-			$("#frm_lobby_tab").attr("action" , "host_dashboard.jsp");
-			$("#lobby_event_id").val(varEventID);
-			$("#lobby_admin_id").val(varAdminID);
-			
-			$("#frm_lobby_tab").submit();
-		});
-	}
+
 	
 	function loadEventSummary()
 	{
@@ -573,6 +664,8 @@
 					{
 						//alert(jsonResponseObj.event_bean.event_id)
 						varEventID = jsonResponseObj.event_bean.event_id;
+						
+						assignNewEventId(varEventID, varAdminID);//this is defined in action_nav.jsp
 					}
 				}
 				
@@ -934,25 +1027,6 @@
 		}
 	}
 	
-	function credentialSuccess(jsonResponse,varSource)
-	{
-		$("#get_phone_num_div").hide();
-		$("#login_name_display").text(jsonResponse.first_name);
-		$("#login_name_display").addClass("bold_text");
-		varIsSignedIn = true;
-		phoneNumTab();
-		
-		resetAdminId(jsonResponse.user_id);
-	}
-	
-	function resetAdminId(tmpAdminId)
-	{
-		varAdminID = tmpAdminId;
-		$('#phone_number_frame').removeAttr('src')
-		$('#phone_number_frame').attr('src','/web/com/gs/event/phone_number.jsp?admin_id='+varAdminID+'&event_id='+varEventID);
-		setLobbyButtonClick();
-		setAllGuestButtonClick();
-	}
 	
 	function resetPhoneNumber()
 	{
@@ -971,6 +1045,97 @@
 		displayPhoneNumberView('li_phone_num');
 	}
 	
+	function displayPhoneNumbers(jsonResult)
+	{
+		//alert('status = '+jsonResult.status);
+		if(jsonResult!=undefined)
+		{
+			var varResponseObj = jsonResult.response;
+			if(jsonResult.status == 'error'  && varResponseObj !=undefined )
+			{
+				
+				var varIsMessageExist = varResponseObj.is_message_exist;
+				if(varIsMessageExist == true)
+				{
+					var jsonResponseMessage = varResponseObj.messages;
+					var varArrErrorMssg = jsonResponseMessage.error_mssg
+					displayMessages( varArrErrorMssg );
+				}
+				
+			}
+			else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+			{
+				var varIsPayloadExist = varResponseObj.is_payload_exist;
+				//alert(varIsPayloadExist);
+				
+				if(varIsPayloadExist == true)
+				{
+					var jsonResponseObj = varResponseObj.payload;
+					processTelNumbers( jsonResponseObj );
+				}
+			}
+			else
+			{
+				alert("Please try again later.");
+			}
+		}
+		else
+		{
+			alert("Please try again later.");
+		}
+	}
+	
+	function processTelNumbers( jsonResponseObj )
+	{
+		var varTelNumbers= jsonResponseObj.telnumbers;
+		var totalRows = varTelNumbers.num_of_rows;
+		//alert('processTelNumbers = ' + totalRows);
+		if(totalRows!=undefined)
+		{
+			var varTelNumList = varTelNumbers.telnum_array;
+			if(varTelNumList!=undefined)
+			{
+				for(var iRow = 0; iRow < totalRows ; iRow++ )
+				{
+					var telNumBean = varTelNumList[iRow];
+					
+					//alert('tel number = ' + telNumBean.telnum);
+					
+					if(telNumBean.telnum_type == varSeatingNumType || telNumBean.telnum_type ==  varDemoSeatingNumType)
+					{
+						$("#seating_gen_num").text(telNumBean.human_telnum);
+						
+					}
+					if(telNumBean.telnum_type == varRsvpNumType || telNumBean.telnum_type ==  varDemoRsvpNumType )
+					{
+						$("#rsvp_gen_num").text(telNumBean.human_telnum);
+					}
+					
+					if(telNumBean.telnum_type ==  varDemoSeatingNumType)
+					{
+						$("#seating_div_event_id").show();
+						$("#seating_event_id").text(telNumBean.secret_event_identity);
+						
+						$("#seating_div_secret_key").show();
+						$("#seating_secret_key").text(telNumBean.secret_event_key);
+					}
+					
+					if(telNumBean.telnum_type ==  varDemoRsvpNumType)
+					{
+						$("#rsvp_div_event_id").show();
+						$("#rsvp_event_id").text(telNumBean.secret_event_identity);
+						
+						$("#rsvp_div_secret_key").show();
+						$("#rsvp_secret_key").text(telNumBean.secret_event_key);
+					}
+					
+						
+				}
+			}
+			
+		}
+		
+	}
 	
 </script>
 <jsp:include page="../common/footer_top.jsp"/>

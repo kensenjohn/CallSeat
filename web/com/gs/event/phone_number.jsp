@@ -6,8 +6,9 @@
 <%@ page import="org.slf4j.LoggerFactory" %>
 
 <jsp:include page="../common/header_top.jsp"/>
-<jsp:include page="../common/security.jsp"/>
+<%@include file="../common/security.jsp"%>
 <jsp:include page="../common/header_bottom.jsp"/>
+<link rel="stylesheet" type="text/css" href="/web/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 	<body>
 	<%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
@@ -27,7 +28,13 @@
 				    <div class="row">
 				      <div class="span2"><label for="table_name">Seating Number :</label></div>
 				      <div class="span4"><label id="seating_gen_num"></label></div>
-				      <div class="span2"><label id="seating_search">Advanced Search</label></div>
+				      <div class="span2" style="display:none;"><label id="seating_search">Advanced Search</label></div>
+				    </div>
+				    <div class="row"  style="display:none;"  id="seating_div_event_id">
+				    	<div class="span8"><label for="table_name" class="span3">Event ID :&nbsp;</label><span class="span1"></span><label id="seating_event_id"  style="text-align:left"></label></div>
+				    </div>
+				    <div class="row"  style="display:none;"  id="seating_div_secret_key">
+				    	<div class="span8"><label for="table_name" class="span3">Secret key :&nbsp;</label><span class="span1"></span><label id="seating_secret_key"  style="text-align:left"></label></div>
 				    </div>
 				    <div class="row" id="seating_numbers_gen" style="display:none;">
 				    	 <div class="span8">
@@ -57,8 +64,14 @@
 				     <div class="row">
 				     	<div class="span2"><label for="table_name">RSVP Number :</label></div>
 				      	<div class="span4"><label id="rsvp_gen_num"></label></div>
-				      <div class="span2"><label id="rsvp_search">Advanced Search</label></div>
+				      <div class="span2"  style="display:none;"><label id="rsvp_search">Advanced Search</label></div>
 				     </div>
+				     <div class="row"  style="display:none;"  id="rsvp_div_event_id">
+				    	<div class="span8"><label for="table_name" class="span3">Event ID : &nbsp;</label><span class="span1"></span><label id="rsvp_event_id" class="span4" style="text-align:left" ></label></div>
+				    </div>
+				    <div class="row"  style="display:none;"  id="rsvp_div_secret_key">
+				    	<div class="span8"><label for="table_name" class="span3">Secret key : &nbsp;</label><span class="span1"></span><label id="rsvp_secret_key" class="span4"  style="text-align:left"  ></label></div>
+				    </div>
 				     <div class="row" id="rsvp_numbers_gen"  style="display:none;">
 				     	<div class="span8">
 							<form id="frm_rsvp_numbers" >
@@ -84,6 +97,18 @@
 				    	 	</form>
 				    	 </div>
 				     </div>
+				  </div>
+				  <div class="span8">
+				  	<div class="row">
+				  		&nbsp;
+				  	</div>
+				  </div>
+				  <div class="span8">
+				  	<div class="row">
+				  		<div class="span8" style="text-align:center;">
+				  			<button id="bt_get_own_phone" name="bt_get_own_phone" type="button" href="search_phone_number.jsp?ei=<%=sEventId%>&admin_id=<%=sAdminId%>" class="action_button primary big">Get direct line.</button>
+				  		</div>
+				   	</div>
 				  </div>
 				  <br>
 				  <br>
@@ -181,7 +206,9 @@
 	var varAdminId = '<%=sAdminId%>';
 	var varEventId = '<%=sEventId%>';
 	var varSeatingNumType = '<%=Constants.EVENT_TASK.SEATING.getTask()%>';
+	var varDemoSeatingNumType = '<%=Constants.EVENT_TASK.DEMO_SEATING.getTask()%>';
 	var varRsvpNumType = '<%=Constants.EVENT_TASK.RSVP.getTask()%>';
+	var varDemoRsvpNumType = '<%=Constants.EVENT_TASK.DEMO_RSVP.getTask()%>';
 	$(document).ready(function() {
 		
 		loadPhoneNumber();
@@ -203,6 +230,17 @@
 			$("#seating_numbers_gen").slideDown();
 		}, function() {
 				$("#seating_numbers_gen").slideUp();
+		});
+		
+		$("#bt_get_own_phone").fancybox({
+			'width'				: '75%',
+			'height'			: '90%',
+			'autoScale'			: false,
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			'type'				: 'iframe',
+				'padding'			: 0,
+				'margin'			: 0
 		});
 		
 	});
@@ -424,14 +462,34 @@
 					
 					//alert('tel number = ' + telNumBean.telnum);
 					
-					if(telNumBean.telnum_type == varSeatingNumType )
+					if(telNumBean.telnum_type == varSeatingNumType || telNumBean.telnum_type ==  varDemoSeatingNumType)
 					{
-						$("#seating_gen_num").text(telNumBean.telnum);
+						$("#seating_gen_num").text(telNumBean.human_telnum);
+						
 					}
-					if(telNumBean.telnum_type == varRsvpNumType )
+					if(telNumBean.telnum_type == varRsvpNumType || telNumBean.telnum_type ==  varDemoRsvpNumType )
 					{
-						$("#rsvp_gen_num").text(telNumBean.telnum);
+						$("#rsvp_gen_num").text(telNumBean.human_telnum);
 					}
+					
+					if(telNumBean.telnum_type ==  varDemoSeatingNumType)
+					{
+						$("#seating_div_event_id").show();
+						$("#seating_event_id").text(telNumBean.secret_event_identity);
+						
+						$("#seating_div_secret_key").show();
+						$("#seating_secret_key").text(telNumBean.secret_event_key);
+					}
+					
+					if(telNumBean.telnum_type ==  varDemoRsvpNumType)
+					{
+						$("#rsvp_div_event_id").show();
+						$("#rsvp_event_id").text(telNumBean.secret_event_identity);
+						
+						$("#rsvp_div_secret_key").show();
+						$("#rsvp_secret_key").text(telNumBean.secret_event_key);
+					}
+					
 						
 				}
 			}
@@ -441,3 +499,5 @@
 	}
 	</script>
 </html>
+<jsp:include page="../common/footer_top.jsp"/>
+<jsp:include page="../common/footer_bottom.jsp"/>

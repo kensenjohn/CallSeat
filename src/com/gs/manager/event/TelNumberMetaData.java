@@ -7,11 +7,16 @@ public class TelNumberMetaData {
 	private String adminId = "";
 	private String digits = "";
 	private String seatingTelNumDigit = "";
+	private String telNumDigit = "";
 	private String rsvpTelNumDigit = "";
 	private boolean isActive = false;
 	private boolean isPurchased = false;
 	private String telNumberTypeId = "";
 	private boolean isDelRow = false;
+
+	private String secretEventIdentifier = "";
+	private String secretEventSecretKey = "";
+	private String humanTelNumber = "";
 
 	public String getSeatingTelNumDigit() {
 		return seatingTelNumDigit;
@@ -118,6 +123,38 @@ public class TelNumberMetaData {
 
 	public void setDelRow(boolean isDelRow) {
 		this.isDelRow = isDelRow;
+	}
+
+	public String getSecretEventIdentifier() {
+		return secretEventIdentifier;
+	}
+
+	public void setSecretEventIdentifier(String secretEventIdentifier) {
+		this.secretEventIdentifier = secretEventIdentifier;
+	}
+
+	public String getSecretEventSecretKey() {
+		return secretEventSecretKey;
+	}
+
+	public void setSecretEventSecretKey(String secretEventSecretKey) {
+		this.secretEventSecretKey = secretEventSecretKey;
+	}
+
+	public String getHumanTelNumber() {
+		return humanTelNumber;
+	}
+
+	public void setHumanTelNumber(String humanTelNumber) {
+		this.humanTelNumber = humanTelNumber;
+	}
+
+	public String getTelNumDigit() {
+		return telNumDigit;
+	}
+
+	public void setTelNumDigit(String telNumDigit) {
+		this.telNumDigit = telNumDigit;
 	}
 
 }

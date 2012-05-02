@@ -5,6 +5,7 @@ String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 String sSelectTab = ParseUtil.checkNull(request.getParameter("select_action_nav"));
 boolean isLoggedIn = ParseUtil.sTob(request.getParameter("logged_in"));
+String sRefererSource = ParseUtil.checkNull(request.getParameter("referrer_source"));
 
 
 %>
@@ -19,17 +20,6 @@ boolean isLoggedIn = ParseUtil.sTob(request.getParameter("logged_in"));
 					<div class="span2 txt_center">
 						<button id="add_table" name="add_table" href="../event/add_table.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="action_button default small ">Add Table</button>
 					</div>
-				
-<%
-				if(!isLoggedIn)
-				{
-%>
-					<div class="span5 txt_center" id="get_phone_num_div">
-						<button id="get_phone_num" name="get_phone_num" href="../common/credential.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="action_button success large ">Get Phone Number!!</button>
-					</div>
-<%
-				}
-%>
 				</div>
 			</div>
 		</div>
@@ -66,3 +56,12 @@ boolean isLoggedIn = ParseUtil.sTob(request.getParameter("logged_in"));
 	%>
 
 </div>
+<script>
+	function assignNewEventId(varNewEventId, varTmpAdminId)
+	{
+		$('#add_table').attr('href','../event/add_table.jsp?admin_id='+varTmpAdminId+'&event_id='+varNewEventId);
+		$('#add_guest').attr('href','../event/add_guest.jsp?admin_id='+varTmpAdminId+'&event_id='+varNewEventId);
+		$('#invite_guest').attr('href','../event/invite_guest.jsp?admin_id='+varTmpAdminId+'&event_id='+varNewEventId);
+		$('#add_all_guests').attr('href','../event/add_guest.jsp?admin_id='+varTmpAdminId+'&event_id='+varNewEventId);
+	}
+</script>

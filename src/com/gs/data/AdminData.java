@@ -283,4 +283,18 @@ public class AdminData {
 					"assignTableToPermAdmin()");
 		}
 	}
+
+	public void assignTelNumberToPermAdmin(String sTmpAdminId,
+			String sPermAdminId) {
+		if (sTmpAdminId != null && !"".equalsIgnoreCase(sTmpAdminId)
+				&& sPermAdminId != null && !"".equalsIgnoreCase(sPermAdminId)) {
+			String sQuery = "UPDATE GTTELNUMBERS SET FK_ADMINID = ? WHERE FK_ADMINID = ?";
+
+			ArrayList<Object> aParams = DBDAO.createConstraint(sPermAdminId,
+					sTmpAdminId);
+
+			DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB, "AdminData.java",
+					"assignTelNumberToPermAdmin()");
+		}
+	}
 }
