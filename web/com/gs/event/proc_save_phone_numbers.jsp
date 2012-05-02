@@ -100,7 +100,7 @@ try
 							telNumberMetaData.setRsvpTelNumDigit(sRsvpNumber);
 							telNumberMetaData.setSeatingTelNumDigit(sSeatingNumber);
 							
-							
+							telNumberMetaData.setTelNumDigit(sRsvpNumber);
 							telNumManager.saveTelNumbers(telNumberMetaData);
 							
 							Text okText = new OkText("Tou purchase was completed successfully.","my_id");

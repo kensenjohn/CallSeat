@@ -390,7 +390,8 @@ public class TelNumberManager {
 				telNumMetaData.setTelNumberTypeId(telNumType
 						.getTelNumberTypeId());
 
-				telNumData.createTelNumber(telNumMetaData);
+				telNumData.updateTelNumber(telNumMetaData,
+						"__THE SOURCE_TEL_ID_REPLACE__");
 			}
 		}
 	}

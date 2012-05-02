@@ -150,6 +150,28 @@ public class TelNumberData {
 		return telNumberBean;
 	}
 
+	public int updateTelNumber(TelNumberMetaData telNumMetaData,
+			String sSourceTelNumTypeId) {
+
+		Integer iNumOfRows = 0;
+		if (telNumMetaData != null) {
+			String sQuery = "UPDATE GTTELNUMBERS SET TELNUMBER = ?,FK_TELNUMBERTYPEID = WHERE FK_ADMINID = ? AND FK_EVENTID = ? "
+					+ " AND FK_TELNUMBERTYPEID = ?";
+
+			ArrayList<Object> aParams = DBDAO.createConstraint(
+					telNumMetaData.getTelNumDigit(),
+					telNumMetaData.getTelNumberTypeId(),
+					telNumMetaData.getAdminId(), telNumMetaData.getEventId(),
+					telNumMetaData.getTelNumberTypeId());
+
+			iNumOfRows = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
+					"TelNumberData.java", "updateTelNumber()");
+
+		}
+
+		return iNumOfRows;
+	}
+
 	public int createTelNumber(TelNumberMetaData telNumMetaData) {
 		/*
 		 * -------------------+-------------+------+-----+---------+-------+ |

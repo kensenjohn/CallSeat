@@ -7,6 +7,7 @@ public class TelNumberMetaData {
 	private String adminId = "";
 	private String digits = "";
 	private String seatingTelNumDigit = "";
+	private String telNumDigit = "";
 	private String rsvpTelNumDigit = "";
 	private boolean isActive = false;
 	private boolean isPurchased = false;
@@ -146,6 +147,14 @@ public class TelNumberMetaData {
 
 	public void setHumanTelNumber(String humanTelNumber) {
 		this.humanTelNumber = humanTelNumber;
+	}
+
+	public String getTelNumDigit() {
+		return telNumDigit;
+	}
+
+	public void setTelNumDigit(String telNumDigit) {
+		this.telNumDigit = telNumDigit;
 	}
 
 }
