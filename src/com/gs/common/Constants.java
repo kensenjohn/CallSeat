@@ -174,4 +174,21 @@ public class Constants {
 		}
 	}
 
+	public final static String PROP_ENVIRONMENT = "environment";
+
+	public enum ENVIRONMENT {
+		VIRTUAL_MACHINE("vm"), SANDBOX("sandbox"), ALPHA("alpha"), BETA("beta"), PROD(
+				"prod");
+
+		private String environment = "";
+
+		ENVIRONMENT(String environment) {
+			this.environment = environment;
+		}
+
+		public String getEnv() {
+			return this.environment;
+		}
+	}
+
 }

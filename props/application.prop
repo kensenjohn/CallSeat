@@ -1,3 +1,4 @@
+environment=vm
 admin_db=admin
 call_service=twilio
 sms_service=twilio

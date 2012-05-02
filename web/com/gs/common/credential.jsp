@@ -198,7 +198,6 @@
 					//alert(varFirstName);
 					parent.credentialSuccess(jsonResponseObj,varSource);
 					
-					alert('varSource - ' + varSource);
 					if(varSource == 'search_phone_number.jsp')
 					{
 						alert('before submit');

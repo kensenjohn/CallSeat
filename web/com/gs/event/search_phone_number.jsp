@@ -21,7 +21,7 @@
 				  <div class="span8">
 				    <div class="row">
 				      <div class="span2"><label for="table_name">Seating Number :</label></div>
-				      <div class="span4"><label id="seating_gen_num"></label></div>
+				      <div class="span4"><label id="seating_gen_num">(234)345-4561</label></div>
 				      <div class="span2" id="div_seating_search" style="display:none;"><label id="seating_search">Advanced Search</label></div>
 				    </div>				  
 				    <div class="row" id="seating_numbers_gen" style="display:none;">
@@ -51,7 +51,7 @@
 				    </div>
 				     <div class="row">
 				     	<div class="span2"><label for="table_name">RSVP Number :</label></div>
-				      	<div class="span4"><label id="rsvp_gen_num"></label></div>
+				      	<div class="span4"><label id="rsvp_gen_num">(144)345-4561</label></div>
 				      <div class="span2" id="div_rsvp_search"  style="display:none;"><label id="rsvp_search">Advanced Search</label></div>
 				     </div>
 				     <div class="row" id="rsvp_numbers_gen"  style="display:none;">

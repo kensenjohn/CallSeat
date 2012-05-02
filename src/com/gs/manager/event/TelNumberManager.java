@@ -17,6 +17,7 @@ import com.gs.bean.EventGuestBean;
 import com.gs.bean.GuestBean;
 import com.gs.bean.TelNumberBean;
 import com.gs.bean.TelNumberTypeBean;
+import com.gs.common.Configuration;
 import com.gs.common.Constants;
 import com.gs.common.ExceptionHandler;
 import com.gs.common.ParseUtil;
@@ -34,6 +35,8 @@ import com.twilio.sdk.resource.list.AvailablePhoneNumberList;
 
 public class TelNumberManager {
 	Logger appLogging = LoggerFactory.getLogger("AppLogging");
+	private static Configuration applicationConfig = Configuration
+			.getInstance(Constants.APPLICATION_PROP);
 
 	public TelNumberResponse getTelNumberDetails(
 			TelNumberMetaData telNumberMetaData) {
@@ -204,6 +207,32 @@ public class TelNumberManager {
 		return list;
 	}
 
+	public boolean prePurchaseCheck(AdminTelephonyAccountMeta adminAccountMeta,
+			String sTelephoneNum) {
+
+		boolean isNumStillAvailable = false;
+		if (sTelephoneNum != null && !"".equalsIgnoreCase(sTelephoneNum)) {
+			HashMap<String, String> hmFilter = new HashMap<String, String>();
+
+			hmFilter.put("__TMP_NUM_CHANGE_THIS__", sTelephoneNum);
+
+			List<AvailablePhoneNumber> listAvailableNum = generateTelephoneNumber(hmFilter);
+
+			if (listAvailableNum != null && !listAvailableNum.isEmpty()) {
+				for (AvailablePhoneNumber availableNum : listAvailableNum) {
+					if (availableNum != null
+							&& availableNum.getPhoneNumber().equalsIgnoreCase(
+									sTelephoneNum)) {
+						isNumStillAvailable = true;
+						break;
+					}
+				}
+			}
+		}
+		return isNumStillAvailable;
+
+	}
+
 	public String purchaseTelephoneNumber(
 			AdminTelephonyAccountMeta adminAccountMeta, String sTelephoneNum)
 			throws TwilioRestException {
@@ -228,13 +257,32 @@ public class TelNumberManager {
 
 				Account mainAccount = client.getAccount();
 
-				// Buy the first number returned
-				Map<String, String> params = new HashMap<String, String>();
-				params.put("PhoneNumber", sTelephoneNum);
-				IncomingPhoneNumber purchasedNumber = mainAccount
-						.getIncomingPhoneNumberFactory().create(params);
+				String sEnvironment = applicationConfig
+						.get(Constants.PROP_ENVIRONMENT);
+				if (Constants.ENVIRONMENT.VIRTUAL_MACHINE.getEnv()
+						.equalsIgnoreCase(sEnvironment)
+						|| Constants.ENVIRONMENT.SANDBOX.getEnv()
+								.equalsIgnoreCase(sEnvironment)
+						|| Constants.ENVIRONMENT.ALPHA.getEnv()
+								.equalsIgnoreCase(sEnvironment)) {
 
-				sPurchasedPhoneNum = purchasedNumber.getPhoneNumber();
+					sPurchasedPhoneNum = "777-888-9999";
+
+				} else if (Constants.ENVIRONMENT.BETA.getEnv()
+						.equalsIgnoreCase(sEnvironment)) {
+
+					sPurchasedPhoneNum = "777-888-9999";
+
+				} else if (Constants.ENVIRONMENT.PROD.getEnv()
+						.equalsIgnoreCase(sEnvironment)) {
+					// Buy the first number returned
+					Map<String, String> params = new HashMap<String, String>();
+					params.put("PhoneNumber", sTelephoneNum);
+					IncomingPhoneNumber purchasedNumber = mainAccount
+							.getIncomingPhoneNumberFactory().create(params);
+
+					sPurchasedPhoneNum = purchasedNumber.getPhoneNumber();
+				}
 
 			}
 		}

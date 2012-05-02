@@ -211,7 +211,13 @@ public class GuestData {
 				if (arrHmGuestEvents != null && !arrHmGuestEvents.isEmpty()) {
 					for (HashMap<String, String> hmGuestEvents : arrHmGuestEvents) {
 
-						arrEventGuestBean = createEventGuestDetailBean(hmGuestEvents);
+						EventGuestBean eventGuestBean = createEventGuestDetailBean(hmGuestEvents);
+						if (eventGuestBean != null
+								&& !"".equalsIgnoreCase(ParseUtil
+										.checkNull(eventGuestBean
+												.getEventGuestId()))) {
+							arrEventGuestBean.add(eventGuestBean);
+						}
 					}
 				}
 			}
@@ -242,7 +248,13 @@ public class GuestData {
 			if (arrHmGuestEvents != null && !arrHmGuestEvents.isEmpty()) {
 				for (HashMap<String, String> hmGuestEvents : arrHmGuestEvents) {
 
-					arrEventGuestBean = createEventGuestDetailBean(hmGuestEvents);
+					EventGuestBean eventGuestBean = createEventGuestDetailBean(hmGuestEvents);
+					if (eventGuestBean != null
+							&& !"".equalsIgnoreCase(ParseUtil
+									.checkNull(eventGuestBean.getEventGuestId()))) {
+						arrEventGuestBean.add(eventGuestBean);
+					}
+
 				}
 			}
 		}
@@ -251,11 +263,11 @@ public class GuestData {
 
 	}
 
-	private ArrayList<EventGuestBean> createEventGuestDetailBean(
+	private EventGuestBean createEventGuestDetailBean(
 			HashMap<String, String> hmGuestEvents) {
-		ArrayList<EventGuestBean> arrEventGuestBean = new ArrayList<EventGuestBean>();
+		EventGuestBean eventGuestBean = new EventGuestBean();
 		if (hmGuestEvents != null && !hmGuestEvents.isEmpty()) {
-			EventGuestBean eventGuestBean = new EventGuestBean(hmGuestEvents);
+			eventGuestBean = new EventGuestBean(hmGuestEvents);
 
 			GuestBean guestBean = new GuestBean();
 			guestBean.setUserInfoId(hmGuestEvents.get("USERINFOID"));
@@ -264,10 +276,8 @@ public class GuestData {
 			guestBean.setUserInfoBean(userInfoBean);
 
 			eventGuestBean.setGuestBean(guestBean);
-
-			arrEventGuestBean.add(eventGuestBean);
 		}
-		return arrEventGuestBean;
+		return eventGuestBean;
 	}
 
 	public ArrayList<EventGuestBean> getEventGuests(String sGuestId) {

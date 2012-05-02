@@ -25,28 +25,37 @@
 						<form id="frm_pricing_plan" >
 							<fieldset>
 								<div class="clearfix-tight">
-								<label class="radio" >
-									<input type="radio" name="optionsRadios"  id="pricing_plan_1" value="pricing_plan_1">
-									Pricing Plan 1
-								</label>
+									<div class="input">
+										<input type="radio" name="optionsRadios"  id="pricing_plan_1" value="pricing_plan_1"/>
+										<label class="radio" id="lbl_pricing_plan_1" style="float:right;">Pricing Plan 1</label>
+									</div>
+									
 								</div>
 								<div class="clearfix-tight">
-								<label class="radio" >
-									<input type="radio" name="optionsRadios"  id="pricing_plan_2" value="pricing_plan_2">
-									Pricing Plan 2
-								</label>
+									<div class="input">
+										<input type="radio" name="optionsRadios"  id="pricing_plan_2" value="pricing_plan_2"/>
+										<label class="radio" id="lbl_pricing_plan_2"  style="float:right;">Pricing Plan 2</label>
+									</div>
+									
 								</div>
 								<div class="clearfix-tight">
-								<label class="radio" >
-									<input type="radio" name="optionsRadios"  id="pricing_plan_3" value="pricing_plan_3">
-									Pricing Plan 3
-								</label>
+									<div class="input">
+										<input type="radio" name="optionsRadios"  id="pricing_plan_3" value="pricing_plan_3"/>
+										<label class="radio" id="lbl_pricing_plan_3"  style="float:right;">Pricing Plan 3</label>
+									</div>
+									
 								</div>
 								<div class="clearfix-tight">
-								<label class="radio" >
-									<input type="radio" name="optionsRadios"  id="pricing_plan_4" value="pricing_plan_4">
-									Pricing Plan 4
-								</label>
+									<div class="input">
+										<input type="radio" name="optionsRadios"  id="pricing_plan_4" value="pricing_plan_4"/>
+									</div>
+									<label class="radio" id="lbl_pricing_plan_4"  style="float:right;">Pricing Plan 4</label>
+								</div>
+								<div class="clearfix-tight">
+									<div class="input">
+										<input type="radio" name="optionsRadios"  id="pricing_plan_5" value="pricing_plan_5"/>
+									</div>
+									<label class="radio" id="lbl_pricing_plan_5"  style="float:right;" >Pricing Plan 5</label>
 								</div>
 								<div class="actions">									
 								            <button id="btn_pricing_plan" name="btn_pricing_plan" type="button"
@@ -77,15 +86,95 @@ var varAdminId = '<%=sAdminId%>';
 var varEventId = '<%=sEventId%>';
 $(document).ready(function() 
 {
+	loadPricingPlan();
 	$('#btn_pricing_plan').click(submitPricingPlan);
 });
+
+function loadPricingPlan()
+{
+	var actionUrl = "proc_pricing_plan.jsp";
+	var methodType = "POST";
+	var dataString = "admin_id="+varAdminId+"&event_id="+varEventId;
+	dataString = dataString + $('#').serialize();
+	
+	
+	pricingPlanData(actionUrl,dataString,methodType,displayPricingPlan);
+}
+function pricingPlanData(actionUrl,dataString,methodType,callBackMethod)
+{
+	$.ajax({
+		  url: actionUrl ,
+		  type: methodType ,
+		  dataType: "json",
+		  data: dataString ,
+		  success: callBackMethod,
+		  error:function(a,b,c)
+		  {
+			  alert(a.responseText + ' = ' + b + " = " + c);
+		  }
+		});
+}
+function displayPricingPlan(jsonResult)
+{
+	//alert('status = '+jsonResult.status);
+	if(jsonResult!=undefined)
+	{
+		var varResponseObj = jsonResult.response;
+		if(jsonResult.status == 'error'  && varResponseObj !=undefined )
+		{
+			
+			var varIsMessageExist = varResponseObj.is_message_exist;
+			if(varIsMessageExist == true)
+			{
+				var jsonResponseMessage = varResponseObj.messages;
+				var varArrErrorMssg = jsonResponseMessage.error_mssg
+				displayMessages( varArrErrorMssg );
+			}
+			
+		}
+		else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+		{
+			var varIsPayloadExist = varResponseObj.is_payload_exist;
+			//alert(varIsPayloadExist);
+			
+			if(varIsPayloadExist == true)
+			{
+				var jsonResponseObj = varResponseObj.payload;
+				processPricingPlan( jsonResponseObj );
+			}
+		}
+		else
+		{
+			alert("Please try again later.");
+		}
+	}
+	else
+	{
+		alert("Please try again later.");
+	}
+}
+function processPricingPlan(varResponse)
+{
+	//alert('groing to display');
+	var varArrPricingPlan = varResponse.value;
+	for(vari = 0 ; vari<varArrPricingPlan.length; vari++)
+	{
+		//alert('pricing grid. - ' + varArrPricingPlan[vari].pricing_group_id);
+		$('#pricing_plan_' + (vari+1) ).val( varArrPricingPlan[vari].pricing_group_id );
+		$('#lbl_pricing_plan_' + (vari+1) ).text( varArrPricingPlan[vari].pricing_group_name 
+					+ '( '+ varArrPricingPlan[vari].pricing_group_name +' call mins.   ' 
+					+ varArrPricingPlan[vari].pricing_group_name + ' sms )' );
+	}
+	
+}
 function submitPricingPlan()
 {
 	if( $('input[name=optionsRadios]:checked', '#frm_pricing_plan').val() != undefined )
 	{
-		alert($('#pass_thru_rsvp_num').val()+ '- ' + $('#pass_thru_seating_num').val());
-		if( $('#pass_thru_rsvp_num').val()!='' && $('#pass_thru_seating_num').val()!='' )
+		//alert($('#pass_thru_rsvp_num').val()+ '- ' + $('#pass_thru_seating_num').val());
+		if( $('#pass_thru_rsvp_num').val( )!='' && $('#pass_thru_seating_num').val()!='' )
 		{
+			$('#pricing_plan').val( $('input[name=optionsRadios]:checked', '#frm_pricing_plan').val() );
 			$('#frm_telnum_bill_passthru').attr('action','billing.jsp');
 			$('#frm_telnum_bill_passthru').attr('method','POST');
 			$('#frm_telnum_bill_passthru').submit();
@@ -93,7 +182,7 @@ function submitPricingPlan()
 	}
 	else
 	{
-		
+		alert('Please select at least one pricing plan');
 	}
 	
 }
