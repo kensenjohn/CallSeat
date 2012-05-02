@@ -54,12 +54,17 @@
 <script type="text/javascript" src="/web/js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="/web/js/jquery.guestsformatter.1.0.0.js"></script>
 <script type="text/javascript" src="/web/js/jquery.datepick.js"></script> 
+<script type="text/javascript" src="/web/js/credential.js"></script>
 <script type="text/javascript">
 	var varAdminID = '<%=sAdminId%>';
 	var varEventID = '<%=sEventId%>';
 	var varIsSignedIn = <%=isSignedIn%>;
 	$(document).ready(function() {
-		
+		setCredentialEventId(varEventID);
+		if(!varIsSignedIn)
+		{
+			setTopNavLogin(varAdminID,varEventID,'guest_setup.jsp');			
+		}
 		$("#add_all_guests").fancybox({
 			'width'				: '80%',
 			'height'			: '90%',
@@ -72,74 +77,13 @@
 		});
 		$("#all_guests_action_nav").show();
 		loadActions();
-		loadGuests();
-		
-		if(!varIsSignedIn)
-		{
-			$("#login_name_display").removeAttr('href');
-			$("#login_name_display").attr('href','/web/com/gs/common/credential.jsp?admin_id='+varAdminID+'&event_id='+varEventID);
-		}
+		loadGuests(varEventID,varAdminID);		
 	});
 	function loadActions()
-	{
-		$("#lnk_event_id").click(function() 
-		{
-			$("#frm_lobby_tab").attr("action" , "event_setup.jsp");
-			$("#lobby_event_id").val(varEventID);
-			$("#lobby_admin_id").val(varAdminID);
-			createNewInputElement('from_landing', false, 'frm_lobby_tab', 'hidden');
-			
-			$("#frm_lobby_tab").submit();
-		});
-		$("#lnk_guest_id").click(function() 
-		{
-			
-			
-			
-		});
+	{		
 		setNewEventClick();
 		setAllGuestButtonClick();
 		setLobbyButtonClick();
-	}
-	
-	// This should be acopied everywhere.
-	function setNewEventClick()
-	{
-		$("#lnk_new_event_id").unbind("click");
-		$("#lnk_new_event_id").click(function() 
-		{
-			$("#frm_lobby_tab").attr("action" , "event_setup.jsp");
-			$("#lobby_create_new").val(true);
-			$("#lobby_admin_id").val(varAdminID);
-			
-			$("#frm_lobby_tab").submit();
-		});
-	}
-	// This should be acopied everywhere.
-	function setAllGuestButtonClick()
-	{
-		$("#lnk_guest_id").unbind("click");
-		$("#lnk_guest_id").click(function() 
-		{
-			$("#frm_lobby_tab").attr("action" , "guest_setup.jsp");
-			$("#lobby_event_id").val(varEventID);
-			$("#lobby_admin_id").val(varAdminID);
-			
-			$("#frm_lobby_tab").submit();
-		});
-	}
-	
-	function setLobbyButtonClick()
-	{
-		$("#lnk_dashboard_id").unbind("click");
-		
-		$("#lnk_dashboard_id").click(function() {
-			$("#frm_lobby_tab").attr("action" , "host_dashboard.jsp");
-			$("#lobby_event_id").val(varEventID);
-			$("#lobby_admin_id").val(varAdminID);
-			
-			$("#frm_lobby_tab").submit();
-		});
 	}
 	
 	function createNewInputElement(elemId,elemValue,elemParent,elemType)
@@ -154,9 +98,9 @@
 		
 		varElem.appendTo('#'+elemParent);
 	}
-	function loadGuests()
+	function loadGuests(varTmpEventId, varTmpAdminId)
 	{
-		var dataString = '&event_id='+ varEventID + '&admin_id='+ varAdminID;
+		var dataString = '&event_id='+ varTmpEventId + '&admin_id='+ varTmpAdminId;
 		var actionUrl = "proc_load_guests.jsp";
 		var methodType = "POST";
 		
@@ -260,21 +204,17 @@
 		}
 	}
 	
-	function credentialSuccess(jsonResponse,varSource)
+	/*function credentialSuccess(jsonResponse,varSource)
 	{
 		$("#login_name_display").text(jsonResponse.first_name);
 		$("#login_name_display").addClass("bold_text");
 		resetAdminId(jsonResponse.user_id);
-		/*varIsSignedIn = true;
-		phoneNumTab();
-		
-		resetAdminId(jsonResponse.user_id);*/
 	}
 	function resetAdminId(tmpAdminId)
 	{
 		varAdminID = tmpAdminId;
 		setLobbyButtonClick();
-	}
+	}*/
 	// TODO: load the lobby after login with current admin's user.
 </script>
 <jsp:include page="../common/footer_top.jsp"/>

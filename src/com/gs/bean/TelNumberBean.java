@@ -19,6 +19,10 @@ public class TelNumberBean {
 	private boolean isPurchased = false;
 	private boolean isNew = false;
 
+	private String secretEventIdentity = "";
+	private String secretEventKey = "";
+	private String humanTelNumber = "";
+
 	public boolean isNew() {
 		return isNew;
 	}
@@ -108,6 +112,30 @@ public class TelNumberBean {
 		this.isPurchased = isPurchased;
 	}
 
+	public String getSecretEventIdentity() {
+		return secretEventIdentity;
+	}
+
+	public void setSecretEventIdentity(String secretEventIdentity) {
+		this.secretEventIdentity = secretEventIdentity;
+	}
+
+	public String getSecretEventKey() {
+		return secretEventKey;
+	}
+
+	public void setSecretEventKey(String secretEventKey) {
+		this.secretEventKey = secretEventKey;
+	}
+
+	public String getHumanTelNumber() {
+		return humanTelNumber;
+	}
+
+	public void setHumanTelNumber(String humanTelNumber) {
+		this.humanTelNumber = humanTelNumber;
+	}
+
 	public JSONObject toJson() {
 
 		JSONObject jsonObject = new JSONObject();
@@ -121,7 +149,10 @@ public class TelNumberBean {
 			jsonObject.put("is_purchased", isPurchased);
 			jsonObject.put("is_active", isactive);
 			jsonObject.put("del_row", delRow);
-			jsonObject.put("is_n ew", isNew);
+			jsonObject.put("is_new", isNew);
+			jsonObject.put("secret_event_identity", secretEventIdentity);
+			jsonObject.put("secret_event_key", secretEventKey);
+			jsonObject.put("human_telnum", humanTelNumber);
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

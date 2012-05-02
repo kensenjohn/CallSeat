@@ -26,8 +26,9 @@ if(cookies!=null)
 
 <body >
 	<div class="container rounded-corners">
-		<jsp:include page="common/top_nav.jsp"/>
-		
+		<jsp:include page="common/top_nav.jsp">
+			<jsp:param name="referrer_source" value="host_landing.jsp"/>	
+		</jsp:include>
 		<div class="main_body">
 			<div>
 						<h2>Seating your Guests, with a phone call.</h2>
@@ -49,7 +50,7 @@ if(cookies!=null)
 								<input type="hidden" id="from_landing" name="from_landing" value="">
 								<input type="hidden" id="lobby_event_id" name="lobby_event_id" value="">
 								<input type="hidden" id="lobby_admin_id" name="lobby_admin_id" 
-									value="<%=isSignedIn?sAdminIdSecure:""%>">
+									value="<%=isSignedIn ? sAdminIdSecure:""%>">
 								
 							</form>
 			</div>
@@ -87,6 +88,7 @@ if(cookies!=null)
 	</div>
 </body>  -->
 <script type="text/javascript" src="/web/js/jquery.datepick.js"></script> 
+<script type="text/javascript" src="/web/js/credential.js"></script>
 
 <jsp:include page="common/footer_top.jsp"/>
 	<script type="text/javascript">
@@ -128,6 +130,7 @@ if(cookies!=null)
 			$("#call_forward").submit();
 		}
 	}
+	/*
 	function credentialSuccess(jsonResponse,varSource)
 	{
 		$("#login_name_display").text(jsonResponse.first_name);
@@ -139,7 +142,7 @@ if(cookies!=null)
 		$("#login_user_account").attr('href','event/host_dashboard.jsp?lobby_admin_id='+jsonResponse.user_id);
 		
 		
-		$("#li_user_sign_out").show();
+		$("#li_user_sign_out").show(); 
 		$("#sign_out_user").removeAttr("href");
 		$("#sign_out_user").attr('href','common/sign_out.jsp?admin_id='+jsonResponse.user_id);
 		
@@ -150,5 +153,6 @@ if(cookies!=null)
 		
 		
 	}
+	*/
 	</script>
 <jsp:include page="common/footer_bottom.jsp"/>

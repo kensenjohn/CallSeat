@@ -11,8 +11,6 @@
 <%@include file="../common/security.jsp"%>
 <jsp:include page="../common/header_bottom.jsp"/>
 
-<%@include file="/web/com/gs/common/gatekeeper.jsp"%>
-
 <%
 	Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 	String sEventId = ParseUtil.checkNull(request.getParameter("lobby_event_id"));
@@ -25,7 +23,9 @@
    <div class="page_setup">
 		<div class="container rounded-corners">
 			<div style="margin:5px;">
-			<jsp:include page="../common/top_nav.jsp"/>
+			<jsp:include page="../common/top_nav.jsp">
+				<jsp:param name="referrer_source" value="host_dashboard.jsp"/>
+			</jsp:include>
 				<jsp:include page="lobby_tab.jsp">
 					<jsp:param name="select_tab" value="guest_tab"/>
 					<jsp:param name="lobby_header" value="My Lobby"/>
@@ -56,79 +56,32 @@
 <script type="text/javascript" src="/web/js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="/web/js/jquery.dashboard.1.0.0.js"></script>
 <script type="text/javascript" src="/web/js/jquery.datepick.js"></script> 
+<script type="text/javascript" src="/web/js/credential.js"></script>
 <script type="text/javascript">
 	var varAdminID = '<%=sAdminId%>';
 	var varEventID = '<%=sEventId%>';
 	var varIsSignedIn = <%=isSignedIn%>;
 	$(document).ready(function() {
-		loadActions();
-		loadDashboard();
+		setCredentialEventId(varEventID);
 		if(!varIsSignedIn)
 		{
-			$("#login_name_display").removeAttr('href');
-			$("#login_name_display").attr('href','/web/com/gs/common/credential.jsp?admin_id='+varAdminID+'&event_id='+varEventID);
+			setTopNavLogin(varAdminID,varEventID,'host_dashboard.jsp');
+			
 		}
+		loadActions();
+		loadDashboard( varEventID , varAdminID );
+		
 	});
 	function loadActions()
 	{
-		$("#lnk_guest_id").click(function() 
-		{
-			//window.location = 'guest_setup.jsp?event_id='+varEventID+'&admin_id='+varAdminID;
-			
-			$("#frm_lobby_tab").attr("action" , "guest_setup.jsp");
-			$("#lobby_event_id").val(varEventID);
-			$("#lobby_admin_id").val(varAdminID);
-			
-			$("#frm_lobby_tab").submit();
-		});
-
 		setNewEventClick();
 		setAllGuestButtonClick();
 		setLobbyButtonClick();
 	}
 	
-	// This should be acopied everywhere.
-	function setNewEventClick()
+	function loadDashboard(varTmpEventId,varTmpAdminId)
 	{
-		$("#lnk_new_event_id").unbind("click");
-		$("#lnk_new_event_id").click(function() 
-		{
-			$("#frm_lobby_tab").attr("action" , "event_setup.jsp");
-			$("#lobby_create_new").val(true);
-			$("#lobby_admin_id").val(varAdminID);
-			
-			$("#frm_lobby_tab").submit();
-		});
-	}
-	// This should be acopied everywhere.
-	function setAllGuestButtonClick()
-	{
-		$("#lnk_guest_id").unbind("click");
-		$("#lnk_guest_id").click(function() 
-		{
-			$("#frm_lobby_tab").attr("action" , "guest_setup.jsp");
-			$("#lobby_event_id").val(varEventID);
-			$("#lobby_admin_id").val(varAdminID);
-			
-			$("#frm_lobby_tab").submit();
-		});
-	}
-	
-	function setLobbyButtonClick()
-	{
-		$("#lnk_dashboard_id").unbind("click");
-		
-		$("#lnk_dashboard_id").click(function() {
-			$("#frm_lobby_tab").attr("action" , "host_dashboard.jsp");
-			$("#lobby_event_id").val(varEventID);
-			$("#lobby_admin_id").val(varAdminID);
-			
-			$("#frm_lobby_tab").submit();
-		});
-	}
-	function loadDashboard()
-	{
-		var dataString = '&event_id='+ varEventID + '&admin_id='+ varAdminID;
+		var dataString = '&event_id='+ varTmpEventId + '&admin_id='+ varTmpAdminId;
 		var actionUrl = "proc_load_dashboard.jsp";
 		var methodType = "POST";
 		
@@ -181,21 +134,17 @@
 			});
 	}
 	
-	function credentialSuccess(jsonResponse,varSource)
+	/*function credentialSuccess(jsonResponse,varSource)
 	{
 		$("#login_name_display").text(jsonResponse.first_name);
 		$("#login_name_display").addClass("bold_text");
 		resetAdminId(jsonResponse.user_id);
-		/*varIsSignedIn = true;
-		phoneNumTab();
-		
-		resetAdminId(jsonResponse.user_id);*/
 	}
 	function resetAdminId(tmpAdminId)
 	{
 		varAdminID = tmpAdminId;
 		setAllGuestButtonClick();
-	}
+	}*/
 	//TODO: load the lobby after login with current admin's user.
 </script>
 <jsp:include page="../common/footer_top.jsp"/>

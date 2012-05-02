@@ -5,6 +5,7 @@ HttpSession  reqSession = request.getSession(false);
 boolean isTmpSignedIn = false;
 String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
+String sRefererSource = ParseUtil.checkNull(request.getParameter("referrer_source"));
 String sFirstName = "";
 if(reqSession!=null)
 {
@@ -43,14 +44,14 @@ if(reqSession!=null)
 		{
 %>
 				<li>
-	    			<a id="login_name_display" class="" href="/web/com/gs/common/credential.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>">&nbsp;&nbsp;&nbsp;Login&nbsp;</a>
+	    			<a id="login_name_display" class="" href="/web/com/gs/common/credential.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>&referrer_source=<%=sRefererSource%>">&nbsp;&nbsp;&nbsp;Login&nbsp;</a>
 	    		</li>
 <%
 		}
 %>
 
 				<li id="li_user_my_account" style="<%=!isTmpSignedIn? "display:none" : "" %>">
-	    			<a class="" id="login_user_account" class="" href="/web/com/gs/common/credential.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>">&nbsp;&nbsp;&nbsp;My Account&nbsp;</a>
+	    			<a class="" id="login_user_account" class="" href="/web/com/gs/common/credential.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>&referrer_source=<%=sRefererSource%>">&nbsp;&nbsp;&nbsp;My Account&nbsp;</a>
 	    		</li>
    		
 	    		<li>

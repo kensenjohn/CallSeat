@@ -12,6 +12,7 @@ import com.gs.bean.UserInfoBean;
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
 import com.gs.common.ParseUtil;
+import com.gs.common.Utility;
 import com.gs.common.db.DBDAO;
 import com.gs.manager.event.TelNumberMetaData;
 
@@ -180,6 +181,52 @@ public class GuestData {
 		return numOfRowsInserted;
 	}
 
+	public ArrayList<EventGuestBean> getEventGuests(String sEventId,
+			ArrayList<String> arrGuestId) {
+		ArrayList<EventGuestBean> arrEventGuestBean = new ArrayList<EventGuestBean>();
+		if (arrGuestId != null && !arrGuestId.isEmpty() && sEventId != null
+				&& !"".equalsIgnoreCase(sEventId)) {
+			String sQuery = "SELECT  GU.USERINFOID, GU.CELL_PHONE, GU.PHONE_NUM, GU.FIRST_NAME, GU.LAST_NAME , "
+					+ " GU.ADDRESS_1, GU.ADDRESS_2, GU.CITY, GU.STATE , "
+					+ " GU.COUNTRY, GU.IP_ADDRESS, GU.EMAIL, "
+					+ " GEG.EVENTGUESTID, GEG.FK_EVENTID, "
+					+ " GEG.FK_GUESTID , GEG.IS_TMP , GEG.DEL_ROW, GEG.RSVP_SEATS, "
+					+ " GEG.TOTAL_INVITED_SEATS FROM GTEVENTGUESTS GEG , GTUSERINFO GU, GTGUESTS GG WHERE "
+					+ " GEG.FK_EVENTID = ? AND GG.GUESTID = GEG.FK_GUESTID AND "
+					+ " GEG.FK_GUESTID IN (__GUEST_ID_LIST__) AND GG.FK_USERINFOID = GU.USERINFOID ";
+
+			String sParamList = ParseUtil.checkNull(Utility
+					.getMultipleParamsList(arrGuestId.size()));
+
+			if (!"".equalsIgnoreCase(sParamList)) {
+				sQuery = sQuery.replaceAll("__GUEST_ID_LIST__", sParamList);
+				ArrayList<Object> aParams = DBDAO.createConstraint(sEventId);
+
+				for (String sGuestId : arrGuestId) {
+					aParams.add(sGuestId);
+				}
+				ArrayList<HashMap<String, String>> arrHmGuestEvents = DBDAO
+						.getDBData(ADMIN_DB, sQuery, aParams, false,
+								"GuestData.java", "getEventAllGuests()");
+				if (arrHmGuestEvents != null && !arrHmGuestEvents.isEmpty()) {
+					for (HashMap<String, String> hmGuestEvents : arrHmGuestEvents) {
+
+						EventGuestBean eventGuestBean = createEventGuestDetailBean(hmGuestEvents);
+						if (eventGuestBean != null
+								&& !"".equalsIgnoreCase(ParseUtil
+										.checkNull(eventGuestBean
+												.getEventGuestId()))) {
+							arrEventGuestBean.add(eventGuestBean);
+						}
+					}
+				}
+			}
+
+		}
+		return arrEventGuestBean;
+
+	}
+
 	public ArrayList<EventGuestBean> getEventAllGuests(String sEventId) {
 		ArrayList<EventGuestBean> arrEventGuestBean = new ArrayList<EventGuestBean>();
 		if (sEventId != null && !"".equalsIgnoreCase(sEventId)) {
@@ -200,24 +247,37 @@ public class GuestData {
 
 			if (arrHmGuestEvents != null && !arrHmGuestEvents.isEmpty()) {
 				for (HashMap<String, String> hmGuestEvents : arrHmGuestEvents) {
-					EventGuestBean eventGuestBean = new EventGuestBean(
-							hmGuestEvents);
 
-					GuestBean guestBean = new GuestBean();
-					guestBean.setUserInfoId(hmGuestEvents.get("USERINFOID"));
+					EventGuestBean eventGuestBean = createEventGuestDetailBean(hmGuestEvents);
+					if (eventGuestBean != null
+							&& !"".equalsIgnoreCase(ParseUtil
+									.checkNull(eventGuestBean.getEventGuestId()))) {
+						arrEventGuestBean.add(eventGuestBean);
+					}
 
-					UserInfoBean userInfoBean = new UserInfoBean(hmGuestEvents);
-					guestBean.setUserInfoBean(userInfoBean);
-
-					eventGuestBean.setGuestBean(guestBean);
-
-					arrEventGuestBean.add(eventGuestBean);
 				}
 			}
 		}
 
 		return arrEventGuestBean;
 
+	}
+
+	private EventGuestBean createEventGuestDetailBean(
+			HashMap<String, String> hmGuestEvents) {
+		EventGuestBean eventGuestBean = new EventGuestBean();
+		if (hmGuestEvents != null && !hmGuestEvents.isEmpty()) {
+			eventGuestBean = new EventGuestBean(hmGuestEvents);
+
+			GuestBean guestBean = new GuestBean();
+			guestBean.setUserInfoId(hmGuestEvents.get("USERINFOID"));
+
+			UserInfoBean userInfoBean = new UserInfoBean(hmGuestEvents);
+			guestBean.setUserInfoBean(userInfoBean);
+
+			eventGuestBean.setGuestBean(guestBean);
+		}
+		return eventGuestBean;
 	}
 
 	public ArrayList<EventGuestBean> getEventGuests(String sGuestId) {
@@ -299,6 +359,63 @@ public class GuestData {
 		return arrGuestBean;
 	}
 
+	public ArrayList<EventGuestBean> getEventGuestList(String sEventId,
+			ArrayList<String> arrGuestId) {
+
+		ArrayList<EventGuestBean> arrEventGuestList = new ArrayList<EventGuestBean>();
+
+		if (sEventId != null && !"".equalsIgnoreCase(sEventId)
+				&& arrGuestId != null && !arrGuestId.isEmpty()) {
+			ArrayList<Object> arrParams = new ArrayList<Object>();
+			String sGuestParam = Utility.getMultipleParamsList(arrGuestId
+					.size());
+			for (String sGuestId : arrGuestId) {
+
+				arrParams.add(sGuestId);
+			}
+
+			arrParams.add(sEventId);
+
+			String sQuery = "SELECT  GU.CELL_PHONE, GU.PHONE_NUM, GU.FIRST_NAME, GU.LAST_NAME , "
+					+ " GU.ADDRESS_1, GU.ADDRESS_2, GU.CITY, GU.STATE , "
+					+ " GU.COUNTRY, GU.IP_ADDRESS, GU.EMAIL, "
+					+ " GEG.EVENTGUESTID, GEG.FK_EVENTID, "
+					+ " GEG.FK_GUESTID , GEG.IS_TMP , GEG.DEL_ROW, GEG.RSVP_SEATS, "
+					+ " GEG.TOTAL_INVITED_SEATS FROM GTEVENTGUESTS GEG , GTUSERINFO GU, GTGUESTS GG WHERE GEG.FK_GUESTID in ("
+					+ sGuestParam
+					+ ") AND GEG.FK_EVENTID = ? AND GG.GUESTID = GEG.FK_GUESTID AND GG.FK_USERINFOID = GU.USERINFOID ";
+
+			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(
+					ADMIN_DB, sQuery, arrParams, false, "GuestData.java",
+					"getGuest()");
+
+			if (arrResult != null && !arrResult.isEmpty()) {
+				for (HashMap<String, String> hmResult : arrResult) {
+					EventGuestBean eventGuestBean = new EventGuestBean();
+					eventGuestBean.setEventGuestId(ParseUtil.checkNull(hmResult
+							.get("EVENTGUESTID")));
+					eventGuestBean.setEventId(ParseUtil.checkNull(hmResult
+							.get("FK_EVENTID")));
+					eventGuestBean.setGuestId(ParseUtil.checkNull(hmResult
+							.get("FK_GUESTID")));
+					eventGuestBean.setIsTemporary(ParseUtil.checkNull(hmResult
+							.get("IS_TMP")));
+					eventGuestBean.setDeleteRow(ParseUtil.checkNull(hmResult
+							.get("DEL_ROW")));
+					eventGuestBean.setRsvpSeats(ParseUtil.checkNull(hmResult
+							.get("RSVP_SEATS")));
+					eventGuestBean.setTotalNumberOfSeats(ParseUtil
+							.checkNull(hmResult.get("TOTAL_INVITED_SEATS")));
+					arrEventGuestList.add(eventGuestBean);
+
+				}
+			}
+
+		}
+
+		return arrEventGuestList;
+	}
+
 	public EventGuestBean getGuest(String sEventId, ArrayList<String> arrGuestId) {
 		EventGuestBean eventGuestBean = new EventGuestBean();
 		if (sEventId != null && !"".equalsIgnoreCase(sEventId)
@@ -373,7 +490,10 @@ public class GuestData {
 
 		if (sAdminId != null && !"".equalsIgnoreCase(sAdminId)
 				&& sEventId != null && !"".equalsIgnoreCase(sEventId)) {
-			String sQuery = " select G.GUESTID,  G.FK_USERINFOID ,  G.FK_ADMINID , U.* FROM GTUSERINFO U, GTGUESTS G WHERE NOT EXISTS ( SELECT * FROM GTEVENTGUESTS EG WHERE EG.FK_GUESTID  = G.GUESTID AND FK_EVENTID='fe366ca5-d234-4464-b22a-b77166bd69bf' ) AND G.FK_ADMINID = '8755be3d-8fc4-4953-9192-66c58b0ebe5c' AND U.USERINFOID = G.FK_USERINFOID";
+			String sQuery = " select G.GUESTID,  G.FK_USERINFOID ,  G.FK_ADMINID , U.* "
+					+ " FROM GTUSERINFO U, GTGUESTS G WHERE NOT EXISTS "
+					+ " ( SELECT * FROM GTEVENTGUESTS EG WHERE EG.FK_GUESTID  = G.GUESTID "
+					+ " AND FK_EVENTID= ? ) AND G.FK_ADMINID = ? AND U.USERINFOID = G.FK_USERINFOID";
 
 			ArrayList<Object> arrParams = DBDAO.createConstraint(sEventId,
 					sAdminId);
