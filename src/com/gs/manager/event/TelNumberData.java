@@ -60,7 +60,10 @@ public class TelNumberData {
 		ArrayList<Object> aParams = new ArrayList<Object>();
 		String sQuery = "SELECT * FROM GTTELNUMBERTYPE";
 
-		if (sTelNumberType != null && !"".equalsIgnoreCase(sTelNumberType)) {
+		if (sTelNumberType != null
+				&& !"".equalsIgnoreCase(sTelNumberType)
+				&& !Constants.EVENT_TASK.ALL.getTask().equalsIgnoreCase(
+						sTelNumberType)) {
 			sQuery = "SELECT * FROM GTTELNUMBERTYPE WHERE TELNUMTYPE = ?";
 
 			if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(
@@ -151,18 +154,19 @@ public class TelNumberData {
 	}
 
 	public int updateTelNumber(TelNumberMetaData telNumMetaData,
-			String sSourceTelNumTypeId) {
+			TelNumberTypeBean demoTelNumTypeBean) {
 
 		Integer iNumOfRows = 0;
-		if (telNumMetaData != null) {
-			String sQuery = "UPDATE GTTELNUMBERS SET TELNUMBER = ?,FK_TELNUMBERTYPEID = WHERE FK_ADMINID = ? AND FK_EVENTID = ? "
+		if (telNumMetaData != null && demoTelNumTypeBean != null) {
+			String sQuery = "UPDATE GTTELNUMBERS SET TELNUMBER = ?,FK_TELNUMBERTYPEID = ? , HUMAN_TELNUMBER = ? WHERE FK_ADMINID = ? AND FK_EVENTID = ? "
 					+ " AND FK_TELNUMBERTYPEID = ?";
 
 			ArrayList<Object> aParams = DBDAO.createConstraint(
-					telNumMetaData.getTelNumDigit(),
+					telNumMetaData.getDigits(),
 					telNumMetaData.getTelNumberTypeId(),
+					telNumMetaData.getHumanTelNumber(),
 					telNumMetaData.getAdminId(), telNumMetaData.getEventId(),
-					telNumMetaData.getTelNumberTypeId());
+					demoTelNumTypeBean.getTelNumberTypeId());
 
 			iNumOfRows = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
 					"TelNumberData.java", "updateTelNumber()");

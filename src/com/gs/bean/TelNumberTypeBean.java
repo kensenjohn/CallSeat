@@ -4,6 +4,10 @@ import java.util.HashMap;
 
 public class TelNumberTypeBean {
 
+	public TelNumberTypeBean() {
+
+	}
+
 	public TelNumberTypeBean(HashMap<String, String> hmResult) {
 		this.telNumberTypeId = hmResult.get("TELNUMBERTYPEID");
 		this.description = hmResult.get("DESCRIPTION");

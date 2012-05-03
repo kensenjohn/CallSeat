@@ -91,4 +91,36 @@ public class Utility {
 		return strParamQuestions.toString();
 	}
 
+	public static String convertHumanToInternationalTelNum(String sHuman) {
+		if (sHuman != null && !"".equalsIgnoreCase(sHuman)) {
+			sHuman = sHuman.trim();
+			sHuman = sHuman.replace("+", "");
+			sHuman = sHuman.replace("(", "");
+			sHuman = sHuman.replace(")", "");
+			sHuman = sHuman.replace("-", "");
+			sHuman = sHuman.replace(" ", "");
+
+			sHuman = "1" + sHuman;
+		}
+		return sHuman;
+	}
+
+	public static String convertInternationalToHumanTelNum(String sTelephoneNum) {
+		String sTmpTelNum = "";
+		if (sTelephoneNum != null && !"".equalsIgnoreCase(sTelephoneNum)) {
+			if (sTelephoneNum.length() < 12) {
+				sTelephoneNum = " " + sTelephoneNum;
+			}
+			if (sTelephoneNum.length() == 12) {
+				String sAreaCode = sTelephoneNum.substring(2, 5);
+				String sFirstSetNumber = sTelephoneNum.substring(5, 8);
+				String sLastSetNumber = sTelephoneNum.substring(8);
+
+				sTmpTelNum = "(" + sAreaCode + ")" + " " + sFirstSetNumber
+						+ " " + sLastSetNumber;
+			}
+		}
+		return sTmpTelNum;
+	}
+
 }

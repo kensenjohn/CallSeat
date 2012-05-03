@@ -9,7 +9,7 @@
 <%@page import="com.gs.phone.account.*" %>
 
 <%@include file="../common/security.jsp" %>
-<%@include file="/www/com/gs/common/gatekeeper.jsp" %>
+<%@include file="../common/gatekeeper.jsp" %>
 <%
 JSONObject jsonResponseObj = new JSONObject();
 
@@ -100,7 +100,6 @@ try
 							telNumberMetaData.setRsvpTelNumDigit(sRsvpNumber);
 							telNumberMetaData.setSeatingTelNumDigit(sSeatingNumber);
 							
-							telNumberMetaData.setTelNumDigit(sRsvpNumber);
 							telNumManager.saveTelNumbers(telNumberMetaData);
 							
 							Text okText = new OkText("Tou purchase was completed successfully.","my_id");
@@ -175,7 +174,7 @@ catch(Exception e)
 {
 	jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
 	jsonResponseObj.put("message", "Phone numbers could not be loaded. Please try again.");
-	appLogging.error("Error processing phone numbers." );
+	appLogging.error("Error processing phone numbers." + ExceptionHandler.getStackTrace(e) );
 	out.println(jsonResponseObj);
 }
 %>

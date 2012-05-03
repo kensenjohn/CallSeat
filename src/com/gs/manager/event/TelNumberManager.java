@@ -237,7 +237,7 @@ public class TelNumberManager {
 			AdminTelephonyAccountMeta adminAccountMeta, String sTelephoneNum)
 			throws TwilioRestException {
 
-		String sPurchasedPhoneNum = "";
+		String sPurchasedPhoneNum = "777-888-9999";
 		if (adminAccountMeta != null
 				&& !"".equalsIgnoreCase(adminAccountMeta.getAdminId())) {
 
@@ -297,23 +297,9 @@ public class TelNumberManager {
 		telNumberBean.setAdminId(telNumberMetaData.getAdminId());
 		telNumberBean.setEventId(telNumberMetaData.getEventId());
 		telNumberBean.setTelNumberType(telNumType.getTask());
-		telNumberBean.setHumanTelNumber(getHumanFormTelNum(sTelephoneNum));
+		telNumberBean.setHumanTelNumber(Utility
+				.convertInternationalToHumanTelNum(sTelephoneNum));
 		return telNumberBean;
-	}
-
-	private String getHumanFormTelNum(String sTelephoneNum) {
-		String sTmpTelNum = "";
-		if (sTelephoneNum != null && !"".equalsIgnoreCase(sTelephoneNum)) {
-			if (sTelephoneNum.length() == 12) {
-				String sAreaCode = sTelephoneNum.substring(2, 5);
-				String sFirstSetNumber = sTelephoneNum.substring(5, 8);
-				String sLastSetNumber = sTelephoneNum.substring(9);
-
-				sTmpTelNum = "(" + sAreaCode + ")" + " " + sFirstSetNumber
-						+ " " + sLastSetNumber;
-			}
-		}
-		return sTmpTelNum;
 	}
 
 	public EventGuestBean getTelNumGuestDetails(
@@ -357,8 +343,8 @@ public class TelNumberManager {
 			for (AvailablePhoneNumber availableTelNum : listAvailableNum) {
 				TelNumberBean telNumberBean = new TelNumberBean();
 				telNumberBean.setTelNumber(availableTelNum.getPhoneNumber());
-				telNumberBean
-						.setHumanTelNumber(getHumanFormTelNum(availableTelNum
+				telNumberBean.setHumanTelNumber(Utility
+						.convertInternationalToHumanTelNum(availableTelNum
 								.getPhoneNumber()));
 
 				telNumberBean.setTelNumberType(sNumType);
@@ -378,22 +364,47 @@ public class TelNumberManager {
 		if (arrTelNumTypeBean != null && !arrTelNumTypeBean.isEmpty()) {
 			TelNumberData telNumData = new TelNumberData();
 			for (TelNumberTypeBean telNumType : arrTelNumTypeBean) {
+				TelNumberTypeBean demoTelNumTypeBean = new TelNumberTypeBean();
 				if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(
 						telNumType.getTelNumType())) {
-					telNumMetaData.setDigits(telNumMetaData
-							.getRsvpTelNumDigit());
+					telNumMetaData.setDigits(Utility
+							.convertHumanToInternationalTelNum(telNumMetaData
+									.getRsvpTelNumDigit()));
+					demoTelNumTypeBean = getDemoTelNumTypes(Constants.EVENT_TASK.DEMO_RSVP);
 				} else if (Constants.EVENT_TASK.SEATING.getTask()
 						.equalsIgnoreCase(telNumType.getTelNumType())) {
-					telNumMetaData.setDigits(telNumMetaData
-							.getSeatingTelNumDigit());
+					telNumMetaData.setDigits(Utility
+							.convertHumanToInternationalTelNum(telNumMetaData
+									.getSeatingTelNumDigit()));
+
+					demoTelNumTypeBean = getDemoTelNumTypes(Constants.EVENT_TASK.DEMO_SEATING);
+				} else {
+					continue;
 				}
+				telNumMetaData.setHumanTelNumber(Utility
+						.convertInternationalToHumanTelNum(telNumMetaData
+								.getDigits()));
 				telNumMetaData.setTelNumberTypeId(telNumType
 						.getTelNumberTypeId());
 
-				telNumData.updateTelNumber(telNumMetaData,
-						"__THE SOURCE_TEL_ID_REPLACE__");
+				telNumData.updateTelNumber(telNumMetaData, demoTelNumTypeBean);
 			}
 		}
+	}
+
+	public TelNumberTypeBean getDemoTelNumTypes(Constants.EVENT_TASK eventTask) {
+		TelNumberTypeBean telNumTypeBean = new TelNumberTypeBean();
+		if (eventTask != null) {
+			ArrayList<TelNumberTypeBean> arrTelNumTypeBean = getTelNumberTypeBeans(eventTask
+					.getTask());
+
+			if (arrTelNumTypeBean != null && !arrTelNumTypeBean.isEmpty()) {
+				for (TelNumberTypeBean tmpTelNumTypeBean : arrTelNumTypeBean) {
+					telNumTypeBean = tmpTelNumTypeBean;
+				}
+			}
+		}
+		return telNumTypeBean;
 	}
 
 	public JSONObject getTelNumberBeanJson(

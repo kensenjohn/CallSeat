@@ -109,9 +109,9 @@
 				  		
 				  		<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
 						<input type="hidden" name="event_id" id="event_id" value="<%=sEventId%>"/>
-						<input type="hidden" id="seating_tel_num" name="seating_tel_num"/>
-						<input type="hidden" id="rsvp_tel_num" name="rsvp_tel_num"/>
-						<input type="hidden" name="pricing_plan_id" name="pricing_plan_id" vale="<%=sPricingPlanId%>"/>
+						<input type="hidden" id="seating_tel_num" name="seating_tel_num"  value="<%=sPassthruSeatingNumber%>"/>
+						<input type="hidden" id="rsvp_tel_num" name="rsvp_tel_num"  value="<%=sPassthruRsvpNumber%>"/>
+						<input type="hidden" name="pricing_plan_id" name="pricing_plan_id" value="<%=sPricingPlanId%>"/>
 				  		</fieldset>				  	
 				  	</form>
 				  </div>
@@ -120,7 +120,7 @@
 <script type="text/javascript">
 $(document).ready(function() 
 {
-	$("#bt_save_tel_num").click(purchaseNumbers);
+	$("#bt_buy_tel_numbers").click(purchaseNumbers);
 });
 
 function purchaseNumbers()
@@ -129,11 +129,75 @@ function purchaseNumbers()
 	var methodType = "POST";
 	
 	//seating_tel_num  rsvp_tel_num
-	$("#rsvp_tel_num").val($("#rsvp_gen_num").text());
-	$("#seating_tel_num").val($("#seating_gen_num").text());
+	//$("#rsvp_tel_num").val($("#rsvp_gen_num").text());
+	//$("#seating_tel_num").val($("#seating_gen_num").text());
 	
-	var dataString = $("#frm_tel_numbers").serialize();		
+	var dataString = $("#frm_billing_info").serialize();		
 	
 	phoneNumberData(actionUrl,dataString,methodType,savePhoneNumbers);
+}
+function phoneNumberData(actionUrl,dataString,methodType,callBackMethod)
+{
+	$.ajax({
+		  url: actionUrl ,
+		  type: methodType ,
+		  dataType: "json",
+		  data: dataString ,
+		  success: callBackMethod,
+		  error:function(a,b,c)
+		  {
+			  alert(a.responseText + ' = ' + b + " = " + c);
+		  }
+		});
+}
+function savePhoneNumbers(jsonResult)
+{
+	//alert('status = '+jsonResult.status);
+	if(jsonResult!=undefined)
+	{
+		var varResponseObj = jsonResult.response;
+		if(jsonResult.status == 'error'  && varResponseObj !=undefined )
+		{
+			
+			var varIsMessageExist = varResponseObj.is_message_exist;
+			if(varIsMessageExist == true)
+			{
+				var jsonResponseMessage = varResponseObj.messages;
+				var varArrErrorMssg = jsonResponseMessage.error_mssg
+				displayMessages( varArrErrorMssg );
+			}
+			
+		}
+		else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+		{
+			var varIsPayloadExist = varResponseObj.is_payload_exist;
+			//alert(varIsPayloadExist);
+			
+			if(varIsPayloadExist == true)
+			{
+				var jsonResponseObj = varResponseObj.payload;
+				//processTelNumbers( jsonResponseObj );
+				alert("Success buy");
+			}
+		}
+		else
+		{
+			alert("Please try again later.");
+		}
+	}
+	else
+	{
+		alert("Please try again later.");
+	}
+}
+function displayMessages(varArrMessages)
+{
+	if(varArrMessages!=undefined)
+	{
+		for(var i = 0; i<varArrMessages.length; i++)
+		{
+			alert( varArrMessages[i].text );
+		}
+	}
 }
 </script>
