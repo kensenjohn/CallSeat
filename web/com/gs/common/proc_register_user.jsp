@@ -60,9 +60,14 @@ try
 			if(!adminManager.isUserExists(regAdminBean))
 			{
 				adminBean = adminManager.registerUser(regAdminBean);
-				
+								
 				if(adminBean!=null && adminBean.getAdminId()!=null && !"".equalsIgnoreCase(adminBean.getAdminId()))					
 				{
+					AdminBean tmpAdminBean = adminManager.getAdmin(adminBean.getAdminId());
+
+					HttpSession httpSession = request.getSession(false);
+					httpSession.setAttribute(Constants.USER_SESSION,tmpAdminBean);
+					
 					Text okText = new OkText("Successfully registered user.","register_err_mssg") ;		
 					arrOkText.add(okText);
 					

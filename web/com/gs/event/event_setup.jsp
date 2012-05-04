@@ -22,7 +22,6 @@
 	String sAdminId = ParseUtil.checkNull(request.getParameter("lobby_admin_id"));
 	boolean isNewEventClicked= ParseUtil.sTob(request.getParameter("lobby_create_new"));
 	
-		
 	jspLogging.info("Invoked by landing page : " + isFromLanding);
 	String sEventTitle = "New Event";
 	
@@ -100,6 +99,12 @@
 	
 	sEventId = eventBean.getEventId();
 	sAdminId = adminBean.getAdminId();
+	
+
+	String sGateAdminId = sAdminId;
+%>
+	<%@include file="../common/gatekeeper.jsp"%>
+<%
 	
 	String eventName = "";
 	String eventDate = "";

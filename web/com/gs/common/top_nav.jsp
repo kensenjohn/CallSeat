@@ -51,7 +51,7 @@ if(reqSession!=null)
 %>
 
 				<li id="li_user_my_account" style="<%=!isTmpSignedIn? "display:none" : "" %>">
-	    			<a class="" id="login_user_account" class="" href="/web/com/gs/common/credential.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>&referrer_source=<%=sRefererSource%>">&nbsp;&nbsp;&nbsp;My Account&nbsp;</a>
+	    			<a class="" id="login_user_account" class="" href="/web/com/gs/common/myaccounts.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>&referrer_source=<%=sRefererSource%>">&nbsp;&nbsp;&nbsp;My Account&nbsp;</a>
 	    		</li>
    		
 	    		<li>
