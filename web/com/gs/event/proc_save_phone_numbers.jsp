@@ -9,7 +9,6 @@
 <%@page import="com.gs.phone.account.*" %>
 
 <%@include file="../common/security.jsp" %>
-<%@include file="../common/gatekeeper.jsp" %>
 <%
 JSONObject jsonResponseObj = new JSONObject();
 
@@ -41,7 +40,11 @@ try
 	String sBillCountry = ParseUtil.checkNull(request.getParameter("bill_country"));
 	String sCreditCardNum = ParseUtil.checkNull(request.getParameter("cc_num"));
 	String sSecureNum = ParseUtil.checkNull(request.getParameter("cc_secure_num"));
-		
+	
+	String sGateAdminId = sAdminId;
+%>
+<%@include file="../common/gatekeeper.jsp"%>
+<%		
 	if(isSignedIn)
 	{
 		if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId)  && sEventId!=null && !"".equalsIgnoreCase(sEventId))

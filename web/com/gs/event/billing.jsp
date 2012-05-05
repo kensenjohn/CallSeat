@@ -30,13 +30,25 @@
 								<div class="clearfix-tight">
 									<label for="login_email">Credit/Debit :</label>
 									<div class="input">
-										<input type="text" id="login_email" name="login_email"/>
+										<input type="text" id="credit_card_num"/>
 									</div>
 								</div>
 								<div class="clearfix-tight">
 									<label for="login_password">Security Code :</label>
 									<div class="input">
-										<input type="password" id="login_password" name="login_password"/>
+										<input type="password" id="credit_card_CCV"/>
+									</div>
+								</div>
+								<div class="clearfix-tight">
+									<label for="login_password">Expiry Month :</label>
+									<div class="input">
+										<input type="password" id="credit_card_expire_month"/>
+									</div>
+								</div>
+								<div class="clearfix-tight">
+									<label for="login_password">Expiry Year :</label>
+									<div class="input">
+										<input type="password" id="credit_card_expire_year"/>
 									</div>
 								</div>
 							</fieldset>								
@@ -105,6 +117,9 @@
 				  		</div>
 				  		<div class="actions">	
 						 	<button id="bt_buy_tel_numbers" name="bt_buy_tel_numbers" type="button" class="action_button primary big">Purchase my numbers</button>
+						 	 <br>								            
+								            <span id="cc_err_mssg"  style="color: #9d261d;" ></span><br>
+								            <span id="cc_success_mssg"  style="color: #46a546;" ></span>
 						 </div>
 				  		
 				  		<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
@@ -117,24 +132,75 @@
 				  </div>
 				</div>
 </body>
+<script type="text/javascript" src="https://js.stripe.com/v1/"></script>
 <script type="text/javascript">
 $(document).ready(function() 
 {
 	$("#bt_buy_tel_numbers").click(purchaseNumbers);
+	 Stripe.setPublishableKey('pk_wATk5Gx38D4jnRXebNX5ilayLKdGY');
 });
+
+function stripeResponseHandler(status, response) {
+	if (response.error) {
+		alert('error')
+	}
+	else
+	{
+		// var form$ = $("#payment-form");
+	        // token contains id, last4, and card type
+	     var token = response['id'];
+	 	
+	 	
+		var actionUrl = "proc_save_phone_numbers.jsp";
+		var methodType = "POST";
+		var dataString = $("#frm_billing_info").serialize();
+		dataString = dataString + '&stripe_token='+token;
+		
+		phoneNumberData(actionUrl,dataString,methodType,savePhoneNumbers);
+	}
+}
+
+function validateCardDetails()
+{
+	var isValid = true;
+	var ccValidateMssg = '';
+	if( isValid && !Stripe.validateCardNumber( $('#credit_card_num').val() ) )
+	{
+		isValid = false;
+		ccValidateMssg =ccValidateMssg + 'Please use a valid credit card.' ;
+	}
+	
+	if( isValid && !Stripe.validateExpiry($('#credit_card_expire_month').val(),  $('#credit_card_expire_year').val() ) )
+	{
+		isValid = false;
+		ccValidateMssg = ccValidateMssg + 'Please enter a valid expiry month and year.' ;
+	}
+	//alert( Stripe.cardType( $('#credit_card_num').val() ) );
+	if( isValid && Stripe.cardType( $('#credit_card_num').val() ) == 'Unknown'  ) 
+	{
+		isValid = false;
+		ccValidateMssg = ccValidateMssg + 'Please use a Visa/Mastercard of Discover card.';
+	}
+	$('#cc_err_mssg').text(ccValidateMssg);
+	return isValid;
+}
 
 function purchaseNumbers()
 {
-	var actionUrl = "proc_save_phone_numbers.jsp";
-	var methodType = "POST";
+	$('#cc_err_mssg').text('');
 	
-	//seating_tel_num  rsvp_tel_num
-	//$("#rsvp_tel_num").val($("#rsvp_gen_num").text());
-	//$("#seating_tel_num").val($("#seating_gen_num").text());
+	if( validateCardDetails() == true )
+	{
+		 Stripe.createToken({
+		        number: $('#credit_card_num').val(),
+		        cvc: $('#credit_card_CCV').val(),
+		        exp_month: $('#credit_card_expire_month').val(),
+		        exp_year: $('#credit_card_expire_year').val()
+		    }, stripeResponseHandler);
+		 
 	
-	var dataString = $("#frm_billing_info").serialize();		
-	
-	phoneNumberData(actionUrl,dataString,methodType,savePhoneNumbers);
+	}
+
 }
 function phoneNumberData(actionUrl,dataString,methodType,callBackMethod)
 {
