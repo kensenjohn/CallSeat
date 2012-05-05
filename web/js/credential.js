@@ -3,11 +3,13 @@ function credentialSuccess(jsonResponse,varSource)
 {	
 	$("#login_name_display").text(jsonResponse.first_name);
 	$("#login_name_display").addClass("bold_text");
+	$("#login_name_display").removeAttr("href");
+	$("#login_name_display").attr('href','/web/com/gs/common/myaccounts.jsp?admin_id='+jsonResponse.user_id);
 	$('#lobby_admin_id').val(jsonResponse.user_id);
 	
 	$("#li_user_my_account").show();
 	$("#login_user_account").removeAttr("href");
-	$("#login_user_account").attr('href','/web/com/gs/event/host_dashboard.jsp?lobby_admin_id='+jsonResponse.user_id);
+	$("#login_user_account").attr('href','/web/com/gs/common/myaccounts.jsp?admin_id='+jsonResponse.user_id);
 	
 	
 	$("#li_user_sign_out").show();
@@ -20,7 +22,7 @@ function credentialSuccess(jsonResponse,varSource)
 	$('#link_goto_lobby').attr('href','/web/com/gs/event/host_dashboard.jsp?lobby_admin_id='+jsonResponse.user_id);
 	
 	if(varSource == 'event_setup.jsp' || varSource == 'guest_setup.jsp' || varSource == 'host_dashboard.jsp'
-		|| varSource == 'search_phone_number.jsp')
+		|| varSource == 'search_phone_number.jsp' || varSource == 'sign_out.jsp')
 	{
 		//phoneNumTab();
 		resetAdminId(jsonResponse.user_id);

@@ -36,17 +36,29 @@ if(reqSession!=null)
 		{
 %>
 				<li>
-	    			<span class="bold_text"><%=sFirstName %>&nbsp;&nbsp;&nbsp;</span>
+	    			<a id="login_name_display" class="bold_text" href="/web/com/gs/common/myaccounts.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>&referrer_source=<%=sRefererSource%>"><%=sFirstName %>&nbsp;&nbsp;&nbsp;</a>
 	    		</li>
 <%
 		}
 		else
 		{
+			if("sign_out.jsp".equalsIgnoreCase(sRefererSource))
+			{
+%>
+				<li>
+	    			<a id="login_name_display" class="" href="/web/com/gs/common/credential.jsp?admin_id=&event_id=&referrer_source=<%=sRefererSource%>">&nbsp;&nbsp;&nbsp;Login&nbsp;</a>
+	    		</li>
+<%				
+			}
+			else
+			{
 %>
 				<li>
 	    			<a id="login_name_display" class="" href="/web/com/gs/common/credential.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>&referrer_source=<%=sRefererSource%>">&nbsp;&nbsp;&nbsp;Login&nbsp;</a>
 	    		</li>
-<%
+<%				
+			}
+
 		}
 %>
 

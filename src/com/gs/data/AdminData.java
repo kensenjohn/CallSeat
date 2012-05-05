@@ -39,10 +39,6 @@ public class AdminData {
 		return numOfRowsInserted;
 	}
 
-	public void updateAdmin() {
-
-	}
-
 	public UserInfoBean getAdminUserInfo(String sAdminId) {
 		UserInfoBean adminUserInfoBean = new UserInfoBean();
 		if (sAdminId != null && !"".equalsIgnoreCase(sAdminId)) {
@@ -129,6 +125,24 @@ public class AdminData {
 			}
 		}
 		return adminBean;
+	}
+
+	public Integer updateUser(AdminBean adminBean) {
+		int numOfAdminInserted = 0;
+		UserInfoBean userInfoBean = adminBean.getAdminUserInfoBean();
+		if (userInfoBean != null && userInfoBean.getEmail() != null
+				&& !"".equalsIgnoreCase(userInfoBean.getEmail())) {
+			String sQuery = "UPDATE GTUSERINFO SET EMAIL = ?, FIRST_NAME = ?, LAST_NAME = ? "
+					+ " WHERE USERINFOID = ?";
+
+			ArrayList<Object> aParams = DBDAO.createConstraint(
+					userInfoBean.getEmail(), userInfoBean.getFirstName(),
+					userInfoBean.getLastName(), userInfoBean.getUserInfoId());
+			numOfAdminInserted = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
+					"AdminData.java", "registerUser() ");
+
+		}
+		return numOfAdminInserted;
 	}
 
 	public Integer registerUser(RegisterAdminBean regAdminBean,
