@@ -149,12 +149,13 @@ function stripeResponseHandler(status, response) {
 		// var form$ = $("#payment-form");
 	        // token contains id, last4, and card type
 	     var token = response['id'];
+	     var last4 = response.card['last4'];
 	 	
 	 	
 		var actionUrl = "proc_save_phone_numbers.jsp";
 		var methodType = "POST";
 		var dataString = $("#frm_billing_info").serialize();
-		dataString = dataString + '&stripe_token='+token;
+		dataString = dataString + '&stripe_token='+token+'&last4='+last4;
 		
 		phoneNumberData(actionUrl,dataString,methodType,savePhoneNumbers);
 	}
@@ -195,10 +196,11 @@ function purchaseNumbers()
 		        number: $('#credit_card_num').val(),
 		        cvc: $('#credit_card_CCV').val(),
 		        exp_month: $('#credit_card_expire_month').val(),
-		        exp_year: $('#credit_card_expire_year').val()
-		    }, stripeResponseHandler);
-		 
-	
+		        exp_year: $('#credit_card_expire_year').val(),
+		        address_zip: $('#bill_zip').val(),
+		        address_state: $('#bill_state').val(),
+		        address_country: $('#bill_country').val()
+		    }, stripeResponseHandler);	
 	}
 
 }
