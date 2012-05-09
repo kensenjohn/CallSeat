@@ -1,5 +1,7 @@
 package com.gs.payment;
 
+import com.gs.common.Constants;
+
 public class BillingManager {
 
 	public boolean isCreditCardAccepted(BillingMetaData billingMetaData) {
@@ -16,4 +18,22 @@ public class BillingManager {
 					billingMetaData, sBillAddressId);
 		}
 	}
+
+	public BillingResponse chargePriceToUser(BillingMetaData billingMetaData) {
+
+		PaymentChannel paymentChannel = PaymentChannel.getPaymentChannel();
+		BillingService billingService = new OnlineBillingService(paymentChannel);
+
+		BillingResponse billingResponse = billingService
+				.chargePrice(billingMetaData);
+
+		if (Constants.BILLING_RESPONSE_CODES.SUCCESS.equals(billingResponse
+				.getBillingResponseCode())) {
+			saveBillingInfo(billingMetaData);
+		}
+
+		return billingResponse;
+
+	}
+
 }

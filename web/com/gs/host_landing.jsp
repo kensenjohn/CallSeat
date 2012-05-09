@@ -3,6 +3,7 @@
 
 <%
 String sTmpUserId = "";
+//dreamsopen@__
 Cookie[] cookies = request.getCookies();
 
 if(cookies!=null)

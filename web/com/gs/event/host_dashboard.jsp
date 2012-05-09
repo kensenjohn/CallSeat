@@ -15,7 +15,11 @@
 	Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 	String sEventId = ParseUtil.checkNull(request.getParameter("lobby_event_id"));
 	String sAdminId = ParseUtil.checkNull(request.getParameter("lobby_admin_id"));
+	
+	String sGateAdminId = sAdminId;
 %>
+<%@include file="../common/gatekeeper.jsp"%>
+
 <link rel="stylesheet" type="text/css" href="/web/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 

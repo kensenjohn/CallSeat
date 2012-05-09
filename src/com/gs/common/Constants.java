@@ -161,7 +161,8 @@ public class Constants {
 	}
 
 	public enum EMAIL_TEMPLATE {
-		REGISTRATION("REGISTRATION"), NEWPASSWORD("NEWPASSWORD");
+		REGISTRATION("REGISTRATION"), NEWPASSWORD("NEWPASSWORD"), NEWTELNUMBERPURCHASE(
+				"NEWTELNUMBERPURCHASE");
 
 		private String emailTemplate = "";
 
@@ -190,5 +191,41 @@ public class Constants {
 			return this.environment;
 		}
 	}
+
+	public enum BILLING_RESPONSE_CODES {
+		GENERAL_ERROR("GEN_ERROR"), INPUT_VALIDATION_ERROR("INP_VALID_ERROR"), SUCCESS(
+				"SUCCESS");
+
+		private String billingRespCodes = "";
+
+		BILLING_RESPONSE_CODES(String billingRespCodes) {
+			this.billingRespCodes = billingRespCodes;
+		}
+
+		public String getCode() {
+			return this.billingRespCodes;
+		}
+	}
+
+	public enum STRIPE_ENVIRONMENT {
+		TEST("TEST"), LIVE("LIVE"), DEFAULT("TEST");
+
+		private String sStripeEnv = "";
+
+		STRIPE_ENVIRONMENT(String sStripeEnv) {
+			this.sStripeEnv = sStripeEnv;
+		}
+
+		public String getStripeEnv() {
+			return sStripeEnv;
+		}
+	}
+
+	public final static String PROP_PAYMENT_CHANNEL = "payment_channel";
+	public final static String PROP_STRIPE_ENV = "stripe_env";
+	public final static String PROP_STRIPE_TEST_PUBLISHABLE_KEY = "stripe_test_publishable_key";
+	public final static String PROP_STRIPE_LIVE_PUBLISHABLE_KEY = "stripe_live_publishable_key";
+	public final static String PROP_STRIPE_TEST_SECRET_KEY = "stripe_test_secret_key";
+	public final static String PROP_STRIPE_LIVE_SECRET_KEY = "stripe_live_secret_key";
 
 }

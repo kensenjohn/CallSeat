@@ -17,11 +17,17 @@ import com.gs.bean.EventGuestBean;
 import com.gs.bean.GuestBean;
 import com.gs.bean.TelNumberBean;
 import com.gs.bean.TelNumberTypeBean;
+import com.gs.bean.UserInfoBean;
+import com.gs.bean.email.EmailQueueBean;
+import com.gs.bean.email.EmailTemplateBean;
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
 import com.gs.common.ExceptionHandler;
 import com.gs.common.ParseUtil;
 import com.gs.common.Utility;
+import com.gs.common.mail.MailCreator;
+import com.gs.common.mail.MailingServiceData;
+import com.gs.common.mail.SingleEmailCreator;
 import com.gs.data.GuestData;
 import com.gs.phone.account.AdminTelephonyAccountManager;
 import com.gs.phone.account.AdminTelephonyAccountMeta;
@@ -237,7 +243,7 @@ public class TelNumberManager {
 			AdminTelephonyAccountMeta adminAccountMeta, String sTelephoneNum)
 			throws TwilioRestException {
 
-		String sPurchasedPhoneNum = "";
+		String sPurchasedPhoneNum = "777-888-9999";
 		if (adminAccountMeta != null
 				&& !"".equalsIgnoreCase(adminAccountMeta.getAdminId())) {
 
@@ -297,23 +303,9 @@ public class TelNumberManager {
 		telNumberBean.setAdminId(telNumberMetaData.getAdminId());
 		telNumberBean.setEventId(telNumberMetaData.getEventId());
 		telNumberBean.setTelNumberType(telNumType.getTask());
-		telNumberBean.setHumanTelNumber(getHumanFormTelNum(sTelephoneNum));
+		telNumberBean.setHumanTelNumber(Utility
+				.convertInternationalToHumanTelNum(sTelephoneNum));
 		return telNumberBean;
-	}
-
-	private String getHumanFormTelNum(String sTelephoneNum) {
-		String sTmpTelNum = "";
-		if (sTelephoneNum != null && !"".equalsIgnoreCase(sTelephoneNum)) {
-			if (sTelephoneNum.length() == 12) {
-				String sAreaCode = sTelephoneNum.substring(2, 5);
-				String sFirstSetNumber = sTelephoneNum.substring(5, 8);
-				String sLastSetNumber = sTelephoneNum.substring(9);
-
-				sTmpTelNum = "(" + sAreaCode + ")" + " " + sFirstSetNumber
-						+ " " + sLastSetNumber;
-			}
-		}
-		return sTmpTelNum;
 	}
 
 	public EventGuestBean getTelNumGuestDetails(
@@ -357,8 +349,8 @@ public class TelNumberManager {
 			for (AvailablePhoneNumber availableTelNum : listAvailableNum) {
 				TelNumberBean telNumberBean = new TelNumberBean();
 				telNumberBean.setTelNumber(availableTelNum.getPhoneNumber());
-				telNumberBean
-						.setHumanTelNumber(getHumanFormTelNum(availableTelNum
+				telNumberBean.setHumanTelNumber(Utility
+						.convertInternationalToHumanTelNum(availableTelNum
 								.getPhoneNumber()));
 
 				telNumberBean.setTelNumberType(sNumType);
@@ -378,22 +370,47 @@ public class TelNumberManager {
 		if (arrTelNumTypeBean != null && !arrTelNumTypeBean.isEmpty()) {
 			TelNumberData telNumData = new TelNumberData();
 			for (TelNumberTypeBean telNumType : arrTelNumTypeBean) {
+				TelNumberTypeBean demoTelNumTypeBean = new TelNumberTypeBean();
 				if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(
 						telNumType.getTelNumType())) {
-					telNumMetaData.setDigits(telNumMetaData
-							.getRsvpTelNumDigit());
+					telNumMetaData.setDigits(Utility
+							.convertHumanToInternationalTelNum(telNumMetaData
+									.getRsvpTelNumDigit()));
+					demoTelNumTypeBean = getDemoTelNumTypes(Constants.EVENT_TASK.DEMO_RSVP);
 				} else if (Constants.EVENT_TASK.SEATING.getTask()
 						.equalsIgnoreCase(telNumType.getTelNumType())) {
-					telNumMetaData.setDigits(telNumMetaData
-							.getSeatingTelNumDigit());
+					telNumMetaData.setDigits(Utility
+							.convertHumanToInternationalTelNum(telNumMetaData
+									.getSeatingTelNumDigit()));
+
+					demoTelNumTypeBean = getDemoTelNumTypes(Constants.EVENT_TASK.DEMO_SEATING);
+				} else {
+					continue;
 				}
+				telNumMetaData.setHumanTelNumber(Utility
+						.convertInternationalToHumanTelNum(telNumMetaData
+								.getDigits()));
 				telNumMetaData.setTelNumberTypeId(telNumType
 						.getTelNumberTypeId());
 
-				telNumData.updateTelNumber(telNumMetaData,
-						"__THE SOURCE_TEL_ID_REPLACE__");
+				telNumData.updateTelNumber(telNumMetaData, demoTelNumTypeBean);
 			}
 		}
+	}
+
+	public TelNumberTypeBean getDemoTelNumTypes(Constants.EVENT_TASK eventTask) {
+		TelNumberTypeBean telNumTypeBean = new TelNumberTypeBean();
+		if (eventTask != null) {
+			ArrayList<TelNumberTypeBean> arrTelNumTypeBean = getTelNumberTypeBeans(eventTask
+					.getTask());
+
+			if (arrTelNumTypeBean != null && !arrTelNumTypeBean.isEmpty()) {
+				for (TelNumberTypeBean tmpTelNumTypeBean : arrTelNumTypeBean) {
+					telNumTypeBean = tmpTelNumTypeBean;
+				}
+			}
+		}
+		return telNumTypeBean;
 	}
 
 	public JSONObject getTelNumberBeanJson(
@@ -519,4 +536,45 @@ public class TelNumberManager {
 		}
 	}
 
+	public void sendNewTelnumberPurchasedEmail(
+			TelNumberMetaData telNumberMetaData, UserInfoBean adminUserInfoBean) {
+
+		if (telNumberMetaData != null && adminUserInfoBean != null) {
+
+			MailingServiceData mailingServiceData = new MailingServiceData();
+			EmailTemplateBean emailTemplate = mailingServiceData
+					.getEmailTemplate(Constants.EMAIL_TEMPLATE.NEWTELNUMBERPURCHASE);
+
+			String sHtmlTemplate = emailTemplate.getHtmlBody();
+			String sTxtTemplate = emailTemplate.getTextBody();
+
+			sTxtTemplate = sTxtTemplate.replaceAll("__NEW__RSVP__TELNUM__",
+					telNumberMetaData.getRsvpTelNumDigit());
+			sTxtTemplate = sTxtTemplate.replaceAll("__NEW_SEATING__TELNUM__",
+					telNumberMetaData.getSeatingTelNumDigit());
+
+			sHtmlTemplate = sHtmlTemplate.replaceAll("__NEW__RSVP__TELNUM__",
+					telNumberMetaData.getRsvpTelNumDigit());
+			sHtmlTemplate = sHtmlTemplate.replaceAll("__NEW_SEATING__TELNUM__",
+					telNumberMetaData.getSeatingTelNumDigit());
+
+			EmailQueueBean emailQueueBean = new EmailQueueBean();
+			emailQueueBean.setEmailSubject(emailTemplate.getEmailSubject());
+			emailQueueBean.setFromAddress(emailTemplate.getFromAddress());
+			emailQueueBean.setFromAddressName(emailTemplate
+					.getFromAddressName());
+			emailQueueBean.setToAddress(adminUserInfoBean.getEmail());
+			emailQueueBean.setToAddressName(adminUserInfoBean.getFirstName()
+					+ " " + adminUserInfoBean.getLastName());
+			emailQueueBean.setHtmlBody(sHtmlTemplate);
+			emailQueueBean.setTextBody(sTxtTemplate);
+
+			emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
+
+			MailCreator eailCreator = new SingleEmailCreator();
+			eailCreator.create(emailQueueBean);
+
+		}
+
+	}
 }

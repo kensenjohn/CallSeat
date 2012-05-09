@@ -37,6 +37,7 @@
 	<script type="text/javascript">
 		var varAdminId = '<%=sAdminId%>';
 		var varGuestId = '<%=sGuestId%>';
+		var varEventId = '<%=sEventId%>';
 		$(document).ready(function() {
 			loadEvents();
 		});
@@ -169,12 +170,12 @@
 			
 		}
 		
-		function inviteEventHandler(varEventId)
+		function inviteEventHandler(varTmpEventId)
 		{
-			//alert('invite to ' + varEventId);
-			var dataString = 'event_id='+varEventId+'&guest_id='+varGuestId+'&admin_id='+varAdminId+
-					'&invited_seats='+$('#event_invited_'+varEventId).val()+'&rsvp_seats='+$('#event_rsvp_'+varEventId).val()+
-					'&event_guest_id='+ $('#event_guest_id_'+varEventId).val() +
+			//alert('invite to ' + varTmpEventId);
+			var dataString = 'event_id='+varTmpEventId+'&guest_id='+varGuestId+'&admin_id='+varAdminId+
+					'&invited_seats='+$('#event_invited_'+varTmpEventId).val()+'&rsvp_seats='+$('#event_rsvp_'+varTmpEventId).val()+
+					'&event_guest_id='+ $('#event_guest_id_'+varTmpEventId).val() +
 					'&invite_guest=true';
 			var actionUrl = 'proc_guest_events.jsp';
 			var methodType = 'POST';
@@ -183,10 +184,10 @@
 			makeAjaxCall(actionUrl,dataString,methodType,redrawGuestEventList);
 			
 		}
-		function unInviteEventHandler(varEventId)
+		function unInviteEventHandler(varTmpEventId)
 		{
-			var dataString = 'event_id='+varEventId+'&guest_id='+varGuestId+'&admin_id='+varAdminId+
-			'&event_guest_id='+ $('#event_guest_id_'+varEventId).val() +
+			var dataString = 'event_id='+varTmpEventId+'&guest_id='+varGuestId+'&admin_id='+varAdminId+
+			'&event_guest_id='+ $('#event_guest_id_'+varTmpEventId).val() +
 			'&un_invite_guest=true';
 			
 			var actionUrl = 'proc_guest_events.jsp';
@@ -248,7 +249,7 @@
 							$('#event_remove_'+varResponseEventId).show();
 						}
 						
-						parent.loadGuests();
+						parent.loadGuests( varEventId , varAdminId );
 						var varIsMessageExist = varResponseObj.is_message_exist;
 						if(varIsMessageExist == true)
 						{

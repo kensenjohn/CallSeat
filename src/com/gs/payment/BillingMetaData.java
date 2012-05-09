@@ -16,6 +16,14 @@ public class BillingMetaData {
 	private String country = "";
 	private String creditCardNum = "";
 	private String secureNum = "";
+	private String expiryMonth = "";
+	private String expiryYear = "";
+
+	private String stripeToken = "";
+	private boolean isStripeTokenUsed = false;
+	private String cardLast4 = "";
+
+	private String email = "";
 
 	public String getAdminId() {
 		return adminId;
@@ -127,6 +135,54 @@ public class BillingMetaData {
 
 	public void setMiddletName(String middletName) {
 		this.middletName = middletName;
+	}
+
+	public String getExpiryMonth() {
+		return expiryMonth;
+	}
+
+	public void setExpiryMonth(String expiryMonth) {
+		this.expiryMonth = expiryMonth;
+	}
+
+	public String getExpiryYear() {
+		return expiryYear;
+	}
+
+	public void setExpiryYear(String expiryYear) {
+		this.expiryYear = expiryYear;
+	}
+
+	public String getStripeToken() {
+		return stripeToken;
+	}
+
+	public void setStripeToken(String stripeToken) {
+		this.stripeToken = stripeToken;
+	}
+
+	public boolean isStripeTokenUsed() {
+		return isStripeTokenUsed;
+	}
+
+	public void setStripeTokenUsed(boolean isStripeTokenUsed) {
+		this.isStripeTokenUsed = isStripeTokenUsed;
+	}
+
+	public String getCardLast4() {
+		return cardLast4;
+	}
+
+	public void setCardLast4(String cardLast4) {
+		this.cardLast4 = cardLast4;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
 	}
 
 }
