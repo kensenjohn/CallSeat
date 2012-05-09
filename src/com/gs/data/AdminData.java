@@ -39,10 +39,6 @@ public class AdminData {
 		return numOfRowsInserted;
 	}
 
-	public void updateAdmin() {
-
-	}
-
 	public UserInfoBean getAdminUserInfo(String sAdminId) {
 		UserInfoBean adminUserInfoBean = new UserInfoBean();
 		if (sAdminId != null && !"".equalsIgnoreCase(sAdminId)) {
@@ -79,7 +75,7 @@ public class AdminData {
 					+ " GTA.IS_TMP AS ADMIN_IS_TMP, GTA.DEL_ROW  AS ADMIN_DEL_ROW,"
 					+ " GTU.USERINFOID , GTU.FIRST_NAME , GTU.LAST_NAME , GTU.ADDRESS_1 , "
 					+ " GTU.ADDRESS_2,  GTU.CITY, GTU.STATE , GTU.COUNTRY , GTU.CELL_PHONE, GTU.IP_ADDRESS, "
-					+ " GTU.PHONE_NUM, GTU.EMAIL, GTU.TIMEZONE,  GTU.IS_TMP , GTU.DEL_ROW, GTU.CREATEDATE "
+					+ " GTU.PHONE_NUM, GTU.EMAIL, GTU.TIMEZONE, GTU.DEL_ROW, GTU.CREATEDATE "
 					+ " FROM GTUSERINFO GTU , GTADMIN GTA WHERE GTA.ADMINID = ? AND "
 					+ " GTA.FK_USERINFOID = GTU.USERINFOID";
 
@@ -110,7 +106,7 @@ public class AdminData {
 					+ " GTA.IS_TMP AS ADMIN_IS_TMP, GTA.DEL_ROW  AS ADMIN_DEL_ROW,"
 					+ " GTU.USERINFOID , GTU.FIRST_NAME , GTU.LAST_NAME , GTU.ADDRESS_1 , "
 					+ " GTU.ADDRESS_2,  GTU.CITY, GTU.STATE , GTU.COUNTRY , GTU.CELL_PHONE, GTU.IP_ADDRESS, "
-					+ " GTU.PHONE_NUM, GTU.EMAIL, GTU.TIMEZONE,  GTU.IS_TMP , GTU.DEL_ROW, GTU.CREATEDATE "
+					+ " GTU.PHONE_NUM, GTU.EMAIL, GTU.TIMEZONE , GTU.DEL_ROW, GTU.CREATEDATE "
 					+ " FROM GTUSERINFO GTU , GTADMIN GTA WHERE GTU.EMAIL = ?  AND "
 					+ " GTA.FK_USERINFOID = GTU.USERINFOID";
 
@@ -129,6 +125,24 @@ public class AdminData {
 			}
 		}
 		return adminBean;
+	}
+
+	public Integer updateUser(AdminBean adminBean) {
+		int numOfAdminInserted = 0;
+		UserInfoBean userInfoBean = adminBean.getAdminUserInfoBean();
+		if (userInfoBean != null && userInfoBean.getEmail() != null
+				&& !"".equalsIgnoreCase(userInfoBean.getEmail())) {
+			String sQuery = "UPDATE GTUSERINFO SET EMAIL = ?, FIRST_NAME = ?, LAST_NAME = ? "
+					+ " WHERE USERINFOID = ?";
+
+			ArrayList<Object> aParams = DBDAO.createConstraint(
+					userInfoBean.getEmail(), userInfoBean.getFirstName(),
+					userInfoBean.getLastName(), userInfoBean.getUserInfoId());
+			numOfAdminInserted = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
+					"AdminData.java", "registerUser() ");
+
+		}
+		return numOfAdminInserted;
 	}
 
 	public Integer registerUser(RegisterAdminBean regAdminBean,

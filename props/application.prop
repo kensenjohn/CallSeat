@@ -9,3 +9,10 @@ twilio_rest_api_version=2010-04-01
 twilio_api_domain=api.twilio.com
 amazon_access_key=********************
 amazon_secret_key=********************
+stripe_test_publishable_key=************************
+stripe_test_secret_key=************************
+stripe_live_publishable_key=************************
+stripe_live_secret_key=************************
+stripe_env=test
+payment_channel=stripe
+

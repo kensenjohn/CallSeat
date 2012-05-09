@@ -60,10 +60,15 @@ try
 			if(!adminManager.isUserExists(regAdminBean))
 			{
 				adminBean = adminManager.registerUser(regAdminBean);
-				
+								
 				if(adminBean!=null && adminBean.getAdminId()!=null && !"".equalsIgnoreCase(adminBean.getAdminId()))					
 				{
-					Text okText = new OkText("Successfully registered user.","register_err_mssg") ;		
+					AdminBean tmpAdminBean = adminManager.getAdmin(adminBean.getAdminId());
+
+					HttpSession httpSession = request.getSession(false);
+					httpSession.setAttribute(Constants.USER_SESSION,tmpAdminBean);
+					
+					Text okText = new OkText("Successfully registered user.","reg_success_mssg") ;		
 					arrOkText.add(okText);
 					
 					responseStatus = RespConstants.Status.OK;
@@ -74,7 +79,7 @@ try
 				}
 				else
 				{
-					Text errorText = new ErrorText("Oops!! User was not registered. Please try again.","register_err_mssg") ;		
+					Text errorText = new ErrorText("Oops!! User was not registered. Please try again.","reg_err_mssg") ;		
 					arrErrorText.add(errorText);
 					
 					responseStatus = RespConstants.Status.ERROR;
@@ -82,7 +87,7 @@ try
 			}
 			else
 			{
-				Text errorText = new ErrorText("This email address were registered to this event previously. Please login","register_err_mssg") ;		
+				Text errorText = new ErrorText("This email address were registered to this event previously. Please login","reg_err_mssg") ;		
 				arrErrorText.add(errorText);
 				
 				responseStatus = RespConstants.Status.ERROR;
@@ -91,7 +96,7 @@ try
 		}
 		else
 		{
-			Text errorText = new ErrorText("The passwords your entered do not match.","register_err_mssg") ;		
+			Text errorText = new ErrorText("The passwords your entered do not match.","reg_err_mssg") ;		
 			arrErrorText.add(errorText);
 			
 			responseStatus = RespConstants.Status.ERROR;
@@ -111,7 +116,7 @@ catch(Exception e)
 {
 	appLogging.error("General Error registering the user." );
 	
-	Text errorText = new ErrorText("Oops!! Your request could not be processed at this time.","register_err_mssg") ;		
+	Text errorText = new ErrorText("Oops!! Your request could not be processed at this time.","reg_err_mssg") ;		
 	arrErrorText.add(errorText);
 	
 	responseObject.setErrorMessages(arrErrorText);

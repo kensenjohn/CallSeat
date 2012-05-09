@@ -119,6 +119,17 @@ public class AdminManager {
 		return isAdminExists;
 	}
 
+	public Integer updateUser(AdminBean adminBean) {
+		int numOfRecords = 0;
+		if (adminBean != null) {
+
+			AdminData adminData = new AdminData();
+
+			numOfRecords = adminData.updateUser(adminBean);
+		}
+		return numOfRecords;
+	}
+
 	public AdminBean registerUser(RegisterAdminBean regAdminBean) {
 		AdminBean adminBean = new AdminBean();
 		int numOfAdminRegs = 0;
@@ -140,16 +151,26 @@ public class AdminManager {
 			if (adminBean == null
 					|| (adminBean != null && !adminBean.isAdminExists())) {
 				adminBean = createAdmin();
+
+				regAdminBean.setAdminId(adminBean.getAdminId());
 			}
 
-			adminData.registerUser(regAdminBean, adminBean);
+			if (regAdminBean != null && regAdminBean.getAdminId() != null
+					&& !"".equalsIgnoreCase(regAdminBean.getAdminId())) {
+				adminData.registerUser(regAdminBean, adminBean);
 
-			if (adminBean != null && adminBean.getAdminId() != null
-					&& !"".equalsIgnoreCase(adminBean.getAdminId())) {
-				numOfAdminRegs = adminData.toggleAdminTemp(true,
-						adminBean.getAdminId());
+				if (adminBean != null && adminBean.getAdminId() != null
+						&& !"".equalsIgnoreCase(adminBean.getAdminId())) {
+					numOfAdminRegs = adminData.toggleAdminTemp(false,
+							adminBean.getAdminId());
+				} else {
+					appLogging.error("Error  registering user.");
+				}
 			} else {
-				appLogging.error("Error  registering user.");
+				appLogging
+						.error("Error registering because the admin id was null or empty."
+								+ regAdminBean + " - " + adminBean);
+				adminBean = null;
 			}
 
 		}
@@ -270,21 +291,9 @@ public class AdminManager {
 						.substring(0, 8));
 
 				if (sNewPassword != null && !"".equalsIgnoreCase(sNewPassword)) {
-					adminData.deactivateOldPassword(adminBean);
-					String sPasswordHash = BCrypt.hashpw(sNewPassword,
-							BCrypt.gensalt(5));
 
-					regAdminBean.setPasswordHash(sPasswordHash);
-					regAdminBean.setAdminId(adminBean.getAdminId());
-					regAdminBean.setCreateDate(DateSupport.getEpochMillis());
-					regAdminBean.setHumanCreateDate(DateSupport
-							.getUTCDateTime());
-
-					Integer iNumOfRecs = adminData.createPassword(regAdminBean);
-					if (iNumOfRecs > 0) {
-						resetPasswordRespBean.setAdminBean(adminBean);
-						resetPasswordRespBean.setNewPassword(sNewPassword);
-					}
+					resetPasswordRespBean = resetPassword(adminBean,
+							sNewPassword);
 				}
 			}
 		}
@@ -366,5 +375,31 @@ public class AdminManager {
 			quickEmail.start();
 		}
 
+	}
+
+	public RestPasswordResponseBean resetPassword(AdminBean adminBean,
+			String sNewPassword) {
+		RestPasswordResponseBean resetPasswordRespBean = new RestPasswordResponseBean();
+		if (adminBean != null && sNewPassword != null
+				&& !"".equalsIgnoreCase(sNewPassword)) {
+			AdminData adminData = new AdminData();
+
+			adminData.deactivateOldPassword(adminBean);
+			String sPasswordHash = BCrypt.hashpw(sNewPassword,
+					BCrypt.gensalt(5));
+
+			RegisterAdminBean regAdminBean = new RegisterAdminBean();
+			regAdminBean.setPasswordHash(sPasswordHash);
+			regAdminBean.setAdminId(adminBean.getAdminId());
+			regAdminBean.setCreateDate(DateSupport.getEpochMillis());
+			regAdminBean.setHumanCreateDate(DateSupport.getUTCDateTime());
+
+			Integer iNumOfRecs = adminData.createPassword(regAdminBean);
+			if (iNumOfRecs > 0) {
+				resetPasswordRespBean.setAdminBean(adminBean);
+				resetPasswordRespBean.setNewPassword(sNewPassword);
+			}
+		}
+		return resetPasswordRespBean;
 	}
 }

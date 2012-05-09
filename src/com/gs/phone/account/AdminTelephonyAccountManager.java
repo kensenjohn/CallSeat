@@ -5,11 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.gs.bean.AdminTelephonyAccountBean;
+import com.gs.common.Configuration;
+import com.gs.common.Constants;
 import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.TwilioRestException;
 import com.twilio.sdk.resource.instance.Account;
 
 public class AdminTelephonyAccountManager {
+	private static Configuration applicationConfig = Configuration
+			.getInstance(Constants.APPLICATION_PROP);
 
 	public boolean createAccount(AdminTelephonyAccountMeta adminAccountMeta)
 			throws TwilioRestException {
@@ -19,22 +23,38 @@ public class AdminTelephonyAccountManager {
 		if (arrAdminTelAccount == null
 				|| (arrAdminTelAccount != null && arrAdminTelAccount.isEmpty())) {
 
-			TwilioRestClient client = new TwilioRestClient(
-					TwilioAccount.getAccountSid(),
-					TwilioAccount.getAccountToken());
+			String sEnvironment = applicationConfig
+					.get(Constants.PROP_ENVIRONMENT);
+			if (Constants.ENVIRONMENT.VIRTUAL_MACHINE.getEnv()
+					.equalsIgnoreCase(sEnvironment)
+					|| Constants.ENVIRONMENT.SANDBOX.getEnv().equalsIgnoreCase(
+							sEnvironment)
+					|| Constants.ENVIRONMENT.ALPHA.getEnv().equalsIgnoreCase(
+							sEnvironment)) {
 
-			Map<String, String> vars = new HashMap<String, String>();
-			vars.put("FriendlyName", adminAccountMeta.getFriendlyName());
-			Account subAccount = client.getAccounts().create(vars);
-			/*
-			 * client.safeRequest("/" + TwilioRestClient.DEFAULT_VERSION +
-			 * "/Account", "POST", vars);
-			 */
-			if (subAccount != null) {
-				adminAccountMeta.setAccountSid(subAccount.getSid());
-				adminAccountMeta.setAuthToken(subAccount.getAuthToken());
-				AdminTelephonyAccountData adminTelAccountData = new AdminTelephonyAccountData();
-				adminTelAccountData.insertAdminAccount(adminAccountMeta);
+			} else if (Constants.ENVIRONMENT.BETA.getEnv().equalsIgnoreCase(
+					sEnvironment)) {
+
+			} else if (Constants.ENVIRONMENT.PROD.getEnv().equalsIgnoreCase(
+					sEnvironment)) {
+
+				TwilioRestClient client = new TwilioRestClient(
+						TwilioAccount.getAccountSid(),
+						TwilioAccount.getAccountToken());
+
+				Map<String, String> vars = new HashMap<String, String>();
+				vars.put("FriendlyName", adminAccountMeta.getFriendlyName());
+				Account subAccount = client.getAccounts().create(vars);
+				/*
+				 * client.safeRequest("/" + TwilioRestClient.DEFAULT_VERSION +
+				 * "/Account", "POST", vars);
+				 */
+				if (subAccount != null) {
+					adminAccountMeta.setAccountSid(subAccount.getSid());
+					adminAccountMeta.setAuthToken(subAccount.getAuthToken());
+					AdminTelephonyAccountData adminTelAccountData = new AdminTelephonyAccountData();
+					adminTelAccountData.insertAdminAccount(adminAccountMeta);
+				}
 			}
 
 		}

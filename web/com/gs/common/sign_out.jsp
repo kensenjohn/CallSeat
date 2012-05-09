@@ -35,7 +35,9 @@ if(cookies!=null)
 %>
 <body>
 	<div class="container rounded-corners">
-		<jsp:include page="top_nav.jsp"/>
+		<jsp:include page="top_nav.jsp">
+			<jsp:param name="referrer_source" value="sign_out.jsp"/>	
+		</jsp:include>
 		<div class="main_body">
 			<div>
 				<h2>Thank for using our application. </h2> <br><br>
@@ -47,7 +49,8 @@ if(cookies!=null)
 	<form id="sign_out_forward" action="/web/com/gs/welcome.jsp">
 	</form>
 </body>
-
+	
+<script type="text/javascript" src="/web/js/credential.js"></script>
 	<script type="text/javascript">
 	var varAdminId = '<%=sTmpUserId%>'
 	$(document).ready(function() {

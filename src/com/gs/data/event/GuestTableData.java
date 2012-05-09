@@ -192,6 +192,7 @@ public class GuestTableData {
 				}
 				hmTableGuests = getTableGuest(arrTableId);
 
+				ArrayList<String> arrTmpGuestTableId = new ArrayList<String>();
 				if (hmTableGuests != null && !hmTableGuests.isEmpty()) {
 					Set<Integer> setTableGuestNumber = hmTableGuests.keySet();
 
@@ -226,6 +227,9 @@ public class GuestTableData {
 												.equalsIgnoreCase(
 														tableGuestsBean
 																.getTableId())) {
+											arrTmpGuestTableId
+													.add(tableGuestsBean
+															.getTableId());
 											tableGuestsBean
 													.setNumOfSeats(tableBean
 															.getNumOfSeats());
@@ -248,6 +252,42 @@ public class GuestTableData {
 
 					}
 				}
+
+				if (arrTmpGuestTableId != null && arrTableId != null
+						&& arrTableId.size() != arrTmpGuestTableId.size()) {
+					ArrayList<String> arrEmptyTables = new ArrayList<String>();
+					for (String sTableId : arrTableId) {
+						boolean isFound = false;
+						for (String sTmpTableId : arrTmpGuestTableId) {
+							if (sTableId.equalsIgnoreCase(sTmpTableId)) {
+								isFound = true;
+								break;
+							}
+						}
+						if (!isFound) {
+							arrEmptyTables.add(sTableId);
+						}
+					}
+					if (arrEmptyTables != null && !arrEmptyTables.isEmpty()) {
+						for (Integer iNumber : setTableNumber) {
+							TableBean tableBean = hmTables.get(iNumber);
+							TableGuestsBean tableGuestBean = new TableGuestsBean();
+							tableGuestBean.setTableId(tableBean.getTableId());
+							tableGuestBean.setTableName(tableBean
+									.getTableName());
+							tableGuestBean.setTableNum(tableBean.getTableNum());
+							tableGuestBean.setRsvpSeats("0");
+							tableGuestBean.setTotalInvitedSeats("0");
+							tableGuestBean.setNumOfSeats(tableBean
+									.getNumOfSeats());
+							tableGuestBean.setAdminId(tableBean.getAdminId());
+
+							hmTableGuests.put(hmTableGuests.size() + 1,
+									tableGuestBean);
+						}
+					}
+				}
+
 			}
 		}
 		// Str

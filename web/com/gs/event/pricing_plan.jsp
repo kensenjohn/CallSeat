@@ -3,10 +3,10 @@
 <%@ page import="org.slf4j.LoggerFactory" %>
 
 <jsp:include page="../common/header_top.jsp"/>
-<jsp:include page="../common/security.jsp"/>
-<%@include file="../common/header_bottom.jsp"%>
+<%@include file="../common/security.jsp"%>
+<jsp:include page="../common/header_bottom.jsp"/>
 
-<body>
+
 <%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
@@ -15,8 +15,12 @@
 
 		String sPassthruRsvpNumber = ParseUtil.checkNull(request.getParameter("pass_thru_rsvp_num"));
 		String sPassthruSeatingNumber = ParseUtil.checkNull(request.getParameter("pass_thru_seating_num"));
-%>
 	
+	String sGateAdminId = sAdminId;
+%>
+<%@include file="../common/gatekeeper.jsp"%>
+
+<body>
 		<div class="container-filler rounded-corners">
 			<div style="padding:20px">
 				<h2 class="txt txt_center">Pricing Plan</h2>
