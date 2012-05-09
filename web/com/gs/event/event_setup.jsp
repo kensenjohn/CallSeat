@@ -1124,6 +1124,13 @@
 						$("#seating_div_secret_key").show();
 						$("#seating_secret_key").text(telNumBean.secret_event_key);
 					}
+					if(telNumBean.telnum_type ==  varSeatingNumType)
+					{
+						$("#seating_div_event_id").hide();
+						$("#seating_event_id").text('');
+						$("#seating_div_secret_key").hide();
+						$("#seating_secret_key").text('');
+					}
 					
 					if(telNumBean.telnum_type ==  varDemoRsvpNumType)
 					{
@@ -1132,6 +1139,14 @@
 						
 						$("#rsvp_div_secret_key").show();
 						$("#rsvp_secret_key").text(telNumBean.secret_event_key);
+					}
+					if(telNumBean.telnum_type ==  varRsvpNumType)
+					{
+						$("#rsvp_div_event_id").hide();
+						$("#rsvp_event_id").text('');
+						
+						$("#rsvp_div_secret_key").hide();
+						$("#rsvp_secret_key").text('');
 					}
 					
 						

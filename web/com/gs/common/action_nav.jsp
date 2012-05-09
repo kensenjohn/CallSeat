@@ -63,5 +63,6 @@ String sRefererSource = ParseUtil.checkNull(request.getParameter("referrer_sourc
 		$('#add_guest').attr('href','../event/add_guest.jsp?admin_id='+varTmpAdminId+'&event_id='+varNewEventId);
 		$('#invite_guest').attr('href','../event/invite_guest.jsp?admin_id='+varTmpAdminId+'&event_id='+varNewEventId);
 		$('#add_all_guests').attr('href','../event/add_guest.jsp?admin_id='+varTmpAdminId+'&event_id='+varNewEventId);
+		$('#bt_get_own_phone').attr('href','../event/search_phone_number.jsp?admin_id='+varTmpAdminId+'&event_id='+varNewEventId);
 	}
 </script>

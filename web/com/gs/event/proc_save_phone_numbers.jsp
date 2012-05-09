@@ -116,8 +116,9 @@ try
 								telNumberMetaData.setSeatingTelNumDigit(sSeatingNumber);
 								
 								telNumManager.saveTelNumbers(telNumberMetaData);
+								telNumManager.sendNewTelnumberPurchasedEmail(telNumberMetaData,adminUserInfoBean);
 								
-								Text okText = new OkText("Tou purchase was completed successfully.","my_id");
+								Text okText = new OkText("Your purchase was completed successfully.","my_id");
 								arrOkText.add(okText);
 								
 								responseStatus = RespConstants.Status.OK;

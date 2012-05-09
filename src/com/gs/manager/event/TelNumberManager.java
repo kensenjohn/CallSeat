@@ -17,11 +17,17 @@ import com.gs.bean.EventGuestBean;
 import com.gs.bean.GuestBean;
 import com.gs.bean.TelNumberBean;
 import com.gs.bean.TelNumberTypeBean;
+import com.gs.bean.UserInfoBean;
+import com.gs.bean.email.EmailQueueBean;
+import com.gs.bean.email.EmailTemplateBean;
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
 import com.gs.common.ExceptionHandler;
 import com.gs.common.ParseUtil;
 import com.gs.common.Utility;
+import com.gs.common.mail.MailCreator;
+import com.gs.common.mail.MailingServiceData;
+import com.gs.common.mail.SingleEmailCreator;
 import com.gs.data.GuestData;
 import com.gs.phone.account.AdminTelephonyAccountManager;
 import com.gs.phone.account.AdminTelephonyAccountMeta;
@@ -530,4 +536,45 @@ public class TelNumberManager {
 		}
 	}
 
+	public void sendNewTelnumberPurchasedEmail(
+			TelNumberMetaData telNumberMetaData, UserInfoBean adminUserInfoBean) {
+
+		if (telNumberMetaData != null && adminUserInfoBean != null) {
+
+			MailingServiceData mailingServiceData = new MailingServiceData();
+			EmailTemplateBean emailTemplate = mailingServiceData
+					.getEmailTemplate(Constants.EMAIL_TEMPLATE.NEWTELNUMBERPURCHASE);
+
+			String sHtmlTemplate = emailTemplate.getHtmlBody();
+			String sTxtTemplate = emailTemplate.getTextBody();
+
+			sTxtTemplate = sTxtTemplate.replaceAll("__NEW__RSVP__TELNUM__",
+					telNumberMetaData.getRsvpTelNumDigit());
+			sTxtTemplate = sTxtTemplate.replaceAll("__NEW_SEATING__TELNUM__",
+					telNumberMetaData.getSeatingTelNumDigit());
+
+			sHtmlTemplate = sHtmlTemplate.replaceAll("__NEW__RSVP__TELNUM__",
+					telNumberMetaData.getRsvpTelNumDigit());
+			sHtmlTemplate = sHtmlTemplate.replaceAll("__NEW_SEATING__TELNUM__",
+					telNumberMetaData.getSeatingTelNumDigit());
+
+			EmailQueueBean emailQueueBean = new EmailQueueBean();
+			emailQueueBean.setEmailSubject(emailTemplate.getEmailSubject());
+			emailQueueBean.setFromAddress(emailTemplate.getFromAddress());
+			emailQueueBean.setFromAddressName(emailTemplate
+					.getFromAddressName());
+			emailQueueBean.setToAddress(adminUserInfoBean.getEmail());
+			emailQueueBean.setToAddressName(adminUserInfoBean.getFirstName()
+					+ " " + adminUserInfoBean.getLastName());
+			emailQueueBean.setHtmlBody(sHtmlTemplate);
+			emailQueueBean.setTextBody(sTxtTemplate);
+
+			emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
+
+			MailCreator eailCreator = new SingleEmailCreator();
+			eailCreator.create(emailQueueBean);
+
+		}
+
+	}
 }
