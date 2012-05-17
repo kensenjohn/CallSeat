@@ -1,9 +1,8 @@
 package com.gs.bean.twilio;
 
-public class TwilioIncomingCallBean extends IncomingCallBean
-{
+public class TwilioIncomingCallBean extends IncomingCallBean {
 
-	private String rsvpDigits = "";
+	private String digits = "";
 	private String apiVersion = "";
 	private String direction = "";
 	private String forwardFrom = "";
@@ -33,306 +32,278 @@ public class TwilioIncomingCallBean extends IncomingCallBean
 	private String callerCountry = "";
 	private String callerZip = "";
 
-	public String getCallid()
-	{
+	private String callerInputEventId = "";
+	private String callerInputSecretKey = "";
+
+	public String getCallid() {
 		return this.callid;
 	}
 
-	public void setCallid(String callSid)
-	{
+	public void setCallid(String callSid) {
 		this.callid = callSid;
 	}
 
-	public String getAccountid()
-	{
+	public String getAccountid() {
 		return accountid;
 	}
 
-	public void setAccountid(String accountid)
-	{
+	public void setAccountid(String accountid) {
 		this.accountid = accountid;
 	}
 
-	public String getFrom()
-	{
+	public String getFrom() {
 		return from;
 	}
 
-	public void setFrom(String from)
-	{
+	public void setFrom(String from) {
 		this.from = from;
 	}
 
-	public String getTo()
-	{
+	public String getTo() {
 		return to;
 	}
 
-	public void setTo(String to)
-	{
+	public void setTo(String to) {
 		this.to = to;
 	}
 
-	public String getCallStatus()
-	{
+	public String getCallStatus() {
 		return callStatus;
 	}
 
-	public void setCallStatus(String callStatus)
-	{
+	public void setCallStatus(String callStatus) {
 		this.callStatus = callStatus;
 	}
 
-	public String getApiVersion()
-	{
+	public String getApiVersion() {
 		return apiVersion;
 	}
 
-	public void setApiVersion(String apiVersion)
-	{
+	public void setApiVersion(String apiVersion) {
 		this.apiVersion = apiVersion;
 	}
 
-	public String getDirection()
-	{
+	public String getDirection() {
 		return direction;
 	}
 
-	public void setDirection(String direction)
-	{
+	public void setDirection(String direction) {
 		this.direction = direction;
 	}
 
-	public String getForwardFrom()
-	{
+	public String getForwardFrom() {
 		return forwardFrom;
 	}
 
-	public void setForwardFrom(String forwardFrom)
-	{
+	public void setForwardFrom(String forwardFrom) {
 		this.forwardFrom = forwardFrom;
 	}
 
-	public String getFromCity()
-	{
+	public String getFromCity() {
 		return fromCity;
 	}
 
-	public void setFromCity(String fromCity)
-	{
+	public void setFromCity(String fromCity) {
 		this.fromCity = fromCity;
 	}
 
-	public String getFromState()
-	{
+	public String getFromState() {
 		return fromState;
 	}
 
-	public void setFromState(String fromState)
-	{
+	public void setFromState(String fromState) {
 		this.fromState = fromState;
 	}
 
-	public String getFromZip()
-	{
+	public String getFromZip() {
 		return fromZip;
 	}
 
-	public void setFromZip(String fromZip)
-	{
+	public void setFromZip(String fromZip) {
 		this.fromZip = fromZip;
 	}
 
-	public String getFromCountry()
-	{
+	public String getFromCountry() {
 		return fromCountry;
 	}
 
-	public void setFromCountry(String fromCountry)
-	{
+	public void setFromCountry(String fromCountry) {
 		this.fromCountry = fromCountry;
 	}
 
-	public String getToZip()
-	{
+	public String getToZip() {
 		return toZip;
 	}
 
-	public void setToZip(String toZip)
-	{
+	public void setToZip(String toZip) {
 		this.toZip = toZip;
 	}
 
-	public String getToCity()
-	{
+	public String getToCity() {
 		return toCity;
 	}
 
-	public void setToCity(String toCity)
-	{
+	public void setToCity(String toCity) {
 		this.toCity = toCity;
 	}
 
-	public String getToCountry()
-	{
+	public String getToCountry() {
 		return toCountry;
 	}
 
-	public void setToCountry(String toCountry)
-	{
+	public void setToCountry(String toCountry) {
 		this.toCountry = toCountry;
 	}
 
-	public String getToState()
-	{
+	public String getToState() {
 		return toState;
 	}
 
-	public void setToState(String toState)
-	{
+	public void setToState(String toState) {
 		this.toState = toState;
 	}
 
-	public String getCallDuration()
-	{
+	public String getCallDuration() {
 		return callDuration;
 	}
 
-	public void setCallDuration(String callDuration)
-	{
+	public void setCallDuration(String callDuration) {
 		this.callDuration = callDuration;
 	}
 
-	public String getCalledState()
-	{
+	public String getCalledState() {
 		return calledState;
 	}
 
-	public void setCalledState(String calledState)
-	{
+	public void setCalledState(String calledState) {
 		this.calledState = calledState;
 	}
 
-	public String getCalledCountry()
-	{
+	public String getCalledCountry() {
 		return calledCountry;
 	}
 
-	public void setCalledCountry(String calledCountry)
-	{
+	public void setCalledCountry(String calledCountry) {
 		this.calledCountry = calledCountry;
 	}
 
-	public String getCalledCity()
-	{
+	public String getCalledCity() {
 		return calledCity;
 	}
 
-	public void setCalledCity(String calledCity)
-	{
+	public void setCalledCity(String calledCity) {
 		this.calledCity = calledCity;
 	}
 
-	public String getCalledZip()
-	{
+	public String getCalledZip() {
 		return calledZip;
 	}
 
-	public void setCalledZip(String calledZip)
-	{
+	public void setCalledZip(String calledZip) {
 		this.calledZip = calledZip;
 	}
 
-	public String getDuration()
-	{
+	public String getDuration() {
 		return duration;
 	}
 
-	public void setDuration(String duration)
-	{
+	public void setDuration(String duration) {
 		this.duration = duration;
 	}
 
-	public String getCaller()
-	{
+	public String getCaller() {
 		return caller;
 	}
 
-	public void setCaller(String caller)
-	{
+	public void setCaller(String caller) {
 		this.caller = caller;
 	}
 
-	public String getCallerCity()
-	{
+	public String getCallerCity() {
 		return callerCity;
 	}
 
-	public void setCallerCity(String callerCity)
-	{
+	public void setCallerCity(String callerCity) {
 		this.callerCity = callerCity;
 	}
 
-	public String getCallerState()
-	{
+	public String getCallerState() {
 		return callerState;
 	}
 
-	public void setCallerState(String callerState)
-	{
+	public void setCallerState(String callerState) {
 		this.callerState = callerState;
 	}
 
-	public String getCallerCountry()
-	{
+	public String getCallerCountry() {
 		return callerCountry;
 	}
 
-	public void setCallerCountry(String callerCountry)
-	{
+	public void setCallerCountry(String callerCountry) {
 		this.callerCountry = callerCountry;
 	}
 
-	public String getCallerZip()
-	{
+	public String getCallerZip() {
 		return callerZip;
 	}
 
-	public void setCallerZip(String callerZip)
-	{
+	public void setCallerZip(String callerZip) {
 		this.callerZip = callerZip;
 	}
 
-	public String getRsvpDigits()
-	{
-		return rsvpDigits;
+	public String getDigits() {
+		return digits;
 	}
 
-	public void setRsvpDigits(String rsvpDigits)
-	{
-		this.rsvpDigits = rsvpDigits;
+	public void setDigits(String digits) {
+		this.digits = digits;
+	}
+
+	public String getCallerInputEventId() {
+		return callerInputEventId;
+	}
+
+	public void setCallerInputEventId(String callerInputEventId) {
+		this.callerInputEventId = callerInputEventId;
+	}
+
+	public String getCallerInputSecretKey() {
+		return callerInputSecretKey;
+	}
+
+	public void setCallerInputSecretKey(String callerInputSecretKey) {
+		this.callerInputSecretKey = callerInputSecretKey;
 	}
 
 	@Override
-	public String toString()
-	{
+	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("TwilioIncomingCallBean [apiVersion=").append(apiVersion)
-				.append(", direction=").append(direction).append(", forwardFrom=")
-				.append(forwardFrom).append(", fromCity=").append(fromCity).append(", fromState=")
-				.append(fromState).append(", fromZip=").append(fromZip).append(", fromCountry=")
-				.append(fromCountry).append(", toZip=").append(toZip).append(", toCity=")
-				.append(toCity).append(", toCountry=").append(toCountry).append(", toState=")
-				.append(toState).append(", callDuration=").append(callDuration)
-				.append(", calledState=").append(calledState).append(", calledCountry=")
-				.append(calledCountry).append(", calledCity=").append(calledCity)
-				.append(", calledZip=").append(calledZip).append(", duration=").append(duration)
-				.append(", caller=").append(caller).append(", callerCity=").append(callerCity)
-				.append(", callerState=").append(callerState).append(", callerCountry=")
-				.append(callerCountry).append(", callerZip=").append(callerZip).append(", from=")
-				.append(from).append(", to=").append(to).append(", callStatus=").append(callStatus)
-				.append(", callid=").append(callid).append(", accountid=").append(accountid)
-				.append("]");
+		builder.append("TwilioIncomingCallBean [digits=").append(digits)
+				.append(", apiVersion=").append(apiVersion)
+				.append(", direction=").append(direction)
+				.append(", forwardFrom=").append(forwardFrom)
+				.append(", fromCity=").append(fromCity).append(", fromState=")
+				.append(fromState).append(", fromZip=").append(fromZip)
+				.append(", fromCountry=").append(fromCountry)
+				.append(", toZip=").append(toZip).append(", toCity=")
+				.append(toCity).append(", toCountry=").append(toCountry)
+				.append(", toState=").append(toState).append(", callDuration=")
+				.append(callDuration).append(", calledState=")
+				.append(calledState).append(", calledCountry=")
+				.append(calledCountry).append(", calledCity=")
+				.append(calledCity).append(", calledZip=").append(calledZip)
+				.append(", duration=").append(duration).append(", caller=")
+				.append(caller).append(", callerCity=").append(callerCity)
+				.append(", callerState=").append(callerState)
+				.append(", callerCountry=").append(callerCountry)
+				.append(", callerZip=").append(callerZip)
+				.append(", callerInputEventId=").append(callerInputEventId)
+				.append(", callerInputSecretKey=").append(callerInputSecretKey)
+				.append(", from=").append(from).append(", to=").append(to)
+				.append(", callStatus=").append(callStatus).append(", callid=")
+				.append(callid).append(", accountid=").append(accountid)
+				.append(", callAttemptNumber=").append(callAttemptNumber)
+				.append(", callType=").append(callType).append("]");
 		return builder.toString();
 	}
 
