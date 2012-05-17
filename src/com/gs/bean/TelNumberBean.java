@@ -160,4 +160,23 @@ public class TelNumberBean {
 		}
 		return jsonObject;
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("TelNumberBean [telNumberId=").append(telNumberId)
+				.append(", telNumber=").append(telNumber)
+				.append(", telNumberTypeId=").append(telNumberTypeId)
+				.append(", telNumberType=").append(telNumberType)
+				.append(", eventId=").append(eventId).append(", adminId=")
+				.append(adminId).append(", delRow=").append(delRow)
+				.append(", isactive=").append(isactive)
+				.append(", isPurchased=").append(isPurchased)
+				.append(", isNew=").append(isNew)
+				.append(", secretEventIdentity=").append(secretEventIdentity)
+				.append(", secretEventKey=").append(secretEventKey)
+				.append(", humanTelNumber=").append(humanTelNumber).append("]");
+		return builder.toString();
+	}
+
 }

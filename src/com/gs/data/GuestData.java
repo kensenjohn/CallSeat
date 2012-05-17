@@ -429,6 +429,7 @@ public class GuestData {
 				}
 				sGuestParam = sGuestParam + "?";
 				arrParams.add(sGuestId);
+				isFirstGuest = false;
 			}
 
 			arrParams.add(sEventId);

@@ -49,4 +49,14 @@ public class EventGuestMetaData {
 		this.rsvpDigits = rsvpDigits;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("EventGuestMetaData [eventId=").append(eventId)
+				.append(", arrGuestId=").append(arrGuestId)
+				.append(", rsvpDigits=").append(rsvpDigits)
+				.append(", eventGuestId=").append(eventGuestId)
+				.append(", guestId=").append(guestId).append("]");
+		return builder.toString();
+	}
 }

@@ -19,30 +19,26 @@ import com.gs.manager.event.EventGuestMetaData;
 import com.gs.manager.event.TelNumberManager;
 import com.gs.manager.event.TelNumberMetaData;
 
-public class RsvpTask extends Task
-{
+public class RsvpTask extends Task {
 	Logger appLogging = LoggerFactory.getLogger("AppLogging");
 
-	public RsvpTask(String eventId, String adminId)
-	{
+	public RsvpTask(String eventId, String adminId) {
 		super(eventId, adminId);
 	}
 
 	@Override
-	public CallResponse processTask(IncomingCallBean incomingCallBean)
-	{
+	public CallResponse processTask(IncomingCallBean incomingCallBean) {
 		CallResponse callResponse = new CallResponse();
-		if (incomingCallBean != null)
-		{
+		if (incomingCallBean != null) {
 
 			RsvpTwiml rsvpTwiml = new RsvpTwiml();
 
-			if (Constants.CALL_TYPE.FIRST_REQUEST.equals(incomingCallBean.getCallType()))
-			{
+			if (Constants.CALL_TYPE.FIRST_REQUEST.equals(incomingCallBean
+					.getCallType())) {
 				callResponse = processFirstResponseTask(incomingCallBean);
 				callResponse = rsvpTwiml.getFirstResponse(callResponse);
-			} else if (Constants.CALL_TYPE.RSVP_DIGIT_RESP.equals(incomingCallBean.getCallType()))
-			{
+			} else if (Constants.CALL_TYPE.RSVP_DIGIT_RESP
+					.equals(incomingCallBean.getCallType())) {
 				callResponse = processRsvpDigits(incomingCallBean);
 			}
 		}
@@ -50,14 +46,13 @@ public class RsvpTask extends Task
 
 	}
 
-	private CallResponse processRsvpDigits(IncomingCallBean incomingCallBean)
-	{
+	private CallResponse processRsvpDigits(IncomingCallBean incomingCallBean) {
 		CallResponse callResponse = new CallResponse();
 		TwilioIncomingCallBean twilioIncomingCallBean = (TwilioIncomingCallBean) incomingCallBean;
-		if (twilioIncomingCallBean != null && twilioIncomingCallBean.getRsvpDigits() != null
-				&& !"".equalsIgnoreCase(twilioIncomingCallBean.getRsvpDigits()))
-		{
-			String rsvpNum = twilioIncomingCallBean.getRsvpDigits();
+		if (twilioIncomingCallBean != null
+				&& twilioIncomingCallBean.getDigits() != null
+				&& !"".equalsIgnoreCase(twilioIncomingCallBean.getDigits())) {
+			String rsvpNum = twilioIncomingCallBean.getDigits();
 
 			String sGuestTelNumber = twilioIncomingCallBean.getFrom();
 
@@ -65,41 +60,42 @@ public class RsvpTask extends Task
 			telNumMetaData.setGuestTelNumber(sGuestTelNumber);
 			telNumMetaData.setAdminId(super.adminId);
 			telNumMetaData.setEventId(super.eventId);
-			telNumMetaData.setDigits(twilioIncomingCallBean.getRsvpDigits());
+			telNumMetaData.setDigits(twilioIncomingCallBean.getDigits());
 
 			TelNumberManager telNumManager = new TelNumberManager();
-			EventGuestBean tmpEventGuestBean = telNumManager.getTelNumGuestDetails(telNumMetaData);
+			EventGuestBean tmpEventGuestBean = telNumManager
+					.getTelNumGuestDetails(telNumMetaData);
 
-			int iTotalSeats = ParseUtil.sToI(tmpEventGuestBean.getTotalNumberOfSeats());
+			int iTotalSeats = ParseUtil.sToI(tmpEventGuestBean
+					.getTotalNumberOfSeats());
 			int iRsvpSeatsSel = ParseUtil.sToI(rsvpNum);
 
 			RsvpTwiml rsvpTwiml = new RsvpTwiml();
 
-			if (iRsvpSeatsSel <= iTotalSeats)
-			{
+			if (iRsvpSeatsSel <= iTotalSeats) {
 				ArrayList<String> arrGuestID = new ArrayList<String>();
 				arrGuestID.add(tmpEventGuestBean.getGuestId());
 
 				EventGuestMetaData eventGuestMetaData = new EventGuestMetaData();
 				eventGuestMetaData.setEventId(super.eventId);
-				eventGuestMetaData.setRsvpDigits(twilioIncomingCallBean.getRsvpDigits());
+				eventGuestMetaData.setRsvpDigits(twilioIncomingCallBean
+						.getDigits());
 				eventGuestMetaData.setArrGuestId(arrGuestID);
 
 				EventGuestManager eventGuestManager = new EventGuestManager();
 				eventGuestManager.setGuestRsvpForEvent(eventGuestMetaData);
 
-				EventGuestBean eventGuestBean = eventGuestManager.getGuest(eventGuestMetaData);
+				EventGuestBean eventGuestBean = eventGuestManager
+						.getGuest(eventGuestMetaData);
 
 				callResponse.setEventGuestBean(eventGuestBean);
 
 				if (eventGuestBean.getRsvpSeats().equalsIgnoreCase(
-						twilioIncomingCallBean.getRsvpDigits()))
-				{
+						twilioIncomingCallBean.getDigits())) {
 					callResponse = rsvpTwiml.getRsvpDigitsSuccess(callResponse,
 							"You have successfully updated the number of seats for RSVP to "
 									+ eventGuestBean.getRsvpSeats());
-				} else
-				{
+				} else {
 					callResponse = rsvpTwiml
 							.getRsvpDigitsFail(
 									callResponse,
@@ -108,19 +104,20 @@ public class RsvpTask extends Task
 
 				}
 
-			} else
-			{
+			} else {
 				// RSVP selected has exceed the total invited seats.
-				callResponse = rsvpTwiml.getRsvpDigitsFail(callResponse,
-						"Your R S V P exceeded the total number of seats you have been allocated.",
-						Constants.RSVP_STATUS.RSVP_EXCEED_TOTAL_SEATS);
+				callResponse = rsvpTwiml
+						.getRsvpDigitsFail(
+								callResponse,
+								"Your R S V P exceeded the total number of seats you have been allocated.",
+								Constants.RSVP_STATUS.RSVP_EXCEED_TOTAL_SEATS);
 			}
 		}
 		return callResponse;
 	}
 
-	private CallResponse processFirstResponseTask(IncomingCallBean incomingCallBean)
-	{
+	private CallResponse processFirstResponseTask(
+			IncomingCallBean incomingCallBean) {
 		CallResponse callResponse = new CallResponse();
 
 		String sGuestTelNumber = incomingCallBean.getFrom();
@@ -131,7 +128,8 @@ public class RsvpTask extends Task
 		telNumMetaData.setEventId(super.eventId);
 
 		TelNumberManager telNumManager = new TelNumberManager();
-		EventGuestBean eventGuestBean = telNumManager.getTelNumGuestDetails(telNumMetaData);
+		EventGuestBean eventGuestBean = telNumManager
+				.getTelNumGuestDetails(telNumMetaData);
 
 		EventData eventData = new EventData();
 		EventBean eventBean = eventData.getEvent(eventGuestBean.getEventId());

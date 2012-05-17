@@ -577,4 +577,34 @@ public class TelNumberManager {
 		}
 
 	}
+
+	public ArrayList<TelNumberBean> getTelNumbersFromSecretEventNumAndKey(
+			TelNumberMetaData telNumMetaData) {
+		ArrayList<TelNumberBean> arrTelNumBean = new ArrayList<TelNumberBean>();
+		if (telNumMetaData != null
+				&& !"".equalsIgnoreCase(telNumMetaData
+						.getSecretEventIdentifier())
+				&& !"".equalsIgnoreCase(telNumMetaData
+						.getSecretEventSecretKey())) {
+			TelNumberData telNumberData = new TelNumberData();
+			arrTelNumBean = telNumberData
+					.getTelNumbersFromSecretEventNumAndKey(telNumMetaData);
+		}
+		return arrTelNumBean;
+	}
+
+	public ArrayList<TelNumberBean> getTelNumbersFromSecretEventNum(
+			TelNumberMetaData telNumMetaData) {
+		ArrayList<TelNumberBean> arrTelNumBean = new ArrayList<TelNumberBean>();
+		if (telNumMetaData != null
+				&& !"".equalsIgnoreCase(telNumMetaData
+						.getSecretEventIdentifier())) {
+
+			TelNumberData telNumberData = new TelNumberData();
+			arrTelNumBean = telNumberData
+					.getTelNumbersFromSecretEventNum(telNumMetaData);
+
+		}
+		return arrTelNumBean;
+	}
 }

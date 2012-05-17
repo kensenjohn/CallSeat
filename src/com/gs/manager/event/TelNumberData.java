@@ -135,6 +135,8 @@ public class TelNumberData {
 				.setEventId(ParseUtil.checkNull(hmResult.get("FK_EVENTID")));
 		telNumberBean
 				.setAdminId(ParseUtil.checkNull(hmResult.get("FK_ADMINID")));
+		appLogging.debug("Superrr Event ID in " + telNumberBean.getEventId()
+				+ " admin id : " + telNumberBean.getAdminId());
 		telNumberBean.setDelRow(ParseUtil.checkNull(hmResult.get("DEL_ROW")));
 		telNumberBean.setTelNumberType(ParseUtil.checkNull(hmResult
 				.get("TELNUMTYPE")));
@@ -174,6 +176,68 @@ public class TelNumberData {
 		}
 
 		return iNumOfRows;
+	}
+
+	/**
+	 * Will list out all event tel numbers using the secret event num.
+	 * 
+	 * @param telNumMetaData
+	 * @return ArrayList<TelNumberBean>
+	 */
+	public ArrayList<TelNumberBean> getTelNumbersFromSecretEventNumAndKey(
+			TelNumberMetaData telNumMetaData) {
+		ArrayList<TelNumberBean> arrTelNumBean = new ArrayList<TelNumberBean>();
+		if (telNumMetaData != null
+				&& !"".equalsIgnoreCase(telNumMetaData
+						.getSecretEventIdentifier())
+				&& !"".equalsIgnoreCase(telNumMetaData
+						.getSecretEventSecretKey())) {
+			String sQuery = "SELECT * FROM  GTTELNUMBERS GTT, GTTELNUMBERTYPE GTN WHERE  GTT.SECRET_EVENT_NUMBER = ? AND GTT.SECRET_KEY = ?"
+					+ " AND GTT.FK_TELNUMBERTYPEID = GTN.TELNUMBERTYPEID ";
+			ArrayList<Object> aParams = DBDAO.createConstraint(
+					telNumMetaData.getSecretEventIdentifier(),
+					telNumMetaData.getSecretEventSecretKey());
+
+			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(
+					ADMIN_DB, sQuery, aParams, false, "TelNumberData.java",
+					"getTelNumbersFromSecretEventNumAndKey()");
+			if (arrResult != null && !arrResult.isEmpty()) {
+				for (HashMap<String, String> hmResult : arrResult) {
+					arrTelNumBean.add(getTelNumberBean(hmResult));
+				}
+			}
+		}
+		return arrTelNumBean;
+	}
+
+	/**
+	 * Will list out all event tel numbers using the secret event num.
+	 * 
+	 * @param telNumMetaData
+	 * @return ArrayList<TelNumberBean>
+	 */
+	public ArrayList<TelNumberBean> getTelNumbersFromSecretEventNum(
+			TelNumberMetaData telNumMetaData) {
+		ArrayList<TelNumberBean> arrTelNumBean = new ArrayList<TelNumberBean>();
+		if (telNumMetaData != null
+				&& !"".equalsIgnoreCase(telNumMetaData
+						.getSecretEventIdentifier())) {
+			String sQuery = "SELECT * FROM GTTELNUMBERS WHERE  SECRET_EVENT_NUMBER = ?";
+
+			ArrayList<Object> aParams = DBDAO.createConstraint(telNumMetaData
+					.getSecretEventIdentifier());
+
+			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(
+					ADMIN_DB, sQuery, aParams, false, "TelNumberData.java",
+					"getTelNumbersFromSecretEventNum()");
+
+			if (arrResult != null && !arrResult.isEmpty()) {
+				for (HashMap<String, String> hmResult : arrResult) {
+					arrTelNumBean.add(getTelNumberBean(hmResult));
+				}
+			}
+		}
+		return arrTelNumBean;
 	}
 
 	public int createTelNumber(TelNumberMetaData telNumMetaData) {

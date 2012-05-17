@@ -116,7 +116,11 @@ public class IncomingCallManager {
 					} else if ("callerZip".equalsIgnoreCase(paramKey)) {
 						twilioIncomingCallBean.setCallerZip(value);
 					} else if ("Digits".equalsIgnoreCase(paramKey)) {
-						twilioIncomingCallBean.setRsvpDigits(value);
+						twilioIncomingCallBean.setDigits(value);
+					} else if ("input_event_num".equalsIgnoreCase(paramKey)) {
+						twilioIncomingCallBean.setCallerInputEventId(value);
+					} else if ("input_secret_key".equalsIgnoreCase(paramKey)) {
+						twilioIncomingCallBean.setCallerInputSecretKey(value);
 					}
 				}
 			}
