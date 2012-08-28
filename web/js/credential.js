@@ -12,14 +12,22 @@ function credentialSuccess(jsonResponse,varSource)
 	$("#login_user_account").attr('href','/web/com/gs/common/myaccounts.jsp?admin_id='+jsonResponse.user_id);
 	
 	
-	$("#li_user_sign_out").show();
+	$("#sign_up_link").hide();
+	$("#sign_out_user").show();
 	$("#sign_out_user").removeAttr("href");
 	$("#sign_out_user").attr('href','/web/com/gs/common/sign_out.jsp?admin_id='+jsonResponse.user_id);
 	
 	
 	$('#div_goto_lobby').show();
 	$('#link_goto_lobby').removeAttr("href");
-	$('#link_goto_lobby').attr('href','/web/com/gs/event/host_dashboard.jsp?lobby_admin_id='+jsonResponse.user_id);
+	$('#link_goto_lobby').attr('href','/web/com/gs/event/host_dashboard.jsp?host_lobby_admin_id='+jsonResponse.user_id);
+	
+	if(varSource == 'host_landing.jsp')
+	{
+		$('#host_lobby_admin_id').val(jsonResponse.user_id);
+		$('#frm_lobby_admin').submit();
+	}
+
 	
 	if(varSource == 'event_setup.jsp' || varSource == 'guest_setup.jsp' || varSource == 'host_dashboard.jsp'
 		|| varSource == 'search_phone_number.jsp' || varSource == 'sign_out.jsp')
@@ -84,7 +92,7 @@ function setLobbyButtonClick()
 	$("#lnk_dashboard_id").click(function() {
 		$("#frm_lobby_tab").attr("action" , "/web/com/gs/event/host_dashboard.jsp");
 		$("#lobby_event_id").val(varCredEventID);
-		$("#lobby_admin_id").val(varAdminID);
+		$("#host_lobby_admin_id").val(varAdminID);
 		$("#frm_lobby_tab").submit();
 	});
 	//alert( 'lobey_event_id = ' + $("#lobby_event_id").val() );

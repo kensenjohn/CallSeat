@@ -32,110 +32,118 @@ try
 	
 	if(sEventName==null || "".equalsIgnoreCase(sEventName))
 	{
-		Text errorText = new ErrorText("Please enter a valid event name.","e_summ_event_name") ;		
+		Text errorText = new ErrorText("*Required","e_summ_event_name") ;		
 		arrErrorText.add(errorText);
 		
 		responseStatus = RespConstants.Status.ERROR;
 	}
 	else if(sEventDate==null || "".equalsIgnoreCase(sEventDate))
 	{
-		Text errorText = new ErrorText("Please enter a valid event date.","e_summ_event_date") ;		
+		Text errorText = new ErrorText("*Required","e_summ_event_date") ;		
 		arrErrorText.add(errorText);
 		
 		responseStatus = RespConstants.Status.ERROR;
 	}
+	else
+	{
+		responseStatus = RespConstants.Status.OK;
+	}
 	com.gs.manager.event.EventManager eventManager = new com.gs.manager.event.EventManager();
 	
-	if(isCreateEvent)
+	if(responseStatus.equals(RespConstants.Status.OK))
 	{
-		if(sEventName==null || "".equalsIgnoreCase(sEventName))
+		if(isCreateEvent)
 		{
-			Text errorText = new ErrorText("Admin user was not recognized. Please log in again.","e_summ_event_name") ;		
-			arrErrorText.add(errorText);
+			if(sEventName==null || "".equalsIgnoreCase(sEventName))
+			{
+				Text errorText = new ErrorText("Admin user was not recognized. Please log in again.","e_summ_event_name") ;		
+				arrErrorText.add(errorText);
+				
+				responseStatus = RespConstants.Status.ERROR;
+			}
+			else
+			{
+				AdminManager adminManager = new AdminManager();		
+				if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId))
+				{
+					AdminBean adminBean = adminManager.getAdmin(sAdminId);
+					 
+					EventCreationMetaDataBean eventMeta = new EventCreationMetaDataBean();
+					eventMeta.setAdminBean(adminBean);
+					eventMeta.setEventDate(sEventDate);
+					eventMeta.setEventDatePattern("MM/dd/yyyy");
+					eventMeta.setEventTimeZone("UTC");
+					eventMeta.setEventName(sEventName);
+					
+					EventBean eventBean = eventManager.createEvent(eventMeta);
+					
+					
+					if(eventBean!=null && eventBean.getEventId()!=null && !"".equalsIgnoreCase(eventBean.getEventId()))
+					{
+						TelNumberManager telNumberManager = new TelNumberManager();
+						telNumberManager.setEventDemoNumber(eventBean.getEventId(),adminBean.getAdminId());
+						
+						
+						responseStatus = RespConstants.Status.OK;
+						
+						jsonResponseObj.put("event_bean",eventBean.toJson());
+						jsonResponseObj.put("create_event",true);
+					}
+					else
+					{
+						Text errorText = new ErrorText("New was not created. Please try again later.","e_summ_event_name") ;		
+						arrErrorText.add(errorText);
+						
+						responseStatus = RespConstants.Status.ERROR;
+					}
+				}
+				
+				
+			}
 			
-			responseStatus = RespConstants.Status.ERROR;
 		}
 		else
 		{
-			AdminManager adminManager = new AdminManager();		
-			if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId))
+			if(sEventId!=null && !"".equalsIgnoreCase(sEventId))
 			{
-				AdminBean adminBean = adminManager.getAdmin(sAdminId);
-				 
-				EventCreationMetaDataBean eventMeta = new EventCreationMetaDataBean();
-				eventMeta.setAdminBean(adminBean);
-				eventMeta.setEventDate(sEventDate);
-				eventMeta.setEventDatePattern("MM/dd/yyyy");
-				eventMeta.setEventTimeZone("UTC");
-				eventMeta.setEventName(sEventName);
 				
-				EventBean eventBean = eventManager.createEvent(eventMeta);
+					EventCreationMetaDataBean eventCreateMetaBean = new EventCreationMetaDataBean();
+					eventCreateMetaBean.setEventId(sEventId);
+					eventCreateMetaBean.setEventName(sEventName);
+					eventCreateMetaBean.setEventDate(sEventDate);
+					eventCreateMetaBean.setEventDatePattern("MM/dd/yyyy");
+					eventCreateMetaBean.setEventTimeZone("UTC");
+					
+					Integer iNumOfRowsUpdated = eventManager.updateEvent(eventCreateMetaBean); 
+					if(iNumOfRowsUpdated<1)
+					{
+						Text errorText = new ErrorText("Oops!! Please try again later.","e_summ_event_date") ;		
+						arrErrorText.add(errorText);
+						
+						responseStatus = RespConstants.Status.ERROR;
+					}
+					else
+					{
+						
+						responseStatus = RespConstants.Status.OK;
+					}
 				
-				
-				if(eventBean!=null && eventBean.getEventId()!=null && !"".equalsIgnoreCase(eventBean.getEventId()))
-				{
-					TelNumberManager telNumberManager = new TelNumberManager();
-					telNumberManager.setEventDemoNumber(eventBean.getEventId(),adminBean.getAdminId());
-					
-					
-					responseStatus = RespConstants.Status.OK;
-					
-					jsonResponseObj.put("event_bean",eventBean.toJson());
-					jsonResponseObj.put("create_event",true);
-				}
-				else
-				{
-					Text errorText = new ErrorText("New was not created. Please try again later.","e_summ_event_name") ;		
-					arrErrorText.add(errorText);
-					
-					responseStatus = RespConstants.Status.ERROR;
-				}
 			}
-			
-			
+			else
+			{
+				Text errorText = new ErrorText("Error processing request.","my_id") ;		
+				arrErrorText.add(errorText);
+				
+				responseStatus = RespConstants.Status.ERROR;
+			}
 		}
-		
 	}
 	else
 	{
-		if(sEventId!=null && !"".equalsIgnoreCase(sEventId))
-		{
-			
-				EventCreationMetaDataBean eventCreateMetaBean = new EventCreationMetaDataBean();
-				eventCreateMetaBean.setEventId(sEventId);
-				eventCreateMetaBean.setEventName(sEventName);
-				eventCreateMetaBean.setEventDate(sEventDate);
-				eventCreateMetaBean.setEventDatePattern("MM/dd/yyyy");
-				eventCreateMetaBean.setEventTimeZone("UTC");
-				
-				Integer iNumOfRowsUpdated = eventManager.updateEvent(eventCreateMetaBean); 
-				if(iNumOfRowsUpdated<1)
-				{
-					Text errorText = new ErrorText("Oops!! Please try again later.","e_summ_event_date") ;		
-					arrErrorText.add(errorText);
-					
-					responseStatus = RespConstants.Status.ERROR;
-				}
-				else
-				{
-					
-					responseStatus = RespConstants.Status.OK;
-				}
-			
-		}
-		else
-		{
-			Text errorText = new ErrorText("Error processing request.","my_id") ;		
-			arrErrorText.add(errorText);
-			
-			responseStatus = RespConstants.Status.ERROR;
-		}
+		appLogging.error("Action isCreateEvent = " +isCreateEvent + "invoked : error detected event id : " + sEventId + " - " + arrErrorText);
 	}
-	
-	
 
-
-	appLogging.error("Response " + sEventId );
+	appLogging.info("Action isCreateEvent = " +isCreateEvent + "invoked : event id : " + sEventId );
 	responseObject.setErrorMessages(arrErrorText);
 	responseObject.setOkMessages(arrOkText);
 	responseObject.setResponseStatus(responseStatus);

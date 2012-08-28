@@ -124,28 +124,315 @@
 
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 
 <body>
+	<jsp:include page="../common/top_nav.jsp">
+		<jsp:param name="referrer_source" value="event_setup.jsp"/>	
+	</jsp:include>
+	<div class="scratch_area" >
+		<jsp:include page="lobby_tab.jsp">
+			<jsp:param name="select_tab" value="event_tab"/>
+			<jsp:param name="lobby_header" value="<%=eventName %>"/>
+			<jsp:param name="lobby_sec_header" value="<%=eventDate%>"/>
+		</jsp:include>
+		<div class="row">
+			<div class="span3">
+				&nbsp;
+			</div>
+		</div>
+		<div class = "row">
+			<div class = "span10">
+				<jsp:include page="../common/tab_view_nav.jsp">
+					<jsp:param name="admin_id" value="<%=sAdminId %>"/>
+				</jsp:include>	
+			</div>
+		</div>
+		<div class = "row" style="margin-left:-18px;">
+			<div class = "tab_view_span12 white_bkg light_border"  >
+					<div class="row">
+						<div class = "offset1 span9">
+							<jsp:include page="../common/action_nav.jsp">
+								<jsp:param name="admin_id" value="<%=sAdminId %>"/>
+								<jsp:param name="event_id" value="<%=sEventId %>"/>
+								<jsp:param name="select_action_nav" value="table_tab"/>
+								<jsp:param name="logged_in" value="<%=isSignedIn %>"/>
+								<jsp:param name="referrer_source" value="event_setup.jsp"/>						
+							</jsp:include> 
+						</div>
+					</div>
+					<div class="row">
+						<div class="span1">
+							&nbsp;
+						</div>
+					</div>
+					<div  class="clear_both" id="tab_view_area">
+					
+					</div>
+					<div  class="clear_both" id="div_table_details">
+						
+					</div>
+					<div  class="clear_both" id="div_guests_details">
+						
+					</div>
+					
+					<div  class="row" id="div_event_summary"  style="display:none;" >
+						<div class="offset_0_5 span7">
+						
+							<div class="row">
+								<div class="span5">
+									<h4>Event </h4>
+								</div>
+							</div>
+							<div  class="row">
+								<div class="offset1 span6">
+									<form id="frm_event_update" >
+										<div class="row">
+											<div class="span2" >
+												<span class="fld_name">Name :  </span>
+											</div>
+										</div>
+										<div class="row">											
+											<div class="span4" >
+												<input type="text"class="ispn4" id="e_summ_event_name" name="e_summ_event_name"/>
+											</div>
+											<div class="span2"  style="text-align : left; padding-top:5px;" >
+												<span id="e_summ_event_name_mssg"></span>
+											</div>
+										</div>
+										<div class="row">											
+											<div class="span3" >
+												&nbsp;
+											</div>
+										</div>
+										<div class="row">
+											<div class="span5" >
+												<span class="fld_name">When : </span>
+											</div>
+										</div>
+										<div class="row">											
+											<div class="span4" >
+												<input type="text" class="ispn4" id="e_summ_event_date" name="e_summ_event_date"/>
+											</div>
+											<div class="span2" style="text-align : left;  padding-top:5px;" >
+												<span id="e_summ_event_date_mssg"></span>
+											</div>
+										</div>
+										<div class="row"style="text-align:right">											
+											<div class="span4" >
+										<%
+												if(isNewEventClicked)
+												{
+		%>
+													<input type="button" class="btn ispn2" id="create_event" name="create_event" value="Create New Event"/>									
+		<%											
+												}
+												else
+												{
+		%>
+													<input type="button" class="btn ispn2" id="save_event" name="save_event" value="Save Changes"/>
+		<%
+												}
+										%>
+											</div>
+											<div class="span2" style="text-align : left; padding-top:5px;" >
+												<span id="act_mssg" ></span>
+											</div>
+										</div>
+									</form>
+								</div>
+							</div>
+							<div class="row">
+								<div class="span1">
+									&nbsp;
+								</div>
+							</div>
+							<div class="row">
+								<div class="span1">
+									&nbsp;
+								</div>
+							</div>
+							<div class="row">
+								<div class="span5">
+									<h4>Phone Numbers</h4>
+								</div>
+							</div>
+							<div class="row">
+								<div class="offset1 span4">
+									<span class="fld_name"> Seating : </span>
+									<span class="fld_txt" id="e_summ_seating_telnum1" >(267) 432 5420 ext: 5432</span>
+								</div>
+							</div>
+							<div class="row">
+								<div class="offset1 span4">
+									<span class="fld_name"> RSVP : </span>
+									<span class="fld_txt" id="e_summ_rsvp_telnum1" >(214) 432 5420 ext: 5432</span>
+								</div>
+							</div>							
+							<div class="row">
+								<div class="span1">
+									&nbsp;
+								</div>
+							</div>
+							<div class="row">
+								<div class="span5">
+									<h4>Seating Plan</h4>
+								</div>
+							</div>
+							<div class="row">
+							<div class="offset1 span10">
+							 <table>
+								<tr>
+									<td ><span class="fld_name">Tables created : </span></td>
+									<td><span id="e_summ_total_table" class="fld_txt" > 0 </span></td>
+								</tr>
+								<tr>
+									<td  ><span class="fld_name">Seats created : </span></td>
+									<td><span id="e_summ_total_seats" class="fld_txt" > 0 </span></td>
+								</tr>
+								<tr>
+									<td  ><span class="fld_name">Seats assigned : </span></td>
+									<td><span id="e_summ_assigned_seats" class="fld_txt" > 0 </span></td>
+								</tr>
+								<tr>
+									<td ><span class="fld_name">Guest parties : </span></td>
+									<td><span id="e_summ_guest_parties" class="fld_txt" > 0 </span></td>
+								</tr>
+								<tr>
+									<td ><span class="fld_name">Total invited : </span></td>
+									<td><span id="e_summ_total_invited" class="fld_txt"> 0 </span></td>
+								</tr>
+								<tr>
+									<td ><span class="fld_name">Total rsvp : </span></td>
+									<td><span id="e_summ_total_rsvp" class="fld_txt"> 0 </span></td>
+								</tr>
+							</table>
+							</div>
+						</div>
+							<div class="row">
+								<div class="span1">
+									&nbsp;
+								</div>
+							</div>
+							<div class="row">
+								<div class="span1">
+									&nbsp;
+								</div>
+							</div>
+				
+					</div>
+				</div>
+				
+				<!-- The phone number summary -->
+				<div  class="row" id="div_phone_numbers"  style="display:none;">
+					<div class="offset1 span8">
+						<div class="row">
+				  			<div class="span8">
+				  			
+				  				<!-- Seating Number -->
+				   				<div class="row">
+				      				<div class="span2"><label for="table_name">Seating Number :</label></div>
+				      				<div class="span4"><label id="seating_gen_num"></label></div>
+				      				<div class="span2" style="display:none;"><label id="seating_search">Advanced Search</label></div>
+				    			</div>
+				    			<div class="row"  style="display:none;"  id="seating_div_event_id">
+				    				<div class="span8"><label for="table_name" class="span3">Event ID :&nbsp;</label><span class="span1"></span><label id="seating_event_id"  style="text-align:left"></label></div>
+				    			</div>
+				    			<div class="row"  style="display:none;"  id="seating_div_secret_key">
+				    				<div class="span8"><label for="table_name" class="span3">Secret key :&nbsp;</label><span class="span1"></span><label id="seating_secret_key"  style="text-align:left"></label></div>
+				    			</div>
+				   				<div class="row" id="seating_numbers_gen" style="display:none;">
+				    	 			<div class="span8">
+				    	 				<form id="frm_seating_numbers" >
+					    	 				<fieldset>
+												<div class="clearfix-tight">
+													<label for="table_name">Area Code :</label>
+													<div class="input">
+														<input type="text" id="seating_area_code" name="seating_area_code"/>
+													</div>
+												</div>								
+												<div class="clearfix-tight">
+													<label for="table_name">Contains :</label>
+													<div class="input">
+														<input type="text" id="seating_text_pattern" name="seating_text_pattern"/>
+													</div>
+												</div>
+												<div class="actions">									
+										            <button id="gen_seating_tel_num" name="gen_seating_tel_num" type="button" class="action_button primary small">Generate New Number</button>
+										        </div>	
+											</fieldset>
+											<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
+											<input type="hidden" name="event_id" id="event_id" value="<%=sEventId%>"/>
+							    	 	</form>
+				    	 			</div>
+				    			</div>
+				    			
+				    			<!-- RSVP Number -->
+							    <div class="row">
+									<div class="span2"><label for="table_name">RSVP Number :</label></div>
+							      	<div class="span4"><label id="rsvp_gen_num"></label></div>
+							    	<div class="span2"  style="display:none;"><label id="rsvp_search">Advanced Search</label></div>
+								</div>
+								<div class="row"  style="display:none;"  id="rsvp_div_event_id">
+				    				<div class="span8"><label for="table_name" class="span3">Event ID : &nbsp;</label><span class="span1"></span><label id="rsvp_event_id" class="span4" style="text-align:left" ></label></div>
+				    			</div>
+							    <div class="row"  style="display:none;"  id="rsvp_div_secret_key">
+							    	<div class="span8"><label for="table_name" class="span3">Secret key : &nbsp;</label><span class="span1"></span><label id="rsvp_secret_key" class="span4"  style="text-align:left"  ></label></div>
+							    </div>
+							     <div class="row" id="rsvp_numbers_gen"  style="display:none;">
+							     	<div class="span8">
+										<form id="frm_rsvp_numbers" >
+							    	 		<fieldset>
+												<div class="clearfix-tight">
+													<label for="table_name">Area Code :</label>
+													<div class="input">
+														<input type="text" id="rsvp_area_code" name="rsvp_area_code"/>
+													</div>
+												</div>								
+												<div class="clearfix-tight">
+													<label for="table_name">Contains :</label>
+													<div class="input">
+														<input type="text" id="rsvp_contains" name="rsvp_contains"/>
+													</div>
+												</div>
+												<div class="actions">									
+										            <button id="gen_rsvp_tel_num" name="gen_rsvp_tel_num" type="button" class="action_button primary small">Generate New Number</button>
+										        </div>	
+											</fieldset>
+											<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
+											<input type="hidden" name="event_id" id="event_id" value="<%=sEventId%>"/>
+							    	 	</form>
+							    	 </div>
+							     </div>
+							  </div>
+							 </div>
+							 	<div class="row">
+							  <div class="span8">
+							  	<div class="row">
+							  		&nbsp;
+							  	</div>
+							  </div>
+							  </div>
+							  	<div class="row">
+							  <div class="span8">
+							  	<div class="row">
+							  		<div class="span8" style="text-align:center;">
+							  			<button id="bt_get_own_phone" name="bt_get_own_phone" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="action_button primary big">Get direct line.</button>
+							  		</div>
+							   	</div>
+							  </div>
+							</div>
+						</div>
+			
+				
+			</div>
+		</div>										
+		
+	</div>
+	<div style="clear:both">&nbsp;</div>
 		<div class="container rounded-corners">
 			<div style="margin:5px;">
-			<jsp:include page="../common/top_nav.jsp">
-				<jsp:param name="referrer_source" value="event_setup.jsp"/>	
-			</jsp:include>
-			<jsp:include page="lobby_tab.jsp">
-				<jsp:param name="select_tab" value="event_tab"/>
-				<jsp:param name="lobby_header" value="<%=eventName %>"/>
-				<jsp:param name="lobby_sec_header" value="<%=eventDate%>"/>
-			</jsp:include>
 			<div class="main_body">
 				<div class="clear_both">					
-					<jsp:include page="../common/tab_view_nav.jsp">
-						<jsp:param name="admin_id" value="<%=sAdminId %>"/>
-					</jsp:include>	
-					<jsp:include page="../common/action_nav.jsp">
-						<jsp:param name="admin_id" value="<%=sAdminId %>"/>
-						<jsp:param name="event_id" value="<%=sEventId %>"/>
-						<jsp:param name="select_action_nav" value="table_tab"/>
-						<jsp:param name="logged_in" value="<%=isSignedIn %>"/>
-						<jsp:param name="referrer_source" value="event_setup.jsp"/>						
-					</jsp:include> 
+					
+					
 				</div>
 				<div  class="clear_both" style="width: 100%;  text-align: center;">
 				<div  class="clear_both" id="tab_view_area">
@@ -156,87 +443,6 @@
 				</div>
 				<div  class="clear_both" id="div_guests_details">
 					
-				</div>
-				<div  class="clear_both" id="div_event_summary" style="display:none;">
-				<div class="row">
-					<div class="span7">
-					<form id="frm_event_update" >
-					<fieldset>
-								<div class="clearfix-tight">
-									<label for="table_name">Event Name :</label>
-									<div class="input">
-										<input type="text"  class="span4" value="" id="e_summ_event_name" name = "e_summ_event_name"/>
-									</div>
-								</div>
-								<div class="clearfix-tight">
-									<label for="table_name">Event Date : </label>
-									<div class="input">
-										<input type="text" class="span4" value="" id="e_summ_event_date" name = "e_summ_event_date"/>
-									</div>
-								</div>
-								<div class="actions">
-								<%
-										if(isNewEventClicked)
-										{
-								%>
-											<button id="create_event" name="create_event" type="button" class="action_button primary small">Create New Event</button>
-								<%
-										}
-										else
-										{
-								%>
-											<button id="save_event" name="save_event" type="button" class="action_button primary small">Save Changes</button>
-								<%			
-										}
-								%>								
-						            
-						        </div>
-						        
-					</fieldset>	
-					</form>	
-					</div>
-				</div>
-				<div class="row">
-					<div class="span2">
-						&nbsp;
-					</div>
-					<div class="span5">
-					 <table>
-						<tr>
-							<td align="right">Tables created : </td>
-							<td><span id="e_summ_total_table" > 0 </span></td>
-						</tr>
-						<tr>
-							<td  align="right">Seats created : </td>
-							<td><span id="e_summ_total_seats"> 0 </span></td>
-						</tr>
-						<tr>
-							<td  align="right">Seats assigned : </td>
-							<td><span id="e_summ_assigned_seats"> 0 </span></td>
-						</tr>
-						<tr>
-							<td  align="right">Guest parties : </td>
-							<td><span id="e_summ_guest_parties"  > 0 </span></td>
-						</tr>
-						<tr>
-							<td  align="right">Total invited : </td>
-							<td><span id="e_summ_total_invited" > 0 </span></td>
-						</tr>
-						<tr>
-							<td  align="right">Total rsvp : </td>
-							<td><span id="e_summ_total_rsvp"> 0 </span></td>
-						</tr>
-						<tr>
-							<td  align="right">Rsvp Telephone : </td>
-							<td><span id="e_summ_rsvp_telnum" > 0 </span></td>
-						</tr>
-						<tr>
-							<td  align="right">Seating Telephone : </td>
-							<td><span id="e_summ_seating_telnum"> 0 </span></td>
-						</tr>
-					</table>
-					</div>
-				</div>
 				</div>
 				<div  class="clear_both" id="div_phone_numbers"  style="display:none;">
 					<div class="row">
@@ -338,6 +544,9 @@
 	<div id="action_fancy_box">
 		
 	</div>
+	<div id="loading_wheel" style="display:none;">
+		<img src="/web/img/wheeler.gif">
+	</div>
 </body>
 
 <script type="text/javascript" src="/web/js/jquery.tableformatter.1.0.0.js"></script>
@@ -358,6 +567,7 @@
 	var varDemoRsvpNumType = '<%=Constants.EVENT_TASK.DEMO_RSVP.getTask()%>';
 	
 	$(document).ready(function() {
+		$("#loading_wheel").hide();
 		setCredentialEventId(varEventID);
 		if(!varIsSignedIn)
 		{
@@ -425,7 +635,9 @@
 		}
 		else
 		{
-			$("#table_action_nav").show();
+			//$("#table_action_nav").show();
+			$("#div_event_summary").show();
+			
 		}
 		
 		
@@ -489,14 +701,23 @@
 		loadActions();
 		if(varIsNewEventCreateClicked)
 		{
-			switchTab('li_event_summary');
+			switchTab('event_summary_tab');
 			$('#div_event_summary').show();
 		}
 		else
 		{
-			loadTables();
+			loadEventSummary();
 		}
 		
+	});
+	
+	$.ajaxSetup({
+	    beforeSend: function(data) {
+	        $("#loading_wheel").show();
+	    },
+	    complete: function(data) {
+	        $("#loading_wheel").hide();
+	    }
 	});
 	
 	function phoneNumTab()
@@ -536,7 +757,7 @@
 	
 	function switchTab(current_tab_id)
 	{
-		$('#div_tab_nav li').each(function(index) {
+		$('#div_tab_nav a').each(function(index) {
 		    $(this).removeClass('active');
 		});
 		$('#'+current_tab_id).addClass('active');
@@ -545,26 +766,26 @@
 	
 	function displayEventSummaryView(tab_id)
 	{		
-		switchTab(tab_id);
+		switchTab('event_summary_tab');
 		$('#div_event_summary').show();
 		loadEventSummary();
 	}
 	
 	function displayTableView(tab_id)
 	{
-		switchTab(tab_id);
+		switchTab('table_view_tab');
 		loadTables();
 	}
 	
 	function displayGuestView(tab_id)
 	{
-		switchTab(tab_id);
+		switchTab('guest_view_tab');
 		loadGuests();
 	}
 	
 	function displayPhoneNumberView(tab_id)
 	{		
-		switchTab(tab_id);
+		switchTab('phone_num_tab');
 		$('#div_phone_numbers').show();
 		loadPhoneNumber();
 		//loadPhoneNumberFrame();
@@ -627,6 +848,7 @@
 		var actionUrl = "proc_save_event.jsp";
 		var methodType = "POST";
 		
+		clearMessages();
 		getDataAjax(actionUrl,dataString,methodType, getUpdatedEvent);
 	}
 	
@@ -637,6 +859,7 @@
 		var actionUrl = "proc_save_event.jsp";
 		var methodType = "POST";
 		
+		clearMessages();
 		getDataAjax(actionUrl,dataString,methodType, getUpdatedEvent);
 	}
 	
@@ -653,10 +876,14 @@
 					var jsonResponseMessage = varResponseObj.messages;
 					var varArrErrorMssg = jsonResponseMessage.error_mssg
 					displayMessages( varArrErrorMssg );
+					
+					displayStatus('Changes were not saved.');
 				}
 			}
 			else  if( jsonResult.status == 'ok' && varResponseObj !=undefined)
 			{
+				displayStatus('Success!');
+				
 				$("#primary_header").text( $("#e_summ_event_name").val() );
 				$("#secondary_header").text( '('+$("#e_summ_event_date").val()+')' );
 				
@@ -867,13 +1094,46 @@
 			
 		}
 	}
+	function displayStatus(varStatMssg)
+	{
+		var varStatusSpan = $("#act_mssg");
+		varStatusSpan.html('');
+		
+		varStatusSpan.removeClass();
+		varStatusSpan.addClass("info_mssg");
+		varStatusSpan.addClass("small");
+		
+		varStatusSpan.html(varStatMssg);
+		
+	}
+	
+	function clearMessages()
+	{
+		var varStatusSpan = $("#act_mssg");
+		varStatusSpan.removeClass();
+		varStatusSpan.html('');
+		
+		var varEventNameMssg = $("#e_summ_event_name_mssg");
+		varEventNameMssg.removeClass();
+		varEventNameMssg.html('');
+		
+		var varEventDateMssg = $("#e_summ_event_date_mssg");
+		varEventDateMssg.removeClass();
+		varEventDateMssg.html('');
+		
+	}
 	function displayMessages(varArrMessages)
 	{
 		if(varArrMessages!=undefined)
 		{
 			for(var i = 0; i<varArrMessages.length; i++)
 			{
-				alert( varArrMessages[i].text );
+				var varMessageSpan = $("#"+varArrMessages[i].txt_loc_id+"_mssg");
+				varMessageSpan.html("");
+				
+				varMessageSpan.addClass("error_mssg");
+				varMessageSpan.addClass("small");
+				varMessageSpan.html(varArrMessages[i].text);
 			}
 		}
 	}

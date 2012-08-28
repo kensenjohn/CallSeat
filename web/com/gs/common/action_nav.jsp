@@ -18,7 +18,7 @@ String sRefererSource = ParseUtil.checkNull(request.getParameter("referrer_sourc
 			<div class="span7">
 				<div class="row">
 					<div class="span2 txt_center">
-						<button id="add_table" name="add_table" href="../event/add_table.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="action_button default small ">Add Table</button>
+						<input type="button" id="add_table" name="add_table" href="../event/add_table.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="btn" value="Add Table">
 					</div>
 				</div>
 			</div>

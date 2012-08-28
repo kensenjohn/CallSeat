@@ -12,93 +12,138 @@
 		String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 		String sRefferrerSource = ParseUtil.checkNull(request.getParameter("referrer_source"));
 		boolean isPassthru = ParseUtil.sTob(request.getParameter("pass_thru_action"));
-		
-		
+		String sAction =  ParseUtil.checkNull(request.getParameter("action"));
 		
 		
 		jspLogging.info("Add Table for event : " + sEventId + " by : " + sAdminId);
 %>
-
-		<div class="container-filler rounded-corners">
+		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
+			<div class="blank_scratch_area" style="padding:5px;">
+				<div class="logo span2"><a href="#">Guests</a></div>
+			</div>
+		</div>
+		<div class="fnbx_scratch_area">
 			<div style="padding:20px">
-				<div class="row">
-					<div class="span16">
-						<div class="row">							
-							<div class="span8">
-								<h3 class="txt txt_center">Login</h3>
-								<form id="frm_login" >
-									<fieldset>
-										<div class="clearfix-tight">
-											<label for="login_email">Email :</label>
-											<div class="input">
-												<input type="text" id="login_email" name="login_email"/>
-											</div>
-										</div>
-										<div class="clearfix-tight">
-											<label for="login_password">Password :</label>
-											<div class="input">
-												<input type="password" id="login_password" name="login_password"/>
-											</div>
-										</div>
-										<div class="actions">									
-								            <button id="login_user" name="login_user" type="button" class="action_button primary large">Login</button>
-								            <br>
-											<a id="link_forgot_password" href="#">Forgot Password?</a><br>
-								            <span id="login_err_mssg"  style="color: #9d261d;" ></span><br>
-								             <span id="login_success_mssg"  style="color: #46a546;" ></span>
-								        </div>
-									</fieldset>
-									<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
-									<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>	
-								</form>
-							</div>
-							
-							<div class="span8">
-								<h3  class="txt txt_center">Register</h3>
-								<form id="frm_register" >
-									<fieldset>
-										<div class="clearfix-tight">
-											<label for="register_email">Email :</label>
-											<div class="input">
-												<input type="text" id="register_email" name="register_email"/>
-											</div>
-										</div>
-										<div class="clearfix-tight">
-											<label for="register_fname">First Name :</label>
-											<div class="input">
-												<input type="text" id="register_fname" name="register_fname"/>
-											</div>
-										</div>
-										<div class="clearfix-tight">
-											<label for="register_lname">Last Name :</label>
-											<div class="input">
-												<input type="text" id="register_lname" name="register_lname"/>
-											</div>
-										</div>
-										<div class="clearfix-tight">
-											<label for="register_pass">Password :</label>
-											<div class="input">
-												<input type="password" id="register_pass" name="register_pass"/>
-											</div>
-										</div>
-										<div class="clearfix-tight">
-											<label for="register_pass_conf">Confirm Password :</label>
-											<div class="input">
-												<input type="password" id="register_pass_conf" name="register_pass_conf"/>
-											</div>
-										</div>
-										<div class="actions">									
-								            <button id="register_user" name="register_user" type="button" class="action_button primary large">Register</button>
-								            <br>								            
-								            <span id="reg_err_mssg"  style="color: #9d261d;" ></span><br>
-								            <span id="reg_success_mssg"  style="color: #46a546;" ></span>
-								        </div>
-									</fieldset>
-									<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
-									<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>							
-								</form>
+				<div id="div_login" name="div_login" class="row" style="display:<%="login".equalsIgnoreCase(sAction)?"block":"none"%>;">
+					<div class="offset1 span5">
+						<h2>Login User</h2>
+						<div class="row">
+							<div class="span2" >
+								&nbsp;
 							</div>
 						</div>
+						<form id="frm_login" >
+						<div class="row">
+							<div class="span2" >
+								Email : 
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								<input type="text" id="login_email" name="login_email"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								Password : 
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								<input type="password" id="login_password" name="login_password"/>
+							</div>
+						</div>
+						<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+						<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
+						<div class="row">
+							<div class="span2" >
+								 <input type="button" id="login_user" name="login_user" class="btn btn-large" value="Login"><br>						 			
+								    <span id="login_err_mssg"  style="color: #9d261d;" ></span><br>
+								    <span id="login_success_mssg"  style="color: #46a546;" ></span>
+							</div>
+						</div>
+						</form>
+						<div class="row">
+							<div class="span2" >
+								<a id="link_forgot_password" href="#">Forgot your password?</a> <br>
+								<a id="link_to_signup" href="#">Sign me up. I don't have an account.</a>
+							</div>
+						</div>
+						
+						
+					</div>
+				</div>
+				<div id="div_signup" name="div_signup" class="row" style="display:<%=("signup".equalsIgnoreCase(sAction) || "".equalsIgnoreCase(sAction) )?"block":"none"%>;">
+					<div class="offset1 span5">
+						<h2>Sign Me Up</h2>
+						<div class="row">
+							<div class="span2" >
+								&nbsp;
+							</div>
+						</div>
+						<form id="frm_register" >
+						<div class="row">
+							<div class="span2" >
+								Email : 
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								<input type="text" id="register_email" name="register_email"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								First Name : 
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								<input type="text" id="register_fname" name="register_fname"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								Last Name : 
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								<input type="text" id="register_lname" name="register_lname"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								Password : 
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								<input type="password" id="register_pass" name="register_pass"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								Confirm Password : 
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								<input type="password" id="register_pass_conf" name="register_pass_conf"/>
+							</div>
+						</div>
+						<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+						<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
+						<div class="row">
+							<div class="span2" >
+								 <input type="button" id="register_user" name="register_user" class="btn btn-large" value="Create My Account"/><br>
+						 			<a id="link_to_login" name="link_to_login" href="#">Already have an account? Click here to Login.</a><br>
+								    <span id="reg_err_mssg"  style="color: #9d261d;" ></span><br>
+								    <span id="reg_success_mssg"  style="color: #46a546;" ></span>
+							</div>
+						</div>
+						
+						</form>
 					</div>
 				</div>		
 			</div>
@@ -130,7 +175,19 @@
 		$("#login_user").click(loginUser);
 		$("#register_user").click(registerUser);
 		$("#link_forgot_password").click(submitForgotPassword);
+		$("#link_to_login").click( showLogin );
+		$("#link_to_signup").click( showSignUp );
 	});
+	function showLogin()
+	{
+		$("#div_signup").hide();
+		$("#div_login").show();
+	}
+	function showSignUp()
+	{
+		$("#div_login").hide();
+		$("#div_signup").show();
+	}
 	function submitForgotPassword()
 	{
 
@@ -155,7 +212,7 @@
 	}
 	
 	function submitCredentials( actionUrl,dataString,methodType,callBackMethod )
-	{
+	{		
 		$.ajax({
 			  url: actionUrl ,
 			  type: methodType ,

@@ -31,43 +31,73 @@
 		
 		jspLogging.info("Add Table for event : " + sEventId + " by : " + sAdminId);
 	%>
-		<div class="container-filler rounded-corners" >
+		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
+			<div class="blank_scratch_area" style="padding:5px;">
+				<div class="logo span2"><a href="#">CallSeat</a></div>
+			</div>
+		</div>
+		<div  class="fnbx_scratch_area">
 			<div style="padding:20px">
-				
-				<h2 class="txt txt_center"><%=sTitle%> &nbsp; <span id='edit_table_name'></span></h2>
-				<div class="row">
-					<div class="span7">
-						<form id="frm_add_table" >
-							<fieldset>
-								<div class="clearfix-tight">
-									<label for="table_name">Table Name :</label>
-									<div class="input">
-										<input type="text" id="table_name" name="table_name"/>
-									</div>
+				<div class="row" >
+					<div class="offset1 span6">
+						<div class="row">
+							<div class="span6">
+								<h2 class="txt txt_center"><%=sTitle%> &nbsp; <span id='edit_table_name'></span></h2>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span6">
+								&nbsp;
+							</div>
+						</div>
+						
+						<form id="frm_login" >
+							<div class="row">
+								<div class="span6">
+									Table Name :
 								</div>
-								<div class="clearfix-tight">
-									<label for="table_name">Table Number :</label>
-									<div class="input">
-										<input type="text" id="table_num" name="table_num"/>
-									</div>
+							</div>
+							<div class="row">
+								<div class="span2" >
+									<input type="text" id="table_name" name="table_name"/>
 								</div>
-								<div class="clearfix-tight">
-									<label for="table_name">Number of Seats :</label>
-									<div class="input">
-										<input type="text" id="num_of_seats" name="num_of_seats"/>
-									</div>
-								</div>	
-								<div class="actions">									
-						            <button id="add_table" name="add_table" type="button" class="action_button primary small"><%=sButtonName %></button>
-						        </div>							
-							</fieldset>
+							</div>
+							<div class="row">
+								<div class="span2" >
+									Table Number :
+								</div>
+							</div>
+							<div class="row">
+								<div class="span2" >
+									<input type="text" id="table_num" name="table_num"/>
+								</div>
+							</div>
+							<div class="row">
+								<div class="span4" >
+									Number of Seats :
+								</div>
+							</div>
+							<div class="row">
+								<div class="span2" >
+									<input type="text" id="num_of_seats" name="num_of_seats"/>
+								</div>
+							</div>
+							<div class="row">								
+								<div class="offset2 span2" >
+									<input type="button" id="add_table" name="add_table" type="button" class="btn" value="<%=sButtonName %>">
+								</div>
+																			
+								<div class="span2" >
+									<span id="err_mssg"></span>
+								</div>
+							</div>
+							
 							<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
 							<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
-							<input type="hidden" id="admin_id" name="table_id"  value="<%=sTableId%>"/>
+							<input type="hidden" id="table_id" name="table_id"  value="<%=sTableId%>"/>
 						</form>
-					</div>			
+					</div>
 				</div>
-				<span id="err_mssg"></span>
 			</div>
 		</div>
 	</body>

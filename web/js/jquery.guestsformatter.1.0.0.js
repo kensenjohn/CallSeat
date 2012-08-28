@@ -37,7 +37,7 @@
 		{
 			create_table : function() 
 			{
-				return '<table cellspacing="1"  class="bordered-table zebra-striped tbl" id="guest_details"> '+this.create_header()+''+this.create_rows()+'</table>';
+				return '<table cellspacing="1" class="table table-striped span11"  id="guest_details"> '+this.create_header()+''+this.create_rows()+'</table>';
 			},
 			create_header : function ()
 			{
@@ -89,6 +89,15 @@
 												'<td>'+tmpTable.table_num+'</td>'+
 												'<td>'+ assignments +'</td>'+
 												'<td>'+ this.create_action_urls( tmpTable ) +'</td>' + '</tr>';*/
+							if((i%2)>0)
+							{
+								varOddClass = 'class="odd"';
+							}
+							else
+							{
+								varOddClass = '';
+							}
+							
 							valRows = valRows + '<tr id="guest_'+tmpGuest.guest_id+'" '+varOddClass+'>' + 
 									'<td class="tbl_td">' + tmpGuest.user_info.first_name + '</td>' + 
 									'<td class="tbl_td">' + tmpGuest.user_info.last_name + '</td>';
@@ -115,7 +124,7 @@
 							
 							var varEventGuest = json_guest_details.varEventGuestDetails;
 							valRows = valRows + '<td class="tbl_td">' + this.create_event_numbers_link(varEventGuest, tmpGuest) + '</td>';
-							valRows = valRows + '<td class="tbl_td">' + this.create_action_urls( tmpGuest ) + '</td>';
+							valRows = valRows + '<td class="tbl_td">' + this.create_action_urls( tmpGuest ) + '</td></tr>';
 						}
 						
 						

@@ -32,15 +32,15 @@
 		{
 			create_table : function() 
 			{
-				return '<table cellspacing="1"  class="bordered-table zebra-striped tbl" id="dashboard_event_details"> '+this.create_header()+''+this.create_rows()+'</table>';
+				return '<table cellspacing="1"  class="table table-striped span9" id="dashboard_event_details"> '+this.create_header()+''+this.create_rows()+'</table>';
 			},
 			create_header : function ()
 			{
 				var valHeader = '<thead><tr> ' + 
-				'<th style="width:10%"  class="tbl_th">Event Number</th>'+
+				'<th style="width:20%"  class="tbl_th">Event Number</th>'+
 				'<th style="width:25%" class="tbl_th">Title</th>'+
 				'<th style="width:10%" class="tbl_th">Date</th>'+
-				'<th style="width:55%" class="tbl_th">&nbsp;</th>'+
+				'<th style="width:45%" class="tbl_th">&nbsp;</th>'+
 				'</tr></thead>';
 				return valHeader; 
 			},
@@ -65,17 +65,26 @@
 				{
 					for( i=0; i<numOfRows; i++ )
 					{
-						
+						if((i%2)>0)
+						{
+							varOddClass = 'class="odd"';
+						}
+						else
+						{
+							varOddClass = '';
+						}
+
 						var tmpEvent = allEvents[i];
 						
 						if(tmpEvent!=undefined && tmpEvent.event_id != '')
 						{
 							
 							valRows = valRows + '<tr id="guest_'+tmpEvent.event_num+'" '+varOddClass+'>' + 
-									'<td class="tbl_td">' + tmpEvent.event_num + '</td>' + 
-									'<td class="tbl_td">' + tmpEvent.event_name + '</td>' + 
-									'<td class="tbl_td">' + tmpEvent.human_event_date + '</td>' +
-									'<td class="tbl_td">'+ this.create_action_urls( tmpEvent ) +'</td>';
+									'<td>' + tmpEvent.event_num + '</td>' + 
+									'<td>' + tmpEvent.event_name + '</td>' + 
+									'<td>' + tmpEvent.human_event_date + '</td>' +
+									'<td>'+ this.create_action_urls( tmpEvent ) +'</td></tr>' ;
+
 						}
 						
 						

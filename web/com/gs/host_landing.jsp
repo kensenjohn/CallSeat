@@ -26,68 +26,54 @@ if(cookies!=null)
 <jsp:include page="common/header_bottom.jsp"/>
 
 <body >
-	<div class="container rounded-corners">
 		<jsp:include page="common/top_nav.jsp">
 			<jsp:param name="referrer_source" value="host_landing.jsp"/>	
 		</jsp:include>
-		<div class="main_body">
-			<div>
-						<h2>Seating your Guests, with a phone call.</h2>
-			</div>
-			
-				<div id="div_goto_lobby" style="<%=!isSignedIn?"display:none;":""%>">
-					<h3><a id="link_goto_lobby" href="<%=isSignedIn ? "event/host_dashboard.jsp?lobby_admin_id="+sAdminIdSecure:""%>">Goto lobby</a></h3>
+		<div class="welcome_img">
+			<div class="blank_scratch_area">
+			<div class="row">
+				<div class="offset3 span9">
+					<h1>Seat your guests with a phone call</h1>
 				</div>
-
-			<div class="landing_when">
-				<h3>When is the Event?</h3><br>
-				<form id="frm_event_dt" name="frm_event_dt">
-					<input type="text" id="event_date" class="span4" placeholder="Event Date" name="event_date">
-				</form>
-				<br>
-				<button id="event_dt_sbt" name="event_dt_sbt" class="action_button primary large ">Submit</button>
-							<form id="call_forward" name="call_forward"  method="POST">
-								<input type="hidden" id="hid_event_date" name="hid_event_date" value="">
-								<input type="hidden" id="from_landing" name="from_landing" value="">
-								<input type="hidden" id="lobby_event_id" name="lobby_event_id" value="">
-								<input type="hidden" id="lobby_admin_id" name="lobby_admin_id" 
-									value="<%=isSignedIn ? sAdminIdSecure:""%>">
-								
-							</form>
 			</div>
-		</div>
-	</div>
-</body>
-
-<!-- <body class="container">
-   <div class="page_setup">
-		<div class="container rounded-corners">
-			<jsp:include page="common/top_nav.jsp"/>
-			<div class="main_body">
-				<div class="clear_both landing_input">
-					<div>
-						<span class="l_txt">Seating your Guests, with a phone call.</span>
-						<br>
-						<br>
-						<div class="landing_when">
-							<label class="m_b_txt">When is the Event?</label><br>
-							<form id="frm_event_dt" name="frm_event_dt">
-								<input type="text" id="event_date" class="clearOnClick" name="event_date">
-							</form>
-							
-								<button id="event_dt_sbt" name="event_dt_sbt" class="action_button">Submit</button>
-							<form id="call_forward" name="call_forward"  method="POST">
-								<input type="hidden" id="hid_event_date" name="hid_event_date" value="">
-								<input type="hidden" id="from_landing" name="from_landing" value="">
-							</form>
-						</div>
+			<div class="row">
+				<div class="offset3 span9">
+					<h3>Create custom phone numbers for seating and RSVP</h3>
+				</div>
+			</div>
+					
+			<div class="row">
+			
+				<div class="offset3 span3">
+					<form id="frm_event_dt" name="frm_event_dt">
+						<input type="text" id="event_date" class="ispn3 inp-large" placeholder="Select date of wedding" name="event_date" readonly>
+					</form>
+				</div>
+				<div class="span3">
+					<button class="btn btn-large" value="event_dt_sbt">Create Phone Number</button>
+					<form id="call_forward" name="call_forward"  method="POST">
+									<input type="hidden" id="hid_event_date" name="hid_event_date" value="">
+									<input type="hidden" id="from_landing" name="from_landing" value="">
+									<input type="hidden" id="lobby_event_id" name="lobby_event_id" value="">
+									<input type="hidden" id="lobby_admin_id" name="lobby_admin_id" 
+										value="<%=isSignedIn ? sAdminIdSecure:""%>">
+									
+								</form>
+				</div>
+			</div>
+			<div class="row">
+				<div class="offset4 span3">
+					<div id="div_goto_lobby" style="<%=!isSignedIn?"display:none;":""%>">
+						<h3><a id="link_goto_lobby" href="<%=isSignedIn ? "event/host_dashboard.jsp?host_lobby_admin_id="+sAdminIdSecure:""%>">Goto lobby</a></h3>
 					</div>
 				</div>
 			</div>
 		</div>
-		
 	</div>
-</body>  -->
+	<form action="event/host_dashboard.jsp" method="POST" id="frm_lobby_admin">
+		<input type="hidden" id="host_lobby_admin_id" name="host_lobby_admin_id" value="<%=isSignedIn ? sAdminIdSecure: "" %>"/>
+	</form>
+</body>
 <script type="text/javascript" src="/web/js/jquery.datepick.js"></script> 
 <script type="text/javascript" src="/web/js/credential.js"></script>
 

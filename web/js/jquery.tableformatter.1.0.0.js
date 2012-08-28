@@ -37,7 +37,7 @@
 		{
 			create_table : function()
 			{
-				return '<table cellspacing="1" id="table_details" class="bordered-table zebra-striped tbl"> '+this.create_header()+''+this.create_rows()+'</table>';
+				return '<table cellspacing="1" id="table_details" class="table table-striped"> '+this.create_header()+''+this.create_rows()+'</table>';
 				
 			},
 			create_header : function ()
@@ -57,14 +57,15 @@
 				var varOddClass = '';
 				for( i=0; i<numOfRows; i++ )
 				{
-					/*if(i%2==0)
+					if((i%2)>0)
+					{
+						varOddClass = 'class="odd"';
+					}
+					else
 					{
 						varOddClass = '';
 					}
-					else 
-					{
-						varOddClass = 'class="odd"'; 
-					}*/
+					
 					var tmpTable = allTables[i];
 					
 					if(tmpTable.table_id != '')

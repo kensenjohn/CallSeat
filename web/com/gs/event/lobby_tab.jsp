@@ -15,40 +15,34 @@
 	int iSpanNum = 5;
 
 %>
-<div style="width:100%;clear:both;margin-left:5px;margin-right:5px;">
-	
-	<section id="lobby_section">
 		<div class="row">
-		
-			<div class="span6">
-				<div class="row">
-					<div class="span4">
-						<h2 class="txt" id="primary_header"><%=sHeaderTxt%></h2>
-					</div>
-					<div class="span2">
-						<h4 class="txt" id="secondary_header"><%=sSecHeaderTxt%></h4>
-					</div>
-				</div>
-			</div>
-			<div class="span10">
-				<div class="row">
-					<div class="span3 txt_center">
-						<button id="lnk_new_event_id" name="lnk_new_event_id" class="action_button primary large ">New Event</button>
-					</div>
-					<div class="span3 txt_center">
-						<button id="lnk_guest_id" name="lnk_guest_id" class="action_button primary large ">All Guests</button>
-					</div>
-					<div class="span3 txt_center">
-						<button id="lnk_dashboard_id" name="lnk_dashboard_id" class="action_button primary large ">Lobby</button>
-					</div>
-				</div>			
+			<div class="span1">
+				&nbsp;
 			</div>
 		</div>
 		
-	</section>
-</div>
+		<div class="row" >
+			<span class="tab_view_span6" >
+				<span id="primary_header" style="margin-left:18px;font-size:210%; color:#324B38;font-weight: bold;"><%=sHeaderTxt%></span> &nbsp;&nbsp;&nbsp;&nbsp;
+				<span id="secondary_header" style="font-size:110%; color:#324B38;"><%=sSecHeaderTxt%></span>
+			</span>
+			<span class="span2" style="margin-left:45px;" >
+				<input type="button" class="btn ispn2 btn-green btn-large" style="margin-top: 0px;margin-bottom: 0px;" id="lnk_new_event_id" name="lnk_new_event_id" value="Start New"/>
+			</span>
+			<div class="span4" style="background-image: none; background-color: RGBA(39,61,10,1.0); padding-bottom:6px; height: 30px;" id="mini_nav_bar">
+				<div class="row" >
+					<span class="tab_view_span2" style="text-align:right" >
+						<input type="button" class="tran_btn ispn2" style="margin-top: 2px;" "id="lnk_guest_id" name="lnk_guest_id" value="All Guests"/>
+					</span>
+					<span class="span2"  style="text-align:right" >
+						<input type="button" class="tran_btn ispn2"  style="margin-top: 2px;" id="lnk_dashboard_id" name="lnk_dashboard_id" value="My Events"/>
+					</span>
+				</div>
+			</div>
+		</div>
 <form id="frm_lobby_tab" method="POST" action="">
 	<input type="hidden" id="lobby_event_id"  name="lobby_event_id" value=""/>
+	<input type="hidden" id="host_lobby_admin_id"  name="host_lobby_admin_id" value=""/>
 	<input type="hidden" id="lobby_admin_id"  name="lobby_admin_id" value=""/>
 	<input type="hidden" id="lobby_create_new"  name="lobby_create_new" value=""/>
 </form>

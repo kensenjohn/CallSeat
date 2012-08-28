@@ -23,30 +23,21 @@
 
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 
 <body>
-   <div class="page_setup">
-		<div class="container rounded-corners">
-			<div style="margin:5px;">
-			<jsp:include page="../common/top_nav.jsp"/>
-				<jsp:include page="lobby_tab.jsp">
-					<jsp:param name="select_tab" value="guest_tab"/>
-					<jsp:param name="lobby_header" value="All Guests"/>
-					<jsp:param name="lobby_sec_header" value=""/>
-				</jsp:include>
-				<div class="main_body">
-					<div class="clear_both">					
-												
-						<jsp:include page="../common/action_nav.jsp">
-							<jsp:param name="admin_id" value="<%=sAdminId %>"/>
-							<jsp:param name="event_id" value="<%=sEventId %>"/>
-							<jsp:param name="select_action_nav" value="all_guest_tab"/> 
-						</jsp:include>
-					</div>
-					<div  class="clear_both" style="width: 100%;  text-align: center;">
-					<div  class="clear_both" id="div_guests_details">
-						
-					</div>
-					</div>
-				</div>
+	<jsp:include page="../common/top_nav.jsp"/>
+	<div class="scratch_area"> 
+		<jsp:include page="lobby_tab.jsp">
+			<jsp:param name="select_tab" value="guest_tab"/>
+			<jsp:param name="lobby_header" value="All Guests"/>
+			<jsp:param name="lobby_sec_header" value=""/>
+		</jsp:include>
+		<jsp:include page="../common/action_nav.jsp">
+			<jsp:param name="admin_id" value="<%=sAdminId %>"/>
+			<jsp:param name="event_id" value="<%=sEventId %>"/>
+			<jsp:param name="select_action_nav" value="all_guest_tab"/> 
+		</jsp:include>
+		<div class="row">
+			<div  class="offset1 span11" id="div_guests_details">
+				
 			</div>
 		</div>
 	</div>

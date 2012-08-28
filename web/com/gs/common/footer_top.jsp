@@ -15,6 +15,16 @@
 			'padding'			: 0,
 			'margin'			: 0
 		});
+		$("#sign_up_link").fancybox({
+			'width'				: '80%',
+			'height'			: '80%',
+			'autoScale'			: false,
+			'transitionIn'		: 'none',
+			'transitionOut'		: 'none',
+			'type'				: 'iframe',
+			'padding'			: 0,
+			'margin'			: 0
+		});
 	 });
 	
 	/*function credentialSuccess(varFirstName,varSource)

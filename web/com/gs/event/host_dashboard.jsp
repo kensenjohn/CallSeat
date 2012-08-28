@@ -14,7 +14,7 @@
 <%
 	Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 	String sEventId = ParseUtil.checkNull(request.getParameter("lobby_event_id"));
-	String sAdminId = ParseUtil.checkNull(request.getParameter("lobby_admin_id"));
+	String sAdminId = ParseUtil.checkNull(request.getParameter("host_lobby_admin_id"));
 	
 	String sGateAdminId = sAdminId;
 %>
@@ -24,34 +24,29 @@
 
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 
 <body>
-   <div class="page_setup">
-		<div class="container rounded-corners">
-			<div style="margin:5px;">
-			<jsp:include page="../common/top_nav.jsp">
-				<jsp:param name="referrer_source" value="host_dashboard.jsp"/>
-			</jsp:include>
+	<jsp:include page="../common/top_nav.jsp">
+		<jsp:param name="referrer_source" value="host_dashboard.jsp"/>
+	</jsp:include>
+	<div class="scratch_area" id="div_host_dash"> 
 				<jsp:include page="lobby_tab.jsp">
 					<jsp:param name="select_tab" value="guest_tab"/>
 					<jsp:param name="lobby_header" value="My Lobby"/>
 					<jsp:param name="lobby_sec_header" value=""/>
 				</jsp:include>
-				<div class="main_body">
-					<div class="clear_both">					
+				
+									
 												
 						<jsp:include page="../common/action_nav.jsp">
 							<jsp:param name="admin_id" value="<%=sAdminId %>"/>
 							<jsp:param name="event_id" value="<%=sEventId %>"/>
 							<jsp:param name="select_action_nav" value="dashboard_tab"/> 
 						</jsp:include>
-					</div>
-					<div  class="clear_both" style="width: 100%;  text-align: center;">
-					<div  class="clear_both" id="div_dashboard_details">
+				<div class="row">
+					<div  class="offset2 span10" id="div_dashboard_details">
 						
 					</div>
-					</div>
 				</div>
-			</div>
-		</div>
+
 	</div>
 </body>
 <script>
