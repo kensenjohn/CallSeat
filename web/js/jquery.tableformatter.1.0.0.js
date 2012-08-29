@@ -43,9 +43,9 @@
 			create_header : function ()
 			{
 				var valHeader = '<thead><tr> ' + 
-				'<th style="width:30%" class="tbl_th">Table Name</th><th style="width:10%" class="tbl_th">Number</th>'+
-				'<th style="width:20%" class="tbl_th">Assigned Seats</th>'+
-				'<th style="width:35%" class="tbl_th"></th>'
+				'<th style="width:30%" >Table Name</th><th style="width:10%" >Number</th>'+
+				'<th style="width:20%" >Assigned Seats</th>'+
+				'<th style="width:35%" ></th>'
 				+'</tr></thead>';
 				return valHeader; 
 			},

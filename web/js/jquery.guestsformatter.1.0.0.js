@@ -37,17 +37,17 @@
 		{
 			create_table : function() 
 			{
-				return '<table cellspacing="1" class="table table-striped span11"  id="guest_details"> '+this.create_header()+''+this.create_rows()+'</table>';
+				return '<table cellspacing="1" class="table table-striped"  id="guest_details"> '+this.create_header()+''+this.create_rows()+'</table>';
 			},
 			create_header : function ()
 			{
 				var valHeader = '<thead><tr> ' + 
-				'<th style="width:23%"  class="tbl_th">First Name</th>'+
-				'<th style="width:22%" class="tbl_th">Last Name</th>'+
-				'<th style="width:5%" class="tbl_th">Cell</th>'+
-				'<th style="width:6%" class="tbl_th">Home</th>'+
-				'<th style="width:15%" class="tbl_th">Invited To</th>'+
-				'<th style="width:25%" class="tbl_th">&nbsp;</th>'+
+				'<th style="width:23%"  >First Name</th>'+ 
+				'<th style="width:22%" >Last Name</th>'+
+				'<th style="width:5%" >Cell</th>'+
+				'<th style="width:6%" >Home</th>'+
+				'<th style="width:15%"  >Invited To</th>'+
+				'<th style="width:25%"  >&nbsp;</th>'+ 
 				'</tr></thead>';
 				return valHeader; 
 			},
@@ -61,12 +61,12 @@
 				if(numOfRows <= 0)
 				{
 					valRows = valRows + '<tr id="table_dummy_row">' +
-					'<td class="tbl_td">Add Guests.</td>'+
-					'<td class="tbl_td">&nbsp;</td>'+
-					'<td class="tbl_td">&nbsp;</td>'+
-					'<td class="tbl_td">&nbsp;</td>'+
-					'<td class="tbl_td">&nbsp;</td>'+
-					'<td class="tbl_td">&nbsp;</td>'+
+					'<td >Add Guests.</td>'+
+					'<td  >&nbsp;</td>'+
+					'<td  >&nbsp;</td>'+
+					'<td  >&nbsp;</td>'+
+					'<td  >&nbsp;</td>'+
+					'<td  >&nbsp;</td>'+
 					'</tr>';
 				}
 				else
@@ -99,32 +99,32 @@
 							}
 							
 							valRows = valRows + '<tr id="guest_'+tmpGuest.guest_id+'" '+varOddClass+'>' + 
-									'<td class="tbl_td">' + tmpGuest.user_info.first_name + '</td>' + 
-									'<td class="tbl_td">' + tmpGuest.user_info.last_name + '</td>';
+									'<td >' + tmpGuest.user_info.first_name + '</td>' + 
+									'<td  >' + tmpGuest.user_info.last_name + '</td>';
 									//'<td>Y</td><td>N</td><td> O events </td>' + 
 									//'<td>' + this.create_action_urls( tmpGuest ) + '</td>';
 							
 							if(tmpGuest.user_info.cell_phone!=undefined && tmpGuest.user_info.cell_phone!='')
 							{
-								valRows = valRows + '<td class="tbl_td">Y</td>';
+								valRows = valRows + '<td >Y</td>';
 							}
 							else
 							{
-								valRows = valRows + '<td class="tbl_td">N</td>';
+								valRows = valRows + '<td >N</td>';
 							}
 							
 							if(tmpGuest.user_info.phone_num!=undefined && tmpGuest.user_info.phone_num!='')
 							{
-								valRows = valRows + '<td class="tbl_td">Y</td>';
+								valRows = valRows + '<td >Y</td>';
 							}
 							else
 							{
-								valRows = valRows + '<td class="tbl_td">N</td>';
+								valRows = valRows + '<td >N</td>';
 							}
 							
 							var varEventGuest = json_guest_details.varEventGuestDetails;
-							valRows = valRows + '<td class="tbl_td">' + this.create_event_numbers_link(varEventGuest, tmpGuest) + '</td>';
-							valRows = valRows + '<td class="tbl_td">' + this.create_action_urls( tmpGuest ) + '</td></tr>';
+							valRows = valRows + '<td >' + this.create_event_numbers_link(varEventGuest, tmpGuest) + '</td>';
+							valRows = valRows + '<td >' + this.create_action_urls( tmpGuest ) + '</td></tr>';
 						}
 						
 						

@@ -5,7 +5,7 @@
 <jsp:include page="../common/header_top.jsp"/>
 <jsp:include page="../common/security.jsp"/>
 <%@include file="../common/header_bottom.jsp"%>
-	<body>
+	<body style="height:auto;">
 <%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
@@ -18,9 +18,17 @@
 		
 		jspLogging.info("Add Table for event : " + sEventId + " by : " + sAdminId);
 %>
-
-		<div class="container-filler rounded-corners">
+		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
+			<div  style="padding-top:5px;">
+				<div class="logo span4"><a href="#">CallSeat</a></div>
+			</div>
+		</div>
+		<div class="fnbx_scratch_area">
 			<div style="padding:20px">
+			<div class="row">
+				<div class="offset1 span6">
+						<div class="row">
+							<div class="span6">
 <%
 					if(isAllGuest && !isAllGuestEditGuest)
 					{
@@ -47,77 +55,108 @@
 						<h2 class="txt txt_center">Add guest to <span id="div_event_list"></span></h2>
 <%
 					}
-%>
+%>	
+						</div>
+					</div>
+		
 				<div class="row">
-					<div class="span10">
-						<form id="frm_add_guest" >
-							<fieldset>
-								<div class="clearfix-tight required" id="first_name_div">
-									<label for="table_name" id="first_name_label">First Name :</label>
-									<div class="input">
-										<input type="text" id="first_name" name="first_name"/>
-										<span class="help-inline" id="first_name_msg"></span>
-									</div>
-								</div>
-								<div class="clearfix-tight required"  id="last_name_div">
-									<label for="table_name"  id="last_name_label">Last Name :</label>
-									<div class="input">
-										<input type="text" id="last_name" name="last_name"/>
-										<span class="help-inline" id="last_name_msg"></span>
-									</div>
-								</div>
-								<div class="clearfix-tight required" id="cell_num_div">
-									<label for="table_name" id="cell_num_label">Cell Number :</label>
-									<div class="input">
-										<input type="text" id="cell_num" name="cell_num"/>										
-										<span class="help-inline" id="cell_num_msg"></span>
-									</div>
-								</div>
-								<div class="clearfix-tight">
-									<label for="table_name">Home Number :</label>
-									<div class="input">
-										<input type="text" id="home_num" name="home_num"/>
-									</div>
-								</div>
-								<div class="clearfix-tight">
-									<label for="table_name">Email :</label>
-									<div class="input">
-										<input type="text" id="email_addr" name="email_addr"/>
-									</div>
-								</div>
+					<div class="span6">
+						&nbsp;
+					</div>
+				</div>
+				<form id="frm_add_guest" >
+					<div class="row">
+						<div class="span6">
+							First Name :
+						</div>
+					</div>
+					<div class="row">
+						<div class="span2" >
+							<input type="text" id="first_name" name="first_name"/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="span6">
+							Last Name :
+						</div>
+					</div>
+					<div class="row">
+						<div class="span2" >
+							<input type="text" id="last_name" name="last_name"/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="span6">
+							Cell Number :
+						</div>
+					</div>
+					<div class="row">
+						<div class="span2" >
+							<input type="text" id="cell_num_msg" name="cell_num_msg"/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="span6">
+							Home Number :
+						</div>
+					</div>
+					<div class="row">
+						<div class="span2" >
+							<input type="text" id="home_num" name="home_num"/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="span6">
+							Email :
+						</div>
+					</div>
+					<div class="row">
+						<div class="span2" >
+							<input type="text" id="email_addr" name="email_addr"/>
+						</div>
+					</div>
 <%
 					if(!isAllGuest)
 					{
-%>								
-								<div class="clearfix-tight" id="invited_num_of_seats_div">
-									<label for="table_name" id="invited_num_of_seats_label" >Invited seats :</label>
-									<div class="input">
-										<input type="text" id="invited_num_of_seats" name="invited_num_of_seats"/>
-										<span class="help-inline" id="invited_num_of_seats_msg">(Number of seats.)</span>
-									</div>
-								</div>
-								<div class="clearfix-tight" id="rsvp_num_of_seats_div">
-									<label for="table_name" id="rsvp_num_of_seats_label" >Guest's RSVP :</label>
-									<div class="input">
-										<input type="text" id="rsvp_num_of_seats" name="rsvp_num_of_seats"/>
-										<span class="help-inline" id="rsvp_num_of_seats_msg">(RSVP from the guest.)</span>
-									</div>									
-								</div>
+%>
+						<div class="row">
+							<div class="span6">
+								Invited seats :
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								<input type="text" id="invited_num_of_seats" name="invited_num_of_seats"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span6">
+								Guest's RSVP :
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								<input type="text" id="rsvp_num_of_seats" name="rsvp_num_of_seats"/>
+							</div>
+						</div>
 <%
 					}
 %>
 
 <%
-//isAllGuestAdd = true;
 					if(isAllGuest && !isAllGuestEditGuest)
 					{
 %>
-								<div class="actions">									
-						            <button id="add_guest" name="add_guest" type="button" class="action_button primary small">Create Guest</button>
-						            <br>
-						            <span id="err_mssg"></span>
-						        </div>
-						        <input type="hidden" id="invited_num_of_seats" name="invited_num_of_seats" value="0"/>
+							<div class="row">								
+								<div class="span2" >
+									<input type="button" id="add_guest" name="add_guest" type="button" class="btn" value="Create Guest">
+								</div>
+																			
+								<div class="span2" >
+									<span id="err_mssg"></span>
+								</div>
+							</div>
+								<input type="hidden" id="invited_num_of_seats" name="invited_num_of_seats" value="0"/>
 						        <input type="hidden" id="rsvp_num_of_seats" name="rsvp_num_of_seats" value="0"/>
 						        <input type="hidden" id="is_guest_create" name="is_guest_create" value="true"/>
 <%
@@ -125,12 +164,16 @@
 					else if(isAllGuest && isAllGuestEditGuest)
 					{
 %>
-						<div class="actions">									
-				            <button id="add_guest" name="add_guest" type="button" class="action_button primary small">Save Changes</button>
-				            <br>
-				            <span id="err_mssg"></span>
-				        </div>
-				         <input type="hidden" id="all_guest_edit" name="all_guest_edit" value="true"/>
+							<div class="row">								
+								<div class="span2" >
+									<input type="button" id="add_guest" name="add_guest" type="button" class="btn" value="Save Changes">
+								</div>
+																			
+								<div class="span2" >
+									<span id="err_mssg"></span>
+								</div>
+							</div>
+						 <input type="hidden" id="all_guest_edit" name="all_guest_edit" value="true"/>
 				          <input type="hidden" id="guest_id" name="guest_id" value=""/>
 				          <input type="hidden" id="guest_userinfo_id" name="guest_userinfo_id" value=""/>
 <%
@@ -138,12 +181,15 @@
 					else if (isSingleEventGuestEdit)
 					{
 %>
-						<div class="actions">									
-				            <button id="add_guest" name="add_guest" type="button" class="action_button primary small">Save Changes</button>
-				            <br>
-				            <span id="err_mssg"></span>
-				        </div>
-				        
+							<div class="row">								
+								<div class="span2" >
+									<input type="button" id="add_guest" name="add_guest" type="button" class="btn" value="Save Changes">
+								</div>
+																			
+								<div class="span2" >
+									<span id="err_mssg"></span>
+								</div>
+							</div>
 				        <input type="hidden" id="is_single_guest_event_edit" name="is_single_guest_event_edit" value="true"/>
 						<input type="hidden" id="admin_id" name="guest_id"  value="<%=sGuestId%>"/>
 				          <input type="hidden" id="guest_userinfo_id" name="guest_userinfo_id" value=""/>
@@ -152,21 +198,22 @@
 					else
 					{
 %>
-								<div class="actions">									
-						            <button id="add_guest" name="add_guest" type="button" class="action_button primary small">Add Guest</button>
-						            <br>
-						            <span id="err_mssg"></span>
-						        </div>
-						        
+							<div class="row">								
+								<div class="span2" >
+									<input type="button" id="add_guest" name="add_guest" type="button" class="btn" value="Add Guest">
+								</div>
+																			
+								<div class="span2" >
+									<span id="err_mssg"></span>
+								</div>
+							</div>
 						        <input type="hidden" id="is_guest_add_event" name="is_guest_add_event" value="true"/>
 <%
 					}
 %>
-							</fieldset>
-							<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
-							<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
-						</form>
-					</div>
+					<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
+					<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+				</form>
 				</div>
 				<form id="frm_event_assign" id="frm_event_assign">
 					<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
@@ -175,35 +222,7 @@
 					<input type="hidden" id="guest_first_name" name="guest_first_name" value=""/>										
 					<input type="hidden" id="guest_last_name" name="guest_last_name" value=""/>
 				</form>
-					
-				<!-- <form id="frm_add_guest" >
-				<br/>
-				<div>
-				
-				<div>
-				<span>First Name :</span> <input type="text" id="table_name" name="first_name"/> &nbsp;&nbsp;
-				<span>Last Name :</span> <input type="text" id="last_name" name="last_name"/><br/>
-				<span>Cell Number :</span> <input type="text" id="cell_num" name="cell_num"/><br/>
-				<span>Home Number :</span> <input type="text" id="home_num" name="home_num"/><br/>			
-				<span>Email :</span> <input type="text" id="email_addr" name="email_addr"/><br/>
-				<span>Invited to :</span> <input type="text" id="invited_num_of_seats" name="invited_num_of_seats"/><br/>
-				<span>RSVP to :</span> <input type="text" id="rsvp_num_of_seats" name="rsvp_num_of_seats"/><br/>
-				
-				<a class="action_button" id="add_guest" name="add_guest">Add Guest</a></br>
-<%
-				if(isAllGuest)
-				{
-%>
-					<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
-<%
-				}
-%>
-
-				<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
-				</div>
-				
-				</div>	
-				</form>			 -->
+							
 			</div>
 		</div>
 	</body>
