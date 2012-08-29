@@ -5,7 +5,7 @@
 <jsp:include page="../common/header_top.jsp"/>
 <jsp:include page="../common/security.jsp"/>
 <%@include file="../common/header_bottom.jsp"%>
-	<body>
+	<body  style="height:auto;">
 <%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
@@ -18,7 +18,7 @@
 		jspLogging.info("Add Table for event : " + sEventId + " by : " + sAdminId);
 %>
 		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
-			<div class="blank_scratch_area" style="padding:5px;">
+			<div style="padding:5px;">
 				<div class="logo span2"><a href="#">Guests</a></div>
 			</div>
 		</div>
@@ -64,7 +64,7 @@
 						</div>
 						</form>
 						<div class="row">
-							<div class="span2" >
+							<div class="span4" >
 								<a id="link_forgot_password" href="#">Forgot your password?</a> <br>
 								<a id="link_to_signup" href="#">Sign me up. I don't have an account.</a>
 							</div>
@@ -135,8 +135,20 @@
 						<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
 						<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
 						<div class="row">
+							<div class="span5" >
+								 <input type="button" id="register_user" name="register_user" class="btn btn-large" value="Create My Account"/>
+							</div>
+						</div>
+						
+						
+						<div class="row">
 							<div class="span2" >
-								 <input type="button" id="register_user" name="register_user" class="btn btn-large" value="Create My Account"/><br>
+								&nbsp;
+							</div>
+						</div>
+						
+						<div class="row">
+							<div class="span5" >
 						 			<a id="link_to_login" name="link_to_login" href="#">Already have an account? Click here to Login.</a><br>
 								    <span id="reg_err_mssg"  style="color: #9d261d;" ></span><br>
 								    <span id="reg_success_mssg"  style="color: #46a546;" ></span>

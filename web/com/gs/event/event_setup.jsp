@@ -148,7 +148,7 @@
 		<div class = "row" style="margin-left:-18px;">
 			<div class = "tab_view_span12 white_bkg light_border"  >
 					<div class="row">
-						<div class = "offset1 span9">
+						<div class = "offset1 span11">
 							<jsp:include page="../common/action_nav.jsp">
 								<jsp:param name="admin_id" value="<%=sAdminId %>"/>
 								<jsp:param name="event_id" value="<%=sEventId %>"/>

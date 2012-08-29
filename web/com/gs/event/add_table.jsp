@@ -5,7 +5,7 @@
 <jsp:include page="../common/header_top.jsp"/>
 <jsp:include page="../common/security.jsp"/>
 <jsp:include page="../common/header_bottom.jsp"/>
-	<body>
+	<body style="height:auto;">
 	<%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
@@ -32,7 +32,7 @@
 		jspLogging.info("Add Table for event : " + sEventId + " by : " + sAdminId);
 	%>
 		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
-			<div class="blank_scratch_area" style="padding:5px;">
+			<div  style="padding-top:5px;">
 				<div class="logo span2"><a href="#">CallSeat</a></div>
 			</div>
 		</div>
@@ -83,7 +83,7 @@
 								</div>
 							</div>
 							<div class="row">								
-								<div class="offset2 span2" >
+								<div class="span2" >
 									<input type="button" id="add_table" name="add_table" type="button" class="btn" value="<%=sButtonName %>">
 								</div>
 																			
