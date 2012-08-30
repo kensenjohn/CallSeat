@@ -339,110 +339,74 @@
 										</div>
 										<div class="span2" style="display:none;"><label id="seating_search">Advanced Search</label></div>
 									</div>
+									<div class="row">
+										<div class="span2">
+											<span class="fld_name">Event Number :  </span>
+										</div>
+										<div class="span4">
+											<span class="fld_txt" id="seating_event_id"></span>
+										</div>
+									</div>
+									<div class="row">
+										<div class="span2">
+											<span class="fld_name">Extension :  </span>
+										</div>
+										<div class="span4">
+											<span class="fld_txt" id="seating_secret_key"></span>
+										</div>
+									</div>
 								</div>
 							</div>
-
-					</div>
-					<div class="offset1 span8">
-						<div class="row">
-				  			<div class="span8">
-				  			
-				  				<!-- Seating Number -->
-				   				<div class="row">
-				      				<div class="span2"><label for="table_name">Seating Number :</label></div>
-				      				<div class="span4"><label id="seating_gen_num"></label></div>
-				      				<div class="span2" style="display:none;"><label id="seating_search">Advanced Search</label></div>
-				    			</div>
-				    			<div class="row"  style="display:none;"  id="seating_div_event_id">
-				    				<div class="span8"><label for="table_name" class="span3">Event ID :&nbsp;</label><span class="span1"></span><label id="seating_event_id"  style="text-align:left"></label></div>
-				    			</div>
-				    			<div class="row"  style="display:none;"  id="seating_div_secret_key">
-				    				<div class="span8"><label for="table_name" class="span3">Secret key :&nbsp;</label><span class="span1"></span><label id="seating_secret_key"  style="text-align:left"></label></div>
-				    			</div>
-				   				<div class="row" id="seating_numbers_gen" style="display:none;">
-				    	 			<div class="span8">
-				    	 				<form id="frm_seating_numbers" >
-					    	 				<fieldset>
-												<div class="clearfix-tight">
-													<label for="table_name">Area Code :</label>
-													<div class="input">
-														<input type="text" id="seating_area_code" name="seating_area_code"/>
-													</div>
-												</div>								
-												<div class="clearfix-tight">
-													<label for="table_name">Contains :</label>
-													<div class="input">
-														<input type="text" id="seating_text_pattern" name="seating_text_pattern"/>
-													</div>
-												</div>
-												<div class="actions">									
-										            <button id="gen_seating_tel_num" name="gen_seating_tel_num" type="button" class="action_button primary small">Generate New Number</button>
-										        </div>	
-											</fieldset>
-											<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
-											<input type="hidden" name="event_id" id="event_id" value="<%=sEventId%>"/>
-							    	 	</form>
-				    	 			</div>
-				    			</div>
-				    			
-				    			<!-- RSVP Number -->
-							    <div class="row">
-									<div class="span2"><label for="table_name">RSVP Number :</label></div>
-							      	<div class="span4"><label id="rsvp_gen_num"></label></div>
-							    	<div class="span2"  style="display:none;"><label id="rsvp_search">Advanced Search</label></div>
+							<div class="row">
+								<div class="span2">
+									&nbsp;
 								</div>
-								<div class="row"  style="display:none;"  id="rsvp_div_event_id">
-				    				<div class="span8"><label for="table_name" class="span3">Event ID : &nbsp;</label><span class="span1"></span><label id="rsvp_event_id" class="span4" style="text-align:left" ></label></div>
-				    			</div>
-							    <div class="row"  style="display:none;"  id="rsvp_div_secret_key">
-							    	<div class="span8"><label for="table_name" class="span3">Secret key : &nbsp;</label><span class="span1"></span><label id="rsvp_secret_key" class="span4"  style="text-align:left"  ></label></div>
-							    </div>
-							     <div class="row" id="rsvp_numbers_gen"  style="display:none;">
-							     	<div class="span8">
-										<form id="frm_rsvp_numbers" >
-							    	 		<fieldset>
-												<div class="clearfix-tight">
-													<label for="table_name">Area Code :</label>
-													<div class="input">
-														<input type="text" id="rsvp_area_code" name="rsvp_area_code"/>
-													</div>
-												</div>								
-												<div class="clearfix-tight">
-													<label for="table_name">Contains :</label>
-													<div class="input">
-														<input type="text" id="rsvp_contains" name="rsvp_contains"/>
-													</div>
-												</div>
-												<div class="actions">									
-										            <button id="gen_rsvp_tel_num" name="gen_rsvp_tel_num" type="button" class="action_button primary small">Generate New Number</button>
-										        </div>	
-											</fieldset>
-											<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
-											<input type="hidden" name="event_id" id="event_id" value="<%=sEventId%>"/>
-							    	 	</form>
-							    	 </div>
-							     </div>
-							  </div>
-							 </div>
-							 	<div class="row">
-							  <div class="span8">
-							  	<div class="row">
-							  		&nbsp;
-							  	</div>
-							  </div>
-							  </div>
-							  	<div class="row">
-							  <div class="span8">
-							  	<div class="row">
-							  		<div class="span8" style="text-align:center;">
-							  			<button id="bt_get_own_phone" name="bt_get_own_phone" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="action_button primary big">Get direct line.</button>
-							  		</div>
-							   	</div>
-							  </div>
 							</div>
-						</div>
-			
-				
+							<div class="row">
+								<div class="span2">
+									<h4>RSVP</h4>
+								</div>
+							</div>
+							<div class="row">
+								<div class="offset1">
+									<div class="row">
+										<div class="span2">
+											<span class="fld_name">Phone Number :  </span>
+										</div>
+										<div class="span4">
+											<span class="fld_txt" id="rsvp_gen_num"></span>
+										</div>
+										<div class="span2" style="display:none;"><label id="seating_search">Advanced Search</label></div>
+									</div>
+									<div class="row">
+										<div class="span2">
+											<span class="fld_name">Event Number :  </span>
+										</div>
+										<div class="span4">
+											<span class="fld_txt" id="rsvp_event_id"></span>
+										</div>
+									</div>
+									<div class="row">
+										<div class="span2">
+											<span class="fld_name">Extension :  </span>
+										</div>
+										<div class="span4">
+											<span class="fld_txt" id="rsvp_secret_key"></span>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="span3">
+									 &nbsp;
+								</div>
+							</div>
+							<div class="row">
+								<div class="span3">
+									 <button id="bt_get_own_phone" name="bt_get_own_phone" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="btn">Get a direct phone number</button>
+								</div>
+							</div>
+					</div>				
 			</div>
 		</div>										
 		

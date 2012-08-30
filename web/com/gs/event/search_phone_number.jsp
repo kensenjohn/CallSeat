@@ -8,21 +8,40 @@
 <jsp:include page="../common/header_top.jsp"/>
 <%@include file="../common/security.jsp"%>
 <jsp:include page="../common/header_bottom.jsp"/>
-<body>
+<body style="height:auto;">
 	<%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 		String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 		
 	%>
-	<div class="container-filler rounded-corners">
+	<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
+		<div  style="padding-top:5px;">
+			<div class="logo span4"><a href="#">CallSeat</a></div>
+		</div>
+	</div>
+	<div  class="fnbx_scratch_area">
 			<div style="padding:10px">
 				<div class="row">
-				  <div class="span8">
+				  <div class="offset1 span11">
+				  	<div class="row">
+				  		<div class="span10">
+				  			<h2>Select a personal phone number</h2>
+				  		</div>
+				  	</div>
+				  	<div class="row">
+				  		<div class="span10">
+				  			&nbsp;
+				  		</div>
+				  	</div>
+				  	 <div class="row">
+				  	 	 <div class="span8">
+				  	 	 	<h4>Seating Phone Number</h4>
+				  	 	 </div>
+				  	 </div>
 				    <div class="row">
-				      <div class="span2"><label for="table_name">Seating Number :</label></div>
-				      <div class="span4"><label id="seating_gen_num">(234)345-4561</label></div>
-				      <div class="span2" id="div_seating_search" style="display:none;"><label id="seating_search">Advanced Search</label></div>
+				      <div class="offset1 span2"><span id="seating_gen_num">(234)345-4561</span></div>
+				      <div class="span3" id="div_seating_search" style="display:none;"><label id="seating_search">Advanced Search</label></div>
 				    </div>				  
 				    <div class="row" id="seating_numbers_gen" style="display:none;">
 				    	 <div class="span8">
@@ -49,31 +68,48 @@
 				    	 	</form>
 				    	 </div>
 				    </div>
-				     <div class="row">
-				     	<div class="span2"><label for="table_name">RSVP Number :</label></div>
-				      	<div class="span4"><label id="rsvp_gen_num">(144)345-4561</label></div>
-				      <div class="span2" id="div_rsvp_search"  style="display:none;"><label id="rsvp_search">Advanced Search</label></div>
-				     </div>
-				     <div class="row" id="rsvp_numbers_gen"  style="display:none;">
+				    <div class="row">
+				  		<div class="span10">
+				  			&nbsp;
+				  		</div>
+				  	</div>
+				  	 <div class="row">
+				  	 	 <div class="span8">
+				  	 	 	<h4>RSVP Phone Number</h4>
+				  	 	 </div>
+				  	 </div>
+				    <div class="row">
+				      <div class="offset1 span2"><span id="rsvp_gen_num">(144)345-4561</span></div>
+				      <div class="span3" id="div_rsvp_search" style="display:none;"><label id="rsvp_search">Advanced Search</label></div>
+				    </div>	
+				    <div class="row" id="rsvp_numbers_gen"  style="display:none;">
 				     	<div class="span8">
 							<form id="frm_rsvp_numbers"  style="margin-bottom:5px" >
-				    	 		<fieldset style="margin-bottom:5px">
-									<div class="clearfix-tight">
-										<label for="table_name">Area Code :</label>
-										<div class="input">
-											<input type="text" id="rsvp_area_code" name="rsvp_area_code"/>
-										</div>
-									</div>								
-									<div class="clearfix-tight">
-										<label for="table_name">Contains :</label>
-										<div class="input">
-											<input type="text" id="rsvp_contains" name="rsvp_contains"/>
-										</div>
+								<div class="row">
+									<div class="span6">
+										Area Code :
 									</div>
-									<div class="actions">									
-							            <button id="gen_rsvp_tel_num" name="gen_rsvp_tel_num" type="button" class="action_button primary small">Generate New Number</button>
-							        </div>	
-								</fieldset>
+								</div>
+								<div class="row">
+									<div class="span2" >
+										<input type="text" id="rsvp_area_code" name="rsvp_area_code"/>
+									</div>
+								</div>
+								<div class="row">
+									<div class="span6">
+										Contains :
+									</div>
+								</div>
+								<div class="row">
+									<div class="span2" >
+										<input type="text" id="rsvp_contains" name="rsvp_contains"/>
+									</div>
+								</div>
+								<div class="row">
+									<div class="span2" >
+										 <button id="gen_rsvp_tel_num" name="gen_rsvp_tel_num" type="button" class="btn btn-small ispn3">Search New Number</button>
+									</div>
+								</div>
 								<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
 								<input type="hidden" name="event_id" id="event_id" value="<%=sEventId%>"/>
 				    	 	</form>
