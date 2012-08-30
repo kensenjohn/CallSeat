@@ -34,16 +34,16 @@
 		{
 			create_table : function() 
 			{
-				return '<table cellspacing="1"  class="bordered-table zebra-striped tbl" id="guest_details"> '+this.create_header()+''+this.create_rows()+'</table>';
+				return '<table cellspacing="1"  class="table table-striped" id="guest_details"> '+this.create_header()+''+this.create_rows()+'</table>';
 			},
 			create_header : function ()
 			{
 				var valHeader = '<thead><tr> ' + 
-				'<th style="width:23%"  class="tbl_th">Guest Name</th>'+
-				'<th style="width:5%" class="tbl_th">Cell</th>'+
-				'<th style="width:6%" class="tbl_th">Invited</th>'+
-				'<th style="width:15%" class="tbl_th">RSVP</th>'+
-				'<th style="width:25%" class="tbl_th">&nbsp;</th>'+
+				'<th style="width:23%" >Guest Name</th>'+
+				'<th style="width:5%" >Cell</th>'+
+				'<th style="width:6%"  >Invited</th>'+
+				'<th style="width:15%" >RSVP</th>'+
+				'<th style="width:25%" >&nbsp;</th>'+
 				'</tr></thead>';
 				return valHeader; 
 			},
@@ -75,11 +75,11 @@
 						{
 							
 							valRows = valRows + '<tr id="guest_'+tmpGuest.guest_id+'" '+varOddClass+'>' + 
-									'<td class="tbl_td">' + tmpGuest.guest_bean.user_info.first_name + ' ' + tmpGuest.guest_bean.user_info.last_name + '</td>' + 
-									'<td class="tbl_td">' + tmpGuest.guest_bean.user_info.cell_phone + '</td>' +
-									'<td class="tbl_td">' + tmpGuest.total_seats + '</td>' +
-									'<td class="tbl_td">' + tmpGuest.rsvp_seats + '</td>' +
-									'<td class="tbl_td">' + this.create_action_urls( tmpGuest ) + ' </td>';
+									'<td  >' + tmpGuest.guest_bean.user_info.first_name + ' ' + tmpGuest.guest_bean.user_info.last_name + '</td>' + 
+									'<td >' + tmpGuest.guest_bean.user_info.cell_phone + '</td>' +
+									'<td >' + tmpGuest.total_seats + '</td>' +
+									'<td >' + tmpGuest.rsvp_seats + '</td>' +
+									'<td  >' + this.create_action_urls( tmpGuest ) + ' </td>';
 						}
 						
 						

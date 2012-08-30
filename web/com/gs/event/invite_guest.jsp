@@ -7,7 +7,7 @@
 <jsp:include page="../common/header_top.jsp"/>
 <jsp:include page="../common/security.jsp"/>
 <%@include file="../common/header_bottom.jsp"%>
-	<body>
+	<body style="height:auto;">
 <%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
@@ -22,16 +22,33 @@
 		
 		String sTitle = eventBean!=null ? ParseUtil.checkNull(eventBean.getEventName()) : "";
 %>
-
-		<div class="container-filler rounded-corners">
+		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
+			<div  style="padding-top:5px;">
+				<div class="logo span2"><a href="#">CallSeat</a></div>
+			</div>
+		</div>
+		<div  class="fnbx_scratch_area">
 			<div style="padding:20px">
-				<h2 class="txt txt_center">Invites guest to Event <span id="span_event_name"><%=sTitle %></span></h2>
-				<br>
-				<span id="err_mssg" style="color: #9d261d;"></span><br>
-				<span id="success_mssg" style="color: #46a546;"></span>
+				<div class="row" >
+					<div class="offset1 span6">
+						<h2 class="txt txt_center">Invite guests to Event <span id="span_event_name"><%=sTitle %></span></h2>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span6">
+						<span id="err_mssg"></span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span6">
+						&nbsp;
+					</div>
+				</div>
 			</div>
 			<form id='frm_event_guests'>
-				<div id='guest_list' style="padding:15px">
+				<div class="row" >
+					<div class="offset1 span12" id='guest_list'>
+					</div>
 				</div>
 			</form>
 			
@@ -79,7 +96,7 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg );
+						displayErrorMessages( varArrErrorMssg );
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -93,7 +110,7 @@
 						{
 							var jsonResponseMessage = varResponseObj.messages;
 							var varArrOkMssg = jsonResponseMessage.ok_mssg;
-							displayMessages( varArrOkMssg );
+							displayOkMessages( varArrOkMssg );
 						}
 						
 						var varPayload = varResponseObj.payload;
@@ -120,7 +137,7 @@
 			if(numOfEvents>0)
 			{
 				var varArrGuest = varUninvitedGuest.guests;
-				var varGuestTable = '<table cellspacing="1" id="table_details" class="bordered-table zebra-striped tbl"> '+create_header()+''+create_rows(varArrGuest)+'</table>';
+				var varGuestTable = '<table cellspacing="1" id="table_details" class="table table-striped"> '+create_header()+''+create_rows(varArrGuest)+'</table>';
 				$('#guest_list').append(varGuestTable);
 			}
 		}
@@ -181,7 +198,7 @@
 			var actionUrl = 'proc_invite_guests.jsp';
 			var methodType = 'POST';
 			$('#err_mssg').text('');
-			$('#success_mssg').text('');
+			//$('#success_mssg').text('');
 			makeAjaxCall(actionUrl,dataString,methodType,redrawGuestEventList);
 			
 		}
@@ -193,7 +210,7 @@
 			var actionUrl = 'proc_invite_guests.jsp';
 			var methodType = 'POST';
 			$('#err_mssg').text('');
-			$('#success_mssg').text('');
+			//$('#success_mssg').text('');
 			makeAjaxCall(actionUrl,dataString,methodType,redrawGuestEventList);
 		}
 		
@@ -210,7 +227,7 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg );
+						displayErrorMessages( varArrErrorMssg );
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -256,7 +273,7 @@
 						{
 							var jsonResponseMessage = varResponseObj.messages;
 							var varArrErrorMssg = jsonResponseMessage.ok_mssg
-							displayMessages( varArrErrorMssg );
+							displayOkMessages( varArrErrorMssg );
 						}
 					}
 				}
@@ -266,10 +283,10 @@
 		function create_header()
 		{
 			var valHeader = '<thead><tr> ' + 
-			'<th style="width:7%" class="tbl_th">Invited</th>'+
-			'<th style="width:27%" class="tbl_th">Guest Name</th>'+
-			'<th style="width:18%" class="tbl_th">Invited for seats</th>'+
-			'<th style="width:18%" class="tbl_th">RSVP to seats</th><th style="width:30%" class="tbl_th"></th>'+
+			'<th style="width:7%" >Invited</th>'+
+			'<th style="width:27%"  >Guest Name</th>'+
+			'<th style="width:18%" >Invited for seats</th>'+
+			'<th style="width:18%" >RSVP to seats</th><th style="width:30%" class="tbl_th"></th>'+
 			'</tr></thead>';
 			return valHeader; 
 		}
@@ -280,29 +297,41 @@
 			{
 				var varTmpGuest = varArrGuest[i];
 				valRows = valRows + '<tr id="event_'+varTmpGuest.guest_id+'">'+
-					'<td  class="tbl_td"><span style="text-align:center;" id="event_invite_status_'+varTmpGuest.guest_id+'">No</span></td>'+
-					'<td  class="tbl_td">'+varTmpGuest.user_info.first_name+' '+varTmpGuest.user_info.last_name+'</td>'+
-					'<td  class="tbl_td txt_center"><input id="event_invited_'+varTmpGuest.guest_id+'" name="event_invited_'+varTmpGuest.guest_id+'" class="span3"  type="textbox"></td>' +
-					'<td  class="tbl_td txt_center"><input id="event_rsvp_'+varTmpGuest.guest_id+'" name="event_rsvp_'+varTmpGuest.guest_id+'" class="span3" type="textbox" ></td>'+
-					'<td  class="tbl_td txt_center">'+
-					'<button id="event_assign_'+varTmpGuest.guest_id+'" name="event_assign_'+varTmpGuest.guest_id+'" type="button" class="action_button primary small" >Invite    </button>'+
-					'<button id="event_remove_'+varTmpGuest.guest_id+'" name="event_remove_'+varTmpGuest.guest_id+'" type="button" class="action_button primary small" style="display:none;">Uninvite</button>'+
+					'<td ><span style="text-align:center;" id="event_invite_status_'+varTmpGuest.guest_id+'">No</span></td>'+
+					'<td  >'+varTmpGuest.user_info.first_name+' '+varTmpGuest.user_info.last_name+'</td>'+
+					'<td ><input id="event_invited_'+varTmpGuest.guest_id+'" name="event_invited_'+varTmpGuest.guest_id+'" class="span1"  type="textbox"></td>' +
+					'<td  ><input id="event_rsvp_'+varTmpGuest.guest_id+'" name="event_rsvp_'+varTmpGuest.guest_id+'" class="span1" type="textbox" ></td>'+
+					'<td  >'+
+					'<button id="event_assign_'+varTmpGuest.guest_id+'" name="event_assign_'+varTmpGuest.guest_id+'" type="button" class="action_button primary small" >Invite Guest</button>'+
+					'<button id="event_remove_'+varTmpGuest.guest_id+'" name="event_remove_'+varTmpGuest.guest_id+'" type="button" class="action_button primary small" style="display:none;">Uninvite Guest</button>'+
 					'</td><input type="hidden" value="" id="event_guest_id_'+varTmpGuest.guest_id+'" name="event_guest_id_'+varTmpGuest.guest_id+'"></tr>'
 					;
 			}
 			return valRows;
 		}
-		function displayMessages(varArrMessages)
+		function displayErrorMessages(varArrMessages)
 		{
 			if(varArrMessages!=undefined)
 			{
 				for(var i = 0; i<varArrMessages.length; i++)
 				{
 					var txtMessage =  varArrMessages[i].text;
-					var txtMssgLocation = varArrMessages[i].txt_loc_id;
-					//alert( varArrMessages[i].text );
-					
-					$("#"+txtMssgLocation).text(txtMessage);
+					var txtMssgLocation = varArrMessages[i].txt_loc_id;					
+					$("#err_mssg").text(txtMessage);
+					$("#err_mssg").addClass("error_mssg");
+				}
+			}
+		}
+		function displayOkMessages(varArrMessages)
+		{
+			if(varArrMessages!=undefined)
+			{
+				for(var i = 0; i<varArrMessages.length; i++)
+				{
+					var txtMessage =  varArrMessages[i].text;
+					var txtMssgLocation = varArrMessages[i].txt_loc_id;					
+					$("#err_mssg").text(txtMessage);
+					$("#err_mssg").addClass("success_mssg");
 				}
 			}
 		}

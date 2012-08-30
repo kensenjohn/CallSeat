@@ -322,6 +322,27 @@
 				
 				<!-- The phone number summary -->
 				<div  class="row" id="div_phone_numbers"  style="display:none;">
+					<div class="offset_0_5 span9">
+							<div class="row">
+								<div class="span2">
+									<h4>Seating</h4>
+								</div>
+							</div>
+							<div class="row">
+								<div class="offset1">
+									<div class="row">
+										<div class="span2">
+											<span class="fld_name">Phone Number :  </span>
+										</div>
+										<div class="span4">
+											<span class="fld_txt" id="seating_gen_num"></span>
+										</div>
+										<div class="span2" style="display:none;"><label id="seating_search">Advanced Search</label></div>
+									</div>
+								</div>
+							</div>
+
+					</div>
 					<div class="offset1 span8">
 						<div class="row">
 				  			<div class="span8">

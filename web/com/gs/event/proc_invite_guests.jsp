@@ -163,7 +163,7 @@ try
 
 					jsonResponseObj.put("invite",true);
 					
-					Text okText = new OkText("The guest has been invited to the event.","success_mssg");		
+					Text okText = new OkText("Success!! The guest has been invited.","err_mssg");		
 					arrOkText.add(okText);
 					responseStatus = RespConstants.Status.OK;
 					
