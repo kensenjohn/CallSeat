@@ -632,7 +632,7 @@
 		
 		$("#add_table").fancybox({
 			'width'				: '75%',
-			'height'			: '80%',
+			'height'			: '90%',
 			'autoScale'			: false,
 			'transitionIn'		: 'none',
 			'transitionOut'		: 'none',
@@ -662,8 +662,8 @@
 		});		
 		
 		$("#get_phone_num").fancybox({
-			'width'				: '80%',
-			'height'			: '80%',
+			'width'				: '75%',
+			'height'			: '90%',
 			'autoScale'			: false,
 			'transitionIn'		: 'none',
 			'transitionOut'		: 'none',
@@ -948,7 +948,7 @@
 				if(tmpGuest!=undefined && tmpGuest.guest_id != '')
 				{
 					$("#link_edit_event_guest_"+tmpGuest.guest_id).fancybox({
-						'width'				: '80%',
+						'width'				: '75%',
 						'height'			: '90%',
 						'autoScale'			: false,
 						'transitionIn'		: 'none',
@@ -1197,8 +1197,8 @@
 				delete_table_action('/web/com/gs/event/proc_delete_table.jsp',varTableId);
 			});
 			$("#link_table_"+varTableId).fancybox({
-				'width'				: '90%',
-				'height'			: '75%%',
+				'width'				: '75%',
+				'height'			: '90%',
 				'autoScale'			: false,
 				'transitionIn'		: 'none',
 				'transitionOut'		: 'none',
@@ -1210,8 +1210,8 @@
 										}
 			});
 			$("#link_guest_"+varTableId).fancybox({
-				'width'				: '90%',
-				'height'			: '75%',
+				'width'				: '75%',
+				'height'			: '90%',
 				'autoScale'			: false,
 				'transitionIn'		: 'none',
 				'transitionOut'		: 'none',
@@ -1228,12 +1228,12 @@
 	
 	function guest_table_action(url,tableid)
 	{
-		alert('Edit Guests');
+		//alert('Edit Guests');
 	}
 	
 	function edit_table_action(url,tableid)
 	{
-		alert('Edit Table');
+		//alert('Edit Table');
 	}
 	
 	function delete_table_action(url,tableid)

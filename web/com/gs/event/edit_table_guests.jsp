@@ -17,38 +17,88 @@
 		String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 		String sTableId = ParseUtil.checkNull(request.getParameter("table_id"));
 %>
-		<div class="container-filler rounded-corners">
-			<div style="padding:20px">
-				<h2 class="txt txt_center">Assign seats at table <span id="table_name"></span></h2>
-				<div class="row">
-					<div class="span6">
-						<div class="row">
-							<div class="span3 left">
-								<h5 class="txt">Total Seats : <span id="seat_per_table"></span> </h5>
-							</div>
-							<div class="span3 left">
-								<h5 class="txt">Assigned seats : <span id="assigned_per_table"></span> </h5>
+		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
+			<div  style="padding-top:5px;">
+				<div class="logo span4"><a href="#">CallSeat</a></div>
+			</div>
+		</div>
+		<div  class="fnbx_scratch_area">
+			<div class="row" >
+				<div class="offset1 span6">
+					<div class="row" >
+						<div class="span6">
+							<h2 class="txt txt_center">Assign seats at table <span id='table_name'></span></h2>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span6">
+					&nbsp;
+				</div>
+			</div>
+			<div class="row" >
+				<div class="offset1 span12">
+					<div class="row" >
+						<div class="span3">
+							<span class="fld_name">Seats at this table : </span><span class="fld_txt" id="seat_per_table"></span>
+						</div>
+						<div class="span3">
+							<span class="fld_name">Seats vacant : </span><span class="fld_txt" id="vacant_per_table"></span>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="span6">
+					&nbsp;
+				</div>
+			</div>
+			<div class="row">
+				<div class="span6">
+					&nbsp;
+				</div>
+			</div>
+			<div class="row" >
+				<div class="offset1 span12">
+					<div class="row" >
+						<div class="span12"  style="padding-top:5px">
+							<span class="fld_name">Seat Assignment : </span><span id="div_unassinged_guests"></span>
+						</div>
+					</div>
+					<div class="row" >
+						<div class="span1">
+							&nbsp;
+						</div>
+						<div class="span11">
+							<div class="row" id="ind_guest_assignments" style="display:none;"">
+								<div class="span2"  style="padding-top:8px">
+									<span class="fld_name">RSVP : </span><span class="fld_txt" id="ind_rsvp"></span>
+								</div>
+								<div class="span3"  style="padding-top:8px">
+									<span class="fld_name">Unassigned : </span> <span class="fld_txt" id="ind_unassigned"></span>
+								</div>
+								<div class="span3">
+									<span class="fld_name">Assign : </span> <input type="text" id="new_assign_seats" class="ispn2"/>
+								</div>
+								<div class="span3">
+									<button id="add_table_guest" name="add_table_guest" type="button" class="btn btn-small">Save</button>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="span13">
-						<div class="row">
-							<div class="span7">
-								<h5 class="txt right">Unassigned Guests :  <span id="div_unassinged_guests"></span> </h5>
-							</div>
-							<div class="span4">
-								<h5 class="txt">Assign seats : <input type="text" id="new_assign_seats" name="new_assign_seats" class="span2"/> </h5>
-							</div>
-							<div class="span2">
-								<div class="txt left">
-									<button id="add_table_guest" name="add_table_guest" type="button" class="action_button primary small">Add and Save</button>
-								</div>								
-							</div>
-						</div>
+
+				</div>
+			</div>
+			<div class="row">
+				<div class="span6">
+					&nbsp;
+				</div>
+			</div>
+			<div class="row" >
+				<div class="offset1 span12">
+					<div id="div_assigned_guests_table">
 					</div>
-			
-				<div style="clear:both;">&nbsp;</div>
-				<div id="div_assigned_guests_table">
 				</div>
 			</div>
 		</div>
@@ -191,6 +241,42 @@
 			}
 		}
 		
+		function popGuestAssignmentDet( unAssignedGuests )
+		{
+			var varGuestId = $("#dd_unassigned_guest").val();
+			var divIndGuestAssign = $("#ind_guest_assignments");
+			
+			if( varGuestId == "select_guest")
+				{
+					
+					divIndGuestAssign.hide("fast");
+					$("#ind_rsvp").text('');
+					$("#ind_unassigned").text('');
+				}
+			else
+				{
+					//alert( $("#dd_unassigned_guest").val() );
+					divIndGuestAssign.hide("fast");
+					divIndGuestAssign.show("slow");
+					$("#ind_rsvp").text('');
+					$("#ind_unassigned").text('');
+					
+					
+					var varNumOfGuests = unAssignedGuests.num_of_rows;
+					var varGuests = unAssignedGuests.guests;
+					
+					for(i=0; i<varNumOfGuests ; i++ )
+					{
+						if( varGuests[i].guest_id == varGuestId )
+						{
+							$("#ind_rsvp").text(varGuests[i].rsvp_seats);
+							$("#ind_unassigned").text(varGuests[i].un_assigned_seats);
+						}
+					}
+					
+				}
+		}
+		
 		function processAssignedSeating(jsonResponseObj)
 		{
 			var varAssignedGuests = jsonResponseObj.assigned_guests;
@@ -199,9 +285,20 @@
 			var varAllTableGuests = jsonResponseObj.all_tables_assigned;
 			if(varUnAssignedGuests!=undefined)
 			{
-				var unAssignedDD = generateGuestDropDown(varUnAssignedGuests);
+				var unAssignedDD = generateGuestDropDown(varUnAssignedGuests, varAssignedGuests);
 				
-				$("#div_unassinged_guests").append(unAssignedDD);
+				if(unAssignedDD != '')
+				{
+					$("#div_unassinged_guests").append(unAssignedDD);
+					
+					$('#dd_unassigned_guest').bind('change', {var_unassigned_guests: varUnAssignedGuests} , function(event){  popGuestAssignmentDet(event.data.var_unassigned_guests) });
+					
+				}
+				else
+				{
+					$("#div_unassinged_guests").append( '<span class="fld_txt">All guests have been seated. Update their assignement below.</span>' );
+				}
+				
 				
 			}
 			
@@ -211,18 +308,61 @@
 			}
 			if(varAssignedGuests!=undefined)
 			{
-				generateAssignedGuests(varAssignedGuests , varAllTableGuests);
+				generateAssignedGuests(varAssignedGuests , varAllTableGuests, varCurrentTable);
+				createEventHandler( varAssignedGuests , varAllTableGuests );
 			}
 		}
 		
-		function generateAssignedGuests(assignedGuests, allTableGuests )
+		function createEventHandler( varAssignedGuests , varAllTableGuests )
+		{
+			var tmpVarAssignedGuest = varAssignedGuests ;
+			var numOfRows = tmpVarAssignedGuest.num_of_rows;
+			var allTables = tmpVarAssignedGuest.guests;
+			if(numOfRows > 0)
+			{
+				var tmpAllTable = 	varAllTableGuests;
+				
+				var numOfRows = tmpAllTable.num_of_rows;
+				var varTables = tmpAllTable.tables;
+				
+				for( var i =0 ; i < numOfRows ; i++)
+				{
+					var tmpTableGuest = varTables[i];
+					
+					if(tmpTableGuest!=undefined && tmpTableGuest.table_guest_id != ''
+								&& tmpTableGuest.table_id == varTableId )
+					{
+						$('#table_guest_'+tmpTableGuest.table_guest_id ).bind('click', {guest_id: tmpTableGuest.table_guest_id } , function(event){  updateGuestAssignment(event.data.guest_id) });
+					}
+				}
+			}
+		}
+		
+		function updateGuestAssignment(varGuestId)
+		{			
+			var dataString = 'event_id='+varEventId+"&admin_id="+varAdminId+"&table_id="+varTableId+'&guest_id='+varGuestId+
+				'&num_of_new_seats=' + $("#assign_guest_"+varGuestId).val() +"&update_seating=true";
+			var actionUrl = 'proc_save_table_guests.jsp';
+			var methodType = 'POST';
+			alert( dataString );
+			makeAjaxCall(actionUrl,dataString,methodType,saveTableGuestList);
+			
+			//console.log('updateGuestAssignment : dataString = ' + dataString );
+			//alert('updateGuestAssignment : dataString = ' + dataString );
+			//$('#err_mssg').text('');
+			//$('#success_mssg').text('');
+			//makeAjaxCall(actionUrl,dataString,methodType,redrawGuestEventList);
+		}
+		
+		function generateAssignedGuests(assignedGuests, allTableGuests, currentTable)
 		{
 			$("#div_assigned_guests_table").assignedtableguest({				
 				varAssignedGuest : assignedGuests,
 				varAllTableGuests : allTableGuests,
 				var_event_id : varEventId,
 				var_admin_id : varAdminId,
-				var_table_id : varTableId
+				var_table_id : varTableId,
+				varCurrentTable : currentTable
 			});
 		}
 		
@@ -231,26 +371,50 @@
 			$("#seat_per_table").text(currentTable.num_of_seats);
 			$("#table_name").text(currentTable.table_name);
 
-			$("#assigned_per_table").text('0');
+			$("#vacant_per_table").text('0');
 			
 		}
 		
-		function generateGuestDropDown(unAssignedGuests)
+		function generateGuestDropDown(unAssignedGuests, assignedGuests)
 		{
-			var varNumOfGuests = unAssignedGuests.num_of_rows;
-			var varGuests = unAssignedGuests.guests;
+			var varNumOfUnassignedGuests = unAssignedGuests.num_of_rows;
+			var varNumOfAssignedGuests = assignedGuests.num_of_rows;
+			var varUnAGuests = unAssignedGuests.guests;
+			var varAssignedGuests = assignedGuests.guests;
 			
-			var varUnAssignedGuestDD = '<select id="dd_unassigned_guest" name="dd_unassigned_guest"> ' +
-			' <option id="all" value="all">Add to list</option>';
 			
-			for(i=0; i<varNumOfGuests ; i++ )
+			var varUnAssignedGuestDD = '';
+			
+			for(i=0; i<varNumOfUnassignedGuests ; i++ )
 			{
-				varUnAssignedGuestDD = varUnAssignedGuestDD + '<option id="'+varGuests[i].guest_id+'"  value="'+varGuests[i].guest_id+'">' 
-					+ varGuests[i].first_name + ' ' + varGuests[i].last_name  + '</option>'
+				for(j=0; j<varNumOfAssignedGuests ; j++ )
+				{
+					var hasGuestBeenAssigned = false;
+					if( varUnAGuests[i].guest_id == varAssignedGuests[j].guest_id )
+					{
+						hasGuestBeenAssigned = true;
+						break;
+					}
+				}
+				if(!hasGuestBeenAssigned)
+				{
+					varUnAssignedGuestDD = varUnAssignedGuestDD + '<option id="'+varUnAGuests[i].guest_id+'"  value="'
+					+ varUnAGuests[i].guest_id+'">' 
+					+ varUnAGuests[i].first_name + ' ' + varUnAGuests[i].last_name  + '</option>'
+				}
+
 			}
-			varUnAssignedGuestDD = varUnAssignedGuestDD + '</select>';
+			
+			if( varUnAssignedGuestDD != '' )
+			{
+				varUnAssignedGuestDD = '<select id="dd_unassigned_guest" name="dd_unassigned_guest"> ' +
+				' <option id="select_guest" value="select_guest">Select a guest</option>' + varUnAssignedGuestDD + '</select>';
+			}
+
+			
+			//varUnAssignedGuestDD = varUnAssignedGuestDD + '</select>';
 			
 			return varUnAssignedGuestDD;
 		}
-	</script>
+		</script>
 </html>

@@ -37,7 +37,6 @@
 			</div>
 		</div>
 		<div  class="fnbx_scratch_area">
-			<div style="padding:20px">
 				<div class="row" >
 					<div class="offset1 span6">
 						<div class="row">
@@ -51,7 +50,7 @@
 							</div>
 						</div>
 						
-						<form id="frm_login" >
+						<form id="frm_add_table" >
 							<div class="row">
 								<div class="span6">
 									Table Name :
@@ -82,12 +81,15 @@
 									<input type="text" id="num_of_seats" name="num_of_seats"/>
 								</div>
 							</div>
-							<div class="row">								
-								<div class="span2" >
-									<input type="button" id="add_table" name="add_table" type="button" class="btn" value="<%=sButtonName %>">
-								</div>
-																			
-								<div class="span2" >
+							 <div class="span8">
+							  	<div class="row">
+							  		<div class="span8">
+							  			<input type="button" id="add_table" name="add_table" type="button" class="btn" value="<%=sButtonName %>">
+							  		</div>
+							   	</div>
+							  </div>
+							<div class="row">																			
+								<div class="span8" >
 									<span id="err_mssg"></span>
 								</div>
 							</div>
@@ -98,7 +100,6 @@
 						</form>
 					</div>
 				</div>
-			</div>
 		</div>
 	</body>
 	<script type="text/javascript">
@@ -168,7 +169,7 @@
 			{
 				for(var i = 0; i<varArrMessages.length; i++)
 				{
-					alert( varArrMessages[i].text );
+					alert( varArrMessages[i].text);
 				}
 			}
 		}

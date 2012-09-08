@@ -2,6 +2,7 @@ package com.gs.data.event;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -181,67 +182,60 @@ public class GuestTableData {
 
 		if (sEventId != null && !"".equalsIgnoreCase(sEventId)) {
 			TableData tableData = new TableData();
-			HashMap<Integer, TableBean> hmTables = tableData
-					.getEventTables(sEventId);
-			if (hmTables != null && !hmTables.isEmpty()) {
+			// get all tables created for this event.
+			HashMap<Integer, TableBean> hmTables = tableData.getEventTables(sEventId);
+			if (hmTables != null && !hmTables.isEmpty()) 
+			{
 				Set<Integer> setTableNumber = hmTables.keySet();
+				// create an arraylist of table ids of this event.
 				ArrayList<String> arrTableId = new ArrayList<String>();
 				for (Integer iNumber : setTableNumber) {
 					TableBean tableBean = hmTables.get(iNumber);
 					arrTableId.add(tableBean.getTableId());
 				}
+				
+				//get all guests who are assigned to this event's tables
 				hmTableGuests = getTableGuest(arrTableId);
 
-				ArrayList<String> arrTmpGuestTableId = new ArrayList<String>();
-				if (hmTableGuests != null && !hmTableGuests.isEmpty()) {
+				//ArrayList<String> arrTmpGuestTableId = new ArrayList<String>();
+				HashMap<String,String> hmTmpGuestTableId = new HashMap<String,String>();
+				if (hmTableGuests != null && !hmTableGuests.isEmpty()) 
+				{
 					Set<Integer> setTableGuestNumber = hmTableGuests.keySet();
 
+					// create an arraylist of guests who were assigned to this event.
 					ArrayList<String> arrGuestId = new ArrayList<String>();
 					for (Integer tableGuestNumber : setTableGuestNumber) {
-						TableGuestsBean tableGuestsBean = hmTableGuests
-								.get(tableGuestNumber);
+						TableGuestsBean tableGuestsBean = hmTableGuests.get(tableGuestNumber);
 						arrGuestId.add(tableGuestsBean.getGuestId());
 					}
 					GuestData guestData = new GuestData();
-					ArrayList<EventGuestBean> arrEventGuestList = guestData
-							.getEventGuestList(sEventId, arrGuestId);
-					if (arrEventGuestList != null
-							&& !arrEventGuestList.isEmpty()) {
-						for (Integer tableGuestNumber : setTableGuestNumber) {
-							TableGuestsBean tableGuestsBean = hmTableGuests
-									.get(tableGuestNumber);
-							for (EventGuestBean eventGuestBean : arrEventGuestList) {
-								if (tableGuestsBean.getGuestId()
-										.equalsIgnoreCase(
-												eventGuestBean.getGuestId())) {
-									tableGuestsBean.setRsvpSeats(eventGuestBean
-											.getRsvpSeats());
-									tableGuestsBean
-											.setTotalInvitedSeats(eventGuestBean
-													.getTotalNumberOfSeats());
-									for (Integer iNumber : setTableNumber) {
-										TableBean tableBean = hmTables
-												.get(iNumber);
+					// getting the guest details such as RSVP, Invite number and userinfo such as , first name, last name etc.
+					ArrayList<EventGuestBean> arrEventGuestList = guestData.getEventGuestList(sEventId, arrGuestId);
+					
+					if (arrEventGuestList != null && !arrEventGuestList.isEmpty()) 
+					{
+						for (Integer tableGuestNumber : setTableGuestNumber) // iterating through guests assigned in a table
+						{
+							TableGuestsBean tableGuestsBean = hmTableGuests.get(tableGuestNumber);
+							for (EventGuestBean eventGuestBean : arrEventGuestList) // iterating through guest userinfo details
+							{
+								if (tableGuestsBean.getGuestId().equalsIgnoreCase(eventGuestBean.getGuestId())) 
+								{
+									tableGuestsBean.setRsvpSeats(eventGuestBean.getRsvpSeats());
+									tableGuestsBean.setTotalInvitedSeats(eventGuestBean.getTotalNumberOfSeats());
+									for (Integer iNumber : setTableNumber) 
+									{
+										TableBean tableBean = hmTables.get(iNumber);
 
-										if (tableBean.getTableId()
-												.equalsIgnoreCase(
-														tableGuestsBean
-																.getTableId())) {
-											arrTmpGuestTableId
-													.add(tableGuestsBean
-															.getTableId());
-											tableGuestsBean
-													.setNumOfSeats(tableBean
-															.getNumOfSeats());
-											tableGuestsBean
-													.setTableId(tableBean
-															.getTableId());
-											tableGuestsBean
-													.setTableName(tableBean
-															.getTableName());
-											tableGuestsBean
-													.setTableNum(tableBean
-															.getTableNum());
+										if (tableBean.getTableId().equalsIgnoreCase(tableGuestsBean.getTableId())) // assign table details to the Guest data.
+										{
+											hmTmpGuestTableId.put(tableGuestsBean.getTableId(), tableGuestsBean.getTableId()); // creating a list of tables which are being used by guests.
+											//arrTmpGuestTableId.add(tableGuestsBean.getTableId()); 
+											tableGuestsBean.setNumOfSeats(tableBean.getNumOfSeats());
+											tableGuestsBean.setTableId(tableBean.getTableId());
+											tableGuestsBean.setTableName(tableBean.getTableName());
+											tableGuestsBean.setTableNum(tableBean.getTableNum());
 										}
 									}
 
@@ -253,13 +247,20 @@ public class GuestTableData {
 					}
 				}
 
-				if (arrTmpGuestTableId != null && arrTableId != null
-						&& arrTableId.size() != arrTmpGuestTableId.size()) {
+				// A mismatch in total number of tables and number of tables which are occupied.
+				// This indicates that there are tables which are empty.
+				if (hmTmpGuestTableId != null && arrTableId != null && arrTableId.size() != hmTmpGuestTableId.size()) 
+				{
 					ArrayList<String> arrEmptyTables = new ArrayList<String>();
-					for (String sTableId : arrTableId) {
+					for (String sTableId : arrTableId) 
+					{
 						boolean isFound = false;
-						for (String sTmpTableId : arrTmpGuestTableId) {
-							if (sTableId.equalsIgnoreCase(sTmpTableId)) {
+						hmTmpGuestTableId.entrySet();
+						for( Map.Entry<String,String> guestTableData : hmTmpGuestTableId.entrySet() )
+						{
+							String sTmpTableId = guestTableData.getKey();
+							if (sTableId.equalsIgnoreCase(sTmpTableId)) 
+							{
 								isFound = true;
 								break;
 							}
@@ -268,24 +269,30 @@ public class GuestTableData {
 							arrEmptyTables.add(sTableId);
 						}
 					}
-					if (arrEmptyTables != null && !arrEmptyTables.isEmpty()) {
-						for (Integer iNumber : setTableNumber) {
-							TableBean tableBean = hmTables.get(iNumber);
-							TableGuestsBean tableGuestBean = new TableGuestsBean();
-							tableGuestBean.setTableId(tableBean.getTableId());
-							tableGuestBean.setTableName(tableBean
-									.getTableName());
-							tableGuestBean.setTableNum(tableBean.getTableNum());
-							tableGuestBean.setRsvpSeats("0");
-							tableGuestBean.setTotalInvitedSeats("0");
-							tableGuestBean.setNumOfSeats(tableBean
-									.getNumOfSeats());
-							tableGuestBean.setAdminId(tableBean.getAdminId());
+					if (arrEmptyTables != null && !arrEmptyTables.isEmpty()) 
+					{
+						for (String sEmptyTableId : arrEmptyTables) 
+						{
+							for (Integer iNumber : setTableNumber) 
+							{
+								TableBean tableBean = hmTables.get(iNumber);
+								if (tableBean.getTableId().equalsIgnoreCase(sEmptyTableId)) 
+								{
+									TableGuestsBean tableGuestBean = new TableGuestsBean();
+									tableGuestBean.setTableId(tableBean.getTableId());
+									tableGuestBean.setTableName(tableBean.getTableName());
+									tableGuestBean.setTableNum(tableBean.getTableNum());
+									tableGuestBean.setRsvpSeats("0");
+									tableGuestBean.setTotalInvitedSeats("0");
+									tableGuestBean.setNumOfSeats(tableBean.getNumOfSeats());
+									tableGuestBean.setAdminId(tableBean.getAdminId());
 
-							hmTableGuests.put(hmTableGuests.size() + 1,
-									tableGuestBean);
+									hmTableGuests.put(hmTableGuests.size() + 1,tableGuestBean);
+								}
+							}
 						}
 					}
+
 				}
 
 			}
@@ -485,6 +492,8 @@ public class GuestTableData {
 			ArrayList<HashMap<String, String>> arrTableGuestsRes = DBDAO
 					.getDBData(ADMIN_DB, sQuery, aParams, false,
 							"GuestTableData.java", "getTableGuests()");
+			appLogging.error(sQuery + ": " + aParams);
+
 			if (arrTableGuestsRes != null && !arrTableGuestsRes.isEmpty()) {
 				Integer iTableGuestNum = 0;
 				for (HashMap<String, String> hmTableGuest : arrTableGuestsRes) {

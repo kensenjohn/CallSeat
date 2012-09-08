@@ -2,6 +2,8 @@ package com.gs.manager.event;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -154,6 +156,9 @@ public class GuestTableManager {
 
 					TableGuestsBean tmpTableGuestBean = hmConsTableGuestBean
 							.get(tableGuestBean.getTableId());
+
+					appLogging.info("TableGuestsBean = " + tmpTableGuestBean
+							+ " - " + indexRows);
 
 					if (tmpTableGuestBean == null) {
 						tmpTableGuestBean = copyOfTableGuestsBean(tableGuestBean);
@@ -319,64 +324,125 @@ public class GuestTableManager {
 		String sAdminId = guestTableMetaData.getAdminId();
 		String sTableId = guestTableMetaData.getTableId();
 		String sGuestId = guestTableMetaData.getGuestId();
-		Integer iNumOfSeats = guestTableMetaData.getNumOfSeats();
+		Integer iNumOfNewSeats = guestTableMetaData.getNumOfSeats();
 
-		HashMap<Integer, AssignedGuestBean> hmAssignedGuests = getAssignedGuest(
-				sEventId, sTableId);
-
+		HashMap<Integer, AssignedGuestBean> hmAssignedGuests = getAssignedGuest(sEventId, sTableId);
+		
+		Integer iTotalAssignedSeats = 0;
+		Integer iRsvpSeats = 0;
+		Integer iTotalSeatsAtThisTable = 0;
+		int countAssigned = 0;
+		Integer thisGuestCurrentTableAssignment = 0;
+		
+		HashMap<Integer, TableGuestsBean> hmTableGuests = new HashMap<Integer, TableGuestsBean>();
+		TableData tableData = new TableData();
+		HashMap<Integer, TableBean> hmTables = tableData.getEventTables(sEventId);
+		if (hmTables != null && !hmTables.isEmpty()) 
+		{
+			Set<Integer> setTableNumber = hmTables.keySet();
+			// create an arraylist of table ids of this event.
+			ArrayList<String> arrTableId = new ArrayList<String>();
+			for (Integer iNumber : setTableNumber) {
+				TableBean tableBean = hmTables.get(iNumber);
+				
+				if(sTableId.equalsIgnoreCase(tableBean.getTableId()))
+				{
+					iTotalSeatsAtThisTable = ParseUtil.sToI(tableBean.getNumOfSeats());
+				}
+				arrTableId.add(tableBean.getTableId());
+			}
+			
+			GuestTableData guestTableData = new GuestTableData();
+			//get all guests who are assigned to this event's tables
+			hmTableGuests = guestTableData.getTableGuest(arrTableId); 
+			
+			if (hmTableGuests != null && !hmTableGuests.isEmpty())
+			{
+				for( Map.Entry<Integer, TableGuestsBean> mapTableGuest : hmTableGuests.entrySet())
+				{
+					TableGuestsBean tmpTableGuest = mapTableGuest.getValue();
+					if( tmpTableGuest.getGuestId().equalsIgnoreCase(sGuestId))
+					{
+						iTotalAssignedSeats = iTotalAssignedSeats + ParseUtil.sToI(tmpTableGuest.getGuestAssignedSeats());
+					}
+				}
+			}
+		}
+		
+		
+		ArrayList<String> arrGuestId = new ArrayList<String>();
+		arrGuestId.add(sGuestId);
+		
+		GuestData guestData = new GuestData();
+		ArrayList<EventGuestBean> arrEventGuestList = guestData.getEventGuestList(sEventId, arrGuestId);
+		
+		
+		if(arrEventGuestList!=null && !arrEventGuestList.isEmpty())
+		{
+			for( EventGuestBean eventGuestBean : arrEventGuestList )
+			{
+				iRsvpSeats = ParseUtil.sToI(eventGuestBean.getRsvpSeats());
+			}
+		}
+		appLogging.info("" +arrEventGuestList);
+		
 		// AssignedGuestBean existingGuestAssigned = new AssignedGuestBean();
 
 		boolean isGuestAlreadySeatedAtTable = false;
-		int sameGuestAlreadyOccupySeats = 0;
-		int countAssigned = 0;
-		if (hmAssignedGuests != null && !hmAssignedGuests.isEmpty()) {
+		
+		if (hmAssignedGuests != null && !hmAssignedGuests.isEmpty()) 
+		{
 			Set<Integer> setNumOfGuest = hmAssignedGuests.keySet();
-			for (Integer iNumOfGuest : setNumOfGuest) {
-				AssignedGuestBean assignedGuests = hmAssignedGuests
-						.get(iNumOfGuest);
+			for (Integer iNumOfGuest : setNumOfGuest) 
+			{
+				AssignedGuestBean assignedGuests = hmAssignedGuests.get(iNumOfGuest);
 
-				countAssigned = countAssigned
-						+ ParseUtil.sToI(assignedGuests.getAssignedSeats());
+				countAssigned = countAssigned + ParseUtil.sToI(assignedGuests.getAssignedSeats());
 
 				if (sGuestId.equalsIgnoreCase(assignedGuests.getGuestId())) {
 					isGuestAlreadySeatedAtTable = true;
-					sameGuestAlreadyOccupySeats = sameGuestAlreadyOccupySeats
-							+ ParseUtil.sToI(assignedGuests.getAssignedSeats());
+					thisGuestCurrentTableAssignment = thisGuestCurrentTableAssignment + ParseUtil.sToI(assignedGuests.getAssignedSeats());
 				}
 
 			}
 		}
 
-		iNumOfSeats = iNumOfSeats + sameGuestAlreadyOccupySeats;
+		//iNumOfSeats = iNumOfSeats + thisGuestCurrentTableAssignment;
 
-		TableData tableData = new TableData();
-		TableBean tableBean = tableData.getTableById(sTableId);
-		int totalSeatsAtTable = ParseUtil.sToI(tableBean.getNumOfSeats());
-
-		appLogging.info("iNumOfSeats " + iNumOfSeats + " totalSeatsAtTable = "
-				+ totalSeatsAtTable + " countAssigned = " + countAssigned);
-
-		if (iNumOfSeats <= (totalSeatsAtTable - countAssigned)) {
-			TableGuestsBean tableGuestBean = assignGuestToTable(sGuestId,
-					sTableId, iNumOfSeats, isGuestAlreadySeatedAtTable);
-
-			if (tableGuestBean != null
-					&& tableGuestBean.getTableGuestId() != null
-					&& !"".equalsIgnoreCase(tableGuestBean.getTableGuestId())) {
-				guestTableResponse.setTableGuestsBean(tableGuestBean);
-				guestTableResponse.setSuccess(true);
-				guestTableResponse
-						.setMessage("Guest was successfully assigned to table.");
-			} else {
-				guestTableResponse.setSuccess(false);
-				guestTableResponse
-						.setMessage("Guest was not assigned a seat. Please try again later.");
+		int iNumOfEmptySeats = iTotalSeatsAtThisTable - thisGuestCurrentTableAssignment;
+		if( (iNumOfNewSeats <= iNumOfEmptySeats) && (iNumOfNewSeats<= iTotalSeatsAtThisTable) )
+		{
+			Integer iProjectedTotalSeatsOccupied = (iTotalAssignedSeats - thisGuestCurrentTableAssignment); 
+			if(iProjectedTotalSeatsOccupied<=0)
+			{
+				iProjectedTotalSeatsOccupied = iProjectedTotalSeatsOccupied*-1;
 			}
-		} else {
-			guestTableResponse.setSuccess(false);
-			guestTableResponse
-					.setMessage("Guest was not assigned a seat. Number of guests exceeds number of seats at table.");
+			iProjectedTotalSeatsOccupied = iProjectedTotalSeatsOccupied + iNumOfNewSeats;
+			if( iProjectedTotalSeatsOccupied <= iRsvpSeats )
+			{
+				TableGuestsBean tableGuestBean = assignGuestToTable(sGuestId,sTableId, iNumOfNewSeats, isGuestAlreadySeatedAtTable);
+
+				if (tableGuestBean != null && tableGuestBean.getTableGuestId() != null && !"".equalsIgnoreCase(tableGuestBean.getTableGuestId())) {
+					guestTableResponse.setTableGuestsBean(tableGuestBean);
+					guestTableResponse.setSuccess(true);
+					guestTableResponse.setMessage("Guest was successfully assigned to table.");
+				} else {
+					guestTableResponse.setSuccess(false);
+					guestTableResponse.setMessage("Guest was not assigned a seat. Please try again later.");
+				}
+			}
+			else {
+				guestTableResponse.setSuccess(false);
+				guestTableResponse.setMessage("Guest was not assigned a seat. Number of guests exceeds number of RSVP." + "projected = "+
+						iProjectedTotalSeatsOccupied + "\nrsvp = " + iRsvpSeats + "\nnum of new seats : " + iNumOfNewSeats + 
+						"\ntotal assigned seats : " + "\nguest current table assign = "+thisGuestCurrentTableAssignment);
+			}
 		}
+		else {
+			guestTableResponse.setSuccess(false);
+			guestTableResponse.setMessage("Guest was not assigned a seat. Number of guests exceeds number of seats at table.");
+		}
+		
 
 		return guestTableResponse;
 	}

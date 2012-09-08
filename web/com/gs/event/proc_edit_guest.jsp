@@ -41,7 +41,7 @@ try
 	{
 		if(sFirstName==null || "".equalsIgnoreCase(sFirstName))
 		{
-			Text errorText = new ErrorText("Please enter the First Name.","first_name") ;		
+			Text errorText = new ErrorText("First Name is required","first_name") ;		
 			arrErrorText.add(errorText);
 			
 			responseStatus = RespConstants.Status.ERROR;
@@ -49,7 +49,7 @@ try
 		}
 		if(sLastName==null || "".equalsIgnoreCase(sLastName))
 		{
-			Text errorText = new ErrorText("Please enter the Last Name.","last_name") ;		
+			Text errorText = new ErrorText("Last Name is required","last_name") ;		
 			arrErrorText.add(errorText);
 			
 			responseStatus = RespConstants.Status.ERROR;
@@ -57,7 +57,7 @@ try
 		}
 		if(sCellNumber==null || "".equalsIgnoreCase(sCellNumber))
 		{
-			Text errorText = new ErrorText("Please enter the Cell Number.","cell_num") ;		
+			Text errorText = new ErrorText("Please enter a valid Cell Number.","cell_num") ;		
 			arrErrorText.add(errorText);
 			
 			responseStatus = RespConstants.Status.ERROR;
@@ -71,7 +71,7 @@ try
 			{
 				appLogging.warn("Invited number of guests was invalid : " + sInvitedNumOfSeats );
 				
-				Text errorText = new ErrorText("Enter a number more than 0.","invited_num_of_seats") ;		
+				Text errorText = new ErrorText("Number of invited seats must be greater than 0.","invited_num_of_seats") ;		
 				arrErrorText.add(errorText);
 				
 				responseStatus = RespConstants.Status.ERROR;
@@ -85,7 +85,7 @@ try
 			{
 				appLogging.warn("RSVP number of guests was invalid : " + sRsvpNumOfSeats );
 				
-				Text errorText = new ErrorText("Enter 0 if no RSVP.","rsvp_num_of_seats") ;		
+				Text errorText = new ErrorText("Please use a valid RSVP number. Enter 0 if guest did not RSVP.","rsvp_num_of_seats") ;		
 				arrErrorText.add(errorText);
 				
 				responseStatus = RespConstants.Status.ERROR;
@@ -96,7 +96,7 @@ try
 			{
 				appLogging.warn("RSVP number larger than the invited number : rsvp :" + sRsvpNumOfSeats + " invited : " + iNumInvited );
 				
-				Text errorText = new ErrorText("Enter 0 if no RSVP.","rsvp_num_of_seats") ;		
+				Text errorText = new ErrorText("Guest's RSVP number should be less than invited seats","rsvp_num_of_seats") ;		
 				arrErrorText.add(errorText);
 				
 				responseStatus = RespConstants.Status.ERROR;

@@ -24,40 +24,39 @@
 			</div>
 		</div>
 		<div class="fnbx_scratch_area">
-			<div style="padding:20px">
 			<div class="row">
-				<div class="offset1 span6">
-						<div class="row">
-							<div class="span6">
+				  <div class="offset1 span9">
 <%
 					if(isAllGuest && !isAllGuestEditGuest)
 					{
 %>
-						<h2 class="txt txt_center">Create a Guest</h2>
+						<h2>Create a Guest</h2>
 						<!-- <span class="l_txt" style="padding:10px;" >Add Guest to</span> <div id="div_event_list"></div> -->
 <%	
 					}
 					else if(isAllGuest && isAllGuestEditGuest)
 					{
 %>
-						<h2 class="txt txt_center">Edit Guest</h2>
+						<h2>Edit Guest</h2>
 <%	
 					}
 					else if(isSingleEventGuestEdit)
 					{
 %>
-						<h2 class="txt txt_center">Edit Guest in event <span id="div_event_list"></span> </h2>
+						<h2>Edit Guest in event <span id="div_event_list"></span></h2>
 <%						
 					}
 					else
 					{
 %>
-						<h2 class="txt txt_center">Add guest to <span id="div_event_list"></span></h2>
+						<h2>Add guest to <span id="div_event_list"></span></h2>
 <%
 					}
 %>	
-						</div>
-					</div>
+				  </div>
+			</div>
+			<div class="row">
+				<div class="offset1 span12">						
 		
 				<div class="row">
 					<div class="span6">
@@ -92,7 +91,7 @@
 					</div>
 					<div class="row">
 						<div class="span2" >
-							<input type="text" id="cell_num_msg" name="cell_num_msg"/>
+							<input type="text" id="cell_num" name="cell_num"/>
 						</div>
 					</div>
 					<div class="row">
@@ -151,11 +150,7 @@
 								<div class="span2" >
 									<input type="button" id="add_guest" name="add_guest" type="button" class="btn" value="Create Guest">
 								</div>
-																			
-								<div class="span2" >
-									<span id="err_mssg"></span>
-								</div>
-							</div>
+							</div>	
 								<input type="hidden" id="invited_num_of_seats" name="invited_num_of_seats" value="0"/>
 						        <input type="hidden" id="rsvp_num_of_seats" name="rsvp_num_of_seats" value="0"/>
 						        <input type="hidden" id="is_guest_create" name="is_guest_create" value="true"/>
@@ -168,11 +163,7 @@
 								<div class="span2" >
 									<input type="button" id="add_guest" name="add_guest" type="button" class="btn" value="Save Changes">
 								</div>
-																			
-								<div class="span2" >
-									<span id="err_mssg"></span>
-								</div>
-							</div>
+							</div>	
 						 <input type="hidden" id="all_guest_edit" name="all_guest_edit" value="true"/>
 				          <input type="hidden" id="guest_id" name="guest_id" value=""/>
 				          <input type="hidden" id="guest_userinfo_id" name="guest_userinfo_id" value=""/>
@@ -185,11 +176,7 @@
 								<div class="span2" >
 									<input type="button" id="add_guest" name="add_guest" type="button" class="btn" value="Save Changes">
 								</div>
-																			
-								<div class="span2" >
-									<span id="err_mssg"></span>
-								</div>
-							</div>
+							</div>	
 				        <input type="hidden" id="is_single_guest_event_edit" name="is_single_guest_event_edit" value="true"/>
 						<input type="hidden" id="admin_id" name="guest_id"  value="<%=sGuestId%>"/>
 				          <input type="hidden" id="guest_userinfo_id" name="guest_userinfo_id" value=""/>
@@ -202,15 +189,17 @@
 								<div class="span2" >
 									<input type="button" id="add_guest" name="add_guest" type="button" class="btn" value="Add Guest">
 								</div>
-																			
-								<div class="span2" >
-									<span id="err_mssg"></span>
-								</div>
-							</div>
+							</div>	
+
 						        <input type="hidden" id="is_guest_add_event" name="is_guest_add_event" value="true"/>
 <%
 					}
 %>
+							<div class="row">									
+								<div class="span9" >
+									<span id="err_mssg"></span>
+								</div>
+							</div>
 					<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
 					<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
 				</form>
@@ -346,7 +335,7 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg );
+						displayMessages( varArrErrorMssg , true );
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -382,7 +371,7 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg );
+						displayMessages( varArrErrorMssg , true );
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -449,7 +438,7 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg );
+						displayMessages( varArrErrorMssg , true );
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -531,7 +520,7 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg );
+						displayMessages( varArrErrorMssg , true );
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -592,23 +581,23 @@
 			$("#frm_event_assign").attr("method","POST");
 			$("#frm_event_assign").submit();
 		}
-		function displayMessages(varArrMessages)
+		function displayMessages(varArrMessages, isError)
 		{
 			if(varArrMessages!=undefined)
 			{
 				for(var i = 0; i<varArrMessages.length; i++)
 				{
-					//alert( varArrMessages[i].text +  '-' + varArrMessages[i].txt_loc_id );
+					if(isError)
+					{
+						$("#err_mssg").addClass("error_mssg");
+					}
+					$("#err_mssg").text(varArrMessages[i].text);
 					if(varArrMessages[i].txt_loc_id == 'err_mssg')
 					{
 						$("#err_mssg").text(varArrMessages[i].text);
 					}
 					else
 					{
-						
-						$("#"+varArrMessages[i].txt_loc_id+"_msg").text(varArrMessages[i].text);
-						$("#"+varArrMessages[i].txt_loc_id+"_div").addClass('error');
-						$("#"+varArrMessages[i].txt_loc_id).addClass('error');
 					}
 				}
 			}

@@ -20,58 +20,80 @@
 %>
 <%@include file="../common/gatekeeper.jsp"%>
 
-<body>
-		<div class="container-filler rounded-corners">
-			<div style="padding:20px">
-				<h2 class="txt txt_center">Pricing Plan</h2>
-				<div class="row">							
-					<div class="span8">
-						<form id="frm_pricing_plan" >
-							<fieldset>
-								<div class="clearfix-tight">
-									<div class="input">
-										<input type="radio" name="optionsRadios"  id="pricing_plan_1" value="pricing_plan_1"/>
-										<label class="radio" id="lbl_pricing_plan_1" style="float:right;">Pricing Plan 1</label>
-									</div>
-									
-								</div>
-								<div class="clearfix-tight">
-									<div class="input">
-										<input type="radio" name="optionsRadios"  id="pricing_plan_2" value="pricing_plan_2"/>
-										<label class="radio" id="lbl_pricing_plan_2"  style="float:right;">Pricing Plan 2</label>
-									</div>
-									
-								</div>
-								<div class="clearfix-tight">
-									<div class="input">
-										<input type="radio" name="optionsRadios"  id="pricing_plan_3" value="pricing_plan_3"/>
-										<label class="radio" id="lbl_pricing_plan_3"  style="float:right;">Pricing Plan 3</label>
-									</div>
-									
-								</div>
-								<div class="clearfix-tight">
-									<div class="input">
-										<input type="radio" name="optionsRadios"  id="pricing_plan_4" value="pricing_plan_4"/>
-									</div>
-									<label class="radio" id="lbl_pricing_plan_4"  style="float:right;">Pricing Plan 4</label>
-								</div>
-								<div class="clearfix-tight">
-									<div class="input">
-										<input type="radio" name="optionsRadios"  id="pricing_plan_5" value="pricing_plan_5"/>
-									</div>
-									<label class="radio" id="lbl_pricing_plan_5"  style="float:right;" >Pricing Plan 5</label>
-								</div>
-								<div class="actions">									
-								            <button id="btn_pricing_plan" name="btn_pricing_plan" type="button"
-								            	 class="action_button primary large">Payment and Billing</button>
-								</div>
-								          
-							</fieldset>
-						</form>
-					</div>
-				</div>
+<body style="height:auto;">
+		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
+			<div  style="padding-top:5px;">
+				<div class="logo span4"><a href="#">CallSeat</a></div>
 			</div>
 		</div>
+		<div class="fnbx_scratch_area">
+				<div class="row">
+				  <div class="offset1 span11">
+						<div class="row">							
+							<div class="span8">
+								<h2 >Step 2 : Select a Pricing Plan</h2>
+							</div>
+						</div>
+						<div class="row">							
+							<div class="span8">
+								&nbsp;
+							</div>
+						</div>
+						<div class="row">
+							<div class="span10">		
+								<form id="frm_pricing_plan" >
+									<div class="row">							
+										<div class="span1">
+											<input type="radio" name="optionsRadios"  id="pricing_plan_1" value="pricing_plan_1" style="width: 35px;"/>
+										</div>
+										<div class="span2">
+											Pricing Plan 1
+										</div>
+									</div>
+									<div class="row">							
+										<div class="span1">
+											<input type="radio" name="optionsRadios"  id="pricing_plan_2" value="pricing_plan_2" style="width: 35px;"/>
+										</div>
+										<div class="span5">
+											Pricing Plan 2
+										</div>
+									</div>
+									<div class="row">							
+										<div class="span1">
+											<input type="radio" name="optionsRadios"  id="pricing_plan_3" value="pricing_plan_3" style="width: 35px;"/>
+										</div>
+										<div class="span5">
+											Pricing Plan 3
+										</div>
+									</div>
+									<div class="row">							
+										<div class="span1">
+											<input type="radio" name="optionsRadios"  id="pricing_plan_4" value="pricing_plan_4"  style="width: 35px;"/>
+										</div>
+										<div class="span5">
+											Pricing Plan 4
+										</div>
+									</div>
+									<div class="row">							
+										<div class="span1">
+											<input type="radio" name="optionsRadios"  id="pricing_plan_5" value="pricing_plan_5"  style="width: 35px;"/>
+										</div>
+										<div class="span5">
+											Pricing Plan 5
+										</div>
+									</div>
+									<div class="row">							
+										<div class="offset2 span8">
+											<button id="btn_pricing_plan" name="btn_pricing_plan" type="button"
+										            	 class="btn">Payment and Billing</button>
+										</div>
+									</div>
+								</form>
+							</div>
+						</div>
+				</div>
+		</div>
+	</div>
 			<form id="frm_telnum_bill_passthru" id="frm_telnum_bill_passthru">
 					<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
 					<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>

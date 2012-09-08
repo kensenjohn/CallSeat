@@ -24,13 +24,12 @@
 %>
 		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
 			<div  style="padding-top:5px;">
-				<div class="logo span2"><a href="#">CallSeat</a></div>
+				<div class="logo span4"><a href="#">CallSeat</a></div>
 			</div>
 		</div>
 		<div  class="fnbx_scratch_area">
-			<div style="padding:20px">
 				<div class="row" >
-					<div class="offset1 span6">
+					<div class="offset1 span10">
 						<h2 class="txt txt_center">Invite guests to Event <span id="span_event_name"><%=sTitle %></span></h2>
 					</div>
 				</div>
@@ -44,7 +43,6 @@
 						&nbsp;
 					</div>
 				</div>
-			</div>
 			<form id='frm_event_guests'>
 				<div class="row" >
 					<div class="offset1 span12" id='guest_list'>
@@ -52,6 +50,9 @@
 				</div>
 			</form>
 			
+		</div>
+		<div id="loading_wheel" style="display:none;">
+			<img src="/web/img/wheeler.gif">
 		</div>
 	</body>
 	
@@ -64,6 +65,7 @@
 		
 		function loadUninvitedGuests()
 		{
+			$("#loading_wheel").show();
 			var actionUrl = "proc_invite_guests.jsp";
 			var methodType = "GET";
 			var dataString = "&admin_id="+varAdminId+"&event_id="+varEventId+'&load_data=true';
@@ -83,6 +85,15 @@
 				  }
 				});
 		}
+		
+		$.ajaxSetup({
+		    beforeSend: function(data) {
+		        $("#loading_wheel").show();
+		    },
+		    complete: function(data) {
+		        $("#loading_wheel").hide();
+		    }
+		});
 		
 		function createGuestList(jsonResult)
 		{
@@ -129,6 +140,7 @@
 					}
 				}
 			}
+			$("#loading_wheel").hide();
 		}
 		
 		function generateUninvitedTable(varUninvitedGuest)
@@ -302,8 +314,8 @@
 					'<td ><input id="event_invited_'+varTmpGuest.guest_id+'" name="event_invited_'+varTmpGuest.guest_id+'" class="span1"  type="textbox"></td>' +
 					'<td  ><input id="event_rsvp_'+varTmpGuest.guest_id+'" name="event_rsvp_'+varTmpGuest.guest_id+'" class="span1" type="textbox" ></td>'+
 					'<td  >'+
-					'<button id="event_assign_'+varTmpGuest.guest_id+'" name="event_assign_'+varTmpGuest.guest_id+'" type="button" class="action_button primary small" >Invite Guest</button>'+
-					'<button id="event_remove_'+varTmpGuest.guest_id+'" name="event_remove_'+varTmpGuest.guest_id+'" type="button" class="action_button primary small" style="display:none;">Uninvite Guest</button>'+
+					'<button id="event_assign_'+varTmpGuest.guest_id+'" name="event_assign_'+varTmpGuest.guest_id+'" type="button" class="btn btn-small" >Invite Guest</button>'+
+					'<button id="event_remove_'+varTmpGuest.guest_id+'" name="event_remove_'+varTmpGuest.guest_id+'" type="button" class="btn" style="display:none;">Uninvite Guest</button>'+
 					'</td><input type="hidden" value="" id="event_guest_id_'+varTmpGuest.guest_id+'" name="event_guest_id_'+varTmpGuest.guest_id+'"></tr>'
 					;
 			}

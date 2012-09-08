@@ -11,6 +11,7 @@
 <%@page import="com.gs.json.RespObjectProc"%>
 <%@page import="com.gs.bean.*" %>
 <%@page import="com.gs.data.event.*" %>
+<%@page import="com.gs.data.*" %>
 
 <%@page import="com.gs.common.*" %>
 <%@page import="org.json.*" %>
@@ -37,11 +38,12 @@ try
 	String sTableId =  ParseUtil.checkNull(request.getParameter("table_id"));
 	String sGuestId =  ParseUtil.checkNull(request.getParameter("guest_id"));
 	Integer sNumOfSeats = ParseUtil.sToI(request.getParameter("num_of_new_seats"));
+	boolean isUpdateSeating =  ParseUtil.sTob(request.getParameter("update_seating"));
 	
 	if(sNumOfSeats<=0)
 	{
 		jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
-		Text errorText = new ErrorText("Please select at least one seat.","my_id");		
+		Text errorText = new ErrorText("Please assign at least one seat.","my_id");		
 		arrErrorText.add(errorText);
 		responseStatus = RespConstants.Status.ERROR;
 		appLogging.error("No seat was selected. EventId =" + sEventId + " table Id = " + sTableId + " Guest ID = " + sGuestId );
@@ -62,9 +64,19 @@ try
 		guestMetaData.setTableId(sTableId);
 		guestMetaData.setGuestId(sGuestId);
 		guestMetaData.setNumOfSeats(sNumOfSeats);
+
 		
 		GuestTableManager guestTableManager = new GuestTableManager();
-		GuestTableResponse guestTableResponse = guestTableManager.assignSeatsForGuest(guestMetaData);
+		GuestTableResponse guestTableResponse = new GuestTableResponse();
+		if(isUpdateSeating)
+		{
+			guestTableResponse = guestTableManager.assignSeatsForGuest(guestMetaData);
+		}
+		else
+		{
+			guestTableResponse = guestTableManager.assignSeatsForGuest(guestMetaData);
+		}
+		
 		
 		if(guestTableResponse!=null)
 		{

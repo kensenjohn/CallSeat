@@ -125,7 +125,7 @@ try
 						}
 						else
 						{
-							Text errorText = new ErrorText("The telephone numbers selected could not be purchased at this time."+
+							Text errorText = new ErrorText("Your purchase was not completed."+
 									"Please try again later.","my_id") ;
 							arrErrorText.add(errorText);
 							
@@ -149,7 +149,7 @@ try
 			}
 			else
 			{
-				Text errorText = new ErrorText("Please fill in at least a one phone number.","my_id") ;
+				Text errorText = new ErrorText("Please select at least one phone number.","my_id") ;
 				arrErrorText.add(errorText);
 				
 				responseStatus = RespConstants.Status.ERROR;
@@ -159,7 +159,7 @@ try
 		}
 		else
 		{
-			Text errorText = new ErrorText("Oops!! Please try again later. Your request was not completed.","my_id") ;		
+			Text errorText = new ErrorText("Please try again later. Your request was not completed.","my_id") ;		
 			arrErrorText.add(errorText);
 			
 			responseStatus = RespConstants.Status.ERROR;
@@ -169,7 +169,7 @@ try
 	}
 	else
 	{
-		Text errorText = new ErrorText("Please log in or register before trying to save the phone numbers","my_id") ;		
+		Text errorText = new ErrorText("Please log in or register to complete this purchase.","my_id") ;		
 		arrErrorText.add(errorText);
 		
 		responseStatus = RespConstants.Status.ERROR;

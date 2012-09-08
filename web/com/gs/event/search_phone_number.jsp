@@ -21,7 +21,6 @@
 		</div>
 	</div>
 	<div  class="fnbx_scratch_area">
-			<div style="padding:10px">
 				<div class="row">
 				  <div class="offset1 span11">
 				  	<div class="row">
@@ -115,7 +114,6 @@
 				    	 	</form>
 				    	 </div>
 				     </div>
-				  </div>
 				  <div class="span8">
 				  	<div class="row">
 				  		&nbsp;
@@ -123,8 +121,8 @@
 				  </div>
 				  <div class="span8">
 				  	<div class="row">
-				  		<div class="span8" style="text-align:center;">
-				  			<button id="bt_get_pricing_option" name="bt_get_pricing_option" type="button" class="action_button primary big">Step 2: Show me the pricing options. </button>
+				  		<div class="span8">
+				  			<button id="bt_get_pricing_option" name="bt_get_pricing_option" type="button" class="btn">Step 2: Show me the pricing options. </button>
 				  		</div>
 				   	</div>
 				  </div>
