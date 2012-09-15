@@ -343,7 +343,7 @@ public class GuestTableData {
 		}
 
 		return iNumOfRows;
-	}
+	}	
 
 	public Integer updateGuestTableAssignment(TableGuestsBean tableGuestBean) {
 		Integer iNumOfRows = 0;

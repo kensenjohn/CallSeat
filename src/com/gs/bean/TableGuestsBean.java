@@ -3,8 +3,7 @@ package com.gs.bean;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class TableGuestsBean
-{
+public class TableGuestsBean {
 	/*
 	 * FK_EVENTID | TABLEID | TABLEID | TABLENAME | TABLENUM | NUMOFSEATS |
 	 * IS_TMP | DEL_ROW | CREATEDATE | FK_ADMINID | MODIFYDATE | MODIFIEDBY
@@ -45,222 +44,178 @@ public class TableGuestsBean
 	private String rsvpSeats = "";
 	private String totalInvitedSeats = "";
 
-	public String getFirstName()
-	{
+	public String getFirstName() {
 		return firstName;
 	}
 
-	public void setFirstName(String firstName)
-	{
+	public void setFirstName(String firstName) {
 		this.firstName = firstName;
 	}
 
-	public String getLastName()
-	{
+	public String getLastName() {
 		return lastName;
 	}
 
-	public void setLastName(String lastName)
-	{
+	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
 
-	public String getCellPhone()
-	{
+	public String getCellPhone() {
 		return cellPhone;
 	}
 
-	public void setCellPhone(String cellPhone)
-	{
+	public void setCellPhone(String cellPhone) {
 		this.cellPhone = cellPhone;
 	}
 
-	public String getPhoneNum()
-	{
+	public String getPhoneNum() {
 		return phoneNum;
 	}
 
-	public void setPhoneNum(String phoneNum)
-	{
+	public void setPhoneNum(String phoneNum) {
 		this.phoneNum = phoneNum;
 	}
 
-	public String getRsvpSeats()
-	{
+	public String getRsvpSeats() {
 		return rsvpSeats;
 	}
 
-	public void setRsvpSeats(String rsvpSeats)
-	{
+	public void setRsvpSeats(String rsvpSeats) {
 		this.rsvpSeats = rsvpSeats;
 	}
 
-	public String getTotalInvitedSeats()
-	{
+	public String getTotalInvitedSeats() {
 		return totalInvitedSeats;
 	}
 
-	public void setTotalInvitedSeats(String totalInvitedSeats)
-	{
+	public void setTotalInvitedSeats(String totalInvitedSeats) {
 		this.totalInvitedSeats = totalInvitedSeats;
 	}
 
-	public String getTableId()
-	{
+	public String getTableId() {
 		return tableId;
 	}
 
-	public void setTableId(String tableId)
-	{
+	public void setTableId(String tableId) {
 		this.tableId = tableId;
 	}
 
-	public String getTableName()
-	{
+	public String getTableName() {
 		return tableName;
 	}
 
-	public void setTableName(String tableName)
-	{
+	public void setTableName(String tableName) {
 		this.tableName = tableName;
 	}
 
-	public String getNumOfSeats()
-	{
+	public String getNumOfSeats() {
 		return numOfSeats;
 	}
 
-	public void setNumOfSeats(String numOfSeats)
-	{
+	public void setNumOfSeats(String numOfSeats) {
 		this.numOfSeats = numOfSeats;
 	}
 
-	public String getIsTemporary()
-	{
+	public String getIsTemporary() {
 		return isTemporary;
 	}
 
-	public void setIsTemporary(String isTemporary)
-	{
+	public void setIsTemporary(String isTemporary) {
 		this.isTemporary = isTemporary;
 	}
 
-	public String getDelelteRow()
-	{
+	public String getDelelteRow() {
 		return delelteRow;
 	}
 
-	public void setDelelteRow(String delelteRow)
-	{
+	public void setDelelteRow(String delelteRow) {
 		this.delelteRow = delelteRow;
 	}
 
-	public String getAdminId()
-	{
+	public String getAdminId() {
 		return adminId;
 	}
 
-	public void setAdminId(String adminId)
-	{
+	public void setAdminId(String adminId) {
 		this.adminId = adminId;
 	}
 
-	public Long getCreateDate()
-	{
+	public Long getCreateDate() {
 		return createDate;
 	}
 
-	public void setCreateDate(Long createDate)
-	{
+	public void setCreateDate(Long createDate) {
 		this.createDate = createDate;
 	}
 
-	public Long getModifyDate()
-	{
+	public Long getModifyDate() {
 		return modifyDate;
 	}
 
-	public void setModifyDate(Long modifyDate)
-	{
+	public void setModifyDate(Long modifyDate) {
 		this.modifyDate = modifyDate;
 	}
 
-	public String getModifiedBy()
-	{
+	public String getModifiedBy() {
 		return modifiedBy;
 	}
 
-	public void setModifiedBy(String modifiedBy)
-	{
+	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
 
-	public String getTableGuestId()
-	{
+	public String getTableGuestId() {
 		return tableGuestId;
 	}
 
-	public void setTableGuestId(String tableGuestId)
-	{
+	public void setTableGuestId(String tableGuestId) {
 		this.tableGuestId = tableGuestId;
 	}
 
-	public String getGuestId()
-	{
+	public String getGuestId() {
 		return guestId;
 	}
 
-	public void setGuestId(String guestId)
-	{
+	public void setGuestId(String guestId) {
 		this.guestId = guestId;
 	}
 
-	public String getGuestTableIsTmp()
-	{
+	public String getGuestTableIsTmp() {
 		return guestTableIsTmp;
 	}
 
-	public void setGuestTableIsTmp(String guestTableIsTmp)
-	{
+	public void setGuestTableIsTmp(String guestTableIsTmp) {
 		this.guestTableIsTmp = guestTableIsTmp;
 	}
 
-	public String getGuestTableDelRow()
-	{
+	public String getGuestTableDelRow() {
 		return guestTableDelRow;
 	}
 
-	public void setGuestTableDelRow(String guestTableDelRow)
-	{
+	public void setGuestTableDelRow(String guestTableDelRow) {
 		this.guestTableDelRow = guestTableDelRow;
 	}
 
-	public String getGuestAssignedSeats()
-	{
+	public String getGuestAssignedSeats() {
 		return guestAssignedSeats;
 	}
 
-	public void setGuestAssignedSeats(String guestAssignedSeats)
-	{
+	public void setGuestAssignedSeats(String guestAssignedSeats) {
 		this.guestAssignedSeats = guestAssignedSeats;
 	}
 
-	public String getTableNum()
-	{
+	public String getTableNum() {
 		return tableNum;
 	}
 
-	public void setTableNum(String tableNum)
-	{
+	public void setTableNum(String tableNum) {
 		this.tableNum = tableNum;
 	}
 
-	public JSONObject toJson()
-	{
+	public JSONObject toJson() {
 
 		JSONObject jsonObject = new JSONObject();
-		try
-		{
+		try {
 			jsonObject.put("table_id", tableId);
 			jsonObject.put("table_name", tableName);
 			jsonObject.put("table_num", tableNum);
@@ -280,6 +235,7 @@ public class TableGuestsBean
 			 * GG.GUESTID, GU.FIRST_NAME, GU.LAST_NAME, GU.CELL_PHONE,
 			 * GU.PHONE_NUM , GEG.RSVP_SEATS, " + " GEG.TOTAL_INVITED_SEATS
 			 */
+			jsonObject.put("guest_id", guestId);
 
 			jsonObject.put("guest_first_name", firstName);
 			jsonObject.put("guest_last_name", lastName);
@@ -288,8 +244,7 @@ public class TableGuestsBean
 			jsonObject.put("guest_rsvp_num", rsvpSeats);
 			jsonObject.put("guest_invited_num", totalInvitedSeats);
 
-		} catch (JSONException e)
-		{
+		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -297,14 +252,15 @@ public class TableGuestsBean
 	}
 
 	@Override
-	public String toString()
-	{
-		return "TableGuestsBean [tableId=" + tableId + ", tableName=" + tableName + ", tableNum="
-				+ tableNum + ", numOfSeats=" + numOfSeats + ", isTemporary=" + isTemporary
-				+ ", delelteRow=" + delelteRow + ", adminId=" + adminId + ", createDate="
-				+ createDate + ", modifyDate=" + modifyDate + ", modifiedBy=" + modifiedBy
-				+ ", tableGuestId=" + tableGuestId + ", guestId=" + guestId + ", guestTableIsTmp="
-				+ guestTableIsTmp + ", guestTableDelRow=" + guestTableDelRow
+	public String toString() {
+		return "TableGuestsBean [tableId=" + tableId + ", tableName="
+				+ tableName + ", tableNum=" + tableNum + ", numOfSeats="
+				+ numOfSeats + ", isTemporary=" + isTemporary + ", delelteRow="
+				+ delelteRow + ", adminId=" + adminId + ", createDate="
+				+ createDate + ", modifyDate=" + modifyDate + ", modifiedBy="
+				+ modifiedBy + ", tableGuestId=" + tableGuestId + ", guestId="
+				+ guestId + ", guestTableIsTmp=" + guestTableIsTmp
+				+ ", guestTableDelRow=" + guestTableDelRow
 				+ ", guestAssignedSeats=" + guestAssignedSeats + "]";
 	}
 

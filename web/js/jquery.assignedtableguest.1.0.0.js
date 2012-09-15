@@ -93,28 +93,24 @@
 								var numOfAssigGuestRows = tmpAllAssignedGuests.num_of_rows;
 								
 								var varAssignedAtOtherTable = 0;
-								if( numOfAssigGuestRows> 0)
+								for( j = 0; j<numOfRows; j++)
 								{
-									var tmpVarAssignedGuests = tmpAllAssignedGuests.guests; 
-									for( j = 0; j<numOfAssigGuestRows; j++)
+									if(json_assigned_guests.var_table_id != varTables[j].table_id && tmpTableGuest.guest_id == varTables[j].guest_id )
 									{
-										if( tmpTableGuest.table_guest_id == tmpVarAssignedGuests[j].guest_id )
-										{
-											varAssignedAtOtherTable = tmpVarAssignedGuests[j].assigned_seats - tmpTableGuest.guest_assigned_seats;
-											break;
-										}
-									}									
-								}
+										varAssignedAtOtherTable = eval(varAssignedAtOtherTable) + eval(varTables[j].guest_assigned_seats);
 
-								
+									}
+								}	
+								var varUnassignedSeats = eval(tmpTableGuest.guest_rsvp_num) - ( eval(tmpTableGuest.guest_assigned_seats) + eval(varAssignedAtOtherTable));
 								valRows = valRows + '<tr id="table_dummy_row" style="padding-top:6px">' +
 								'<td style="padding-top:15px">'+tmpTableGuest.guest_first_name+' '+tmpTableGuest.guest_last_name+'</td>'+
 								'<td style="padding-top:15px">'+tmpTableGuest.guest_rsvp_num+'</td>'+
-								'<td style="padding-top:10px"><input type="text" class="ispn2" id="assign_guest_'+tmpTableGuest.table_guest_id+'"' + 
-								' name ="assign_guest_'+tmpTableGuest.table_guest_id+'" value="'+tmpTableGuest.guest_assigned_seats+'"></td>'+
-								'<td style="padding-top:15px">'+tmpTableGuest.guest_assigned_seats+'</td>' + 
+								'<td style="padding-top:10px"><input type="text" class="ispn2" id="assign_guest_'+tmpTableGuest.guest_id+'"' + 
+								' name ="assign_guest_'+tmpTableGuest.guest_id+'" value="'+tmpTableGuest.guest_assigned_seats+'"></td>'+
+								'<td style="padding-top:15px">'+varUnassignedSeats+'</td>' + 
 								'<td style="padding-top:15px">'+varAssignedAtOtherTable+'</td>' +
-								'<td><button class="btn btn-small" id="table_guest_'+tmpTableGuest.table_guest_id+'">Update</button></td>' +'</tr>';
+								'<td><button class="btn btn-small" id="table_guest_'+tmpTableGuest.guest_id+'">Update</button>&nbsp;&nbsp;&nbsp;&nbsp;'+
+								'<button class="btn btn-small" id="delete_table_guest_'+tmpTableGuest.guest_id+'">Delete Assignment</button></td>' +'</tr>';
 								
 								varTotalAssignedPerTable = eval(varTotalAssignedPerTable) + eval(tmpTableGuest.guest_assigned_seats);
 							}

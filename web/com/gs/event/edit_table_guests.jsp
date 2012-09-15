@@ -8,7 +8,7 @@
 <%@ page import="com.gs.common.*"%>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
-
+	<link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
 	<body>
 <%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
@@ -17,6 +17,7 @@
 		String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 		String sTableId = ParseUtil.checkNull(request.getParameter("table_id"));
 %>
+		
 		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
 			<div  style="padding-top:5px;">
 				<div class="logo span4"><a href="#">CallSeat</a></div>
@@ -104,6 +105,7 @@
 		</div>
 	</body>
 	<script type="text/javascript" src="/web/js/jquery.assignedtableguest.1.0.0.js"></script>
+	<script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
 	<script type="text/javascript">
 		var varAdminId = '<%=sAdminId%>';
 		var varEventId = '<%=sEventId%>';
@@ -154,7 +156,7 @@
 				  success: callBackMethod,
 				  error:function(a,b,c)
 				  {
-					  alert(a.responseText + ' = ' + b + " = " + c);
+					  displayMessages(a.responseText + ' = ' + b + " = " + c, true);
 				  }
 				});
 		}
@@ -171,22 +173,24 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg );
+						displayMessages( varArrErrorMssg, true);
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj!=undefined)
 				{
 					$("#div_unassinged_guests").children().detach();
-					loadTableGuests();	
+					$("#ind_guest_assignments").hide("fast");
+					displayAlert("Your change was successful.", false);
+					loadTableGuests();
 				}
 				else
 				{
-					alert("Please try again later.");
+					displayAlert("Please try again later.", true);
 				}
 			}
 			else
 			{
-				alert("Please try again later.");
+				displayAlert("Please try again later.", true);
 			}
 						
 		}
@@ -204,7 +208,7 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg );
+						displayMessages( varArrErrorMssg, true);
 					}
 					
 				}
@@ -220,25 +224,65 @@
 				}
 				else
 				{
-					alert("Please try again later.");
+					displayAlert("Please try again later.", true);
 				}
 			}
 			else
 			{
-				alert("Please try again later.");
+				displayAlert("Please try again later.", true);
 			}
 			
 		}
 		
-		function displayMessages(varArrMessages)
+		function displayAlert(varMessage, isError)
+		{
+			var varTitle = 'Status';
+			var varType = 'info';
+			if(isError)
+			{
+				varTitle = 'Error';
+				varType = 'error';
+			}
+			else
+			{
+				varTitle = 'Status';	
+				varType = 'info';
+			}
+			
+			if(varMessage!='')
+			{
+				$.msgBox({
+	                title: varTitle,
+	                content: varMessage,
+	                type: varType
+	            });
+			}
+		}
+		
+		function displayMessages(varArrMessages, isError)
 		{
 			if(varArrMessages!=undefined)
 			{
+				
+					
+				var varMssg = '';
+				var isFirst = true;
 				for(var i = 0; i<varArrMessages.length; i++)
 				{
-					alert( varArrMessages[i].text );
+					if(isFirst == false)
+					{
+						varMssg = varMssg + '\n';
+					}
+					varMssg = varMssg + varArrMessages[i].text;
+				}
+				
+				if(varMssg!='')
+				{
+					displayAlert(varMssg,isError);
 				}
 			}
+			
+
 		}
 		
 		function popGuestAssignmentDet( unAssignedGuests )
@@ -332,10 +376,20 @@
 					if(tmpTableGuest!=undefined && tmpTableGuest.table_guest_id != ''
 								&& tmpTableGuest.table_id == varTableId )
 					{
-						$('#table_guest_'+tmpTableGuest.table_guest_id ).bind('click', {guest_id: tmpTableGuest.table_guest_id } , function(event){  updateGuestAssignment(event.data.guest_id) });
+						$('#table_guest_'+tmpTableGuest.guest_id ).bind('click', {guest_id: tmpTableGuest.guest_id } , function(event){  updateGuestAssignment(event.data.guest_id) });
+						$('#delete_table_guest_'+tmpTableGuest.guest_id ).bind('click', {guest_id: tmpTableGuest.guest_id } , function(event){  deleteGuestAssignment(event.data.guest_id) });
 					}
 				}
 			}
+		}
+		
+		function deleteGuestAssignment( varGuestId )
+		{
+			var dataString = 'event_id='+varEventId+"&admin_id="+varAdminId+"&table_id="+varTableId+'&guest_id='+varGuestId+
+			'&num_of_new_seats=' + $("#assign_guest_"+varGuestId).val() +"&delete_seating=true";
+			var actionUrl = 'proc_save_table_guests.jsp';
+			var methodType = 'POST';
+			makeAjaxCall(actionUrl,dataString,methodType,saveTableGuestList);
 		}
 		
 		function updateGuestAssignment(varGuestId)
@@ -344,7 +398,6 @@
 				'&num_of_new_seats=' + $("#assign_guest_"+varGuestId).val() +"&update_seating=true";
 			var actionUrl = 'proc_save_table_guests.jsp';
 			var methodType = 'POST';
-			alert( dataString );
 			makeAjaxCall(actionUrl,dataString,methodType,saveTableGuestList);
 			
 			//console.log('updateGuestAssignment : dataString = ' + dataString );

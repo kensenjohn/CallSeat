@@ -39,6 +39,7 @@ try
 	String sGuestId =  ParseUtil.checkNull(request.getParameter("guest_id"));
 	Integer sNumOfSeats = ParseUtil.sToI(request.getParameter("num_of_new_seats"));
 	boolean isUpdateSeating =  ParseUtil.sTob(request.getParameter("update_seating"));
+	boolean isDeleteSeating =  ParseUtil.sTob(request.getParameter("delete_seating"));
 	
 	if(sNumOfSeats<=0)
 	{
@@ -68,7 +69,11 @@ try
 		
 		GuestTableManager guestTableManager = new GuestTableManager();
 		GuestTableResponse guestTableResponse = new GuestTableResponse();
-		if(isUpdateSeating)
+		if(isDeleteSeating)
+		{
+			guestTableResponse = guestTableManager.deleteSeatingForGuest(guestMetaData);
+		}
+		else if(isUpdateSeating)
 		{
 			guestTableResponse = guestTableManager.assignSeatsForGuest(guestMetaData);
 		}
