@@ -120,7 +120,7 @@
 	}
 %>
 <link rel="stylesheet" type="text/css" href="/web/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
-
+<link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
 
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 
 <body>
@@ -539,6 +539,7 @@
 <script type="text/javascript" src="/web/js/jquery.tablesorter.js"></script> 
 <script type="text/javascript" src="/web/js/jquery.eventguests.1.0.0.js"></script>
 <script type="text/javascript" src="/web/js/credential.js"></script>
+<script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
 
 <script type="text/javascript">
 	var varEventID = '<%=sEventId%>';
@@ -961,14 +962,24 @@
 							{'tmp_guest_id':tmpGuest.guest_id,'tmp_event_id':varEventID,
 								'tmp_event_guest_id':tmpGuest.event_guest_id},function(event)
 							{
-								if(confirm('Do you want to uninvite this guest?'))
+									
+									$.msgBox({
+									    title: "Uninvite Guest",
+									    content: "Are you sure you want to remove guest from invitee list?",
+									    type: "confirm",
+									    buttons: [{ value: "Yes" }, { value: "No" }, { value: "Cancel"}],
+									    success: function (result) {
+									        if (result == "Yes") {
+									            //alert("One cup of coffee coming right up!");
+									        	uninvite_event_guest_action(event.data.tmp_guest_id , event.data.tmp_event_id , event.data.tmp_event_guest_id  );
+									        }
+									    }
+									});
+									
+								/*if(confirm('Do you want to uninvite this guest?'))
 								{
 									uninvite_event_guest_action(event.data.tmp_guest_id , event.data.tmp_event_id , event.data.tmp_event_guest_id  );
-								}
-								else 
-								{
-									alert('close dialog');
-								}
+								}*/
 							});
 					
 				}
@@ -977,11 +988,7 @@
 	}
 	
 	function uninvite_event_guest_action(varTmpGuestId,varTmpEventId,varTmpEventGuestId)
-	{
-		var confirmDelete = confirm('Do you want to delete this table?');
-		
-		if(confirmDelete == true)
-		{
+	{		
 			//$("#table_"+tableid).remove();
 			
 			var dataString = '&event_id='+ varTmpEventId + '&guest_id='+varTmpGuestId + '&event_guest_id=' + varTmpEventGuestId;
@@ -991,7 +998,6 @@
 			//getAllTablesData(actionUrl,dataString,methodType);
 			
 			getDataAjax(actionUrl,dataString,methodType, uninviteGuest);
-		}
 		
 	}
 	

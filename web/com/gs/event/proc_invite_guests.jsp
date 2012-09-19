@@ -98,7 +98,7 @@ try
 				}
 				else
 				{
-					Text errorText = new ErrorText("Your request to uninvite this guest could not be processed. Please try again later.","err_mssg") ;		
+					Text errorText = new ErrorText("Your request was not completed. Please try again later.","err_mssg") ;		
 					arrErrorText.add(errorText);
 					
 					responseStatus = RespConstants.Status.ERROR;
@@ -110,7 +110,7 @@ try
 		{
 			if(iInvitedSeats <= 0)
 			{
-				Text errorText = new ErrorText("Invited number of seats must be greater than 0.","err_mssg") ;		
+				Text errorText = new ErrorText("You have to invite at least one guest.","err_mssg") ;		
 				arrErrorText.add(errorText);
 				
 				responseStatus = RespConstants.Status.ERROR;
@@ -125,7 +125,7 @@ try
 			}
 			else if(sEventId==null || "".equalsIgnoreCase(sEventId) ||  sGuestID==null || "".equalsIgnoreCase(sGuestID) )
 			{
-				Text errorText = new ErrorText("Invalid parameters used. Please try again with valid data.","err_mssg") ;		
+				Text errorText = new ErrorText("Error processing request due to invalid data.","err_mssg") ;		
 				arrErrorText.add(errorText);
 				
 				responseStatus = RespConstants.Status.ERROR;
@@ -163,14 +163,14 @@ try
 
 					jsonResponseObj.put("invite",true);
 					
-					Text okText = new OkText("Success!! The guest has been invited.","err_mssg");		
+					Text okText = new OkText("The guest has been invited.","err_mssg");		
 					arrOkText.add(okText);
 					responseStatus = RespConstants.Status.OK;
 					
 				}
 				else
 				{
-					Text errorText = new ErrorText("This changes for this guest were not updated. Please try again later.","err_mssg") ;		
+					Text errorText = new ErrorText("Your changes were not saved. Please try again later.","err_mssg") ;		
 					arrErrorText.add(errorText);
 					
 					responseStatus = RespConstants.Status.ERROR;

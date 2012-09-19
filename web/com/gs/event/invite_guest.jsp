@@ -7,6 +7,8 @@
 <jsp:include page="../common/header_top.jsp"/>
 <jsp:include page="../common/security.jsp"/>
 <%@include file="../common/header_bottom.jsp"%>
+
+	<link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
 	<body style="height:auto;">
 <%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
@@ -34,7 +36,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="span6">
+					<div class="offset1 span6">
 						<span id="err_mssg"></span>
 					</div>
 				</div>
@@ -56,6 +58,7 @@
 		</div>
 	</body>
 	
+	<script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
 	<script type="text/javascript">
 		var varAdminId = '<%=sAdminId%>';
 		var varEventId = '<%=sEventId%>';
@@ -107,7 +110,8 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayErrorMessages( varArrErrorMssg );
+
+						displayMessages( varArrErrorMssg , true);
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -121,7 +125,7 @@
 						{
 							var jsonResponseMessage = varResponseObj.messages;
 							var varArrOkMssg = jsonResponseMessage.ok_mssg;
-							displayOkMessages( varArrOkMssg );
+							displayMessages( varArrOkMssg , false);
 						}
 						
 						var varPayload = varResponseObj.payload;
@@ -239,7 +243,7 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayErrorMessages( varArrErrorMssg );
+						displayMessages( varArrErrorMssg , true);
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -264,7 +268,7 @@
 							$('#event_invited_'+varResponseGuestId).val('');
 							$('#event_rsvp_'+varResponseGuestId).val('');
 							$('#event_remove_'+varResponseGuestId).hide();
-							$('#event_assign_'+varResponseGuestId).text('Invite');
+							$('#event_assign_'+varResponseGuestId).text('Invite Guest');
 						}
 						
 						if(varIsInvited == true)
@@ -285,7 +289,7 @@
 						{
 							var jsonResponseMessage = varResponseObj.messages;
 							var varArrErrorMssg = jsonResponseMessage.ok_mssg
-							displayOkMessages( varArrErrorMssg );
+							displayMessages( varArrErrorMssg , false);
 						}
 					}
 				}
@@ -315,13 +319,66 @@
 					'<td  ><input id="event_rsvp_'+varTmpGuest.guest_id+'" name="event_rsvp_'+varTmpGuest.guest_id+'" class="span1" type="textbox" ></td>'+
 					'<td  >'+
 					'<button id="event_assign_'+varTmpGuest.guest_id+'" name="event_assign_'+varTmpGuest.guest_id+'" type="button" class="btn btn-small" >Invite Guest</button>'+
+					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
 					'<button id="event_remove_'+varTmpGuest.guest_id+'" name="event_remove_'+varTmpGuest.guest_id+'" type="button" class="btn" style="display:none;">Uninvite Guest</button>'+
 					'</td><input type="hidden" value="" id="event_guest_id_'+varTmpGuest.guest_id+'" name="event_guest_id_'+varTmpGuest.guest_id+'"></tr>'
 					;
 			}
 			return valRows;
 		}
-		function displayErrorMessages(varArrMessages)
+		
+		function displayAlert(varMessage, isError)
+		{
+			var varTitle = 'Status';
+			var varType = 'info';
+			if(isError)
+			{
+				varTitle = 'Error';
+				varType = 'error';
+			}
+			else
+			{
+				varTitle = 'Status';	
+				varType = 'info';
+			}
+			
+			if(varMessage!='')
+			{
+				$.msgBox({
+	                title: varTitle,
+	                content: varMessage,
+	                type: varType
+	            });
+			}
+		}
+		
+		function displayMessages(varArrMessages, isError)
+		{
+			if(varArrMessages!=undefined)
+			{
+				
+					
+				var varMssg = '';
+				var isFirst = true;
+				for(var i = 0; i<varArrMessages.length; i++)
+				{
+					if(isFirst == false)
+					{
+						varMssg = varMssg + '\n';
+					}
+					varMssg = varMssg + varArrMessages[i].text;
+				}
+				
+				if(varMssg!='')
+				{
+					displayAlert(varMssg,isError);
+				}
+			}
+			
+
+		}
+		
+		/*function displayErrorMessages(varArrMessages)
 		{
 			if(varArrMessages!=undefined)
 			{
@@ -346,7 +403,7 @@
 					$("#err_mssg").addClass("success_mssg");
 				}
 			}
-		}
+		}*/
 	</script>
 </html>
 <%
