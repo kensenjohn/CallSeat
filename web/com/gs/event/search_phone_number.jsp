@@ -41,32 +41,40 @@
 				    <div class="row">
 				      <div class="offset1 span2"><span id="seating_gen_num">(234)345-4561</span></div>
 				      <div class="span3" id="div_seating_search" style="display:none;"><label id="seating_search">Advanced Search</label></div>
-				    </div>				  
-				    <div class="row" id="seating_numbers_gen" style="display:none;">
-				    	 <div class="span8">
-				    	 	<form id="frm_seating_numbers" style="margin-bottom:5px">
-				    	 		<fieldset  style="margin-bottom:5px">
-									<div class="clearfix-tight">
-										<label for="table_name">Area Code :</label>
-										<div class="input">
-											<input type="text" id="seating_area_code" name="seating_area_code"/>
-										</div>
-									</div>								
-									<div class="clearfix-tight">
-										<label for="table_name">Contains :</label>
-										<div class="input">
-											<input type="text" id="seating_text_pattern" name="seating_text_pattern"/>
-										</div>
+				    </div>
+				     <div class="row" id="seating_numbers_gen"  style="display:none;">
+				     	<div class="span8">
+							<form id="frm_seating_numbers"  style="margin-bottom:5px" >
+								<div class="row">
+									<div class="span6">
+										Area Code :
 									</div>
-									<div class="actions">									
-							            <button id="gen_seating_tel_num" name="gen_seating_tel_num" type="button" class="action_button primary small">Generate New Number</button>
-							        </div>	
-								</fieldset>
+								</div>
+								<div class="row">
+									<div class="span2" >
+										<input type="text" id="seating_area_code" name="seating_area_code"/>
+									</div>
+								</div>
+								<div class="row">
+									<div class="span6">
+										Contains :
+									</div>
+								</div>
+								<div class="row">
+									<div class="span2" >
+										<input type="text" id="seating_text_pattern" name="seating_text_pattern"/>
+									</div>
+								</div>
+								<div class="row">
+									<div class="span2" >
+										 <button id="gen_seating_tel_num" name="gen_seating_tel_num" type="button" class="btn span3">Search New Number</button>
+									</div>
+								</div>
 								<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
 								<input type="hidden" name="event_id" id="event_id" value="<%=sEventId%>"/>
 				    	 	</form>
 				    	 </div>
-				    </div>
+				     </div>	
 				    <div class="row">
 				  		<div class="span10">
 				  			&nbsp;
@@ -106,7 +114,7 @@
 								</div>
 								<div class="row">
 									<div class="span2" >
-										 <button id="gen_rsvp_tel_num" name="gen_rsvp_tel_num" type="button" class="btn btn-small ispn3">Search New Number</button>
+										 <button id="gen_rsvp_tel_num" name="gen_rsvp_tel_num" type="button" class="btn span3">Search New Number</button>
 									</div>
 								</div>
 								<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
@@ -119,10 +127,15 @@
 				  		&nbsp;
 				  	</div>
 				  </div>
+				   <div class="span8">
+				  	<div class="row">
+				  		&nbsp;
+				  	</div>
+				  </div>
 				  <div class="span8">
 				  	<div class="row">
 				  		<div class="span8">
-				  			<button id="bt_get_pricing_option" name="bt_get_pricing_option" type="button" class="btn">Step 2: Show me the pricing options. </button>
+				  			<button id="bt_get_pricing_option" name="bt_get_pricing_option" type="button" class="btn">Show me the pricing options. </button>
 				  		</div>
 				   	</div>
 				  </div>
