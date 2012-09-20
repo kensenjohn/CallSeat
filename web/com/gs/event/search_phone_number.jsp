@@ -25,7 +25,7 @@
 				  <div class="offset1 span11">
 				  	<div class="row">
 				  		<div class="span10">
-				  			<h2>Select a personal phone number</h2>
+				  			<h2>Personalize your phone number</h2>
 				  		</div>
 				  	</div>
 				  	<div class="row">
@@ -35,34 +35,39 @@
 				  	</div>
 				  	 <div class="row">
 				  	 	 <div class="span8">
-				  	 	 	<h4>Seating Phone Number</h4>
+				  	 	 	<h4>Seating</h4>
 				  	 	 </div>
 				  	 </div>
 				    <div class="row">
-				      <div class="offset1 span2"><span id="seating_gen_num">(234)345-4561</span></div>
-				      <div class="span3" id="div_seating_search" style="display:none;"><label id="seating_search">Advanced Search</label></div>
+				      <div class="offset1 span2"><span class="fld_name">Phone Number : </span></div>
+				      <div class="span2"><span id="seating_gen_num" class="fld_txt">(234)345-4561</span></div>
+				      <div class="span3" id="div_seating_search" style="display:none;"><span id="seating_search" class="fld_link_txt">Customize  number</span></div>
 				    </div>
 				     <div class="row" id="seating_numbers_gen"  style="display:none;">
-				     	<div class="span8">
+				     	<div class="offset1 span10">
 							<form id="frm_seating_numbers"  style="margin-bottom:5px" >
 								<div class="row">
 									<div class="span6">
-										Area Code :
-									</div>
-								</div>
-								<div class="row">
-									<div class="span2" >
-										<input type="text" id="seating_area_code" name="seating_area_code"/>
+										<span>&nbsp; </span>
 									</div>
 								</div>
 								<div class="row">
 									<div class="span6">
-										Contains :
+										<span class="fld_name">Search for : </span>
 									</div>
 								</div>
 								<div class="row">
-									<div class="span2" >
-										<input type="text" id="seating_text_pattern" name="seating_text_pattern"/>
+									<div class="offset1 span1" style="margin-top:6px;">
+										<span class="fld_txt_small"  style="float:right;">Area Code :</span>
+									</div>
+									<div class="span1"  style="margin-left:10px;"><input type="text" id="seating_area_code" name="seating_area_code" style="margin-left: 10px;" /></div>
+								</div>
+								<div class="row">
+									<div class="offset1 span1">
+										<span class="fld_txt_small"  style="float:right;">Contains :</span>
+									</div>
+									<div class="span1"  style="margin-left:10px;">
+										<input type="text" id="seating_text_pattern" name="seating_text_pattern"  style="margin-left: 10px;"/>
 									</div>
 								</div>
 								<div class="row">
@@ -82,12 +87,13 @@
 				  	</div>
 				  	 <div class="row">
 				  	 	 <div class="span8">
-				  	 	 	<h4>RSVP Phone Number</h4>
+				  	 	 	<h4>RSVP</h4>
 				  	 	 </div>
 				  	 </div>
 				    <div class="row">
-				      <div class="offset1 span2"><span id="rsvp_gen_num">(144)345-4561</span></div>
-				      <div class="span3" id="div_rsvp_search" style="display:none;"><label id="rsvp_search">Advanced Search</label></div>
+				    	<div class="offset1 span2"><span class="fld_name">Phone Number : </span></div>
+				      	<div class="span2"><span id="rsvp_gen_num">(144)345-4561</span></div>
+				     	<div class="span3" id="div_rsvp_search" style="display:none;"><span id="rsvp_search" class="fld_link_txt">Customize  number</span></div>
 				    </div>	
 				    <div class="row" id="rsvp_numbers_gen"  style="display:none;">
 				     	<div class="span8">
