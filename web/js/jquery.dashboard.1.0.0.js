@@ -100,19 +100,17 @@
 				actionLinks = actionLinks + this.create_edit_event( single_event_detail ) + '&nbsp;&nbsp;&nbsp;';
 				//actionLinks = actionLinks + this.create_delete_guest( single_guest_detail );
 				
-				actionLinks = '<div class="action_column">' + actionLinks + '</div>';
+				actionLinks = '<div class="action_column" style="text-align:center;">' + actionLinks + '</div>';
 				
 				return actionLinks;
 			},
 			create_edit_event :  function ( single_event_detail )
 			{
-				var varEditLink = '<span id="edit_'+single_event_detail.guest_id+'">Edit</span>';
-				
 				var varEditLink = '<span id="edit_'+single_event_detail.event_id+'">'+
 					'<a id="link_event_'+single_event_detail.event_id+'" '+ 
 					' href="/web/com/gs/event/event_setup.jsp?lobby_event_id='+single_event_detail.event_id+
 					'&from_lobby=true&lobby_admin_id='+single_event_detail.event_admin_id+'">'+
-					' Edit Event</a></span>';
+					'Edit</a></span>';
 				
 				return varEditLink;
 			},

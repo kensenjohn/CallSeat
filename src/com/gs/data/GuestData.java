@@ -472,6 +472,32 @@ public class GuestData {
 		return eventGuestBean;
 	}
 
+	public Integer deleteGuest(String sGuestId)
+	{
+		Integer iNumOfRecs = 0;
+		if(sGuestId!=null && !"".equalsIgnoreCase(sGuestId))
+		{
+			String sQuery = "DELETE FROM  GTGUESTS WHERE GUESTID = ?";
+			ArrayList<Object> aParams = DBDAO.createConstraint(sGuestId);
+			iNumOfRecs = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
+					"GuestData.java", "deleteGuest()");
+		}
+		return iNumOfRecs;
+	}
+	public Integer deleteGuestFromAllEvents(String sGuestId) 
+	{
+		Integer iNumOfRecs = 0;
+		if(sGuestId!=null && !"".equalsIgnoreCase(sGuestId))
+		{
+			String sQuery = "DELETE FROM GTEVENTGUESTS WHERE FK_GUESTID = ?";
+			ArrayList<Object> aParams = DBDAO.createConstraint(sGuestId);
+			iNumOfRecs = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
+					"GuestData.java", "deleteGuestFromAllEvents()");
+			
+		}
+		return iNumOfRecs;
+	}
+
 	public Integer deleteEventGuest(String sEventGuestId, String sEventId,
 			String sGuestId) {
 		Integer iNumOfRecs = 0;

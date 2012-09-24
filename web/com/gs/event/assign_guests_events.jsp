@@ -5,7 +5,8 @@
 <jsp:include page="../common/header_top.jsp"/>
 <jsp:include page="../common/security.jsp"/>
 <%@include file="../common/header_bottom.jsp"%>
-	<body>
+	<link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
+	<body style="height:auto;">
 <%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
@@ -19,21 +20,36 @@
 		jspLogging.info("Assign to event  for : " + sAdminId);
 %>
 
-		<div class="container-filler rounded-corners">
-			<div style="padding:20px">
-				<h2 class="txt txt_center">Assign <%=sGuestFirstName %> to Events</h2>
-				<br>
-				<span id="err_mssg" style="color: #9d261d;"></span><br>
-				<span id="success_mssg" style="color: #46a546;"></span>
+		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
+			<div  style="padding-top:5px;">
+				<div class="logo span4"><a href="#">CallSeat</a></div>
 			</div>
-			<form id='frm_event_guests'>
-				<div id='event_list' style="padding:15px">
+		</div>
+		<div  class="fnbx_scratch_area">
+				<div class="row" >
+					<div class="offset1 span10">
+						<h2 class="txt txt_center">Invite <%=sGuestFirstName%> to Events</h2>
+					</div>
 				</div>
-			</form>
-			
+				<div class="row">
+					<div class="offset1 span6">
+						<span id="err_mssg"></span>
+					</div>
+				</div>
+				<div class="row">
+					<div class="span6">
+						&nbsp;
+					</div>
+				</div>
+				<form id='frm_event_guests'>
+					<div class="row" >
+						<div class="offset1 span12" id='event_list'>
+						</div>
+					</div>
+				</form>
 		</div>
 	</body>
-	
+	<script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
 	<script type="text/javascript">
 		var varAdminId = '<%=sAdminId%>';
 		var varGuestId = '<%=sGuestId%>';
@@ -75,7 +91,7 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg );
+						displayMessages( varArrErrorMssg , true );
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -113,7 +129,7 @@
 			if(numOfEvents>0)
 			{
 				var varArrEvents = eventDetails.events;
-				var varEventTable = '<table cellspacing="1" id="table_details" class="bordered-table zebra-striped tbl"> '+create_header()+''+create_rows(varArrEvents)+'</table>';
+				var varEventTable = '<table cellspacing="1" id="table_details" class="table table-striped"> '+create_header()+''+create_rows(varArrEvents)+'</table>';
 				$('#event_list').append(varEventTable);
 			}
 			
@@ -162,7 +178,23 @@
 						//alert('event id - ' + varTmpEventId);
 						
 						$('#event_assign_'+varTmpEventId).bind('click', {event_id: varTmpEventId} , function(event){  inviteEventHandler(event.data.event_id) });
-						$('#event_remove_'+varTmpEventId).bind('click', {event_id: varTmpEventId} , function(event){  unInviteEventHandler(event.data.event_id) });
+						$('#event_remove_'+varTmpEventId).bind('click', {event_id: varTmpEventId} , function(event){ 
+							
+								$.msgBox({
+								    title: "Uninvite Guest",
+								    content: "Are you sure you want to remove this guest from this event's invitee list?",
+								    type: "confirm",
+								    buttons: [{ value: "Yes" }, { value: "No" }, { value: "Cancel"}],
+								    success: function (result) {
+								        if (result == "Yes") {
+								            //alert("One cup of coffee coming right up!");
+								        	//uninvite_event_guest_action(event.data.tmp_guest_id , event.data.tmp_event_id , event.data.tmp_event_guest_id  );
+								        	unInviteEventHandler(event.data.event_id);
+								        }
+								    }
+								});
+							
+							});
 					}
 				}
 			}
@@ -210,7 +242,7 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg );
+						displayMessages( varArrErrorMssg , true );
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -235,7 +267,7 @@
 							$('#event_invited_'+varResponseEventId).val('');
 							$('#event_rsvp_'+varResponseEventId).val('');
 							$('#event_remove_'+varResponseEventId).hide();
-							$('#event_assign_'+varResponseEventId).text('Invite to event');
+							$('#event_assign_'+varResponseEventId).text('Invite');
 						}
 						
 						if(varIsInvited == true)
@@ -255,7 +287,7 @@
 						{
 							var jsonResponseMessage = varResponseObj.messages;
 							var varArrErrorMssg = jsonResponseMessage.ok_mssg
-							displayMessages( varArrErrorMssg );
+							displayMessages( varArrErrorMssg , false );
 						}
 					}
 				}
@@ -281,17 +313,72 @@
 				valRows = valRows + '<tr id="event_'+varTmpEvent.event_id+'">'+
 					'<td  class="tbl_td"><span style="text-align:center;" id="event_invite_status_'+varTmpEvent.event_id+'">No</span></td>'+
 					'<td  class="tbl_td">'+varTmpEvent.event_name+'</td>'+
-					'<td  class="tbl_td txt_center"><input id="event_invited_'+varTmpEvent.event_id+'" name="event_invited_'+varTmpEvent.event_id+'" class="span3"  type="textbox"></td>' +
-					'<td  class="tbl_td txt_center"><input id="event_rsvp_'+varTmpEvent.event_id+'" name="event_rsvp_'+varTmpEvent.event_id+'" class="span3" type="textbox" ></td>'+
+					'<td  class="tbl_td txt_center"><input id="event_invited_'+varTmpEvent.event_id+'" name="event_invited_'+varTmpEvent.event_id+'" class="ispn2"  type="text"></td>' +
+					'<td  class="tbl_td txt_center"><input id="event_rsvp_'+varTmpEvent.event_id+'" name="event_rsvp_'+varTmpEvent.event_id+'" class="ispn2" type="text" ></td>'+
 					'<td  class="tbl_td txt_center">'+
-					'<button id="event_assign_'+varTmpEvent.event_id+'" name="event_assign_'+varTmpEvent.event_id+'" type="button" class="action_button primary small" >Invite to event</button>'+
-					'<button id="event_remove_'+varTmpEvent.event_id+'" name="event_remove_'+varTmpEvent.event_id+'" type="button" class="action_button primary small" style="display:none;">Uninvite</button>'+
+					'<button id="event_assign_'+varTmpEvent.event_id+'" name="event_assign_'+varTmpEvent.event_id+'" type="button" class="btn btn-small" >Invite</button>'+
+					'<button id="event_remove_'+varTmpEvent.event_id+'" name="event_remove_'+varTmpEvent.event_id+'" type="button" class="btn btn-small" style="display:none;">Uninvite</button>'+
 					'</td><input type="hidden" value="" id="event_guest_id_'+varTmpEvent.event_id+'" name="event_guest_id_'+varTmpEvent.event_id+'"></tr>'
 					;
 			}
 			return valRows;
 		}
-		function displayMessages(varArrMessages)
+		function displayAlert(varMessage, isError)
+		{
+			var varTitle = 'Status';
+			var varType = 'info';
+			if(isError)
+			{
+				varTitle = 'Error';
+				varType = 'error';
+			}
+			else
+			{
+				varTitle = 'Status';	
+				varType = 'info';
+			}
+			
+			if(varMessage!='')
+			{
+				$.msgBox({
+	                title: varTitle,
+	                content: varMessage,
+	                type: varType
+	            });
+			}
+		}
+		
+		function displayMessages(varArrMessages, isError)
+		{
+			if(varArrMessages!=undefined)
+			{
+				
+					
+				var varMssg = '';
+				var isFirst = true;
+				for(var i = 0; i<varArrMessages.length; i++)
+				{
+					if(isFirst == false)
+					{
+						varMssg = varMssg + '\n';
+					}
+					varMssg = varMssg + varArrMessages[i].text;
+					var txtMssgLocation = varArrMessages[i].txt_loc_id;
+					if(txtMssgLocation=='err_mssg')
+					{
+						isError = true;
+					}
+				}
+				
+				if(varMssg!='')
+				{
+					displayAlert(varMssg,isError);
+				}
+			}
+			
+
+		}
+		/*function displayMessages(varArrMessages)
 		{
 			if(varArrMessages!=undefined)
 			{
@@ -304,7 +391,7 @@
 					$("#"+txtMssgLocation).text(txtMessage);
 				}
 			}
-		}
+		}*/
 	</script>
 </html>
 			

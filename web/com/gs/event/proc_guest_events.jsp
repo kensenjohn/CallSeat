@@ -109,7 +109,7 @@ try
 		{
 			if(iInvitedSeats <= 0)
 			{
-				Text errorText = new ErrorText("Invited number of seats must be greater than 0.","err_mssg") ;		
+				Text errorText = new ErrorText("Please invite at least one guest to the event.","err_mssg") ;		
 				arrErrorText.add(errorText);
 				
 				responseStatus = RespConstants.Status.ERROR;
@@ -117,7 +117,7 @@ try
 			}
 			else if(iRsvpSeats > iInvitedSeats)
 			{
-				Text errorText = new ErrorText("RSVP number of seats cannot be greated than invited number of seats.","err_mssg") ;		
+				Text errorText = new ErrorText("Guest's RSVP is greater than invited number of seats.","err_mssg") ;		
 				arrErrorText.add(errorText);
 				
 				responseStatus = RespConstants.Status.ERROR;
@@ -162,14 +162,14 @@ try
 
 					jsonResponseObj.put("invite",true);
 					
-					Text okText = new OkText("The changes were updated successfully.","success_mssg");		
+					Text okText = new OkText("Guest's invite and rsvp numbers have been updated.","success_mssg");		
 					arrOkText.add(okText);
 					responseStatus = RespConstants.Status.OK;
 					
 				}
 				else
 				{
-					Text errorText = new ErrorText("This changes for this guest were not updated. Please try again later.","err_mssg") ;		
+					Text errorText = new ErrorText("There was an error processing your request. Please try again later.","err_mssg") ;		
 					arrErrorText.add(errorText);
 					
 					responseStatus = RespConstants.Status.ERROR;

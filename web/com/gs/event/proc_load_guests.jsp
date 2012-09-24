@@ -102,7 +102,11 @@ try
 		{
 			GuestManager guestManager = new GuestManager();
 			ArrayList<GuestBean> arrGuestBean = guestManager.getGuestsByAdmin(sAdminId);
-			appLogging.info( "Guest = " + arrGuestBean );
+			if(arrGuestBean!=null)
+			{
+				appLogging.info( "Guest loaded = " + arrGuestBean.size() );
+			}
+			
 			
 			EventGuestManager eventGuestManager = new EventGuestManager();
 			HashMap<String, ArrayList<EventGuestBean>>  hmEventGuestBean = eventGuestManager.getEventGuests(arrGuestBean);

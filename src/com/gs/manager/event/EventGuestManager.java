@@ -194,6 +194,17 @@ public class EventGuestManager {
 		}
 
 	}
+	
+	public Integer deleteGuestFromAllEvent(EventGuestMetaData eventGuestMetaData) {
+		Integer iNumOfRecs = 0;
+		if(eventGuestMetaData!=null && eventGuestMetaData.getGuestId()!=null
+				&& !"".equalsIgnoreCase(eventGuestMetaData.getGuestId()))
+		{
+			GuestData guestData = new GuestData();
+			iNumOfRecs = guestData.deleteGuestFromAllEvents(eventGuestMetaData.getGuestId());
+		}
+		return iNumOfRecs;
+	}
 
 	public Integer deleteGuestFromEvent(EventGuestMetaData eventGuestMetaData) {
 		Integer iNumOfRecs = 0;

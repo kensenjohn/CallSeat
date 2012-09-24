@@ -95,5 +95,15 @@ public class GuestManager {
 		}
 		return arrGuestBean;
 	}
+	
+	public Integer deleteGuest(String sGuestId)
+	{
+		Integer iNumOfRecs = 0;
+		if (sGuestId != null && !"".equalsIgnoreCase(sGuestId)) {
+			GuestData guestData = new GuestData();
+			iNumOfRecs = guestData.deleteGuest(sGuestId);
+		}
+		return iNumOfRecs;
+	}
 
 }

@@ -161,7 +161,7 @@
 					<div class="row">
 						<div class="span5">
 							<select  id="bill_state" name="bill_state" >
-							<option value="" selected="selected">Select</option>
+							<option value="" selected="selected"></option>
 							<option value="AL">Alabama</option>
 							<option value="AK">Alaska</option>
 							<option value="AZ">Arizona</option>

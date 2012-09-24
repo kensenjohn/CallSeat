@@ -21,6 +21,7 @@
 
 <link rel="stylesheet" type="text/css" href="/web/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 
+<link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 
 <body>
 	<jsp:include page="../common/top_nav.jsp"/>
@@ -36,7 +37,7 @@
 			<jsp:param name="select_action_nav" value="all_guest_tab"/> 
 		</jsp:include>
 		<div class="row">
-			<div  class="offset1 span11" id="div_guests_details">
+			<div  class="offset1 span10" id="div_guests_details">
 				
 			</div>
 		</div>
@@ -45,6 +46,7 @@
 <script>
 	!window.jQuery && document.write('<script src="/web/js/fancybox/jquery-1.4.3.min.js"><\/script>');
 </script>
+<script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
 <script type="text/javascript" src="/web/js/fancybox/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript" src="/web/js/jquery.guestsformatter.1.0.0.js"></script>
 <script type="text/javascript" src="/web/js/jquery.datepick.js"></script> 
@@ -60,7 +62,7 @@
 			setTopNavLogin(varAdminID,varEventID,'guest_setup.jsp');			
 		}
 		$("#add_all_guests").fancybox({
-			'width'				: '80%',
+			'width'				: '75%',
 			'height'			: '90%',
 			'autoScale'			: false,
 			'transitionIn'		: 'none',
@@ -128,7 +130,7 @@
 			{
 				var jsonResponseMessage = varResponseObj.messages;
 				var varArrErrorMssg = jsonResponseMessage.error_mssg
-				displayMessages( varArrErrorMssg );
+				displayMessages( varArrErrorMssg  , true);
 			}
 		}
 		else  if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -142,10 +144,10 @@
 				var eventGuestRows = jsonResponseObj.event_guest_rows;
 				
 				if(guestRows!=undefined)
-				{
+				{					
 					var numOfRows = guestRows.num_of_rows;
 					var allTables = guestRows.guests;
-					
+					//eventGuestRows={};
 					$("#div_guests_details").guestformatter({
 						varGuestDetails : guestRows,
 						varEventGuestDetails : eventGuestRows,
@@ -172,7 +174,7 @@
 				if(tmpGuest!=undefined && tmpGuest.guest_id != '')
 				{
 					$("#link_edit_guest_"+tmpGuest.guest_id).fancybox({
-						'width'				: '80%',
+						'width'				: '75%',
 						'height'			: '90%',
 						'autoScale'			: false,
 						'transitionIn'		: 'none',
@@ -183,7 +185,7 @@
 					});
 					
 					$("#link_edit_event_assign_"+tmpGuest.guest_id).fancybox({
-						'width'				: '80%',
+						'width'				: '75%',
 						'height'			: '90%',
 						'autoScale'			: false,
 						'transitionIn'		: 'none',
@@ -192,12 +194,120 @@
 						'padding'			: 0,
 						'margin'			: 0
 					});
-					$('#link_del_'+tmpGuest.guest_id).click(function(){ $( "#dialog-confirm" ).show(); });
+					$('#link_del_'+tmpGuest.guest_id).bind('click', {tmp_guest_id: tmpGuest.guest_id} , function(event){ 
+								$.msgBox({
+								    title: "Delete Guest",
+								    content: "This guest and all information will be permanently deleted from the application. Are you sure you want to proceed?",
+								    type: "confirm",
+								    buttons: [{ value: "Yes" }, { value: "No" }, { value: "Cancel"}],
+								    success: function (result) {
+								        if (result == "Yes") {
+								            //alert("One cup of coffee coming right up!");
+								        	//uninvite_event_guest_action(event.data.tmp_guest_id , event.data.tmp_event_id , event.data.tmp_event_guest_id  );
+								        	//unInviteEventHandler(event.data.event_id);
+								        	//alert('This guest has been marked for deletion.');
+								        	/*$.msgBox({
+								                title: 'Delete Guest',
+								                content: 'This guest has been marked for deletion.'
+								            });*/
+								        	delete_guest_action(event.data.tmp_guest_id);
+								        }
+								    }
+								});
+								//$( "#dialog-confirm" ).show(); 
+							});
 				}
 			}
 		}
 	}
 	
+	function delete_guest_action(guestId)
+	{
+		//var confirmDelete = confirm('Do you want to delete this table?');
+		
+		var dataString = '&guest_id='+guestId;
+		var actionUrl = "proc_delete_guest.jsp";
+		var methodType = "POST";
+		
+		getDataAjax(actionUrl,dataString,methodType, deleteGuest);
+	}
+	
+	function deleteGuest( jsonResult )
+	{
+		var varResponseObj = jsonResult.response;
+		if(jsonResult.status == 'error'  && varResponseObj !=undefined )
+		{
+			var varIsMessageExist = varResponseObj.is_message_exist;
+			if(varIsMessageExist == true)
+			{
+				var jsonResponseMessage = varResponseObj.messages;
+				var varArrErrorMssg = jsonResponseMessage.error_mssg
+				displayMessages( varArrErrorMssg , true );
+			}
+		}
+		else  if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+		{
+			$('#div_guests_details').html('');
+			loadGuests(varEventID,varAdminID);
+			var jsonResponseMessage = varResponseObj.messages;
+			var varArrErrorMssg = jsonResponseMessage.ok_mssg
+			displayMessages( varArrErrorMssg , false );
+		}
+	}
+	 
+	function displayAlert(varMessage, isError)
+	{
+		var varTitle = 'Status';
+		var varType = 'info';
+		if(isError)
+		{
+			varTitle = 'Error';
+			varType = 'error';
+		}
+		else
+		{
+			varTitle = 'Status';	
+			varType = 'info';
+		}
+		
+		if(varMessage!='')
+		{
+			$.msgBox({
+                title: varTitle,
+                content: varMessage,
+                type: varType
+            });
+		}
+	}
+	
+	function displayMessages(varArrMessages, isError)
+	{
+		if(varArrMessages!=undefined)
+		{
+			
+				
+			var varMssg = '';
+			var isFirst = true;
+			for(var i = 0; i<varArrMessages.length; i++)
+			{
+				if(isFirst == false)
+				{
+					varMssg = varMssg + '\n';
+				}
+				varMssg = varMssg + varArrMessages[i].text;
+				var txtMssgLocation = varArrMessages[i].txt_loc_id;
+				if(txtMssgLocation=='err_mssg')
+				{
+					isError = true;
+				}
+			}
+			
+			if(varMssg!='')
+			{
+				displayAlert(varMssg,isError);
+			}
+		}
+	}
 	/*function credentialSuccess(jsonResponse,varSource)
 	{
 		$("#login_name_display").text(jsonResponse.first_name);

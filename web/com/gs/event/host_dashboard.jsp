@@ -30,7 +30,7 @@
 	<div class="scratch_area" id="div_host_dash"> 
 				<jsp:include page="lobby_tab.jsp">
 					<jsp:param name="select_tab" value="guest_tab"/>
-					<jsp:param name="lobby_header" value="My Lobby"/>
+					<jsp:param name="lobby_header" value="My Events"/>
 					<jsp:param name="lobby_sec_header" value=""/>
 				</jsp:include>
 				
@@ -41,6 +41,16 @@
 							<jsp:param name="event_id" value="<%=sEventId %>"/>
 							<jsp:param name="select_action_nav" value="dashboard_tab"/> 
 						</jsp:include>
+				<div class="row">
+					<div  class="span10">
+						&nbsp;
+					</div>
+				</div>
+				<div class="row">
+					<div  class="span10">
+						&nbsp;
+					</div>
+				</div>
 				<div class="row">
 					<div  class="offset2 span10" id="div_dashboard_details">
 						

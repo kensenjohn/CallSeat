@@ -25,8 +25,10 @@
 		</div>
 		<div class="fnbx_scratch_area">
 			<div class="row">
-				  <div class="offset1 span9">
-<%
+				  <div class="offset1 span6">
+				  		<div class="row">
+							<div class="span6">
+							<%
 					if(isAllGuest && !isAllGuestEditGuest)
 					{
 %>
@@ -53,17 +55,14 @@
 <%
 					}
 %>	
-				  </div>
-			</div>
-			<div class="row">
-				<div class="offset1 span12">						
-		
-				<div class="row">
-					<div class="span6">
-						&nbsp;
-					</div>
-				</div>
-				<form id="frm_add_guest" >
+							</div>
+						</div>
+						<div class="row">
+							<div class="span6">
+								&nbsp;
+							</div>
+						</div>
+										<form id="frm_add_guest" >
 					<div class="row">
 						<div class="span6">
 							First Name :
@@ -203,6 +202,17 @@
 					<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
 					<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
 				</form>
+				  </div>
+			</div>
+			<div class="row">
+				<div class="offset1 span12">						
+		
+				<div class="row">
+					<div class="span6">
+						&nbsp;
+					</div>
+				</div>
+
 				</div>
 				<form id="frm_event_assign" id="frm_event_assign">
 					<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>

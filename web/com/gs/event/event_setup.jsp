@@ -331,8 +331,8 @@
 							<div class="row">
 								<div class="offset1">
 									<div class="row">
-										<div class="span2">
-											<span class="fld_name">Phone Number :  </span>
+										<div class="span2"    style="text-align:right;">
+											<span class="fld_name" >Phone Number :  </span>
 										</div>
 										<div class="span4">
 											<span class="fld_txt" id="seating_gen_num"></span>
@@ -340,16 +340,16 @@
 										<div class="span2" style="display:none;"><label id="seating_search">Advanced Search</label></div>
 									</div>
 									<div class="row">
-										<div class="span2">
-											<span class="fld_name">Event Number :  </span>
+										<div class="span2"   style="text-align:right;"> 
+											<span class="fld_name" >Event Number :  </span>
 										</div>
 										<div class="span4">
 											<span class="fld_txt" id="seating_event_id"></span>
 										</div>
 									</div>
 									<div class="row">
-										<div class="span2">
-											<span class="fld_name">Extension :  </span>
+										<div class="span2"   style="text-align:right;">
+											<span class="fld_name" >Extension :  </span>
 										</div>
 										<div class="span4">
 											<span class="fld_txt" id="seating_secret_key"></span>
@@ -369,26 +369,25 @@
 							</div>
 							<div class="row">
 								<div class="offset1">
-									<div class="row">
-										<div class="span2">
-											<span class="fld_name">Phone Number :  </span>
+									<div class="row"> 
+										<div class="span2"   style="text-align:right;"> 
+											<span class="fld_name" >Phone Number :  </span>
 										</div>
 										<div class="span4">
 											<span class="fld_txt" id="rsvp_gen_num"></span>
 										</div>
-										<div class="span2" style="display:none;"><label id="seating_search">Advanced Search</label></div>
 									</div>
 									<div class="row">
-										<div class="span2">
-											<span class="fld_name">Event Number :  </span>
+										<div class="span2"   style="text-align:right;">
+											<span class="fld_name" >Event Number :  </span>
 										</div>
 										<div class="span4">
 											<span class="fld_txt" id="rsvp_event_id"></span>
 										</div>
 									</div>
 									<div class="row">
-										<div class="span2">
-											<span class="fld_name">Extension :  </span>
+										<div class="span2"   style="text-align:right;">
+											<span class="fld_name" >Extension :  </span>
 										</div>
 										<div class="span4">
 											<span class="fld_txt" id="rsvp_secret_key"></span>
@@ -429,100 +428,7 @@
 				<div  class="clear_both" id="div_guests_details">
 					
 				</div>
-				<div  class="clear_both" id="div_phone_numbers"  style="display:none;">
-					<div class="row">
-				  <div class="span8">
-				    <div class="row">
-				      <div class="span2"><label for="table_name">Seating Number :</label></div>
-				      <div class="span4"><label id="seating_gen_num"></label></div>
-				      <div class="span2" style="display:none;"><label id="seating_search">Advanced Search</label></div>
-				    </div>
-				    <div class="row"  style="display:none;"  id="seating_div_event_id">
-				    	<div class="span8"><label for="table_name" class="span3">Event ID :&nbsp;</label><span class="span1"></span><label id="seating_event_id"  style="text-align:left"></label></div>
-				    </div>
-				    <div class="row"  style="display:none;"  id="seating_div_secret_key">
-				    	<div class="span8"><label for="table_name" class="span3">Secret key :&nbsp;</label><span class="span1"></span><label id="seating_secret_key"  style="text-align:left"></label></div>
-				    </div>
-				    <div class="row" id="seating_numbers_gen" style="display:none;">
-				    	 <div class="span8">
-				    	 	<form id="frm_seating_numbers" >
-				    	 		<fieldset>
-									<div class="clearfix-tight">
-										<label for="table_name">Area Code :</label>
-										<div class="input">
-											<input type="text" id="seating_area_code" name="seating_area_code"/>
-										</div>
-									</div>								
-									<div class="clearfix-tight">
-										<label for="table_name">Contains :</label>
-										<div class="input">
-											<input type="text" id="seating_text_pattern" name="seating_text_pattern"/>
-										</div>
-									</div>
-									<div class="actions">									
-							            <button id="gen_seating_tel_num" name="gen_seating_tel_num" type="button" class="action_button primary small">Generate New Number</button>
-							        </div>	
-								</fieldset>
-								<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
-								<input type="hidden" name="event_id" id="event_id" value="<%=sEventId%>"/>
-				    	 	</form>
-				    	 </div>
-				    </div>
-				     <div class="row">
-				     	<div class="span2"><label for="table_name">RSVP Number :</label></div>
-				      	<div class="span4"><label id="rsvp_gen_num"></label></div>
-				      <div class="span2"  style="display:none;"><label id="rsvp_search">Advanced Search</label></div>
-				     </div>
-				     <div class="row"  style="display:none;"  id="rsvp_div_event_id">
-				    	<div class="span8"><label for="table_name" class="span3">Event ID : &nbsp;</label><span class="span1"></span><label id="rsvp_event_id" class="span4" style="text-align:left" ></label></div>
-				    </div>
-				    <div class="row"  style="display:none;"  id="rsvp_div_secret_key">
-				    	<div class="span8"><label for="table_name" class="span3">Secret key : &nbsp;</label><span class="span1"></span><label id="rsvp_secret_key" class="span4"  style="text-align:left"  ></label></div>
-				    </div>
-				     <div class="row" id="rsvp_numbers_gen"  style="display:none;">
-				     	<div class="span8">
-							<form id="frm_rsvp_numbers" >
-				    	 		<fieldset>
-									<div class="clearfix-tight">
-										<label for="table_name">Area Code :</label>
-										<div class="input">
-											<input type="text" id="rsvp_area_code" name="rsvp_area_code"/>
-										</div>
-									</div>								
-									<div class="clearfix-tight">
-										<label for="table_name">Contains :</label>
-										<div class="input">
-											<input type="text" id="rsvp_contains" name="rsvp_contains"/>
-										</div>
-									</div>
-									<div class="actions">									
-							            <button id="gen_rsvp_tel_num" name="gen_rsvp_tel_num" type="button" class="action_button primary small">Generate New Number</button>
-							        </div>	
-								</fieldset>
-								<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
-								<input type="hidden" name="event_id" id="event_id" value="<%=sEventId%>"/>
-				    	 	</form>
-				    	 </div>
-				     </div>
-				  </div>
-				 </div>
-				 	<div class="row">
-				  <div class="span8">
-				  	<div class="row">
-				  		&nbsp;
-				  	</div>
-				  </div>
-				  </div>
-				  	<div class="row">
-				  <div class="span8">
-				  	<div class="row">
-				  		<div class="span8" style="text-align:center;">
-				  			<button id="bt_get_own_phone" name="bt_get_own_phone" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="action_button primary big">Get direct line.</button>
-				  		</div>
-				   	</div>
-				  </div>
-				</div>
-			</div>
+
 			</div>
 		</div>
 	</div>
@@ -687,7 +593,7 @@
 		loadActions();
 		if(varIsNewEventCreateClicked)
 		{
-			switchTab('event_summary_tab');
+			switchTab('li_event_summary');
 			$('#div_event_summary').show();
 		}
 		else
@@ -743,7 +649,7 @@
 	
 	function switchTab(current_tab_id)
 	{
-		$('#div_tab_nav a').each(function(index) {
+		$('#div_tab_nav li').each(function(index) {
 		    $(this).removeClass('active');
 		});
 		$('#'+current_tab_id).addClass('active');
@@ -752,26 +658,26 @@
 	
 	function displayEventSummaryView(tab_id)
 	{		
-		switchTab('event_summary_tab');
+		switchTab('li_event_summary');
 		$('#div_event_summary').show();
 		loadEventSummary();
 	}
 	
 	function displayTableView(tab_id)
 	{
-		switchTab('table_view_tab');
+		switchTab('li_table_view');
 		loadTables();
 	}
 	
 	function displayGuestView(tab_id)
 	{
-		switchTab('guest_view_tab');
+		switchTab('li_guest_view');
 		loadGuests();
 	}
 	
 	function displayPhoneNumberView(tab_id)
 	{		
-		switchTab('phone_num_tab');
+		switchTab('li_phone_num');
 		$('#div_phone_numbers').show();
 		loadPhoneNumber();
 		//loadPhoneNumberFrame();
@@ -965,7 +871,7 @@
 									
 									$.msgBox({
 									    title: "Uninvite Guest",
-									    content: "Are you sure you want to remove guest from invitee list?",
+									    content: "Are you sure you want to remove guest from the invitee list?",
 									    type: "confirm",
 									    buttons: [{ value: "Yes" }, { value: "No" }, { value: "Cancel"}],
 									    success: function (result) {

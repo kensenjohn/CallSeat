@@ -55,7 +55,6 @@ try
 			HashMap<Integer, TableGuestsBean> hmTables =  guestTableManager.getTablesAndGuest(sEventID);
 			
 			HashMap<String, TableGuestsBean> hmConsTableGuestBean = guestTableManager.consolidateTableAndGuest(hmTables);
-			appLogging.info("hmTableGuests = " + hmConsTableGuestBean);
 			jsonResponseObj.put("table_detail",guestTableManager.getTablesAndGuestJson(hmConsTableGuestBean));
 			
 			Text okText = new OkText("Loading Data Complete ","my_id");		

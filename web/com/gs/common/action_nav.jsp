@@ -49,10 +49,20 @@ String sRefererSource = ParseUtil.checkNull(request.getParameter("referrer_sourc
 	{
 %>
 		<div class="row" id="all_guests_action_nav"  style="display:none;">
-			<div class="span7">
+			<div class="span12">
 				<div class="row">
-					<div class="span2 txt_center">
-						<button id="add_all_guests" name="add_all_guests" href="../event/add_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>&all_guest_tab=true" class="action_button default small ">Create Guest</button>
+					<div class="span8">
+						&nbsp;
+					</div>
+				</div>
+				<div class="row">
+					<div class="offset1 span2" style="text-align:left;">
+						<input type="button" id="add_all_guests" name="add_all_guests" href="../event/add_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>&all_guest_tab=true" class="btn ispn2" value="Create New Guest">
+					</div>
+				</div>
+				<div class="row">
+					<div class="span8">
+						&nbsp;
 					</div>
 				</div>
 			</div>

@@ -94,6 +94,18 @@ public class TableManager {
 		}
 		return numOfEventTablesDel;
 	}
+	
+	public Integer deleteGuestFromTables(String sGuestId) {
+		
+		Integer numOfGuestTablesDel = 0;
+		if(sGuestId != null
+				&& !"".equalsIgnoreCase(sGuestId))
+		{
+			GuestTableData guestTableData = new GuestTableData();
+			numOfGuestTablesDel =  guestTableData.deleteGuestFromAllTables(sGuestId);
+		}
+		return numOfGuestTablesDel;
+	}
 
 	public Integer deleteGuestEventTable(ArrayList<String> arrTableId,
 			String sGuestId) {

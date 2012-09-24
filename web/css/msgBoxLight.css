@@ -34,7 +34,7 @@ div.msgBoxTitle
     font-variant:small-caps;
     font-size:16pt;
     font-weight:lighter;
-    color:#00335e;
+    color:#155521;
     width:100%;
     border-bottom : 1px solid #002c5f;
 }
@@ -73,7 +73,7 @@ div.msgBoxContent span
 {
     display: table-cell;
     vertical-align: middle;
-    color: #00335e;
+    color: #155521;
 }
 
 div.msgBoxButtons

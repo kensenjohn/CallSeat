@@ -37,7 +37,9 @@
 		{
 			create_table : function() 
 			{
-				return '<table cellspacing="1" class="table table-striped"  id="guest_details"> '+this.create_header()+''+this.create_rows()+'</table>';
+				var varGuestTableCreated = '<table cellspacing="1" class="table table-striped"  id="guest_details"> '+this.create_header()+''+this.create_rows()+'</table>';
+				json_guest_details = '';
+				return varGuestTableCreated;
 			},
 			create_header : function ()
 			{
@@ -190,13 +192,13 @@
 				'&admin_id='+json_guest_details.varAdminId+
 				'&guest_first_name='+single_guest_detail.user_info.first_name+
 				'&guest_last_name='+single_guest_detail.user_info.last_name+'&all_guest_tab_edit=true&all_guest_tab=true">'+
-				'Invite to events</a></span>';
+				'Invite</a></span>';
 			
 				return varEditLink;
 			},
 			create_delete_guest :  function ( single_guest_detail )
 			{
-				var varEditLink = '<span id="del_'+single_guest_detail.guest_id+'"><a id="link_del_'+single_guest_detail.guest_id+'" >Delete</a></span>';
+				var varEditLink = ' <input type="button" id="link_del_'+single_guest_detail.guest_id+'" class="btn btn-small ispn1" value="Delete">';
 				return varEditLink;
 			}
 			
