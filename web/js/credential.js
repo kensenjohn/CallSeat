@@ -108,3 +108,8 @@ function setTopNavLogin(varAdminId, varEventId, varSource)
 	$("#login_name_display").attr("href","/web/com/gs/common/credential.jsp?admin_id="+varAdminId
 			+"&event_id="+varEventId+"&referrer_source="+varSource);
 }
+function setTopNavSingup(varAdminId, varEventId, varSource)
+{	
+	$("#sign_up_link").attr("href","/web/com/gs/common/credential.jsp?action=signup&admin_id="+varAdminId
+			+"&event_id="+varEventId+"&referrer_source="+varSource);
+}

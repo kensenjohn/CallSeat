@@ -402,4 +402,13 @@ public class AdminManager {
 		}
 		return resetPasswordRespBean;
 	}
+	
+	public void createTemporaryContact(AdminBean adminBean, String sTmpEmail)
+	{
+		if (adminBean != null && !"".equalsIgnoreCase(adminBean.getAdminId())
+				&& sTmpEmail != null && !"".equalsIgnoreCase(sTmpEmail)) {
+			AdminData adminData = new AdminData();
+			adminData.insertTmpContact(adminBean, sTmpEmail);
+		}
+	}
 }

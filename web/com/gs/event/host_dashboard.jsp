@@ -75,6 +75,7 @@
 		if(!varIsSignedIn)
 		{
 			setTopNavLogin(varAdminID,varEventID,'host_dashboard.jsp');
+			setTopNavSingup(varAdminID,varEventID,'host_dashboard.jsp');
 			
 		}
 		loadActions();

@@ -46,12 +46,14 @@ if(cookies!=null)
 			
 				<div class="offset3 span3">
 					<form id="frm_event_dt" name="frm_event_dt">
+						<input type="text" id="tmp_email" class="ispn3 inp-large" placeholder="Email" name="tmp_email">
 						<input type="text" id="event_date" class="ispn3 inp-large" placeholder="Select date of wedding" name="event_date" readonly>
 					</form>
 				</div>
 				<div class="span3">
-					<button class="btn btn-large" value="event_dt_sbt">Create Phone Number</button>
+					<button class="btn btn-large" id="event_dt_sbt">Create Phone Number</button>
 					<form id="call_forward" name="call_forward"  method="POST">
+									<input type="hidden" id="hid_tmp_email" name="hid_tmp_email" value="">
 									<input type="hidden" id="hid_event_date" name="hid_event_date" value="">
 									<input type="hidden" id="from_landing" name="from_landing" value="">
 									<input type="hidden" id="lobby_event_id" name="lobby_event_id" value="">
@@ -111,7 +113,8 @@ if(cookies!=null)
 		}
 		else 
 		{
-			$("#hid_event_date").attr( "value", $("#event_date").attr("value") )
+			$("#hid_event_date").attr( "value", $("#event_date").attr("value") );
+			$("#hid_tmp_email").attr( "value", $("#tmp_email").attr("value") );
 			$("#call_forward").attr("action","event/event_setup.jsp");
 			$("#from_landing").val("true");
 			$("#call_forward").submit();

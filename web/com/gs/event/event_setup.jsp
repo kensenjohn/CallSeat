@@ -1,6 +1,7 @@
 <%@ page import="com.gs.manager.*" %>
 <%@ page import="com.gs.manager.event.EventManager" %>
 <%@ page import="com.gs.bean.*" %>
+<%@ page import="com.gs.data.*" %>
 <%@ page import="com.gs.common.*" %>
 <%@ page import="com.gs.manager.*" %>
 <%@ page import="com.gs.manager.event.*" %>
@@ -16,6 +17,7 @@
 <%
 	Logger jspLogging = LoggerFactory.getLogger(Constants.JSP_LOGS);
 
+	String sTmpEmail = ParseUtil.checkNull(request.getParameter("hid_tmp_email"));
 	String sEventDate = ParseUtil.checkNull(request.getParameter("hid_event_date"));
 	boolean isFromLanding = ParseUtil.sTob(request.getParameter("from_landing"));
 	String sEventId = ParseUtil.checkNull(request.getParameter("lobby_event_id"));
@@ -47,6 +49,18 @@
 		else
 		{
 			adminBean = adminManager.createAdmin();
+			
+			UserInfoBean adminUserInfoBean = adminManager.getAminUserInfo(adminBean.getAdminId());
+			
+			adminManager.createTemporaryContact(adminBean , sTmpEmail );
+			//UserInfoBean adminUserInfoBean = adminBean.getAdminUserInfoBean();
+			/*adminUserInfoBean.setEmail(sTmpEmail);
+			
+			jspLogging.info("User info bean : " + adminUserInfoBean.toJson());
+			
+			UserInfoData userInfoData = new UserInfoData();
+			userInfoData.updateGuestUserInfo(adminUserInfoBean);*/
+			//adminManager.updateUser();
 		}
 		
 		
@@ -464,6 +478,7 @@
 		if(!varIsSignedIn)
 		{
 			setTopNavLogin(varAdminID,varEventID,'event_setup.jsp');
+			setTopNavSingup(varAdminID,varEventID,'event_setup.jsp');
 			
 		}
 		$("#e_summ_event_date").datepick();

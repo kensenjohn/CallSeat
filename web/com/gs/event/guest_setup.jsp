@@ -59,7 +59,8 @@
 		setCredentialEventId(varEventID);
 		if(!varIsSignedIn)
 		{
-			setTopNavLogin(varAdminID,varEventID,'guest_setup.jsp');			
+			setTopNavLogin(varAdminID,varEventID,'guest_setup.jsp');
+			setTopNavSingup(varAdminID,varEventID,'guest_setup.jsp');
 		}
 		$("#add_all_guests").fancybox({
 			'width'				: '75%',

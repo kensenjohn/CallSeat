@@ -19,102 +19,106 @@
 %>
 <%@include file="../common/gatekeeper.jsp"%>
 
-<body>
-   <div class="page_setup">
-		<div class="container rounded-corners">
-			<div style="margin:5px;">
-			<jsp:include page="../common/top_nav.jsp">
-				<jsp:param name="referrer_source" value="host_dashboard.jsp"/>
-			</jsp:include>
-				<jsp:include page="../event/lobby_tab.jsp">
-					<jsp:param name="select_tab" value="guest_tab"/>
-					<jsp:param name="lobby_header" value="Account Settings"/>
-					<jsp:param name="lobby_sec_header" value=""/>
-				</jsp:include>
-				<div class="main_body">
-					<div class="clear_both">					
-												
-						<jsp:include page="../common/action_nav.jsp">
-							<jsp:param name="admin_id" value="<%=sAdminId %>"/>
-							<jsp:param name="event_id" value="<%=sEventId %>"/>
-							<jsp:param name="select_action_nav" value="dashboard_tab"/> 
-						</jsp:include>
-					</div>
-					<div  class="clear_both" style="width: 100%;  text-align: center;">
-						<div  class="clear_both" id="div_account_details">
-							<div class="span14">
-								<div class="row">							
-									<div class="span7">
-										<h3 class="txt txt_center">User Information</h3>
-										<form id="frm_user_data" >
-											<fieldset>
-												<div class="clearfix-tight">
-													<label for="login_email">Email :</label>
-													<div class="input">
-														<input type="text" id="login_email" name="login_email"/>
-													</div>
-												</div>
-												<div class="clearfix-tight">
-													<label for="register_fname">First Name :</label>
-													<div class="input">
-														<input type="text" id="register_fname" name="register_fname"/>
-													</div>
-												</div>
-												<div class="clearfix-tight">
-													<label for="register_lname">Last Name :</label>
-													<div class="input">
-														<input type="text" id="register_lname" name="register_lname"/>
-													</div>
-												</div>
-												<div class="actions">									
-										            <button id="update_admin_info" name="update_admin_info" type="button" class="action_button primary large">Save Changes</button>
-										            <br>								            
-										            <span id="reg_err_mssg"  style="color: #9d261d;" ></span><br>
-										            <span id="reg_success_mssg"  style="color: #46a546;" ></span>
-										        </div>
-											</fieldset>
-											<input type="hidden" id="admin_id" name="admin_id" value="<%=sAdminId%>"/>
-										</form>
-									</div>
-									<div class="span7">
-										<h3 class="txt txt_center">Reset Password</h3>
-										<form id="frm_new_password" >
-											<fieldset>
-												<div class="clearfix-tight">
-													<label for="current_password">Current Password :</label>
-													<div class="input">
-														<input type="text" id="current_password" name="current_password"/>
-													</div>
-												</div>
-												<div class="clearfix-tight">
-													<label for="new_password">New Password :</label>
-													<div class="input">
-														<input type="text" id="new_password" name="new_password"/>
-													</div>
-												</div>
-												<div class="clearfix-tight">
-													<label for="confirm_password">Confirm Password :</label>
-													<div class="input">
-														<input type="text" id="confirm_password" name="confirm_password"/>
-													</div>
-												</div>
-												<div class="actions">									
-										            <button id="update_user_password" name="update_user_password" type="button" class="action_button primary large">Update my password.</button>
-										            <br>								            
-										            <span id="reset_pass_err_mssg"  style="color: #9d261d;" ></span><br>
-										            <span id="reset_pass_success_mssg"  style="color: #46a546;" ></span>
-										        </div>
-											</fieldset>
-											<input type="hidden" id="admin_id" name="admin_id" value="<%=sAdminId%>"/>
-										</form>
-									</div>
-									</div>
-
-								</div>
-							</div>
-						</div>
+<body style="height:auto;">
+	<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
+		<div  style="padding-top:5px;">
+			<div class="logo span4"><a href="#">CallSeat</a></div>
+		</div>
+	</div>
+	<div class="fnbx_scratch_area">
+		<div class="row">
+			<div class="offset1 span6">
+				<div class="row">
+					<div class="span6">
+						<h2>User Information</h2>
 					</div>
 				</div>
+				<form id="frm_user_data" >
+					<div class="row">
+						<div class="span6">
+							Email :
+						</div>
+					</div>
+					<div class="row">
+						<div class="span2" >
+							<input type="text" id="login_email" name="login_email"/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="span6">
+							First Name :
+						</div>
+					</div>
+					<div class="row">
+						<div class="span2" >
+							<input type="text" id="register_fname" name="register_fname"/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="span6">
+							Last Name :
+						</div>
+					</div>
+					<div class="row">
+						<div class="span2" >
+							<input type="text" id="register_lname" name="register_lname"/>
+						</div>
+					</div>
+					<div class="row">								
+						<div class="span2" >
+							<input type="button" id="update_admin_info" name="update_admin_info" type="button" class="btn" value="Save Changes">
+						</div>
+					</div>
+					<input type="hidden" id="admin_id" name="admin_id" value="<%=sAdminId%>"/>
+				</form>
+				<div class="row">
+					<div class="span6">
+						&nbsp;
+					</div>
+				</div>
+				<div class="row">
+					<div class="span6">
+						<h2>Reset Password</h2>
+					</div>
+				</div>
+				<form id="frm_new_password" >
+					<div class="row">
+						<div class="span6">
+							Current Password :
+						</div>
+					</div>
+					<div class="row">
+						<div class="span2" >
+							<input type="text" id="current_password" name="current_password"/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="span6">
+							New Password :
+						</div>
+					</div>
+					<div class="row">
+						<div class="span2" >
+							<input type="text" id="new_password" name="new_password"/>
+						</div>
+					</div>
+					<div class="row">
+						<div class="span6">
+							Confirm Password :
+						</div>
+					</div>
+					<div class="row">
+						<div class="span2" >
+							<input type="text" id="confirm_password" name="confirm_password"/>
+						</div>
+					</div>
+					<div class="row">								
+						<div class="span2" >
+							<input type="button" id="update_user_password" name="update_user_password" type="button" class="btn" value="Update my password">
+						</div>
+					</div>
+					<input type="hidden" id="admin_id" name="admin_id" value="<%=sAdminId%>"/>
+				</form>
 			</div>
 		</div>
 	</div>

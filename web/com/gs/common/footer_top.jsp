@@ -6,8 +6,8 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("#login_name_display").fancybox({
-			'width'				: '80%',
-			'height'			: '80%',
+			'width'				: '75%',
+			'height'			: '90%',
 			'autoScale'			: false,
 			'transitionIn'		: 'none',
 			'transitionOut'		: 'none',
@@ -16,8 +16,8 @@
 			'margin'			: 0
 		});
 		$("#sign_up_link").fancybox({
-			'width'				: '80%',
-			'height'			: '80%',
+			'width'				: '75%',
+			'height'			: '90%',
 			'autoScale'			: false,
 			'transitionIn'		: 'none',
 			'transitionOut'		: 'none',

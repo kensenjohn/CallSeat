@@ -58,7 +58,7 @@
   					 adminBean = adminManager.getAdmin(sUserId);
   				}
   			}
-  			securityLogging.error("11 is signe in - " + isSignedIn);
+  			//securityLogging.error("11 is signe in - " + isSignedIn);
   			if( adminBean!=null && adminBean.isAdminExists() )
   			{
   				isSignedIn = true;
@@ -66,7 +66,7 @@
   				sAdminIdSecure = adminBean.getAdminId();
   				reqSession.setAttribute(Constants.USER_SESSION,adminBean);
   			}
-  			securityLogging.error("22 is signe in - " + isSignedIn);
+  			//securityLogging.error("22 is signe in - " + isSignedIn);
   		}
   		
   		

@@ -549,10 +549,16 @@
 						
 						
 						
-						parent.loadGuests();
+						
 						
 						if(!varIsAllGuest)
 						{
+							parent.loadGuests();
+							parent.$.fancybox.close();
+						}
+						else
+						{
+							parent.loadGuests(varEventId,varAdminId);
 							parent.$.fancybox.close();
 						}
 						//parent.$.fancybox.close();

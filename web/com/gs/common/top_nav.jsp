@@ -79,7 +79,7 @@ if(reqSession!=null)
 			{
 %>
 				<a id="sign_up_link" name="sign_up_link" class="btn btn-green"
-					href="/web/com/gs/common/credential.jsp?action=signup&admin_id=<%=sAdminId %>&event_id=<%=sEventId%>&referrer_source=<%=sRefererSource%>">Sign Up</a>
+					href="/web/com/gs/common/credential.jsp?action=signup&admin_id=<%=sAdminId%>&event_id=<%=sEventId%>&referrer_source=<%=sRefererSource%>">Sign Up</a>
 <%				
 			}
 %>

@@ -219,7 +219,6 @@
 		var dataString = $("#frm_register").serialize();
 		var actionUrl = "proc_register_user.jsp";
 		var methodType = "POST";
-		//alert(dataString);
 		submitCredentials(actionUrl,dataString,methodType,getResult);
 	}
 	

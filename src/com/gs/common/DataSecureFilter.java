@@ -11,6 +11,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 
 import org.owasp.validator.html.AntiSamy;
 import org.owasp.validator.html.CleanResults;
@@ -24,10 +26,15 @@ public class DataSecureFilter implements Filter {
 
 	private static final Logger appLogging = LoggerFactory
 			.getLogger("AppLogging");
+	Configuration applicationConfig = Configuration
+					.getInstance(Constants.APPLICATION_PROP);
+	private static final Logger breadCrumbLogging = LoggerFactory
+				.getLogger("BreadcrumbLogging");
 
 	private String sSecurityPolicy = "";
 	private boolean isSecureFilterEnabled = false;
 	private Policy owsapiPolicy = null;
+	private boolean trackBreadcrumb = false;
 
 	@Override
 	public void destroy() {
@@ -40,6 +47,35 @@ public class DataSecureFilter implements Filter {
 	public void doFilter(ServletRequest servReq, ServletResponse servResp,
 			FilterChain filterChain) throws IOException, ServletException {
 
+		if(trackBreadcrumb)
+		{
+			HttpServletRequest httpRequest = (HttpServletRequest)servReq;
+			String sReferer = httpRequest.getHeader("referer");
+			StringBuffer sDestination = httpRequest.getRequestURL();
+			
+			String sUserId = "";
+			String sJSessionId = "";
+			
+			Cookie[] cookies = httpRequest.getCookies();
+
+			if(cookies!=null)
+			{
+				for(int cookieCount = 0; cookieCount < cookies.length; cookieCount++) 
+				{ 
+					Cookie cookie1 = cookies[cookieCount];
+			        if (Constants.COOKIE_APP_USERID.equals(cookie1.getName())) {
+			        	sUserId = cookie1.getValue();
+			        }
+			        if ("JSESSIONID".equals(cookie1.getName())) {
+			        	sJSessionId = cookie1.getValue();
+			        }
+				}
+			}
+			
+			breadCrumbLogging.info("\"ui\":\""+sUserId+"\",\"sess\":\""+sJSessionId+"\"\"src\":\""+sReferer+"\",\"dest\":\""+sDestination+"\"");
+		}
+		
+		
 		if (isSecureFilterEnabled) {
 			Map<String, String[]> reqParams = servReq.getParameterMap();
 			if (reqParams != null && !reqParams.isEmpty()) {
@@ -101,6 +137,9 @@ public class DataSecureFilter implements Filter {
 			appLogging
 					.error("Security Filter policy file was not specified in the web.xml ");
 		}
+		
+		trackBreadcrumb = ParseUtil.sTob(applicationConfig.get("track_user_breadcrumb"));
+		
 
 	}
 

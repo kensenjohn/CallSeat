@@ -311,4 +311,21 @@ public class AdminData {
 					"assignTelNumberToPermAdmin()");
 		}
 	}
+	
+	public void insertTmpContact(AdminBean adminBean, String sTmpEmail)
+	{
+		if (adminBean != null && !"".equalsIgnoreCase(adminBean.getAdminId())
+				&& sTmpEmail != null && !"".equalsIgnoreCase(sTmpEmail)) {
+			
+			String sQuery = "INSERT INTO GTTEMPCONTACT (TEMPCONTACTID, FK_ADMINID,TMPEMAILADDRESS,CREATEDATE,HUMANCREATEDATE)"
+				+ " VALUES ( ? , ? , ? , ? , ? )";
+			ArrayList<Object> aParams = DBDAO.createConstraint(
+					Utility.getNewGuid(), adminBean.getAdminId(),sTmpEmail,
+					adminBean.getCreateDate(), adminBean.getHumanCreateDate());
+			
+			DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB, "AdminData.java",
+			"insertTmpContact()");
+			
+		}
+	}
 }

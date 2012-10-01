@@ -68,6 +68,13 @@ try
 					HttpSession httpSession = request.getSession(false);
 					httpSession.setAttribute(Constants.USER_SESSION,tmpAdminBean);
 					
+					if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId) && !sAdminId.equalsIgnoreCase(adminBean.getAdminId()))
+					{
+						adminManager.assignTmpToPermAdmin(sAdminId,adminBean.getAdminId());
+					}
+					
+					
+					
 					Text okText = new OkText("Successfully registered user.","reg_success_mssg") ;		
 					arrOkText.add(okText);
 					
