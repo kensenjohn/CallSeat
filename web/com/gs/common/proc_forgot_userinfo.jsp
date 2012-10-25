@@ -42,10 +42,11 @@ try
 		}
 		else
 		{
-			Text errorText = new ErrorText("There was an error processing your request. Please try again later. If problems persists please call ","err_mssg") ;	 	
-			arrErrorText.add(errorText);
+			Text errorText = new ErrorText("An email with your new password has been sent to the email address specified.","success_mssg") ;	 	
+			arrOkText.add(errorText);
 			
-			responseStatus = RespConstants.Status.ERROR;
+			responseStatus = RespConstants.Status.OK;
+			jsonResponseObj.put("email_id",sEmailId);
 		}
 	}
 	else

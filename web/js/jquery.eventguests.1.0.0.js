@@ -112,8 +112,8 @@
 			create_uninvite_guest :  function ( tmpGuest )
 			{
 				var varEditLink = '<span id="del_'+tmpGuest.guest_id+'">'+
-				'<a id="link_uninvite_event_guest_'+tmpGuest.guest_id+'" href="#" >'+
-				'Uninvite</a>'
+				'<button id="link_uninvite_event_guest_'+tmpGuest.guest_id+'" href="#"   type="button" class="btn btn-small"  >'+
+				'Uninvite</button>'
 				+'</span>';
 				return varEditLink;
 			}

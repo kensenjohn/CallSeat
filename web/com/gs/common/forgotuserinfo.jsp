@@ -5,35 +5,49 @@
 <jsp:include page="../common/header_top.jsp"/>
 <jsp:include page="../common/security.jsp"/>
 <%@include file="../common/header_bottom.jsp"%>
-<body>
-<div class="container-filler rounded-corners">
-			
-			<div class="row">
-					<div class="span8">
-						<h3 class="txt txt_center">Regenerate New Password</h3>
-						<form id='frm_forgot_password'>
-							<fieldset>
-								<div class="clearfix-tight">
-									<label for="reg_email_id">Email :</label>
-									<div class="input">
-										<input type="text" id="reg_email_id" name="reg_email_id"/>
-									</div>
-								</div>
-								<div class="actions">									
-						            <button id="but_submit_email" name="but_submit_email" type="button" 
-						            	class="action_button primary large">Submit Request</button>
-						            <br>
-						             <span id="err_mssg"  style="color: #9d261d;" ></span><br>
-								     <span id="success_mssg"  style="color: #46a546;" ></span>
-						        </div>
-							</fieldset>
-						</form>
-					</div>
+<link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
+<body  style="height:auto;">
+		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
+			<div style="padding:5px;">
+				<div class="logo span4"><a href="#">Guests</a></div>
 			</div>
-			
-			
+		</div>
+		<div class="fnbx_scratch_area">
+			<div class="row" >
+				<div class="offset1 span6">
+					<div class="row">
+						<div class="span6">
+							<h2 class="txt txt_center">Regenerate New Password</h2>
+						</div>
+					</div>
+					<div class="row">
+						<div class="span2" >
+							&nbsp;
+						</div>
+					</div>
+					<form id="frm_forgot_password" >
+						<div class="row">
+							<div class="span2" >
+								Email : 
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								<input type="text" id="reg_email_id" name="reg_email_id"/>
+							</div>
+						</div>
+						<div class="row">
+							<div class="span2" >
+								 <input type="button" id="but_submit_email" name="but_submit_email" 
+								 class="btn btn-large" value="Submit Request">			 			
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
 		</div>
 	</body>
+	<script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#but_submit_email").click(submitEmail);
@@ -74,7 +88,8 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg );
+						//displayMessages( varArrErrorMssg );
+						displayMessages( varArrErrorMssg , true);
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -92,13 +107,67 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.ok_mssg
-						displayMessages( varArrErrorMssg );
+						//displayMessages( varArrErrorMssg );
+						displayMessages( varArrErrorMssg , false);
 					}
 				}
 			}
 		}
 		
-		function displayMessages(varArrMessages)
+
+		
+		function displayAlert(varMessage, isError)
+		{
+			var varTitle = 'Status';
+			var varType = 'info';
+			if(isError)
+			{
+				varTitle = 'Error';
+				varType = 'error';
+			}
+			else
+			{
+				varTitle = 'Status';	
+				varType = 'info';
+			}
+			
+			if(varMessage!='')
+			{
+				$.msgBox({
+	                title: varTitle,
+	                content: varMessage,
+	                type: varType
+	            });
+			}
+		}
+		
+		function displayMessages(varArrMessages, isError)
+		{
+			if(varArrMessages!=undefined)
+			{
+				
+					
+				var varMssg = '';
+				var isFirst = true;
+				for(var i = 0; i<varArrMessages.length; i++)
+				{
+					if(isFirst == false)
+					{
+						varMssg = varMssg + '\n';
+					}
+					varMssg = varMssg + varArrMessages[i].text;
+				}
+				
+				if(varMssg!='')
+				{
+					displayAlert(varMssg,isError);
+				}
+			}
+			
+
+		}
+		
+		/*function displayMessages(varArrMessages)
 		{
 			if(varArrMessages!=undefined)
 			{
@@ -111,5 +180,5 @@
 					$("#"+txtMssgLocation).text(txtMessage);
 				}
 			}
-		}
+		}*/
 	</script>

@@ -27,45 +27,45 @@
 	</div>
 	<div class="fnbx_scratch_area">
 		<div class="row">
-			<div class="offset1 span6">
+			<div class="offset1 span5">
 				<div class="row">
-					<div class="span6">
+					<div class="span5">
 						<h2>User Information</h2>
 					</div>
 				</div>
 				<form id="frm_user_data" >
 					<div class="row">
-						<div class="span6">
+						<div class="span5">
 							Email :
 						</div>
 					</div>
 					<div class="row">
-						<div class="span2" >
+						<div class="span5" >
 							<input type="text" id="login_email" name="login_email"/>
 						</div>
 					</div>
 					<div class="row">
-						<div class="span6">
+						<div class="span5">
 							First Name :
 						</div>
 					</div>
 					<div class="row">
-						<div class="span2" >
+						<div class="span5" >
 							<input type="text" id="register_fname" name="register_fname"/>
 						</div>
 					</div>
 					<div class="row">
-						<div class="span6">
+						<div class="span5">
 							Last Name :
 						</div>
 					</div>
 					<div class="row">
-						<div class="span2" >
+						<div class="span5" >
 							<input type="text" id="register_lname" name="register_lname"/>
 						</div>
 					</div>
 					<div class="row">								
-						<div class="span2" >
+						<div class="span5" >
 							<input type="button" id="update_admin_info" name="update_admin_info" type="button" class="btn" value="Save Changes">
 						</div>
 					</div>
@@ -76,44 +76,49 @@
 						&nbsp;
 					</div>
 				</div>
+			</div>
+			<div class="span1">
+				&nbsp;
+			</div>
+			<div class="span5">
 				<div class="row">
-					<div class="span6">
+					<div class="span5">
 						<h2>Reset Password</h2>
 					</div>
 				</div>
 				<form id="frm_new_password" >
 					<div class="row">
-						<div class="span6">
+						<div class="span5">
 							Current Password :
 						</div>
 					</div>
 					<div class="row">
-						<div class="span2" >
-							<input type="text" id="current_password" name="current_password"/>
+						<div class="span5" >
+							<input type="password" id="current_password" name="current_password"/>
 						</div>
 					</div>
 					<div class="row">
-						<div class="span6">
+						<div class="span5">
 							New Password :
 						</div>
 					</div>
 					<div class="row">
-						<div class="span2" >
-							<input type="text" id="new_password" name="new_password"/>
+						<div class="span5" >
+							<input type="password" id="new_password" name="new_password"/>
 						</div>
 					</div>
 					<div class="row">
-						<div class="span6">
+						<div class="span5">
 							Confirm Password :
 						</div>
 					</div>
 					<div class="row">
-						<div class="span2" >
-							<input type="text" id="confirm_password" name="confirm_password"/>
+						<div class="span5" >
+							<input type="password" id="confirm_password" name="confirm_password"/>
 						</div>
 					</div>
 					<div class="row">								
-						<div class="span2" >
+						<div class="span5" >
 							<input type="button" id="update_user_password" name="update_user_password" type="button" class="btn" value="Update my password">
 						</div>
 					</div>

@@ -497,19 +497,43 @@
 		});
 		
 		$("#table_view_tab").click(function(){
+			if(varEventID == '')
+			{
+				//alert('First create the event before adding tables;');
+				displayMssgBoxAlert('Please create the seating plan before adding tables', true);
+			}
+			else
+			{
+				toggleActionNavs('table_action_nav');
+				displayTableView('li_table_view');
+			}
 
-			toggleActionNavs('table_action_nav');
-			displayTableView('li_table_view');
 		});
 		$("#guest_view_tab").click(function(){
-			displayGuestView('li_guest_view');
-
-			toggleActionNavs('invite_guest_action_nav');
+			if(varEventID == '')
+			{
+				//alert('First create the event before adding tables;');
+				displayMssgBoxAlert('Please create the seating plan before inviting guests', true);
+			}
+			else
+			{
+				displayGuestView('li_guest_view');
+				toggleActionNavs('invite_guest_action_nav');				
+			}
 		});
 		
 		$("#phone_num_tab").click(function(){
-			toggleActionNavs('li_phone_num');
-			displayPhoneNumberView('li_phone_num');
+			if(varEventID == '')
+			{
+				//alert('First create the event before adding tables;');
+				displayMssgBoxAlert('Please create the seating plan before creating phone numbers', true);
+			}
+			else
+			{
+				toggleActionNavs('li_phone_num');
+				displayPhoneNumberView('li_phone_num');
+			}
+
 		});
 		
 		/*if(!varIsSignedIn)
@@ -789,7 +813,7 @@
 			}
 			else  if( jsonResult.status == 'ok' && varResponseObj !=undefined)
 			{
-				displayStatus('Success!');
+				displayStatus('Successfully created seating plan.');
 				
 				$("#primary_header").text( $("#e_summ_event_name").val() );
 				$("#secondary_header").text( '('+$("#e_summ_event_date").val()+')' );
@@ -1120,9 +1144,24 @@
 			$('#edit_'+varTableId).click(function() {
 				edit_table_action('/web/com/gs/event/proc_delete_table.jsp',varTableId);
 			});
-			$('#link_del_table_'+varTableId).click(function() {
-				delete_table_action('/web/com/gs/event/proc_delete_table.jsp',varTableId);
+			$("#link_del_table_"+varTableId).bind('click',{'tmp_del_table_link':'/web/com/gs/event/proc_delete_table.jsp','tmp_table_id':varTableId},function(event)
+			{
+				$.msgBox({
+				    title: "Delete Table",
+				    content: "Are you sure you want to delete this table?",
+				    type: "confirm",
+				    buttons: [{ value: "Yes" }, { value: "No" }, { value: "Cancel"}],
+				    success: function (result) {
+				        if (result == "Yes") {
+				            //alert("One cup of coffee coming right up!");
+				        	delete_table_action(event.data.tmp_del_table_link , event.data.tmp_table_id  );
+				        }
+				    }
+				});
 			});
+			/*$('#link_del_table_'+varTableId).click(function() {
+				delete_table_action('/web/com/gs/event/proc_delete_table.jsp',varTableId);
+			});*/
 			$("#link_table_"+varTableId).fancybox({
 				'width'				: '75%',
 				'height'			: '90%',
@@ -1165,10 +1204,10 @@
 	
 	function delete_table_action(url,tableid)
 	{
-		var confirmDelete = confirm('Do you want to delete this table?');
+		//var confirmDelete = confirm('Do you want to delete this table?');
 		
-		if(confirmDelete == true)
-		{
+		//if(confirmDelete == true)
+		//{
 			$("#table_"+tableid).remove();
 			
 			var dataString = '&event_id='+ varEventID + '&table_id='+tableid;
@@ -1178,7 +1217,7 @@
 			//getAllTablesData(actionUrl,dataString,methodType);
 			
 			getDataAjax(actionUrl,dataString,methodType, deleteTable);
-		}
+		//}
 		
 	}
 	
@@ -1327,6 +1366,57 @@
 			
 		}
 		
+	}
+	
+	function displayMssgBoxAlert(varMessage, isError)
+	{
+		var varTitle = 'Status';
+		var varType = 'info';
+		if(isError)
+		{
+			varTitle = 'Error';
+			varType = 'error';
+		}
+		else
+		{
+			varTitle = 'Status';	
+			varType = 'info';
+		}
+		
+		if(varMessage!='')
+		{
+			$.msgBox({
+                title: varTitle,
+                content: varMessage,
+                type: varType
+            });
+		}
+	}
+	
+	function displayMssgBoxMessages(varArrMessages, isError)
+	{
+		if(varArrMessages!=undefined)
+		{
+			
+				
+			var varMssg = '';
+			var isFirst = true;
+			for(var i = 0; i<varArrMessages.length; i++)
+			{
+				if(isFirst == false)
+				{
+					varMssg = varMssg + '\n';
+				}
+				varMssg = varMssg + varArrMessages[i].text;
+			}
+			
+			if(varMssg!='')
+			{
+				displayAlert(varMssg,isError);
+			}
+		}
+		
+
 	}
 	
 </script>

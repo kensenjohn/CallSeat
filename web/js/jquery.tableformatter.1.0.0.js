@@ -108,7 +108,7 @@
 			create_delete_table : function ( single_table_detail )
 			{
 				var varDeleteLink = '<span id="del_'+single_table_detail.table_id+'">'+
-					'<a id="link_del_table_'+single_table_detail.table_id+'" >Delete</a></span>';
+					'<button id="link_del_table_'+single_table_detail.table_id+'"  type="button" class="btn btn-small"  >Delete</button></span>';
 				return varDeleteLink;
 			},
 			create_edit_table :  function ( single_table_detail )
