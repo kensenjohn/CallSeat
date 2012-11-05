@@ -221,4 +221,5 @@
 			$('#num_of_seats').val( varTableDetail.num_of_seats);
 		}
 	</script>
+	<jsp:include page="../common/footer_bottom_fancybox.jsp"/> 
 </html>

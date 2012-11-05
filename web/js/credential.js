@@ -105,7 +105,7 @@ function setCredentialEventId(varEventId)
 
 function setTopNavLogin(varAdminId, varEventId, varSource)
 {	
-	$("#login_name_display").attr("href","/web/com/gs/common/credential.jsp?admin_id="+varAdminId
+	$("#login_name_display").attr("href","/web/com/gs/common/credential.jsp?action=login&admin_id="+varAdminId
 			+"&event_id="+varEventId+"&referrer_source="+varSource);
 }
 function setTopNavSingup(varAdminId, varEventId, varSource)

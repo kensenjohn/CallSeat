@@ -5,6 +5,8 @@
 <jsp:include page="../common/header_top.jsp"/>
 <jsp:include page="../common/security.jsp"/>
 <%@include file="../common/header_bottom.jsp"%>
+
+<link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
 	<body  style="height:auto;">
 <%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
@@ -64,8 +66,8 @@
 						</div>
 						</form>
 						<div class="row">
-							<div class="span4" >
-								<a id="link_forgot_password" href="#">Forgot your password?</a> <br>
+							<div class="span5" >
+								<a id="link_forgot_password" href="#">Forgot your password?</a> <br><br>
 								<a id="link_to_signup" href="#">Sign me up. I don't have an account.</a>
 							</div>
 						</div>
@@ -148,7 +150,7 @@
 						</div>
 						
 						<div class="row">
-							<div class="span5" >
+							<div class="span6" >
 						 			<a id="link_to_login" name="link_to_login" href="#">Already have an account? Click here to Login.</a><br>
 								    <span id="reg_err_mssg"  style="color: #9d261d;" ></span><br>
 								    <span id="reg_success_mssg"  style="color: #46a546;" ></span>
@@ -161,6 +163,14 @@
 			</div>
 		</div>
 		<form id="frm_forgot_password" id="frm_forgot_password" action="forgotuserinfo.jsp">
+			<input type="hidden" id="parent_referrer_src" name="parent_referrer_src" value="<%=sRefferrerSource %>"/>
+			<input type="hidden" id="parent_admin_id" name="parent_admin_id" value="<%=sAdminId %>"/>
+			<input type="hidden" id="parent_event_id" name="parent_event_id" value="<%=sEventId %>"/>
+			<input type="hidden" id="parent_pass_thru_action" name="parent_pass_thru_action" value="<%=isPassthru%>"/>
+			
+			
+			<input type="hidden" id="parent_pass_thru_rsvp_num" name="parent_pass_thru_rsvp_num" value="<%=ParseUtil.checkNull(request.getParameter("pass_thru_rsvp_num"))%>"/>			
+			<input type="hidden" id="parent_pass_thru_seating_num" name="parent_pass_thru_seating_num" value="<%=ParseUtil.checkNull(request.getParameter("pass_thru_seating_num"))%>"/>
 		</form>
 		<%
 			if( sRefferrerSource!=null  && "search_phone_number.jsp".equalsIgnoreCase(sRefferrerSource))
@@ -181,6 +191,7 @@
 		
 		
 	</body>
+	<script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
 	<script type="text/javascript">
 	var varSource = '<%=sRefferrerSource%>';
 	$(document).ready(function() {
@@ -249,7 +260,7 @@
 				{
 					var jsonResponseMessage = varResponseObj.messages;
 					var varArrErrorMssg = jsonResponseMessage.error_mssg
-					displayMessages( varArrErrorMssg );
+					displayMessages( varArrErrorMssg , true );
 				}
 			}
 			else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -294,7 +305,7 @@
 		document.cookie=cookieName + "=" + c_value;
 	}
 	
-	function displayMessages(varArrMessages)
+	/*function displayMessages(varArrMessages)
 	{
 		if(varArrMessages!=undefined)
 		{
@@ -307,7 +318,58 @@
 				$("#"+txtMssgLocation).text(txtMessage);
 			}
 		}
+	}*/
+	function displayAlert(varMessage, isError)
+	{
+		var varTitle = 'Status';
+		var varType = 'info';
+		if(isError)
+		{
+			varTitle = 'Error';
+			varType = 'error';
+		}
+		else
+		{
+			varTitle = 'Status';	
+			varType = 'info';
+		}
+		
+		if(varMessage!='')
+		{
+			$.msgBox({
+                title: varTitle,
+                content: varMessage,
+                type: varType
+            });
+		}
+	}
+	
+	function displayMessages(varArrMessages, isError)
+	{
+		if(varArrMessages!=undefined)
+		{
+			
+				
+			var varMssg = '';
+			var isFirst = true;
+			for(var i = 0; i<varArrMessages.length; i++)
+			{
+				if(isFirst == false)
+				{
+					varMssg = varMssg + '\n';
+				}
+				varMssg = varMssg + varArrMessages[i].text;
+			}
+			
+			if(varMssg!='')
+			{
+				displayAlert(varMssg,isError);
+			}
+		}
+		
+
 	}
 	</script>
+	<jsp:include page="../common/footer_bottom_fancybox.jsp"/> 
 </html>
 	

@@ -30,7 +30,7 @@
 	<div class="scratch_area" id="div_host_dash"> 
 				<jsp:include page="lobby_tab.jsp">
 					<jsp:param name="select_tab" value="guest_tab"/>
-					<jsp:param name="lobby_header" value="My Events"/>
+					<jsp:param name="lobby_header" value="Seating Plans"/>
 					<jsp:param name="lobby_sec_header" value=""/>
 				</jsp:include>
 				

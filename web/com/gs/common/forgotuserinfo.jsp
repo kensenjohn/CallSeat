@@ -6,6 +6,15 @@
 <jsp:include page="../common/security.jsp"/>
 <%@include file="../common/header_bottom.jsp"%>
 <link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
+<%
+	String sParentReferrerSource = ParseUtil.checkNull(request.getParameter("parent_referrer_src"));
+	String sParentAdminId = ParseUtil.checkNull(request.getParameter("parent_admin_id"));
+	String sParentEventId = ParseUtil.checkNull(request.getParameter("parent_event_id"));
+
+	String sParentPassthruAction = ParseUtil.checkNull(request.getParameter("parent_pass_thru_action"));
+	String sParentPassthruRsvpNum = ParseUtil.checkNull(request.getParameter("parent_pass_thru_rsvp_num"));
+	String sParentPassthruSeatingNum = ParseUtil.checkNull(request.getParameter("parent_pass_thru_seating_num"));
+%>
 <body  style="height:auto;">
 		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
 			<div style="padding:5px;">
@@ -42,6 +51,19 @@
 								 class="btn btn-large" value="Submit Request">			 			
 							</div>
 						</div>
+						<div class="row">
+							<div class="span2" >
+								&nbsp;			 			
+							</div>
+						</div>
+						<div class="row">
+							<div class="span4" >
+								 <a id="link_back_to_login" name="link_back_to_login" href="#">Return to Login</a><br>		
+							</div>
+						</div>
+					</form>
+					<form id="frm_login" id="frm_login" 
+						action="credential.jsp?action=login&referrer_source=<%=sParentReferrerSource%>&admin_id=<%=sParentAdminId %>&event_id=<%=sParentEventId %>&pass_thru_action=<%=sParentPassthruAction%>&pass_thru_rsvp_num=<%=sParentPassthruRsvpNum%>&pass_thru_seating_num=<%=sParentPassthruSeatingNum%>">
 					</form>
 				</div>
 			</div>
@@ -51,6 +73,8 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 			$("#but_submit_email").click(submitEmail);
+			$("#link_back_to_login").click(submitBackToLogin);
+			$("#link_back_to_signup").click(submitBackToSignup);
 		});
 		function submitEmail()
 		{
@@ -60,6 +84,18 @@
 			var methodType = "POST";
 			
 			submitPasswordRequest(actionUrl,dataString,methodType,getResult);
+		}
+		function submitBackToLogin()
+		{
+
+			$("#frm_login").attr("method","POST");
+			$("#frm_login").submit();
+		}
+		function submitBackToSignup()
+		{
+
+			$("#frm_signup").attr("method","POST");
+			$("#frm_signup").submit();
 		}
 		function submitPasswordRequest(  actionUrl,dataString,methodType,callBackMethod )
 		{
@@ -182,3 +218,4 @@
 			}
 		}*/
 	</script>
+<jsp:include page="../common/footer_bottom_fancybox.jsp"/> 

@@ -386,3 +386,5 @@ var varIsSignedIn = <%=isSignedIn%>;
 		phoneNumberData(actionUrl,dataString,methodType,displayPhoneNumbers);
 	}
 </script>
+<jsp:include page="../common/footer_bottom_fancybox.jsp"/> 
+</html>

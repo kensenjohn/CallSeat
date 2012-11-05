@@ -48,10 +48,10 @@ if(cookies!=null)
 					<form id="frm_event_dt" name="frm_event_dt">
 						<input type="text" id="tmp_email" class="ispn3 inp-large" placeholder="Email" name="tmp_email">
 						<input type="text" id="event_date" class="ispn3 inp-large" placeholder="Select date of wedding" name="event_date" readonly>
+						<input type="button" class="btn btn-large" id="event_dt_sbt" value="Create Phone Number"/>
 					</form>
 				</div>
 				<div class="span3">
-					<button class="btn btn-large" id="event_dt_sbt">Create Phone Number</button>
 					<form id="call_forward" name="call_forward"  method="POST">
 									<input type="hidden" id="hid_tmp_email" name="hid_tmp_email" value="">
 									<input type="hidden" id="hid_event_date" name="hid_event_date" value="">
@@ -86,13 +86,24 @@ if(cookies!=null)
 		$("#event_dt_sbt").click( 
 				function()
 				{
-					var url = 'proc_host_landing.jsp';
-					var formData = $("#frm_event_dt").serialize();
-					var method = "POST";
-					submitEventDt(url,formData,method)
+					callSubmitEvent();
 				});
+		
+		$("#event_dt_sbt").keypress( function(event){
+			if ( event.which == 13 ) {
+				callSubmitEvent();
+			   }
+		} );
 
 	});
+	function callSubmitEvent()
+	{
+		var url = 'proc_host_landing.jsp';
+		var formData = $("#frm_event_dt").serialize();
+		var method = "POST";
+		submitEventDt(url,formData,method)
+		
+	}
 	function submitEventDt(actionUrl,formData,methodType)
 	{
 		$.ajax({

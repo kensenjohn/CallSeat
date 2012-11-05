@@ -4,7 +4,6 @@ com.gs.common.Configuration applicationConfig = com.gs.common.Configuration.getI
 String sCopyrightYear = applicationConfig.get("copyright_year");
 String sCopyrightCompany = applicationConfig.get("copyright_company");
 %>
-<div class="blank_scratch_area" style="padding:5px;text-align:right;font-size:75%; color:#37291C; margin : 0px; clear:both ">
-	&copy<%=sCopyrightYear%> - <%=sCopyrightCompany%>
+<div style="padding:5px;text-align:right;font-size:75%; color:#37291C; margin-right : 30px; clear:both ">
+	&copy<%=sCopyrightYear%> - <%=sCopyrightCompany%> 
 </div>
-</html>

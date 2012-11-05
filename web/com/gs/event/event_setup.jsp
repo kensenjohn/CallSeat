@@ -124,7 +124,7 @@
 	String eventDate = "";
 	if(isNewEventClicked)
 	{
-		eventName = "Create New";
+		eventName = "New Seating Plan";
 		eventDate = "";
 	}
 	else

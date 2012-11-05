@@ -7,7 +7,7 @@
 	<div id="boxtab-blue">
 		<ul>
 			<li  id="li_event_summary"  class="active" >
-				<a  id="event_summary_tab"  >Event Summary</a>
+				<a  id="event_summary_tab"  >Seating Plan Summary</a>
 			</li>
 			<li id="li_table_view">
 				<a id="table_view_tab" >Tables</a>

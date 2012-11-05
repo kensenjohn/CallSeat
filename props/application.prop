@@ -15,4 +15,7 @@ stripe_live_publishable_key=************************
 stripe_live_secret_key=************************
 stripe_env=test
 payment_channel=stripe
+track_user_breadcrumb=true
+copyright_year=2012
+copyright_company=Smarasoft Inc
 

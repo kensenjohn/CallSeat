@@ -28,7 +28,7 @@
 		<div  class="fnbx_scratch_area">
 				<div class="row" >
 					<div class="offset1 span10">
-						<h2 class="txt txt_center">Invite <%=sGuestFirstName%> to Events</h2>
+						<h2 class="txt txt_center">Invite <%=sGuestFirstName%></h2>
 					</div>
 				</div>
 				<div class="row">
@@ -393,6 +393,7 @@
 			}
 		}*/
 	</script>
+	<jsp:include page="../common/footer_bottom_fancybox.jsp"/> 
 </html>
 			
 		

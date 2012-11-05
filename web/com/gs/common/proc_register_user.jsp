@@ -94,7 +94,7 @@ try
 			}
 			else
 			{
-				Text errorText = new ErrorText("This email address were registered to this event previously. Please login","reg_err_mssg") ;		
+				Text errorText = new ErrorText("An account with that email address already exists. Try another?","reg_err_mssg") ;		
 				arrErrorText.add(errorText);
 				
 				responseStatus = RespConstants.Status.ERROR;

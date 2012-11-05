@@ -213,3 +213,5 @@ function submitPricingPlan()
 	
 }
 </script>
+<jsp:include page="../common/footer_bottom_fancybox.jsp"/> 
+</html>

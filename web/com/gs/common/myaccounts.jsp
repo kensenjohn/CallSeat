@@ -275,4 +275,5 @@
 	}
 </script>
 <jsp:include page="../common/footer_top.jsp"/>
-<jsp:include page="../common/footer_bottom.jsp"/>
+<jsp:include page="../common/footer_bottom_fancybox.jsp"/> 
+</html>
