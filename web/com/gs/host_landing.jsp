@@ -26,6 +26,7 @@ if(cookies!=null)
 <jsp:include page="common/header_bottom.jsp"/>
 
 <body >
+		<jsp:include page="common/analytics.jsp"/>
 		<jsp:include page="common/top_nav.jsp">
 			<jsp:param name="referrer_source" value="host_landing.jsp"/>	
 		</jsp:include>

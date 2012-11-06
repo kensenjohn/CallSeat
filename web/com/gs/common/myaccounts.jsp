@@ -18,7 +18,7 @@
 	String sGateAdminId = sAdminId;
 %>
 <%@include file="../common/gatekeeper.jsp"%>
-
+<link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
 <body style="height:auto;">
 	<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
 		<div  style="padding-top:5px;">
@@ -132,6 +132,7 @@
 	!window.jQuery && document.write('<script src="/web/js/fancybox/jquery-1.4.3.min.js"><\/script>');
 </script>
 <script type="text/javascript" src="/web/js/credential.js"></script>
+<script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
 <script type="text/javascript">
 	var varAdminID = '<%=sAdminId%>';
 	var varEventID = '<%=sEventId%>';
@@ -196,7 +197,7 @@
 				{
 					var jsonResponseMessage = varResponseObj.messages;
 					var varArrErrorMssg = jsonResponseMessage.error_mssg
-					displayMessages( varArrErrorMssg );
+					displayMessages( varArrErrorMssg , true );
 				}
 			}
 			else  if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -218,7 +219,7 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrOkMssg = jsonResponseMessage.ok_mssg
-						displayMessages( varArrOkMssg );
+						displayMessages( varArrOkMssg, false );
 					}
 					
 					
@@ -251,7 +252,57 @@
 			  }
 			});
 	}
-	function displayMessages(varArrMessages)
+	function displayAlert(varMessage, isError)
+	{
+		var varTitle = 'Status';
+		var varType = 'info';
+		if(isError)
+		{
+			varTitle = 'Error';
+			varType = 'error';
+		}
+		else
+		{
+			varTitle = 'Status';	
+			varType = 'info';
+		}
+		
+		if(varMessage!='')
+		{
+			$.msgBox({
+                title: varTitle,
+                content: varMessage,
+                type: varType
+            });
+		}
+	}
+	
+	function displayMessages(varArrMessages, isError)
+	{
+		if(varArrMessages!=undefined)
+		{
+			
+				
+			var varMssg = '';
+			var isFirst = true;
+			for(var i = 0; i<varArrMessages.length; i++)
+			{
+				if(isFirst == false)
+				{
+					varMssg = varMssg + '\n';
+				}
+				varMssg = varMssg + varArrMessages[i].text;
+			}
+			
+			if(varMssg!='')
+			{
+				displayAlert(varMssg,isError);
+			}
+		}
+		
+
+	}
+	/*function displayMessages(varArrMessages)
 	{
 		if(varArrMessages!=undefined)
 		{
@@ -264,7 +315,7 @@
 				$("#"+txtMssgLocation).text(txtMessage);
 			}
 		}
-	}
+	}*/
 	
 	function clearMessages()
 	{

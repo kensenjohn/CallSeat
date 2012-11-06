@@ -9,6 +9,7 @@ public class Constants {
 	public static String PROCESS_SCHEDULER_PROP = PROP_FILE_PATH
 			+ "process_scheduler.prop";
 	public static String EMAILER_PROP = PROP_FILE_PATH + "emailer.prop";
+	public static String ANALYTICS_PROP = PROP_FILE_PATH + "analytics.prop";
 
 	public static String ADMIN_DB = "admin_db";
 
@@ -227,5 +228,19 @@ public class Constants {
 	public final static String PROP_STRIPE_LIVE_PUBLISHABLE_KEY = "stripe_live_publishable_key";
 	public final static String PROP_STRIPE_TEST_SECRET_KEY = "stripe_test_secret_key";
 	public final static String PROP_STRIPE_LIVE_SECRET_KEY = "stripe_live_secret_key";
+	
+	public enum ANALYTICS_KEYS {
+		GOOGLE_TRACKING_ID("google_tracking_id");
+		
+		private String sAnalyticKey = "";
+		ANALYTICS_KEYS(String sAnalyticKey){
+			this.sAnalyticKey = sAnalyticKey;
+		}
+		
+		public String getKey()
+		{
+			return this.sAnalyticKey;
+		}
+	}
 
 }
