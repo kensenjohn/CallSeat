@@ -138,7 +138,6 @@
 
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 
 <body>
-	<jsp:include page="../common/analytics.jsp"/>
 	<jsp:include page="../common/top_nav.jsp">
 		<jsp:param name="referrer_source" value="event_setup.jsp"/>	
 	</jsp:include>

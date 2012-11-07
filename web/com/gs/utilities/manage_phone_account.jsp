@@ -49,15 +49,13 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
-	$("#frm_close_account").click(closeAccount);
+	$("#frm_close_account").click(closeAccount); 
 });
 function closeAccount()
 {
-	var dataString = $("#frm_close_account").serialize();
-	
+	var dataString = $("#frm_close_account").serialize();	
 	var actionUrl = "proc_manage_phone_account.jsp";
-	var methodType = "POST";
-	
+	var methodType = "POST";	
 	submitAccountAction(actionUrl,dataString,methodType,getResult);
 }
 

@@ -483,16 +483,17 @@ a.btn-green[disabled],
         background:#fff;
         text-decoration:none;
         color:#000;
-        border-top:1px solid #369;
-        border-left:1px solid #369;
-        border-right:1px solid #369;
+        border-top:1px solid #51a351;
+        border-left:1px solid #51a351;
+        border-right:1px solid #51a351;
         position:relative;
         bottom:1px;
     }
     #boxtab-blue ul li a:hover {
-        background:#36f;
-        color:#fff;
+        background:#AFC9B1;
+        color:#000000;
         cursor:pointer;
+        font-weight:bold;
     }
     #boxtab-blue ul li.active {
         margin-top:10px;
