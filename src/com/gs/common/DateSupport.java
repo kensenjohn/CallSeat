@@ -49,4 +49,11 @@ public class DateSupport {
 		return PRETTY_DATE_2.print(localTime);
 
 	}
+	
+	public static Long subtractHours(Long epochDate, Integer iNumOfHours)
+	{
+		DateTime srcTime = new DateTime(epochDate);
+		DateTime afterMinus = srcTime.minusHours(iNumOfHours);
+		return afterMinus.getMillis();
+	}
 }

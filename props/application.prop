@@ -18,4 +18,5 @@ payment_channel=stripe
 track_user_breadcrumb=true
 copyright_year=2012
 copyright_company=Smarasoft Inc
-
+product_name=Callseat
+domain=guestslocal:8080

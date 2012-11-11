@@ -5,4 +5,13 @@
 	
 	
   	<link type="text/css" rel="stylesheet" href="/web/css/style.css" /> 
-  
+<%
+	String sPageTitle =  com.gs.common.ParseUtil.checkNull(request.getParameter("page_title"));
+
+	if(!"".equals(sPageTitle))
+	{
+%>
+		<title><%=sPageTitle%></title>
+<%
+	}
+%>

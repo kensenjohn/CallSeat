@@ -2,7 +2,9 @@
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
 
-<jsp:include page="../common/header_top.jsp"/>
+<jsp:include page="../common/header_top.jsp">
+	<jsp:param name="page_title" value="Add/Edit Table"/>	
+</jsp:include>
 <jsp:include page="../common/security.jsp"/>
 <jsp:include page="../common/header_bottom.jsp"/>
 	<body style="height:auto;">

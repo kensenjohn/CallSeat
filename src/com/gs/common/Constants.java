@@ -242,5 +242,25 @@ public class Constants {
 			return this.sAnalyticKey;
 		}
 	}
+	
+	public enum FORGOT_INFO_ACTION
+	{
+		PASSWORD("PASSWORD"),
+		USERNAME("USERNAME");
+		
+		private String forgotInfoAction = "";
+		FORGOT_INFO_ACTION(String forgotInfoAction)
+		{
+			this.forgotInfoAction = forgotInfoAction;
+		}
+		
+		public String getAction()
+		{
+			return this.forgotInfoAction;
+		}
+	}
+	
+	public static String PRODUCT_NAME="product_name";
+	public static String DOMAIN="domain";
 
 }

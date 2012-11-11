@@ -3,7 +3,7 @@ com.gs.common.Configuration analyticsConfig = com.gs.common.Configuration.getIns
 
 String sGoogleTrackId = com.gs.common.ParseUtil.checkNull(analyticsConfig.get(com.gs.common.Constants.ANALYTICS_KEYS.GOOGLE_TRACKING_ID.getKey()));
 
-//if(!"".equals(sGoogleTrackId))
+if(!"".equals(sGoogleTrackId))
 {
 %>
 	

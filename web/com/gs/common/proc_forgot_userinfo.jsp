@@ -1,4 +1,6 @@
+<%@page import="org.xml.sax.ErrorHandler"%>
 <%@page import="com.gs.manager.event.*" %>
+<%@page import="com.gs.manager.forgot.*" %>
 <%@page import="com.gs.manager.*" %>
 <%@page import="com.gs.bean.*" %>
 <%@page import="com.gs.common.*" %>
@@ -30,7 +32,10 @@ try
 		
 		
 		AdminManager adminManager = new AdminManager();
-		boolean isSuccess = adminManager.resetPasswordAndEmail(sEmailId);
+		//boolean isSuccess = adminManager.resetPasswordAndEmail(sEmailId);
+		
+		ForgotInfoManager forgotInfoManager = new ForgotPassword(sEmailId);
+		boolean isSuccess = forgotInfoManager.createUserRequest(); 
 		
 		if(isSuccess)
 		{ 
@@ -65,7 +70,7 @@ try
 }
 catch(Exception e)
 {
-	appLogging.error("General Error logging in user." );
+	appLogging.error("General Error: Forgot userinfo." + ExceptionHandler.getStackTrace(e));
 	
 	Text errorText = new ErrorText("Oops!! Your request could not be processed at this time.","err_mssg") ;		
 	arrErrorText.add(errorText);
