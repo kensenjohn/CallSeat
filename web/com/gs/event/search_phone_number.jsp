@@ -8,6 +8,8 @@
 <jsp:include page="../common/header_top.jsp"/>
 <%@include file="../common/security.jsp"%>
 <jsp:include page="../common/header_bottom.jsp"/>
+
+<link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
 <body style="height:auto;">
 	<%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
@@ -40,7 +42,7 @@
 				  	 </div>
 				    <div class="row">
 				      <div class="offset1 span2"><span class="fld_name_small">Phone Number:</span></div>
-				      <div class="span2"><span id="seating_gen_num" class="fld_txt">(234)345-4561</span></div>
+				      <div class="span2"><span id="seating_gen_num" class="fld_txt">Loading new number ...</span></div>
 				      <div class="span3" id="div_seating_search" style="display:none;"><span id="seating_search" class="fld_link_txt">Customize  number</span></div>
 				    </div>
 				     <div class="row" id="seating_numbers_gen"  style="display:none;">
@@ -92,7 +94,7 @@
 				  	 </div>
 				    <div class="row">
 				    	 <div class="offset1 span2"><span class="fld_name_small">Phone Number:</span></div>
-				      	<div class="span2"><span id="rsvp_gen_num">(144)345-4561</span></div>
+				      	<div class="span2"><span id="rsvp_gen_num">Loading new number ...</span></div>
 				     	<div class="span3" id="div_rsvp_search" style="display:none;"><span id="rsvp_search" class="fld_link_txt">Customize  number</span></div>
 				    </div>	
 				    <div class="row" id="rsvp_numbers_gen"  style="display:none;">
@@ -157,8 +159,12 @@
 					<input type="hidden" id="pass_thru_action" name="pass_thru_action" value="true"/>
 					
 			</form>
-			
+			<div id="loading_wheel" style="display:none;">
+				<img src="/web/img/wheeler.gif">
+			</div>
 </body>
+
+<script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
 <script type="text/javascript">
 
 var  varEventId= '<%=sEventId%>';
@@ -170,9 +176,10 @@ var varRsvpNumType = '<%=Constants.EVENT_TASK.RSVP.getTask()%>';
 var varIsSignedIn = <%=isSignedIn%>;
 
 	$(document).ready(function() {
+		$("#loading_wheel").show();
 		loadPhoneNumber();
 		
-		$("#bt_custom_seating_num").click(getCustomSeatingNums);
+		//$("#bt_custom_seating_num").click(getCustomSeatingNums);
 		
 		$("#gen_seating_tel_num").click(genSeatingTelNum);
 		$("#gen_rsvp_tel_num").click(genRsvpTelNum);
@@ -190,9 +197,16 @@ var varIsSignedIn = <%=isSignedIn%>;
 		}, function() {
 				$("#seating_numbers_gen").slideUp();
 		});
-		
-		$('#bt_get_pricing_option').click( passthruForm );
 	});
+	
+	function enablePassThruButton()
+	{
+		$('#bt_get_pricing_option').bind('click',passthruForm);
+	}
+	function disablePassThruButton()
+	{
+		$('#bt_get_pricing_option').unbind('click');
+	}
 	
 	function passthruForm()
 	{
@@ -213,6 +227,7 @@ var varIsSignedIn = <%=isSignedIn%>;
 	}
 	function getCustomSeatingNums()
 	{
+		disablePassThruButton();
 		searchMoreNumbers(varSeatingNumType,customSeatingNumResult);
 	}
 	
@@ -286,7 +301,10 @@ var varIsSignedIn = <%=isSignedIn%>;
 		{
 			alert("Please try again later.");
 		}
+		$("#loading_wheel").hide();
+		enablePassThruButton();
 	}
+
 	function customSeatingNumResult(jsonResult)
 	{
 		if(jsonResult!=undefined)
@@ -300,7 +318,7 @@ var varIsSignedIn = <%=isSignedIn%>;
 				{
 					var jsonResponseMessage = varResponseObj.messages;
 					var varArrErrorMssg = jsonResponseMessage.error_mssg
-					displayMessages( varArrErrorMssg );
+					displayMssgBoxMessages( varArrErrorMssg , true);
 				}
 				
 			}
@@ -317,13 +335,14 @@ var varIsSignedIn = <%=isSignedIn%>;
 			}
 			else
 			{
-				alert("Please try again later.");
+				displayMssgBoxAlert("Please try again later.",true);
 			}
 		}
 		else
 		{
-			alert("Please try again later.");
+			displayMssgBoxAlert("Please try again later.",true);
 		}
+		enablePassThruButton();
 	}
 	function processTelNumbers( jsonResponseObj )
 	{
@@ -357,7 +376,57 @@ var varIsSignedIn = <%=isSignedIn%>;
 			
 		}
 	}
-	function displayMessages(varArrMessages)
+	function displayMssgBoxAlert(varMessage, isError)
+	{
+		var varTitle = 'Status';
+		var varType = 'info';
+		if(isError)
+		{
+			varTitle = 'Error';
+			varType = 'error';
+		}
+		else
+		{
+			varTitle = 'Status';	
+			varType = 'info';
+		}
+		
+		if(varMessage!='')
+		{
+			$.msgBox({
+                title: varTitle,
+                content: varMessage,
+                type: varType
+            });
+		}
+	}
+	
+	function displayMssgBoxMessages(varArrMessages, isError)
+	{
+		if(varArrMessages!=undefined)
+		{
+			
+				
+			var varMssg = '';
+			var isFirst = true;
+			for(var i = 0; i<varArrMessages.length; i++)
+			{
+				if(isFirst == false)
+				{
+					varMssg = varMssg + '\n';
+				}
+				varMssg = varMssg + varArrMessages[i].text;
+			}
+			
+			if(varMssg!='')
+			{
+				displayAlert(varMssg,isError);
+			}
+		}
+		
+
+	}
+	/*function displayMessages(varArrMessages)
 	{
 		if(varArrMessages!=undefined)
 		{
@@ -366,9 +435,10 @@ var varIsSignedIn = <%=isSignedIn%>;
 				alert( varArrMessages[i].text );
 			}
 		}
-	}
+	}*/
 	function genSeatingTelNum()
 	{
+		disablePassThruButton();
 		var actionUrl = "proc_load_phone_numbers.jsp";
 		var methodType = "POST";
 		var dataString = $("#frm_seating_numbers").serialize();
@@ -378,6 +448,7 @@ var varIsSignedIn = <%=isSignedIn%>;
 	}
 	function  genRsvpTelNum()
 	{
+		disablePassThruButton();
 		var actionUrl = "proc_load_phone_numbers.jsp";
 		var methodType = "POST";
 		var dataString = $("#frm_rsvp_numbers").serialize();
