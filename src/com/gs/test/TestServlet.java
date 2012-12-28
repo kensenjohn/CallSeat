@@ -31,7 +31,5 @@ public class TestServlet extends HttpServlet {
 		//response.sendRedirect("web/com/gs/login.jsp?username="+testHome.getSomething());
 		this.getServletContext().getRequestDispatcher("/web/com/gs/login.jsp?username="+testHome.getSomething()).forward(request, response);
 		System.out.println("Called after forward");
-		this.getServletContext().getRequestDispatcher("/web/com/gs/login.jsp?username="+testHome.getSomething()).forward(request, response);
-		System.out.println("Called after forward 2nd");
 	}
 }
