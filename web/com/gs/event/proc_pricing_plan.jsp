@@ -14,6 +14,11 @@ Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 Logger appLogging = LoggerFactory.getLogger("AppLogging");
 response.setContentType("application/json");
 
+    boolean isProcessTransactionId = ParseUtil.sTob(request.getParameter("process_purchase_transaction"));
+    String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
+    String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
+    String sSubscriptionId = ParseUtil.checkNull(request.getParameter("purchase_grid_id"));
+
 ArrayList<Text> arrOkText = new ArrayList<Text>();
 ArrayList<Text> arrErrorText = new ArrayList<Text>();
 RespConstants.Status responseStatus = RespConstants.Status.ERROR;
@@ -23,28 +28,76 @@ RespObjectProc responseObject = new RespObjectProc();
 
 try
 {
-	EventPricingGroupManager eventPricingManager = new EventPricingGroupManager();
-	ArrayList<PricingGroupBean> arrPricingBean = eventPricingManager.getPricingGroups();
-	
-	JSONArray jsonPricingGroupArray = eventPricingManager.getPricingGroupJsonArray(arrPricingBean);
-	if(arrPricingBean!=null && !arrPricingBean.isEmpty() && jsonPricingGroupArray!=null)
-	{
-		//jsonResponseObj.put(Constants.J_RESP_SUCCESS, true);
-		jsonResponseObj.put("value",jsonPricingGroupArray);
-		
-		Text okText = new OkText("Loading Data Complete ","my_id");		
-		arrOkText.add(okText);
-		responseStatus = RespConstants.Status.OK;
-	}
-	else
-	{
-		appLogging.error("Error retieving Pricing Groups ");
-		
-		Text errorText = new ErrorText("The pricing data could not be accessed at this time. Please try again later.","my_id") ;		
-		arrErrorText.add(errorText);
-		
-		responseStatus = RespConstants.Status.ERROR;
-	}
+    if(isProcessTransactionId)
+    {
+        if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId) && sEventId!=null && !"".equalsIgnoreCase(sEventId)
+                && sSubscriptionId!=null && !"".equalsIgnoreCase(sSubscriptionId))
+        {
+            PurchaseTransactionManager purchaseTransactionManager = new PurchaseTransactionManager();
+
+            PurchaseTransactionBean requestPurchaseTransactionBean = new  PurchaseTransactionBean();
+            requestPurchaseTransactionBean.setAdminId(sAdminId);
+            requestPurchaseTransactionBean.setEventId(sEventId);
+
+            PurchaseTransactionBean responsePurchaseTransactionBean = purchaseTransactionManager.getPurchaseTransactionByEventAdmin(requestPurchaseTransactionBean);
+            appLogging.info("Response Purchase Transaction Id." + responsePurchaseTransactionBean );
+            Integer iNumOfRows = 0;
+            if(responsePurchaseTransactionBean != null && responsePurchaseTransactionBean.getPurchaseTransactionId()!=null && !"".equalsIgnoreCase(responsePurchaseTransactionBean.getPurchaseTransactionId()))
+            {
+                responsePurchaseTransactionBean.setSubscriptionId(sSubscriptionId);
+                // update Transaction with latest phone numbers
+                iNumOfRows = purchaseTransactionManager.modifyPurchaseTransaction(responsePurchaseTransactionBean);
+            }
+            else
+            {
+                requestPurchaseTransactionBean.setPurchaseTransactionId(Utility.getNewGuid());
+                // insert Transaction with latest phone numbers
+                iNumOfRows = purchaseTransactionManager.createPurchaseTransaction(requestPurchaseTransactionBean);
+            }
+
+            if(iNumOfRows>0)
+            {
+                Text okText = new OkText("Loading Data Complete ","my_id");
+                arrOkText.add(okText);
+                responseStatus = RespConstants.Status.OK;
+            }
+            else
+            {
+                appLogging.error("Transaction records were not created." + responsePurchaseTransactionBean );
+                Text errorText = new ErrorText("Your request was not processed. Please try again later.","my_id") ;
+                arrErrorText.add(errorText);
+
+                responseStatus = RespConstants.Status.ERROR;
+            }
+
+        }
+    }
+    else
+    {
+        EventPricingGroupManager eventPricingManager = new EventPricingGroupManager();
+        ArrayList<PricingGroupBean> arrPricingBean = eventPricingManager.getPricingGroups();
+
+        JSONArray jsonPricingGroupArray = eventPricingManager.getPricingGroupJsonArray(arrPricingBean);
+        if(arrPricingBean!=null && !arrPricingBean.isEmpty() && jsonPricingGroupArray!=null)
+        {
+            //jsonResponseObj.put(Constants.J_RESP_SUCCESS, true);
+            jsonResponseObj.put("value",jsonPricingGroupArray);
+
+            Text okText = new OkText("Loading Data Complete ","my_id");
+            arrOkText.add(okText);
+            responseStatus = RespConstants.Status.OK;
+        }
+        else
+        {
+            appLogging.error("Error retrieving Pricing Groups ");
+
+            Text errorText = new ErrorText("The pricing data could not be accessed at this time. Please try again later.","my_id") ;
+            arrErrorText.add(errorText);
+
+            responseStatus = RespConstants.Status.ERROR;
+        }
+    }
+
 	
 	responseObject.setErrorMessages(arrErrorText);
 	responseObject.setOkMessages(arrOkText);
@@ -55,9 +108,14 @@ try
 }
 catch(Exception e)
 {
-	jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
-	jsonResponseObj.put("message", "Phone numbers could not be loaded. Please try again.");
-	appLogging.error("Error processing phone numbers." );
-	out.println(jsonResponseObj);
+    Text errorText = new ErrorText("Oops!! Your request could not be processed at this time.","my_id") ;
+    arrErrorText.add(errorText);
+
+    responseObject.setErrorMessages(arrErrorText);
+    responseObject.setResponseStatus(RespConstants.Status.ERROR);
+    responseObject.setJsonResponseObj(jsonResponseObj);
+
+    appLogging.error("Error saving purchase transaction." );
+    out.println(responseObject.getJson());
 }
 %>

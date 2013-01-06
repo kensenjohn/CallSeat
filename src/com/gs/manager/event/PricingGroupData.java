@@ -49,7 +49,7 @@ public class PricingGroupData {
 		ArrayList<PricingGroupBean> arrPricingGroupBean = new ArrayList<PricingGroupBean>();
 
 		String sQuery = "select PRICEGROUPID, PRICEGROUPNAME,  MIN_GUEST_NUM,  MAX_GUEST_NUM , "
-				+ " PRICE, MAX_MINUTES, MIN_MINUTES,SMS_COUNT from GTPRICEGROUP GPG";
+				+ " PRICE, MAX_MINUTES, MIN_MINUTES,SMS_COUNT , IS_DEFAULT from GTPRICEGROUP GPG";
 
 		ArrayList<Object> aParams = new ArrayList<Object>();
 

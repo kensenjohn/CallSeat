@@ -1,6 +1,7 @@
 <%@ page import="com.gs.common.*"%>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
+<%@ page import="com.gs.manager.event.PurchaseTransactionManager" %>
 
 <jsp:include page="../common/header_top.jsp"/>
 <%@include file="../common/security.jsp"%>
@@ -17,10 +18,39 @@
 
 		String sPassthruRsvpNumber = ParseUtil.checkNull(request.getParameter("pass_thru_rsvp_num"));
 		String sPassthruSeatingNumber = ParseUtil.checkNull(request.getParameter("pass_thru_seating_num"));
-	
+
+    PurchaseTransactionBean purchaseTransactionBean = new PurchaseTransactionBean();
+    purchaseTransactionBean.setAdminId(sAdminId);
+    purchaseTransactionBean.setEventId(sEventId);
+
+    PurchaseTransactionManager purchaseTransactionManager = new PurchaseTransactionManager();
+    PurchaseTransactionBean purchaseResponseTransactionBean = purchaseTransactionManager.getPurchaseTransactionByEventAdmin(purchaseTransactionBean);
+
+    String sFirstName = "";
+    String sLastName = "";
+    String sZipCode = "";
+    String sState = "";
+    if(purchaseResponseTransactionBean!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getPurchaseTransactionId()))
+    {
+        if(purchaseResponseTransactionBean.getFirstName()!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getFirstName()) )
+        {
+            sFirstName = ParseUtil.checkNull(purchaseResponseTransactionBean.getFirstName());
+        }
+
+        if(purchaseResponseTransactionBean.getLastName()!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getLastName()) )
+        {
+            sLastName = ParseUtil.checkNull(purchaseResponseTransactionBean.getLastName());
+        }
+
+        if(purchaseResponseTransactionBean.getState()!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getState()) )
+        {
+            sState = ParseUtil.checkNull(purchaseResponseTransactionBean.getState());
+        }
+    }
 	String sGateAdminId = sAdminId;
 %>
 <%@include file="../common/gatekeeper.jsp"%>
+<link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
 	<body style="height:auto;">
 		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
 			<div  style="padding-top:5px;">
@@ -28,6 +58,13 @@
 			</div>
 		</div>
 		<div  class="fnbx_scratch_area">
+            <div class="row">
+                <div class="offset1 span11">
+                    <jsp:include page="breadcrumb_shopping_cart.jsp">
+                        <jsp:param name="active_now" value="billing.jsp" />
+                    </jsp:include>
+                </div>
+            </div>
 			<div class="row">
 				  <div class="offset1 span11">
 				  	<h2 class="txt txt_center">Billing Info</h2>
@@ -90,17 +127,7 @@
 					</div>
 					<div class="row">
 						<div class="span5">
-							<input type="text" id="bill_first_name" name="bill_first_name"/>
-						</div>
-					</div>
-					<div class="row">
-						<div class="span5">
-							Middle Name :
-						</div>
-					</div>
-					<div class="row">
-						<div class="span5">
-							<input type="text" id="bill_middle_name" name="bill_middle_name"/>
+							<input type="text" id="bill_first_name" name="bill_first_name" value="<%=sFirstName%>">
 						</div>
 					</div>
 					<div class="row">
@@ -110,37 +137,7 @@
 					</div>
 					<div class="row">
 						<div class="span5">
-							<input type="text" id="bill_last_name" name="bill_last_name"/>
-						</div>
-					</div>
-					<div class="row">
-						<div class="span5">
-							Address 1 :
-						</div>
-					</div>
-					<div class="row">
-						<div class="span5">
-							<input type="text" id="bill_addr_1" name="bill_addr_1"/>
-						</div>
-					</div>
-					<div class="row">
-						<div class="span5">
-							Address 2 :
-						</div>
-					</div>
-					<div class="row">
-						<div class="span5">
-							<input type="text" id="bill_addr_2" name="bill_addr_2"/>
-						</div>
-					</div>
-					<div class="row">
-						<div class="span5">
-							City :
-						</div>
-					</div>
-					<div class="row">
-						<div class="span5">
-							<input type="text" id="bill_city" name="bill_city"/>
+							<input type="text" id="bill_last_name" name="bill_last_name"  value="<%=sLastName%>">
 						</div>
 					</div>
 					<div class="row">
@@ -150,7 +147,7 @@
 					</div>
 					<div class="row">
 						<div class="span5">
-							<input type="text" id="bill_zip" name="bill_zip"/>
+							<input type="text" id="bill_zip" name="bill_zip"   value="<%=sZipCode%>">
 						</div>
 					</div>
 					<div class="row">
@@ -161,58 +158,26 @@
 					<div class="row">
 						<div class="span5">
 							<select  id="bill_state" name="bill_state" >
-							<option value="" selected="selected"></option>
-							<option value="AL">Alabama</option>
-							<option value="AK">Alaska</option>
-							<option value="AZ">Arizona</option>
-							<option value="AR">Arkansas</option>
-							<option value="CA">California</option>
-							<option value="CO">Colorado</option>
-							<option value="CT">Connecticut</option>
-							<option value="DE">Delaware</option>
-							<option value="DC">District of Columbia</option>
-							<option value="FL">Florida</option>
-							<option value="GA">Georgia</option>
-							<option value="HI">Hawaii</option>
-							<option value="ID">Idaho</option>
-							<option value="IL">Illinois</option>
-							<option value="IN">Indiana</option>
-							<option value="IA">Iowa</option>
-							<option value="KS">Kansas</option>
-							<option value="KY">Kentucky</option>
-							<option value="LA">Louisiana</option>
-							<option value="ME">Maine</option>
-							<option value="MD">Maryland</option>
-							<option value="MA">Massachusetts</option>
-							<option value="MI">Michigan</option>
-							<option value="MN">Minnesota</option>
-							<option value="MS">Mississippi</option>
-							<option value="MO">Missouri</option>
-							<option value="MT">Montana</option>
-							<option value="NE">Nebraska</option>
-							<option value="NV">Nevada</option>
-							<option value="NH">New Hampshire</option>
-							<option value="NJ">New Jersey</option>
-							<option value="NM">New Mexico</option>
-							<option value="NY">New York</option>
-							<option value="NC">North Carolina</option>
-							<option value="ND">North Dakota</option>
-							<option value="OH">Ohio</option>
-							<option value="OK">Oklahoma</option>
-							<option value="OR">Oregon</option>
-							<option value="PA">Pennsylvania</option>
-							<option value="RI">Rhode Island</option>
-							<option value="SC">South Carolina</option>
-							<option value="SD">South Dakota</option>
-							<option value="TN">Tennessee</option>
-							<option value="TX">Texas</option>
-							<option value="UT">Utah</option>
-							<option value="VT">Vermont</option>
-							<option value="VA">Virginia</option>
-							<option value="WA">Washington</option>
-							<option value="WV">West Virginia</option>
-							<option value="WI">Wisconsin</option>
-							<option value="WY">Wyoming</option>
+							<option value=""></option>
+                            <%
+                                SortedMap<String, Constants.US_STATES> mapStates = Constants.SORTED_US_STATES();
+
+                                if(mapStates!=null && !mapStates.isEmpty())
+                                {
+                                   for( Map.Entry<String, Constants.US_STATES> entryMapUsStates : mapStates.entrySet() )
+                                   {
+                                       boolean isSelected = false;
+                                       if( entryMapUsStates.getValue().getShortForm().equalsIgnoreCase(sState))
+                                       {
+                                           isSelected = true;
+                                       }
+                                        %>
+
+                                            <option value="<%=entryMapUsStates.getValue().getShortForm()%>"  <%=isSelected?"selected=\"selected\"":""%>><%=entryMapUsStates.getValue().getFullName()%></option>
+                                        <%
+                                   }
+                                }
+                            %>
 						</select>
 						</div>
 					</div>
@@ -232,7 +197,7 @@
 				</div>
 					<div class="row">
 						<div class="offset3 span5">
-							<button id="bt_buy_tel_numbers" name="bt_buy_tel_numbers" type="button" class="btn">Purchase my numbers</button>
+							<button id="bt_checkout_tel_numbers" name="bt_checkout_tel_numbers" type="button" class="btn">Checkout</button>
 						</div>
 						<div class="span5">
 							<span id="status_mssg"  name="status_mssg"></span>
@@ -249,12 +214,42 @@
 	<div id="loading_wheel" style="display:none;">
 		<img src="/web/img/wheeler.gif">
 	</div>
+        <form id="frm_credential_check">
+            <input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
+            <input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+
+            <input type="hidden" id="referrer_source" name="referrer_source" value="billing.jsp"/>
+            <input type="hidden" id="pass_thru_action" name="pass_thru_action" value="true"/>
+        </form>
+
+        <form  id="frm_process_purchase_transaction">
+            <input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
+            <input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+            <input type="hidden" id="purchase_first_name" name="purchase_first_name" value=""/>
+            <input type="hidden" id="purchase_last_name" name="purchase_last_name" value=""/>
+            <input type="hidden" id="purchase_state" name="purchase_state" value=""/>
+            <input type="hidden" id="purchase_zip_code" name="purchase_zip_code" value=""/>
+            <input type="hidden" id="purchase_stripe_token" name="purchase_stripe_token" value=""/>
+            <input type="hidden" id="purchase_cc_last4" name="purchase_cc_last4" value=""/>
+            <input type="hidden" id="process_purchase_transaction" name="process_purchase_transaction" value="true"/>
+        </form>
+        <form id="frm_checkout_passthru">
+            <input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
+            <input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+
+            <input type="hidden" id="referrer_source" name="referrer_source" value="billing.jsp"/>
+            <input type="hidden" id="pass_thru_action" name="pass_thru_action" value="true"/>
+
+        </form>
 </body>
 <script type="text/javascript" src="https://js.stripe.com/v1/"></script>
 <script type="text/javascript" src="/web/js/jquery.select-to-autocomplete.js"></script>
 <script type="text/javascript" src="/web/js/jquery-ui-1.8.13.custom.min.js"></script>
 
+<script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
 <script type="text/javascript">
+    var varIsSignedIn = <%=isSignedIn%>;
+
 $(document).ready(function() 
 {
 	$("#loading_wheel").hide();
@@ -273,13 +268,27 @@ $.ajaxSetup({
 
 function stripeResponseHandler(status, response) {
 	if (response.error) {
-		alert('error')
+		//alert('error');
+        displayMssgBoxAlert('There was an error processing your request. Please try again later.' , true);
 	}
 	else
 	{
+        $('#purchase_first_name').val($('#bill_first_name'));
+        $('#purchase_last_name').val($('#bill_last_name'));
+        $('#purchase_state').val($('#bill_state'));
+        $('#purchase_zip_code').val($('#bill_zip'));
+        $('#purchase_stripe_token').val(response['id']);
+        $('#purchase_cc_last4').val(response.card['last4']);
+        var actionUrl = "proc_pricing_plan.jsp";
+        var methodType = "POST";
+        var dataString = $('#frm_process_purchase_transaction').serialize();
+
+
+        phoneNumberData(actionUrl,dataString,methodType,processPurchaseTransactions);
+
 		// var form$ = $("#payment-form");
 	        // token contains id, last4, and card type
-	     var token = response['id'];
+	   /*  var token = response['id'];
 	     var last4 = response.card['last4'];
 	 	
 	 	
@@ -289,8 +298,43 @@ function stripeResponseHandler(status, response) {
 		dataString = dataString + '&stripe_token='+token+'&last4='+last4;
 		
 		phoneNumberData(actionUrl,dataString,methodType,savePhoneNumbers);
+		*/
 	}
 }
+
+    function processPurchaseTransactions(jsonResult)
+    {
+        if(jsonResult!=undefined)
+        {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined )
+            {
+                var varIsMessageExist = varResponseObj.is_message_exist;
+                if(varIsMessageExist == true)
+                {
+                    var jsonResponseMessage = varResponseObj.messages;
+                    var varArrErrorMssg = jsonResponseMessage.error_mssg;
+                    displayMssgBoxMessages( varArrErrorMssg , true);
+                }
+            }
+            else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+            {
+
+                if( varIsSignedIn )
+                {
+                    $("#frm_checkout_passthru").attr('action','/web/com/gs/event/checkout.jsp');
+                    $("#frm_checkout_passthru").attr('method','POST');
+
+
+                    $("#frm_billing_passthru").submit();
+                }
+            }
+            else
+            {
+                alert("Please try again later.");
+            }
+        }
+    }
 
 function validateCardDetails()
 {
@@ -299,40 +343,77 @@ function validateCardDetails()
 	if( isValid && !Stripe.validateCardNumber( $('#credit_card_num').val() ) )
 	{
 		isValid = false;
-		ccValidateMssg =ccValidateMssg + 'Please enter a valid credit card number.' ;
+		ccValidateMssg =ccValidateMssg + 'We could not identify a valid credit card number. Please try again.' ;
 	}
 	
 	if( isValid && !Stripe.validateExpiry($('#credit_card_expire_month').val(),  $('#credit_card_expire_year').val() ) )
 	{
 		isValid = false;
-		ccValidateMssg = ccValidateMssg + 'Please enter a valid expiry month and year.' ;
+		ccValidateMssg = ccValidateMssg + 'Oops you did not enter a valid expiry month or year. Please try again.' ;
 	}
 	//alert( Stripe.cardType( $('#credit_card_num').val() ) );
 	if( isValid && Stripe.cardType( $('#credit_card_num').val() ) == 'Unknown'  ) 
 	{
 		isValid = false;
-		ccValidateMssg = ccValidateMssg + 'Please use a Visa, Mastercard or Discover.';
+		ccValidateMssg = ccValidateMssg + 'We did not recognize the credit card that you used. Please use Visa, Mastercard or Discover credit card.';
 	}
-	displayErrorMessage(ccValidateMssg);
+
+    if( isValid && $('#bill_first_name') == ''  )
+    {
+        isValid = false;
+        ccValidateMssg = ccValidateMssg + 'You did not enter a first name. Please enter the last name as seen on the credit card.';
+    }
+
+    if( isValid && $('#bill_last_name') == ''  )
+    {
+        isValid = false;
+        ccValidateMssg = ccValidateMssg + 'You did not enter a last name. Please enter the last name as seen on the credit card.';
+    }
+
+    if( isValid && $('#bill_zip') == ''  )
+    {
+        isValid = false;
+        ccValidateMssg = ccValidateMssg + 'You did not enter a zip code. Please type in a zip code.';
+    }
+
+    if( isValid && $('#bill_state') == ''  )
+    {
+        isValid = false;
+        ccValidateMssg = ccValidateMssg + 'You did not select a state. Please select your state.';
+    }
+
+    displayMssgBoxAlert(ccValidateMssg,true);
 	return isValid;
 }
 
 function purchaseNumbers()
 {
+    if(varIsSignedIn)
+    {
+        if( validateCardDetails() == true )
+        {
+            Stripe.createToken({
+                number: $('#credit_card_num').val(),
+                cvc: $('#credit_card_CCV').val(),
+                exp_month: $('#credit_card_expire_month').val(),
+                exp_year: $('#credit_card_expire_year').val(),
+                name: $('#bill_first_name').val() + ' ' + $('#bill_last_name').val(),
+                address_zip: $('#bill_zip').val(),
+                address_state: $('#bill_state').val(),
+                address_country: $('#bill_country').val()
+            }, stripeResponseHandler);
+        }
+    }
+    else
+    {
+        $("#frm_credential_check").attr('action',"/web/com/gs/common/credential.jsp");
+        $("#frm_credential_check").attr('method','POST');
+        $("#frm_credential_check").submit();
+    }
+
 	$('#status_mssg').text('');
 	
-	if( validateCardDetails() == true )
-	{
-		 Stripe.createToken({
-		        number: $('#credit_card_num').val(),
-		        cvc: $('#credit_card_CCV').val(),
-		        exp_month: $('#credit_card_expire_month').val(),
-		        exp_year: $('#credit_card_expire_year').val(),
-		        address_zip: $('#bill_zip').val(),
-		        address_state: $('#bill_state').val(),
-		        address_country: $('#bill_country').val()
-		    }, stripeResponseHandler);	
-	}
+
 
 }
 function phoneNumberData(actionUrl,dataString,methodType,callBackMethod)
@@ -382,16 +463,67 @@ function savePhoneNumbers(jsonResult)
 		}
 		else
 		{
-			alert("Your request was not processed. Please try again later.");
+            displayMssgBoxAlert("Your request was not processed. Please try again later.",true);
 		}
 	}
 	else
 	{
-		alert("Please try again later.");
+        displayMssgBoxAlert("Please try again later.",true);
 	}
 }
 
-function displayErrorMessage(varMessage)
+    function displayMssgBoxAlert(varMessage, isError)
+    {
+        var varTitle = 'Status';
+        var varType = 'info';
+        if(isError)
+        {
+            varTitle = 'Error';
+            varType = 'error';
+        }
+        else
+        {
+            varTitle = 'Status';
+            varType = 'info';
+        }
+
+        if(varMessage!='')
+        {
+            $.msgBox({
+                title: varTitle,
+                content: varMessage,
+                type: varType
+            });
+        }
+    }
+
+    function displayMssgBoxMessages(varArrMessages, isError)
+    {
+        if(varArrMessages!=undefined)
+        {
+
+
+            var varMssg = '';
+            var isFirst = true;
+            for(var i = 0; i<varArrMessages.length; i++)
+            {
+                if(isFirst == false)
+                {
+                    varMssg = varMssg + '\n';
+                }
+                varMssg = varMssg + varArrMessages[i].text;
+            }
+
+            if(varMssg!='')
+            {
+                displayMssgBoxAlert(varMssg,isError);
+            }
+        }
+
+
+    }
+
+/*function displayErrorMessage(varMessage)
 {
 	$("#status_mssg").addClass("error_mssg");
 	$("#status_mssg").addClass("small");
@@ -416,7 +548,7 @@ function displayMessages(varArrMessages, isError)
 			//alert( varArrMessages[i].text );
 		}
 	}
-}
+}*/
 </script>
 <jsp:include page="../common/footer_bottom_fancybox.jsp"/> 
 </html>

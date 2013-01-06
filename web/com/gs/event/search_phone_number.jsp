@@ -15,7 +15,38 @@
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 		String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
-		
+
+
+        PurchaseTransactionBean purchaseTransactionBean = new PurchaseTransactionBean();
+        purchaseTransactionBean.setAdminId(sAdminId);
+        purchaseTransactionBean.setEventId(sEventId);
+
+        PurchaseTransactionManager purchaseTransactionManager = new PurchaseTransactionManager();
+        PurchaseTransactionBean purchaseResponseTransactionBean = purchaseTransactionManager.getPurchaseTransactionByEventAdmin(purchaseTransactionBean);
+
+        boolean isNumberSelectedPreviously = false;
+        if(purchaseResponseTransactionBean!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getRsvpTelNumber())
+                && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getSeatingTelNumber()))
+        {
+            isNumberSelectedPreviously = true;
+        }
+
+        String sRsvpNumber = "Loading new number ..";
+        String sSeatingNumber = "Loading new number ..";
+        if(isNumberSelectedPreviously)
+        {
+            if(purchaseResponseTransactionBean.getRsvpTelNumber()!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getRsvpTelNumber()))
+            {
+                sRsvpNumber = ParseUtil.checkNull(purchaseResponseTransactionBean.getRsvpTelNumber());
+            }
+
+            if(purchaseResponseTransactionBean.getSeatingTelNumber()!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getSeatingTelNumber()))
+            {
+                sSeatingNumber = ParseUtil.checkNull(purchaseResponseTransactionBean.getSeatingTelNumber());
+            }
+        }
+
+
 	%>
 	<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
 		<div  style="padding-top:5px;">
@@ -23,6 +54,13 @@
 		</div>
 	</div>
 	<div  class="fnbx_scratch_area">
+               <div class="row">
+                <div class="offset1 span11">
+                    <jsp:include page="breadcrumb_shopping_cart.jsp">
+                        <jsp:param name="active_now" value="search_phone_number.jsp" />
+                    </jsp:include>
+                </div>
+               </div>
 				<div class="row">
 				  <div class="offset1 span11">
 				  	<div class="row">
@@ -42,7 +80,10 @@
 				  	 </div>
 				    <div class="row">
 				      <div class="offset1 span2"><span class="fld_name_small">Phone Number:</span></div>
-				      <div class="span2"><span id="seating_gen_num" class="fld_txt">Loading new number ...</span></div>
+                      <%
+
+                      %>
+				      <div class="span2"><span id="seating_gen_num" class="fld_txt"><%=sSeatingNumber%></span></div>
 				      <div class="span3" id="div_seating_search" style="display:none;"><span id="seating_search" class="fld_link_txt">Customize  number</span></div>
 				    </div>
 				     <div class="row" id="seating_numbers_gen"  style="display:none;">
@@ -94,7 +135,7 @@
 				  	 </div>
 				    <div class="row">
 				    	 <div class="offset1 span2"><span class="fld_name_small">Phone Number:</span></div>
-				      	<div class="span2"><span id="rsvp_gen_num">Loading new number ...</span></div>
+				      	<div class="span2"><span id="rsvp_gen_num"><%=sRsvpNumber%></span></div>
 				     	<div class="span3" id="div_rsvp_search" style="display:none;"><span id="rsvp_search" class="fld_link_txt">Customize  number</span></div>
 				    </div>	
 				    <div class="row" id="rsvp_numbers_gen"  style="display:none;">
@@ -159,6 +200,12 @@
 					<input type="hidden" id="pass_thru_action" name="pass_thru_action" value="true"/>
 					
 			</form>
+            <form id="frm_process_purchase_transaction" id="frm_process_purchase_transaction">
+                <input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
+                <input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+                <input type="hidden" id="purchase_transact_rsvp_num" name="purchase_transact_rsvp_num" value=""/>
+                <input type="hidden" id="purchase_transact_seating_num" name="purchase_transact_seating_num" value=""/>
+            </form>
 			<div id="loading_wheel" style="display:none;">
 				<img src="/web/img/wheeler.gif">
 			</div>
@@ -175,9 +222,24 @@ var varRsvpNumType = '<%=Constants.EVENT_TASK.RSVP.getTask()%>';
 
 var varIsSignedIn = <%=isSignedIn%>;
 
+var varIsNumberSelectedPreviously = <%=isNumberSelectedPreviously%>;
+
 	$(document).ready(function() {
-		$("#loading_wheel").show();
-		loadPhoneNumber();
+
+        if(!varIsNumberSelectedPreviously)
+        {
+            $("#loading_wheel").show();
+            loadPhoneNumber();
+        }
+        else
+        {
+            $("#div_seating_search").show();
+            $("#div_rsvp_search").show();
+
+            enablePassThruButton();
+        }
+
+
 		
 		//$("#bt_custom_seating_num").click(getCustomSeatingNums);
 		
@@ -210,21 +272,62 @@ var varIsSignedIn = <%=isSignedIn%>;
 	
 	function passthruForm()
 	{
-		$('#pass_thru_rsvp_num').val( $("#rsvp_gen_num").text() );
-		$('#pass_thru_seating_num').val( $("#seating_gen_num").text() );
-		
-		if( varIsSignedIn )
-		{
-			$("#frm_telnum_bill_address").attr('action','/web/com/gs/event/pricing_plan.jsp');
-			$("#frm_telnum_bill_address").attr('method','POST');
-		}
-		else
-		{
-			$("#frm_telnum_bill_address").attr('action',"/web/com/gs/common/credential.jsp");
-			$("#frm_telnum_bill_address").attr('method','POST');
-		}
-		$("#frm_telnum_bill_address").submit();
+        if( varIsSignedIn )
+        {
+            $('#purchase_transact_rsvp_num').val( $("#rsvp_gen_num").text() );
+            $('#purchase_transact_seating_num').val( $("#seating_gen_num").text() );
+
+
+            var actionUrl = "proc_search_phone_number.jsp";
+            var methodType = "POST";
+            var dataString = $('#frm_process_purchase_transaction').serialize();
+
+
+            phoneNumberData(actionUrl,dataString,methodType,processPurchaseTransactions);
+        }
+        else
+        {
+            $("#frm_telnum_bill_address").attr('action',"/web/com/gs/common/credential.jsp");
+            $("#frm_telnum_bill_address").attr('method','POST');
+            $("#frm_telnum_bill_address").submit();
+        }
 	}
+
+    function processPurchaseTransactions(jsonResult)
+    {
+        if(jsonResult!=undefined)
+        {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined )
+            {
+                var varIsMessageExist = varResponseObj.is_message_exist;
+                if(varIsMessageExist == true)
+                {
+                    var jsonResponseMessage = varResponseObj.messages;
+                    var varArrErrorMssg = jsonResponseMessage.error_mssg;
+                    displayMssgBoxMessages( varArrErrorMssg , true);
+                }
+            }
+            else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+            {
+                $('#pass_thru_rsvp_num').val( $("#rsvp_gen_num").text() );
+                $('#pass_thru_seating_num').val( $("#seating_gen_num").text() );
+
+                if( varIsSignedIn )
+                {
+                    $("#frm_telnum_bill_address").attr('action','/web/com/gs/event/pricing_plan.jsp');
+                    $("#frm_telnum_bill_address").attr('method','POST');
+
+
+                    $("#frm_telnum_bill_address").submit();
+                }
+            }
+            else
+            {
+                alert("Please try again later.");
+            }
+        }
+    }
 	function getCustomSeatingNums()
 	{
 		disablePassThruButton();
@@ -276,8 +379,8 @@ var varIsSignedIn = <%=isSignedIn%>;
 				if(varIsMessageExist == true)
 				{
 					var jsonResponseMessage = varResponseObj.messages;
-					var varArrErrorMssg = jsonResponseMessage.error_mssg
-					displayMessages( varArrErrorMssg );
+					var varArrErrorMssg = jsonResponseMessage.error_mssg;
+                    displayMssgBoxMessages( varArrErrorMssg , true);
 				}
 				
 			}
@@ -294,12 +397,12 @@ var varIsSignedIn = <%=isSignedIn%>;
 			}
 			else
 			{
-				alert("Please try again later.");
+                displayMssgBoxAlert("Please try again later.",true);
 			}
 		}
 		else
 		{
-			alert("Please try again later.");
+            displayMssgBoxAlert("Please try again later.",true);
 		}
 		$("#loading_wheel").hide();
 		enablePassThruButton();
@@ -420,7 +523,7 @@ var varIsSignedIn = <%=isSignedIn%>;
 			
 			if(varMssg!='')
 			{
-				displayAlert(varMssg,isError);
+                displayMssgBoxAlert(varMssg,isError);
 			}
 		}
 		

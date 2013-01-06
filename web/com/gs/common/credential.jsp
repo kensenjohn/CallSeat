@@ -188,6 +188,19 @@
 		<%
 			}
 		%>
+
+<%
+    if( sRefferrerSource!=null  && "pricing_plan.jsp".equalsIgnoreCase(sRefferrerSource))
+    {
+%>
+
+        <form id="frm_telnum_purchase_finalize_passthru" id="frm_telnum_purchase_finalize_passthru">
+            <input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>
+            <input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
+        </form>
+<%
+    }
+%>
 		
 		
 	</body>
@@ -284,10 +297,21 @@
 						$("#frm_telnum_pricing_plan_passthru").attr('method','POST');
 						$('#frm_telnum_pricing_plan_passthru').submit();
 					}
+                    else if(varSource == 'pricing_plan.jsp' || (varSource == 'billing.jsp') )
+                    {
+                        //alert('before submit');
+                        $("#frm_telnum_purchase_finalize_passthru").attr('action','/web/com/gs/event/search_phone_number.jsp');
+                        $("#frm_telnum_purchase_finalize_passthru").attr('method','POST');
+                        $('#frm_telnum_purchase_finalize_passthru').submit();
+                    }
 					else
 					{
 						parent.$.fancybox.close();
-					}
+                    }
+
+
+
+
 					
 				}
 			}

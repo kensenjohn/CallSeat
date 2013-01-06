@@ -29,8 +29,8 @@ try
 		AdminManager adminManager = new AdminManager();
 		AdminBean adminBean = adminManager.getAdmin(sAdminId);
 		
-		Text okText = new OkText("Successfully registered user.","register_err_mssg") ;		
-		arrOkText.add(okText);
+		//Text okText = new OkText("Successfully registered user.","register_err_mssg") ;
+		//arrOkText.add(okText);
 		
 		responseStatus = RespConstants.Status.OK;
 		jsonResponseObj.put("admin_bean",adminBean.toJson());

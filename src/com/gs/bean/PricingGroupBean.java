@@ -23,6 +23,8 @@ public class PricingGroupBean {
 	private Integer maxMinutes = 0;
 	private Integer smsCount = 0;
 
+    private boolean isDefault = false;
+
 	public PricingGroupBean() {
 
 	}
@@ -36,6 +38,7 @@ public class PricingGroupBean {
 		setMinMinutes(ParseUtil.sToI(hmResult.get("MIN_MINUTES")));
 		setMaxMinutes(ParseUtil.sToI(hmResult.get("MAX_MINUTES")));
 		setSmsCount(ParseUtil.sToI(hmResult.get("SMS_COUNT")));
+        setDefault(ParseUtil.sTob(hmResult.get("IS_DEFAULT")));
 	}
 
 	public Integer getMinMinutes() {
@@ -93,19 +96,13 @@ public class PricingGroupBean {
 	public void setMaxGuestNum(Integer maxGuestNum) {
 		this.maxGuestNum = maxGuestNum;
 	}
+    public boolean isDefault() {
+        return isDefault;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("PricingGroupBean [pricegroupid=").append(pricegroupid)
-				.append(", pricegroupname=").append(pricegroupname)
-				.append(", minGuestNum=").append(minGuestNum)
-				.append(", maxGuestNum=").append(maxGuestNum)
-				.append(", price=").append(price).append(", minMinutes=")
-				.append(minMinutes).append(", maxMinutes=").append(maxMinutes)
-				.append(", smsCount=").append(smsCount).append("]");
-		return builder.toString();
-	}
+    public void setDefault(boolean aDefault) {
+        isDefault = aDefault;
+    }
 
 	public Double getPrice() {
 		return price;
@@ -126,6 +123,7 @@ public class PricingGroupBean {
 			jsonObject.put("min_minutes", minMinutes);
 			jsonObject.put("max_minutes", maxMinutes);
 			jsonObject.put("sms_count", smsCount);
+            jsonObject.put("is_default",isDefault);
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -134,4 +132,18 @@ public class PricingGroupBean {
 		return jsonObject;
 	}
 
+    @Override
+    public String toString() {
+        return "PricingGroupBean{" +
+                "pricegroupid='" + pricegroupid + '\'' +
+                ", pricegroupname='" + pricegroupname + '\'' +
+                ", minGuestNum=" + minGuestNum +
+                ", maxGuestNum=" + maxGuestNum +
+                ", price=" + price +
+                ", minMinutes=" + minMinutes +
+                ", maxMinutes=" + maxMinutes +
+                ", smsCount=" + smsCount +
+                ", isDefault=" + isDefault +
+                '}';
+    }
 }

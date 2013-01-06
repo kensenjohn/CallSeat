@@ -1,5 +1,8 @@
 package com.gs.common;
 
+import java.util.SortedMap;
+import java.util.TreeMap;
+
 public class Constants {
 
 	public static String PROP_FILE_PATH = "/etc/guests/props/";
@@ -262,5 +265,89 @@ public class Constants {
 	
 	public static String PRODUCT_NAME="product_name";
 	public static String DOMAIN="domain";
+
+    public enum US_STATES
+    {
+        Alabama ("Alabama","AL"),
+        Alaska ("Alaska","AK"),
+        Arizona ("Arizona","AZ"),
+        Arkansas ("Arkansas","AR"),
+        California ("California","CA"),
+        Colorado ("Colorado","CO"),
+        Connecticut ("Connecticut","CT"),
+        Delaware ("Delaware","DE"),
+        District_of_Columbia ("District of Columbia","DC"),
+        Florida ("Florida","FL"),
+        Georgia ("Georgia","GA"),
+        Hawaii ("Hawaii","HI"),
+        Idaho ("Idaho","ID"),
+        Illinois ("Illinois","IL"),
+        Indiana ("Indiana","IN"),
+        Iowa ("Iowa","IA"),
+        Kansas ("Kansas","KS"),
+        Kentucky ("Kentucky","KY"),
+        Louisiana ("Louisiana","LA"),
+        Maine ("Maine","ME"),
+        Maryland ("Maryland","MD"),
+        Massachusetts ("Massachusetts","MA"),
+        Michigan ("Michigan","MI"),
+        Minnesota ("Minnesota","MN"),
+        Mississippi ("Mississippi","MS"),
+        Missouri ("Missouri","MO"),
+        Montana ("Montana","MT"),
+        Nebraska ("Nebraska","NE"),
+        Nevada ("Nevada","NV"),
+        New_Hampshire ("New Hampshire","NH"),
+        New_Jersey ("New Jersey","NJ"),
+        New_Mexico ("New Mexico","NM"),
+        New_York ("New York","NY"),
+        North_Carolina ("North Carolina","NC"),
+        North_Dakota ("North Dakota","ND"),
+        Ohio ("Ohio","OH"),
+        Oklahoma ("Oklahoma","OK"),
+        Oregon ("Oregon","OR"),
+        Pennsylvania ("Pennsylvania","PA"),
+        Rhode_Island ("Rhode Island","RI"),
+        South_Carolina ("South Carolina","SC"),
+        South_Dakota ("South Dakota","SD"),
+        Tennessee ("Tennessee","TN"),
+        Texas ("Texas","TX"),
+        Utah ("Utah","UT"),
+        Vermont ("Vermont","VT"),
+        Virginia ("Virginia","VA"),
+        Washington ("Washington","WA"),
+        West_Virginia ("West Virginia","WV"),
+        Wisconsin ("Wisconsin","WI"),
+        Wyoming ("Wyoming","WY");
+
+        private String fullName = "";
+        private String shortForm = "";
+        US_STATES(String fullName, String shortForm)
+        {
+            this.fullName = fullName;
+            this.shortForm = shortForm;
+        }
+
+        public String getFullName()
+        {
+            return this.fullName;
+        }
+
+        public String getShortForm()
+        {
+            return this.shortForm;
+        }
+
+    }
+
+    public static SortedMap<String, US_STATES> SORTED_US_STATES()
+    {
+        SortedMap<String, US_STATES> mapStates = new TreeMap<String,US_STATES>();
+        for (US_STATES usState : US_STATES.values()) {
+            mapStates.put(usState.getFullName(), usState);
+        }
+
+        return mapStates;
+    }
 
 }
