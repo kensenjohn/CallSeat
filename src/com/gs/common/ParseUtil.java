@@ -81,4 +81,8 @@ public class ParseUtil {
 	public static String iToS(Integer iInput) {
 		return Integer.toString(iInput);
 	}
+
+    public static String dToS(Double dInput) {
+        return Double.toString(dInput);
+    }
 }

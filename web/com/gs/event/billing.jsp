@@ -46,7 +46,22 @@
         {
             sState = ParseUtil.checkNull(purchaseResponseTransactionBean.getState());
         }
+
+        if(purchaseResponseTransactionBean.getZipcode()!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getZipcode()) )
+        {
+            sZipCode = ParseUtil.checkNull(purchaseResponseTransactionBean.getZipcode());
+        }
     }
+
+    Long currentServerTime = DateSupport.getEpochMillis();
+    Integer iCurrentYear = DateSupport.getYear(currentServerTime);
+
+    ArrayList<Integer> arrYears = new ArrayList<Integer>();
+    for(Integer iYearCount = 0; iYearCount<10;iYearCount++  )
+    {
+        arrYears.add(iYearCount, (iCurrentYear+iYearCount) );
+    }
+
 	String sGateAdminId = sAdminId;
 %>
 <%@include file="../common/gatekeeper.jsp"%>
@@ -79,8 +94,8 @@
 				<form id="frm_billing_info" name="frm_billing_info">
 				<div class="offset1 span7">
 						<div class="row">
-							<div class="span5">
-								Credit/Debit :
+							<div class="span7">
+								Credit/Debit Card Number:<br><span class="fld_txt_small" style="font-size:11px;">The digits in front of your card</span>
 							</div>
 						</div>
 						<div class="row">
@@ -88,36 +103,74 @@
 								<input type="text" id="credit_card_num" name="credit_card_num"/>
 							</div>
 						</div>
+                        <div class="row">
+                            <div class="span5">
+                                <img src="/web/img/credit_card_logos.png" alt="Visa, MasterCard, Discover, American Express logos">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span5">
+                               &nbsp;
+                            </div>
+                        </div>
 						<div class="row">
 							<div class="span5">
-								Security Code :
+								Expiration date<br>
+                                <span class="fld_txt_small" style="font-size:11px;">The date your card expires</span>
 							</div>
 						</div>
 						<div class="row">
-							<div class="span5">
-								<input type="text" id="credit_card_CCV" name="credit_card_CCV"/>
+							<div class="span4">
+                                <select id="credit_card_expire_month"   name="credit_card_expire_month">
+                                    <option value="">Month</option>
+                                    <option value="1">01 - Jan</option>
+                                    <option value="2">02 - Feb</option>
+                                    <option value="3">03 - Mar</option>
+                                    <option value="4">04 - Apr</option>
+                                    <option value="5">05 - May</option>
+                                    <option value="6">06 - Jun</option>
+                                    <option value="7">07 - Jul</option>
+                                    <option value="8">08 - Aug</option>
+                                    <option value="9">09 - Sep</option>
+                                    <option value="10">10 - Oct</option>
+                                    <option value="11">11 - Nov</option>
+                                    <option value="12">12 - Dec</option>
+                                </select>
+                                &nbsp;&nbsp;/&nbsp;&nbsp;
+                                <select id="credit_card_expire_year"   name="credit_card_expire_year">
+                                    <option value="">Year</option>
+                                    <%
+                                        if(arrYears!=null && !arrYears.isEmpty())
+                                        {
+                                            for(Integer ddYear : arrYears )
+                                            {
+                                    %>
+                                                <option value="<%=ddYear%>"><%=ddYear%></option>
+                                    <%
+                                            }
+                                        }
+                                    %>
+                                </select>
 							</div>
 						</div>
-						<div class="row">
-							<div class="span5">
-								Expiry Month :
-							</div>
-						</div>
-						<div class="row">
-							<div class="span5">
-								<input type="text" id="credit_card_expire_month" name="credit_card_expire_month"/>
-							</div>
-						</div>
-						<div class="row">
-							<div class="span5">
-								Expiry Year :
-							</div>
-						</div>
-						<div class="row">
-							<div class="span5">
-								<input type="text" id="credit_card_expire_year" name="credit_card_expire_year"/>
-							</div>
-						</div>
+
+
+                        <div class="row">
+                            <div class="span5">
+                                &nbsp;
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span5">
+                                Security Code <span style="font-size:12px;">(or CVV or CVC)</span><br>
+                                <span class="fld_txt_small" style="font-size:11px;">Last 3 digits on the back of the card<br>(Amex:4 digits on front.)</span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span5">
+                                <input type="text" id="credit_card_CCV" name="credit_card_CCV"/>
+                            </div>
+                        </div>
 					</div>
 				<div class="span6">
 					<div class="row">
@@ -229,6 +282,7 @@
             <input type="hidden" id="purchase_last_name" name="purchase_last_name" value=""/>
             <input type="hidden" id="purchase_state" name="purchase_state" value=""/>
             <input type="hidden" id="purchase_zip_code" name="purchase_zip_code" value=""/>
+            <input type="hidden" id="purchase_country" name="purchase_country" value=""/>
             <input type="hidden" id="purchase_stripe_token" name="purchase_stripe_token" value=""/>
             <input type="hidden" id="purchase_cc_last4" name="purchase_cc_last4" value=""/>
             <input type="hidden" id="process_purchase_transaction" name="process_purchase_transaction" value="true"/>
@@ -254,7 +308,7 @@ $(document).ready(function()
 {
 	$("#loading_wheel").hide();
 	$('#bill_state').selectToAutocomplete();
-	$("#bt_buy_tel_numbers").click(purchaseNumbers);
+	$("#bt_checkout_tel_numbers").click(checkoutNumbers);
 	 Stripe.setPublishableKey('pk_wATk5Gx38D4jnRXebNX5ilayLKdGY');
 });
 $.ajaxSetup({
@@ -273,13 +327,14 @@ function stripeResponseHandler(status, response) {
 	}
 	else
 	{
-        $('#purchase_first_name').val($('#bill_first_name'));
-        $('#purchase_last_name').val($('#bill_last_name'));
-        $('#purchase_state').val($('#bill_state'));
-        $('#purchase_zip_code').val($('#bill_zip'));
+        $('#purchase_first_name').val($('#bill_first_name').val());
+        $('#purchase_last_name').val($('#bill_last_name').val());
+        $('#purchase_state').val($('#bill_state').val());
+        $('#purchase_zip_code').val($('#bill_zip').val());
+        $('#purchase_country').val($('#bill_country').val());
         $('#purchase_stripe_token').val(response['id']);
         $('#purchase_cc_last4').val(response.card['last4']);
-        var actionUrl = "proc_pricing_plan.jsp";
+        var actionUrl = "proc_billing.jsp";
         var methodType = "POST";
         var dataString = $('#frm_process_purchase_transaction').serialize();
 
@@ -319,21 +374,22 @@ function stripeResponseHandler(status, response) {
             }
             else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
             {
-
                 if( varIsSignedIn )
                 {
                     $("#frm_checkout_passthru").attr('action','/web/com/gs/event/checkout.jsp');
                     $("#frm_checkout_passthru").attr('method','POST');
 
 
-                    $("#frm_billing_passthru").submit();
+                    $("#frm_checkout_passthru").submit();
                 }
+
             }
             else
             {
-                alert("Please try again later.");
+                displayMssgBoxAlert("Oops!! Your request was not processed. Please try again later.");
             }
         }
+        $("#loading_wheel").hide();
     }
 
 function validateCardDetails()
@@ -345,17 +401,17 @@ function validateCardDetails()
 		isValid = false;
 		ccValidateMssg =ccValidateMssg + 'We could not identify a valid credit card number. Please try again.' ;
 	}
+
+    if( isValid && !Stripe.validateCVC( $('#credit_card_CCV').val() ) )
+    {
+        isValid = false;
+        ccValidateMssg =ccValidateMssg + 'We could not identify a valid Security Code ( CVV / CVC ). Please try again.' ;
+    }
 	
 	if( isValid && !Stripe.validateExpiry($('#credit_card_expire_month').val(),  $('#credit_card_expire_year').val() ) )
 	{
 		isValid = false;
-		ccValidateMssg = ccValidateMssg + 'Oops you did not enter a valid expiry month or year. Please try again.' ;
-	}
-	//alert( Stripe.cardType( $('#credit_card_num').val() ) );
-	if( isValid && Stripe.cardType( $('#credit_card_num').val() ) == 'Unknown'  ) 
-	{
-		isValid = false;
-		ccValidateMssg = ccValidateMssg + 'We did not recognize the credit card that you used. Please use Visa, Mastercard or Discover credit card.';
+		ccValidateMssg = ccValidateMssg + 'We could not identify a valid expiry date. Please try again.' ;
 	}
 
     if( isValid && $('#bill_first_name') == ''  )
@@ -386,12 +442,14 @@ function validateCardDetails()
 	return isValid;
 }
 
-function purchaseNumbers()
+function checkoutNumbers()
 {
     if(varIsSignedIn)
     {
         if( validateCardDetails() == true )
         {
+
+            $("#loading_wheel").show();
             Stripe.createToken({
                 number: $('#credit_card_num').val(),
                 cvc: $('#credit_card_CCV').val(),

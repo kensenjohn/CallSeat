@@ -56,4 +56,11 @@ public class DateSupport {
 		DateTime afterMinus = srcTime.minusHours(iNumOfHours);
 		return afterMinus.getMillis();
 	}
+
+    public static Integer getYear(Long epochDate)
+    {
+        DateTime srcTime = new DateTime(epochDate);
+        Integer iYear = srcTime.getYear();
+        return iYear;
+    }
 }

@@ -4,19 +4,23 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class EventSummaryBean {
-	String eventId = "";
-	String eventName = "";
-	String eventDate = "";
+    private String eventId = "";
+    private String eventName = "";
+    private String eventDate = "";
 
-	Integer totalTable = 0;
-	Integer totalSeats = 0;
-	Integer assignedSeats = 0;
-	Integer totalGuestParty = 0;
-	Integer totalGuestsInvited = 0;
-	Integer totalGuestRsvp = 0;
+    private Integer totalTable = 0;
+    private Integer totalSeats = 0;
+    private Integer assignedSeats = 0;
+    private Integer totalGuestParty = 0;
+    private Integer totalGuestsInvited = 0;
+    private Integer totalGuestRsvp = 0;
 
-	String rsvpNumber = "";
-	String seatingNumber = "";
+    private String rsvpNumber = "";
+    private String seatingNumber = "";
+    private String telephonyEventNumber = "";
+    private String telephonyRSVPSecretKey = "";
+    private String telephonySeatingSecretKey = "";
+    private boolean isDemoMode = true;
 
 	public String getEventId() {
 		return eventId;
@@ -106,7 +110,60 @@ public class EventSummaryBean {
 		this.seatingNumber = seatingNumber;
 	}
 
-	public JSONObject toJson() {
+    public String getTelephonyEventNumber() {
+        return telephonyEventNumber;
+    }
+
+    public void setTelephonyEventNumber(String telephonyEventNumber) {
+        this.telephonyEventNumber = telephonyEventNumber;
+    }
+
+    public String getTelephonyRSVPSecretKey() {
+        return telephonyRSVPSecretKey;
+    }
+
+    public void setTelephonyRSVPSecretKey(String telephonyRSVPSecretKey) {
+        this.telephonyRSVPSecretKey = telephonyRSVPSecretKey;
+    }
+
+    public String getTelephonySeatingSecretKey() {
+        return telephonySeatingSecretKey;
+    }
+
+    public void setTelephonySeatingSecretKey(String telephonySeatingSecretKey) {
+        this.telephonySeatingSecretKey = telephonySeatingSecretKey;
+    }
+
+    public boolean isDemoMode() {
+        return isDemoMode;
+    }
+
+    public void setDemoMode(boolean demoMode) {
+        isDemoMode = demoMode;
+    }
+
+    @Override
+    public String toString() {
+        return "EventSummaryBean{" +
+                "eventId='" + eventId + '\'' +
+                ", eventName='" + eventName + '\'' +
+                ", eventDate='" + eventDate + '\'' +
+                ", totalTable=" + totalTable +
+                ", totalSeats=" + totalSeats +
+                ", assignedSeats=" + assignedSeats +
+                ", totalGuestParty=" + totalGuestParty +
+                ", totalGuestsInvited=" + totalGuestsInvited +
+                ", totalGuestRsvp=" + totalGuestRsvp +
+                ", rsvpNumber='" + rsvpNumber + '\'' +
+                ", seatingNumber='" + seatingNumber + '\'' +
+                ", telephonyEventNumber='" + telephonyEventNumber + '\'' +
+                ", telephonyRSVPSecretKey='" + telephonyRSVPSecretKey + '\'' +
+                ", telephonySeatingSecretKey='" + telephonySeatingSecretKey + '\'' +
+                ", isDemoMode=" + isDemoMode +
+                '}';
+    }
+
+    public JSONObject toJson() {
 
 		JSONObject jsonObject = new JSONObject();
 		try {
@@ -121,6 +178,10 @@ public class EventSummaryBean {
 			jsonObject.put("total_guest_rsvp", this.totalGuestRsvp);
 			jsonObject.put("rsvp_tel_number", this.rsvpNumber);
 			jsonObject.put("seating_tel_number", this.seatingNumber);
+            jsonObject.put("telephony_event_number", this.telephonyEventNumber);
+            jsonObject.put("telephony_rsvp_secret_key", this.telephonyRSVPSecretKey);
+            jsonObject.put("telephony_seating_secret_key", this.telephonySeatingSecretKey);
+            jsonObject.put("is_demo_numbers", this.isDemoMode);
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

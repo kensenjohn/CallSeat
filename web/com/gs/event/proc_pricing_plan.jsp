@@ -17,7 +17,7 @@ response.setContentType("application/json");
     boolean isProcessTransactionId = ParseUtil.sTob(request.getParameter("process_purchase_transaction"));
     String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
-    String sSubscriptionId = ParseUtil.checkNull(request.getParameter("purchase_grid_id"));
+    String sPricingGroupId = ParseUtil.checkNull(request.getParameter("purchase_grid_id"));
 
 ArrayList<Text> arrOkText = new ArrayList<Text>();
 ArrayList<Text> arrErrorText = new ArrayList<Text>();
@@ -31,7 +31,7 @@ try
     if(isProcessTransactionId)
     {
         if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId) && sEventId!=null && !"".equalsIgnoreCase(sEventId)
-                && sSubscriptionId!=null && !"".equalsIgnoreCase(sSubscriptionId))
+                && sPricingGroupId!=null && !"".equalsIgnoreCase(sPricingGroupId))
         {
             PurchaseTransactionManager purchaseTransactionManager = new PurchaseTransactionManager();
 
@@ -44,7 +44,7 @@ try
             Integer iNumOfRows = 0;
             if(responsePurchaseTransactionBean != null && responsePurchaseTransactionBean.getPurchaseTransactionId()!=null && !"".equalsIgnoreCase(responsePurchaseTransactionBean.getPurchaseTransactionId()))
             {
-                responsePurchaseTransactionBean.setSubscriptionId(sSubscriptionId);
+                responsePurchaseTransactionBean.setPriceGroupId(sPricingGroupId);
                 // update Transaction with latest phone numbers
                 iNumOfRows = purchaseTransactionManager.modifyPurchaseTransaction(responsePurchaseTransactionBean);
             }

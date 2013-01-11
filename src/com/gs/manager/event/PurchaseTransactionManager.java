@@ -22,7 +22,6 @@ public class PurchaseTransactionManager {
              if(purchaseTransactionBean.getAdminId()!=null && !"".equalsIgnoreCase(purchaseTransactionBean.getAdminId())
                      && purchaseTransactionBean.getEventId()!=null && !"".equalsIgnoreCase(purchaseTransactionBean.getEventId()))
              {
-                 appLogging.info("Admin id = " + purchaseTransactionBean.getAdminId()+ " Event id = " + purchaseTransactionBean.getEventId() );
                  PurchaseTransactionData purchaseTransactionData = new  PurchaseTransactionData();
 
                  purchaseTransactionBean = purchaseTransactionData.getPurchaseTransaction(purchaseTransactionBean.getAdminId(),purchaseTransactionBean.getEventId() );

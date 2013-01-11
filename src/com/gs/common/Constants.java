@@ -350,4 +350,22 @@ public class Constants {
         return mapStates;
     }
 
+    public enum TAX_TYPE
+    {
+        SALES_TAX("SALES_TAX");
+
+        private String taxType = "";
+        TAX_TYPE(String taxType)
+        {
+            this.taxType = taxType;
+        }
+
+
+        public String getTaxType()
+        {
+            return this.taxType;
+        }
+
+    }
+
 }

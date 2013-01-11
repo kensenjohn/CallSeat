@@ -18,7 +18,7 @@ public class PurchaseTransactionBean {
     private boolean isPurchaseComplete = false;
     private String rsvpTelNumber = "";
     private String seatingTelNumber = "";
-    private String subscriptionId = "";
+    private String priceGroupId = "";
     private String firstName = "";
     private String lastName = "";
     private String state = "";
@@ -28,6 +28,7 @@ public class PurchaseTransactionBean {
     private String stripeToken = "";
     private String creditCardLast4Digits = "";
     private Long createDate = 0L;
+    private String uniquePurchaseToken = "";
 
     public PurchaseTransactionBean()
     {
@@ -42,15 +43,17 @@ public class PurchaseTransactionBean {
         setPurchaseComplete(ParseUtil.sTob(hmResult.get("IS_PURCHASE_COMPLETE")));
         setRsvpTelNumber(ParseUtil.checkNull(hmResult.get("RSVP_TELNUMBER")));
         setSeatingTelNumber(ParseUtil.checkNull(hmResult.get("SEATING_TELNUMBER")));
-        setSubscriptionId(ParseUtil.checkNull(hmResult.get("FK_SUBSCRIPTIONID")));
+        setPriceGroupId(ParseUtil.checkNull(hmResult.get("FK_PRICEGROUPID")));
         setFirstName(ParseUtil.checkNull(hmResult.get("FIRSTNAME")));
         setLastName(ParseUtil.checkNull(hmResult.get("LASTNAME")));
         setState(ParseUtil.checkNull(hmResult.get("STATE")));
         setZipcode(ParseUtil.checkNull(hmResult.get("ZIPCODE")));
+        setCountry(ParseUtil.checkNull(hmResult.get("COUNTRY")));
         setStripeCustomerId(ParseUtil.checkNull(hmResult.get("STRIPE_CUSTOMER_ID")));
         setCreateDate(ParseUtil.sToL(hmResult.get("CREATEDATE")));
         setStripeToken(ParseUtil.checkNull(hmResult.get("STRIPE_TOKEN")));
         setCreditCardLast4Digits(ParseUtil.checkNull(hmResult.get("CREDIT_CARD_LAST4_DIGITS")));
+        setUniquePurchaseToken( ParseUtil.checkNull(hmResult.get("UNIQUE_PURCHASE_TOKEN")) );
     }
 
     public String getPurchaseTransactionId() {
@@ -101,12 +104,12 @@ public class PurchaseTransactionBean {
         this.seatingTelNumber = seatingTelNumber;
     }
 
-    public String getSubscriptionId() {
-        return subscriptionId;
+    public String getPriceGroupId() {
+        return priceGroupId;
     }
 
-    public void setSubscriptionId(String subscriptionId) {
-        this.subscriptionId = subscriptionId;
+    public void setPriceGroupId(String priceGroupId) {
+        this.priceGroupId = priceGroupId;
     }
 
     public String getFirstName() {
@@ -181,6 +184,14 @@ public class PurchaseTransactionBean {
         this.creditCardLast4Digits = creditCardLast4Digits;
     }
 
+    public String getUniquePurchaseToken() {
+        return uniquePurchaseToken;
+    }
+
+    public void setUniquePurchaseToken(String uniquePurchaseToken) {
+        this.uniquePurchaseToken = uniquePurchaseToken;
+    }
+
     @Override
     public String toString() {
         return "PurchaseTransactionBean{" +
@@ -190,7 +201,7 @@ public class PurchaseTransactionBean {
                 ", isPurchaseComplete=" + isPurchaseComplete +
                 ", rsvpTelNumber='" + rsvpTelNumber + '\'' +
                 ", seatingTelNumber='" + seatingTelNumber + '\'' +
-                ", subscriptionId='" + subscriptionId + '\'' +
+                ", priceGroupId='" + priceGroupId + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", state='" + state + '\'' +

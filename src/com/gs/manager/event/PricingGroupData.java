@@ -23,7 +23,7 @@ public class PricingGroupData {
 
 		PricingGroupBean pricingGroupBean = new PricingGroupBean();
 		if (sPricingGroupId != null && !"".equalsIgnoreCase(sPricingGroupId)) {
-			String sQuery = "select PRICEGROUPID, PRICEGROUPNAME,  MIN_GUEST_NUM,  MAX_GUEST_NUM , PRICE "
+			String sQuery = "select * "
 					+ " from GTPRICEGROUP GPG WHERE PRICEGROUPID = ?";
 
 			ArrayList<Object> aParams = new ArrayList<Object>();
@@ -48,8 +48,7 @@ public class PricingGroupData {
 
 		ArrayList<PricingGroupBean> arrPricingGroupBean = new ArrayList<PricingGroupBean>();
 
-		String sQuery = "select PRICEGROUPID, PRICEGROUPNAME,  MIN_GUEST_NUM,  MAX_GUEST_NUM , "
-				+ " PRICE, MAX_MINUTES, MIN_MINUTES,SMS_COUNT , IS_DEFAULT from GTPRICEGROUP GPG";
+		String sQuery = "select * from GTPRICEGROUP GPG";
 
 		ArrayList<Object> aParams = new ArrayList<Object>();
 
@@ -59,8 +58,7 @@ public class PricingGroupData {
 
 		if (arrResult != null && !arrResult.isEmpty()) {
 			for (HashMap<String, String> hmResult : arrResult) {
-				PricingGroupBean pricingGroupBean = new PricingGroupBean();
-				pricingGroupBean = getPricingGroupBean(hmResult);
+				PricingGroupBean pricingGroupBean = new PricingGroupBean(hmResult);
 
 				arrPricingGroupBean.add(pricingGroupBean);
 			}

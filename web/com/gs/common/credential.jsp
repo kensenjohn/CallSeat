@@ -293,7 +293,7 @@
 					if(varSource == 'search_phone_number.jsp')
 					{
 						//alert('before submit');
-						$("#frm_telnum_pricing_plan_passthru").attr('action','/web/com/gs/event/pricing_plan.jsp');
+						$("#frm_telnum_pricing_plan_passthru").attr('action','/web/com/gs/event/search_phone_number.jsp');
 						$("#frm_telnum_pricing_plan_passthru").attr('method','POST');
 						$('#frm_telnum_pricing_plan_passthru').submit();
 					}

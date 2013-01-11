@@ -20,7 +20,7 @@
 <link href="/web/css/pricing/pricing.css" rel="stylesheet">
 <link href="/web/css/pricing/bootstrap.css" rel="stylesheet">
 <link href="/web/css/pricing/bootstrap-responsive.css" rel="stylesheet">
-
+<link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
 <body style="height:auto;">
 		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
 			<div  style="padding-top:5px;">
@@ -87,7 +87,7 @@
 <!-- Placed at the end of the document so the pages load faster -->
 <script src="/web/js/pricing/jquery-1.7.2.min.js"></script>
 <script src="/web/js/pricing/bootstrap.js"></script>
-
+<script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
 <script type="text/javascript">
 
 var varAdminId = '<%=sAdminId%>';
@@ -183,7 +183,7 @@ function processPricingPlan(varResponse)
         varPricingGrid = varPricingGrid + '<li class="price">$'+varArrPricingPlan[vari].price+'</li>';
         varPricingGrid = varPricingGrid + '<li>'+varArrPricingPlan[vari].max_minutes+' minutes</li>';
         varPricingGrid = varPricingGrid + '<li>'+varArrPricingPlan[vari].sms_count+' texts</li>';
-        varPricingGrid = varPricingGrid + '<li class="footer"><a href="#" id="" class="btn btn-inverse btn-large">Buy</a></li>';
+        varPricingGrid = varPricingGrid + '<li class="footer"><a href="#" id="" class="btn btn-inverse btn-large">Select</a></li>';
         varPricingGrid = varPricingGrid + '</ul></div>';
 
         $('#pricing_grid_options').append(varPricingGrid);
@@ -266,6 +266,57 @@ function processPurchaseTransactions(jsonResult)
             alert("Please try again later.");
         }
     }
+}
+
+function displayMssgBoxAlert(varMessage, isError)
+{
+    var varTitle = 'Status';
+    var varType = 'info';
+    if(isError)
+    {
+        varTitle = 'Error';
+        varType = 'error';
+    }
+    else
+    {
+        varTitle = 'Status';
+        varType = 'info';
+    }
+
+    if(varMessage!='')
+    {
+        $.msgBox({
+            title: varTitle,
+            content: varMessage,
+            type: varType
+        });
+    }
+}
+
+function displayMssgBoxMessages(varArrMessages, isError)
+{
+    if(varArrMessages!=undefined)
+    {
+
+
+        var varMssg = '';
+        var isFirst = true;
+        for(var i = 0; i<varArrMessages.length; i++)
+        {
+            if(isFirst == false)
+            {
+                varMssg = varMssg + '\n';
+            }
+            varMssg = varMssg + varArrMessages[i].text;
+        }
+
+        if(varMssg!='')
+        {
+            displayMssgBoxAlert(varMssg,isError);
+        }
+    }
+
+
 }
 </script>
 <jsp:include page="../common/footer_bottom_fancybox.jsp"/> 

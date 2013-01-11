@@ -291,7 +291,18 @@ public class EventManager {
 							.equalsIgnoreCase(telNumberBean.getTelNumberType())) {
 						eventSummaryBean.setSeatingNumber(telNumberBean
 								.getTelNumber());
-					}
+					}  else if (Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))
+                    {
+                        eventSummaryBean.setRsvpNumber(telNumberBean.getTelNumber());
+                        eventSummaryBean.setTelephonyEventNumber(telNumberBean.getSecretEventIdentity());
+                        eventSummaryBean.setTelephonyRSVPSecretKey(telNumberBean.getSecretEventKey());
+                    }
+                    else if (Constants.EVENT_TASK.DEMO_SEATING.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))
+                    {
+                        eventSummaryBean.setSeatingNumber(telNumberBean.getTelNumber());
+                        eventSummaryBean.setTelephonyEventNumber(telNumberBean.getSecretEventIdentity());
+                        eventSummaryBean.setTelephonySeatingSecretKey(telNumberBean.getSecretEventKey());
+                    }
 
 				}
 			}

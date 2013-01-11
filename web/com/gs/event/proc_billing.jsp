@@ -59,6 +59,8 @@
                     responsePurchaseTransactionBean.setStripeToken(sPurchaseStripeToken);
                     responsePurchaseTransactionBean.setCreditCardLast4Digits(sPurchaseLast4CreditCard);
                     // update Transaction with latest phone numbers
+                    appLogging.error("Purchase transaction record." + responsePurchaseTransactionBean );
+
                     iNumOfRows = purchaseTransactionManager.modifyPurchaseTransaction(responsePurchaseTransactionBean);
                 }
                 else

@@ -271,13 +271,6 @@ border: 0;
     -o-transition:-o-transform 0.5s;
 }
 
-.pricing2 ul li{
-    padding:10px;
-    border-bottom:1px dashed #BFBFBF;
-    margin:0 20px 0 20px;
-    font-size:16px;
-}
-
 .pricing2 ul li.head{
     background-color: whiteSmoke;
     background-image: -ms-linear-gradient(top, #ffffff, #e6e6e6);
@@ -303,21 +296,61 @@ border: 0;
     height:45px !important;
 }
 
-.pricing2 ul li.head h1{
-    color:#444;
+
+
+@media (min-width: 768px) and (max-width: 979px) {
+
+    .pricing2 ul li{
+        padding:10px;
+        border-bottom:1px dashed #BFBFBF;
+        margin:0 10px 0 10px;
+        font-size:14px;
+        text-align: center;
+    }
+
+    .pricing2 ul li.head h1{
+        font-size:18px;
+        color:#444;
+    }
+
+    .pricing2 ul li.price{
+        font-size:30px;
+        font-weight:bold;
+        margin-top: 20px !important;
+        padding-bottom: 20px !important;
+        padding-left:0!important;
+        padding-right:0!important;
+        margin-left: 0 !important;
+        margin-right:0 !important;
+        border-bottom:none !important;
+    }
 }
 
-.pricing2 ul li.price{
-    font-size:60px;
-    font-weight:bold;
-    margin-top: 20px !important;
-    padding-bottom: 20px !important;
-    padding-left:0!important;
-    padding-right:0!important;
-    margin-left: 0 !important;
-    margin-right:0 !important;
-    border-bottom:none !important;
+@media (min-width: 1200px) {
+
+    .pricing2 ul li{
+        padding:10px;
+        border-bottom:1px dashed #BFBFBF;
+        margin:0 20px 0 20px;
+        font-size:16px;
+    }
+
+    .pricing2 ul li.head h1{
+        color:#444;
+    }
+    .pricing2 ul li.price{
+        font-size:60px;
+        font-weight:bold;
+        margin-top: 20px !important;
+        padding-bottom: 20px !important;
+        padding-left:0!important;
+        padding-right:0!important;
+        margin-left: 0 !important;
+        margin-right:0 !important;
+        border-bottom:none !important;
+    }
 }
+
 
 .pricing2 ul li.footer{
     background-color: whiteSmoke;
@@ -479,13 +512,6 @@ border: 0;
     -o-transition:-o-transform 0.5s;
 }
 
-.pricing4 ul li{
-    padding:10px;
-    border-bottom:1px dashed #003580;
-    margin:0 20px 0 20px;
-    font-size:16px;
-}
-
 .pricing4 ul li.head{
     background-color: #0074CC;
     background-image: -ms-linear-gradient(top, #0088cc, #0055cc);
@@ -509,21 +535,59 @@ border: 0;
     height:45px !important;
 }
 
-.pricing4 ul li.head h1{
-    color:#fff;
+@media (min-width: 768px) and (max-width: 979px) {
+
+    .pricing4 ul li{
+        padding:10px;
+        border-bottom:1px dashed #003580;
+        margin:0 10px 0 10px;
+        font-size:14px;
+    }
+
+    .pricing4 ul li.head h1{
+        font-size: 18px;
+        color:#fff;
+    }
+
+    .pricing4 ul li.price{
+        font-size:30px;
+        font-weight:bold;
+        margin-top: 20px !important;
+        padding-bottom: 20px !important;
+        padding-left:0!important;
+        padding-right:0!important;
+        margin-left: 0 !important;
+        margin-right:0 !important;
+        border-bottom:none !important;
+    }
 }
 
-.pricing4 ul li.price{
-    font-size:60px;
-    font-weight:bold;
-    margin-top: 20px !important;
-    padding-bottom: 20px !important;
-    padding-left:0!important;
-    padding-right:0!important;
-    margin-left: 0 !important;
-    margin-right:0 !important;
-    border-bottom:none !important;
+@media (min-width: 1200px) {
+
+    .pricing4 ul li{
+        padding:10px;
+        border-bottom:1px dashed #003580;
+        margin:0 20px 0 20px;
+        font-size:16px;
+    }
+
+    .pricing4 ul li.head h1{
+        color:#fff;
+    }
+
+    .pricing4 ul li.price{
+        font-size:60px;
+        font-weight:bold;
+        margin-top: 20px !important;
+        padding-bottom: 20px !important;
+        padding-left:0!important;
+        padding-right:0!important;
+        margin-left: 0 !important;
+        margin-right:0 !important;
+        border-bottom:none !important;
+    }
 }
+
 
 .pricing4 ul li.footer{
     background-color: #0074CC;

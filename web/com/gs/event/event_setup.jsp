@@ -273,13 +273,13 @@
 							<div class="row">
 								<div class="offset1 span4">
 									<span class="fld_name"> Seating : </span>
-									<span class="fld_txt" id="e_summ_seating_telnum1" >(267) 432 5420 ext: 5432</span>
+									<span class="fld_txt" id="e_summ_seating_telnum" >(267) 432 5420 ext: 5432</span>
 								</div>
 							</div>
 							<div class="row">
 								<div class="offset1 span4">
 									<span class="fld_name"> RSVP : </span>
-									<span class="fld_txt" id="e_summ_rsvp_telnum1" >(214) 432 5420 ext: 5432</span>
+									<span class="fld_txt" id="e_summ_rsvp_telnum" >(214) 432 5420 ext: 5432</span>
 								</div>
 							</div>							
 							<div class="row">
@@ -355,7 +355,7 @@
 										</div>
 										<div class="span2" style="display:none;"><label id="seating_search">Advanced Search</label></div>
 									</div>
-									<div class="row">
+									<div class="row"  id="seating_div_event_id" >
 										<div class="span2"   style="text-align:right;"> 
 											<span class="fld_name" >Event Number :  </span>
 										</div>
@@ -363,7 +363,7 @@
 											<span class="fld_txt" id="seating_event_id"></span>
 										</div>
 									</div>
-									<div class="row">
+									<div class="row" id="seating_div_secret_key" >
 										<div class="span2"   style="text-align:right;">
 											<span class="fld_name" >Extension :  </span>
 										</div>
@@ -393,7 +393,7 @@
 											<span class="fld_txt" id="rsvp_gen_num"></span>
 										</div>
 									</div>
-									<div class="row">
+									<div class="row" id="rsvp_div_event_id">
 										<div class="span2"   style="text-align:right;">
 											<span class="fld_name" >Event Number :  </span>
 										</div>
@@ -401,7 +401,7 @@
 											<span class="fld_txt" id="rsvp_event_id"></span>
 										</div>
 									</div>
-									<div class="row">
+									<div class="row" id="rsvp_div_secret_key">
 										<div class="span2"   style="text-align:right;">
 											<span class="fld_name" >Extension :  </span>
 										</div>
@@ -1328,6 +1328,11 @@
 					{
 						$("#rsvp_gen_num").text(telNumBean.human_telnum);
 					}
+
+                    if(telNumBean.telnum_type ==  varDemoRsvpNumType )
+                    {
+
+                    }
 					
 					if(telNumBean.telnum_type ==  varDemoSeatingNumType)
 					{
