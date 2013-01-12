@@ -279,29 +279,32 @@ public class EventManager {
 			telNumberMetaData.setEventId(sEventId);
 			telNumberMetaData.setAdminId(sAdminId);
 			TelNumberManager telNumManager = new TelNumberManager();
-			ArrayList<TelNumberBean> arrTelNumberBean = telNumManager
-					.getTelNumbersByEvent(telNumberMetaData);
+			ArrayList<TelNumberBean> arrTelNumberBean = telNumManager.getTelNumbersByEvent(telNumberMetaData);
 			if (arrTelNumberBean != null && !arrTelNumberBean.isEmpty()) {
 				for (TelNumberBean telNumberBean : arrTelNumberBean) {
-					if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(
-							telNumberBean.getTelNumberType())) {
-						eventSummaryBean.setRsvpNumber(telNumberBean
-								.getTelNumber());
-					} else if (Constants.EVENT_TASK.SEATING.getTask()
-							.equalsIgnoreCase(telNumberBean.getTelNumberType())) {
-						eventSummaryBean.setSeatingNumber(telNumberBean
-								.getTelNumber());
-					}  else if (Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))
+					if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))
                     {
-                        eventSummaryBean.setRsvpNumber(telNumberBean.getTelNumber());
+						eventSummaryBean.setRsvpNumber(telNumberBean.getHumanTelNumber());
+                        eventSummaryBean.setDemoMode(false);
+					}
+                    else if (Constants.EVENT_TASK.SEATING.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))
+                    {
+						eventSummaryBean.setSeatingNumber(telNumberBean.getHumanTelNumber());
+                        eventSummaryBean.setDemoMode(false);
+					}
+                    else if (Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))
+                    {
+                        eventSummaryBean.setRsvpNumber(telNumberBean.getHumanTelNumber());
                         eventSummaryBean.setTelephonyEventNumber(telNumberBean.getSecretEventIdentity());
                         eventSummaryBean.setTelephonyRSVPSecretKey(telNumberBean.getSecretEventKey());
+                        eventSummaryBean.setDemoMode(true);
                     }
                     else if (Constants.EVENT_TASK.DEMO_SEATING.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))
                     {
-                        eventSummaryBean.setSeatingNumber(telNumberBean.getTelNumber());
+                        eventSummaryBean.setSeatingNumber(telNumberBean.getHumanTelNumber());
                         eventSummaryBean.setTelephonyEventNumber(telNumberBean.getSecretEventIdentity());
                         eventSummaryBean.setTelephonySeatingSecretKey(telNumberBean.getSecretEventKey());
+                        eventSummaryBean.setDemoMode(true);
                     }
 
 				}

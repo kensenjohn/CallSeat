@@ -62,10 +62,9 @@ public class TelNumberManager {
 			TelNumberMetaData telNumberMetaData) {
 		ArrayList<TelNumberBean> arrTelNumberBean = new ArrayList<TelNumberBean>();
 
-		if (telNumberMetaData != null && telNumberMetaData.getAdminId() != null
-				&& telNumberMetaData.getEventId() != null
-				&& !"".equalsIgnoreCase(telNumberMetaData.getAdminId())
-				&& !"".equalsIgnoreCase(telNumberMetaData.getEventId())) {
+		if (telNumberMetaData != null && telNumberMetaData.getAdminId() != null&& telNumberMetaData.getEventId() != null
+				&& !"".equalsIgnoreCase(telNumberMetaData.getAdminId())	&& !"".equalsIgnoreCase(telNumberMetaData.getEventId()))
+        {
 			TelNumberData telNumData = new TelNumberData();
 			arrTelNumberBean = telNumData.getEventTelNumbers(telNumberMetaData);
 		}

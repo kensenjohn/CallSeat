@@ -135,8 +135,6 @@ public class TelNumberData {
 				.setEventId(ParseUtil.checkNull(hmResult.get("FK_EVENTID")));
 		telNumberBean
 				.setAdminId(ParseUtil.checkNull(hmResult.get("FK_ADMINID")));
-		appLogging.debug("Superrr Event ID in " + telNumberBean.getEventId()
-				+ " admin id : " + telNumberBean.getAdminId());
 		telNumberBean.setDelRow(ParseUtil.checkNull(hmResult.get("DEL_ROW")));
 		telNumberBean.setTelNumberType(ParseUtil.checkNull(hmResult
 				.get("TELNUMTYPE")));

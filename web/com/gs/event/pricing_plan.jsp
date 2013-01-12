@@ -39,7 +39,7 @@
 				  <div class="offset1 span11">
 						<div class="row">							
 							<div class="span8">
-								<h2 >Step 2 : Select a Pricing Plan</h2>
+								<h2 style="font-size:155%; color:#758A48; margin : 0px; clear:both">Select a Pricing Plan</h2>
 							</div>
 						</div>
 						<div class="row">							

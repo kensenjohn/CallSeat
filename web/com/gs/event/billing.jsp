@@ -414,28 +414,28 @@ function validateCardDetails()
 		ccValidateMssg = ccValidateMssg + 'We could not identify a valid expiry date. Please try again.' ;
 	}
 
-    if( isValid && $('#bill_first_name') == ''  )
+    if( isValid && $('#bill_first_name').val() == ''  )
     {
         isValid = false;
-        ccValidateMssg = ccValidateMssg + 'You did not enter a first name. Please enter the last name as seen on the credit card.';
+        ccValidateMssg = ccValidateMssg + 'You did not enter a first name. Please enter the first name as seen on the credit card.';
     }
 
-    if( isValid && $('#bill_last_name') == ''  )
+    if( isValid && $('#bill_last_name').val() == ''  )
     {
         isValid = false;
         ccValidateMssg = ccValidateMssg + 'You did not enter a last name. Please enter the last name as seen on the credit card.';
     }
 
-    if( isValid && $('#bill_zip') == ''  )
+    if( isValid && $('#bill_zip').val() == ''  )
     {
         isValid = false;
-        ccValidateMssg = ccValidateMssg + 'You did not enter a zip code. Please type in a zip code.';
+        ccValidateMssg = ccValidateMssg + 'You did not enter a valid zip code. Please use the credit card billing zip code.';
     }
 
-    if( isValid && $('#bill_state') == ''  )
+    if( isValid && $('#bill_state').val() == ''  )
     {
         isValid = false;
-        ccValidateMssg = ccValidateMssg + 'You did not select a state. Please select your state.';
+        ccValidateMssg = ccValidateMssg + 'You did not select a state. Please select the credit card billing state.';
     }
 
     displayMssgBoxAlert(ccValidateMssg,true);

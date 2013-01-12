@@ -43,6 +43,11 @@ try
     <div  class="fnbx_scratch_area">
         <div class="row">
             <div class="offset1 span11">
+                &nbsp;
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset1 span11">
                 <h2 class="txt txt_center">Receipt</h2>
             </div>
         </div>
@@ -54,7 +59,7 @@ try
         <div class="row">
             <div class="offset1 span10">
                 <div class="row">
-                    <div class="offset1 span11">
+                    <div class="span11">
                         Thank you,<br>Please review your purchase. This event's telephone numbers have have been switched to Pro mode.<br>
                         You should be able to access the event's seating and RSVP data without using extensions.
                     </div>
@@ -85,7 +90,7 @@ try
 
                     </div>
                     <div class="span1" style="text-align:right;margin-top: 10px;">
-                        <h2 style="color:#37291C;"><%=checkoutBean.getFormattedItemPrice()%></h2>
+                        <h4 style="color:#37291C;"><%=checkoutBean.getFormattedItemPrice()%></h4>
                     </div>
                 </div>
                 <div class="row">

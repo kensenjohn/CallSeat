@@ -394,6 +394,10 @@ var varIsNumberSelectedPreviously = <%=isNumberSelectedPreviously%>;
 					var jsonResponseObj = varResponseObj.payload;
 					processTelNumbers( jsonResponseObj );
 				}
+                else
+                {
+                    displayMssgBoxAlert("There were no telephone numbers available for the search parameters.",true);
+                }
 			}
 			else
 			{
@@ -450,34 +454,52 @@ var varIsNumberSelectedPreviously = <%=isNumberSelectedPreviously%>;
 	function processTelNumbers( jsonResponseObj )
 	{
 		var varTelNumbers= jsonResponseObj.telnumbers;
-		var totalRows = varTelNumbers.num_of_rows;
-		//alert('processTelNumbers = ' + totalRows);
-		if(totalRows!=undefined)
-		{
-			var varTelNumList = varTelNumbers.telnum_array;
-			if(varTelNumList!=undefined)
-			{
-				for(var iRow = 0; iRow < totalRows ; iRow++ )
-				{
-					var telNumBean = varTelNumList[iRow];
-					
-					//alert('tel number = ' + telNumBean.telnum);
-					
-					if(telNumBean.telnum_type == varSeatingNumType)
-					{
-						$("#div_seating_search").show();
-						$("#seating_gen_num").text(telNumBean.human_telnum);
-					}
-					if(telNumBean.telnum_type == varRsvpNumType)
-					{
-						$("#div_rsvp_search").show();
-						$("#rsvp_gen_num").text(telNumBean.human_telnum);
-					}
-						
-				}
-			}
-			
-		}
+        if(varTelNumbers != undefined )
+        {
+            var totalRows = varTelNumbers.num_of_rows;
+            if(totalRows!=undefined)
+            {
+                var varTelNumList = varTelNumbers.telnum_array;
+                if(varTelNumList!=undefined)
+                {
+                    var varIsSeatingFound = false;
+                    var varIsRsvpFound = false;
+                    for(var iRow = 0; iRow < totalRows ; iRow++ )
+                    {
+                        var telNumBean = varTelNumList[iRow];
+
+                        //alert('tel number = ' + telNumBean.telnum);
+                        if(telNumBean.telnum_type == varSeatingNumType)
+                        {
+                            $("#div_seating_search").show();
+                            $("#seating_gen_num").text(telNumBean.human_telnum);
+                            varIsSeatingFound = true;
+                        }
+                        if(telNumBean.telnum_type == varRsvpNumType)
+                        {
+                            $("#div_rsvp_search").show();
+                            $("#rsvp_gen_num").text(telNumBean.human_telnum);
+                            varIsRsvpFound = true;
+                        }
+                    }
+                    if(varIsSeatingFound==true && varIsRsvpFound==true)
+                    {
+
+                    }
+                    else if(varIsSeatingFound==true || varIsRsvpFound==true)
+                    {
+                        $("#loading_wheel").hide();
+                        displayMssgBoxAlert('Success!! Please click on \"Search\" again to get a new number.', false);
+                    }
+                }
+
+            }
+        }
+        else
+        {
+            displayMssgBoxAlert('We could not find a valid telephone number with the area code provided.', true);
+        }
+
 	}
 	function displayMssgBoxAlert(varMessage, isError)
 	{
@@ -541,6 +563,7 @@ var varIsNumberSelectedPreviously = <%=isNumberSelectedPreviously%>;
 	}*/
 	function genSeatingTelNum()
 	{
+        $("#loading_wheel").show();
 		disablePassThruButton();
 		var actionUrl = "proc_load_phone_numbers.jsp";
 		var methodType = "POST";
@@ -551,6 +574,7 @@ var varIsNumberSelectedPreviously = <%=isNumberSelectedPreviously%>;
 	}
 	function  genRsvpTelNum()
 	{
+        $("#loading_wheel").show();
 		disablePassThruButton();
 		var actionUrl = "proc_load_phone_numbers.jsp";
 		var methodType = "POST";

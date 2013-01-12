@@ -9,6 +9,7 @@ import java.util.Locale;
 import com.gs.bean.CheckoutBean;
 import com.gs.bean.PurchaseTransactionBean;
 import com.gs.bean.TaxBean;
+import com.gs.common.ExceptionHandler;
 import com.gs.common.ParseUtil;
 import com.gs.manager.TaxManager;
 import org.json.JSONArray;
@@ -60,8 +61,7 @@ public class EventPricingGroupManager {
 				numOfRows++;
 			}
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			appLogging.error("There was an error processing the Pricing GRoup JSON. " + ExceptionHandler.getStackTrace(e));
 		}
 		return jsonPricingGroupArray;
 	}
@@ -124,13 +124,8 @@ public class EventPricingGroupManager {
 
                         String sState =  ParseUtil.checkNull(purchaseResponseTransactionBean.getState());
                         String sCountry = ParseUtil.checkNull(purchaseResponseTransactionBean.getCountry());
-
-                        appLogging.info("State - " + sState + " Country = " + sCountry );
                         TaxManager taxManager = new TaxManager();
                         TaxBean taxBean =taxManager.getSalesTax(sState,sCountry);
-
-                        appLogging.info(" Tax bean = " + taxBean );
-
                         BigDecimal bdTaxAmount = new BigDecimal("0.00");
                         BigDecimal bdTaxPercentage = new BigDecimal("0.00");
                         if(taxBean!=null && taxBean.getStateTaxId()!=null && !"".equalsIgnoreCase(taxBean.getStateTaxId()))
@@ -146,7 +141,6 @@ public class EventPricingGroupManager {
                             checkoutBean.setFormattedTaxPercentage(decimalFormat.format(new BigDecimal(Double.toString(dTaxPercentage*100))));
                             checkoutBean.setTaxPercentage( (dTaxPercentage*100) );
                         }
-                        appLogging.info(" Tax amount = " + bdTaxAmount );
                         BigDecimal bdGrandTotal = bdSubTotal.add(bdTaxAmount);
                         bdGrandTotal.setScale(2,BigDecimal.ROUND_HALF_UP);
 

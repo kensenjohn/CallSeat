@@ -64,7 +64,15 @@ try
 			arrTelNumberBean = telNumManager.getTelNumEventDetails(telNumberMetaData);
 		}
 		
-		
+
+        if(arrTelNumberBean!=null && !arrTelNumberBean.isEmpty())
+        {
+            jsonResponseObj.put("telnumbers",  telNumManager.getTelNumberBeanJson(arrTelNumberBean));
+        }
+        else
+        {
+
+        }
 		if(arrTelNumberBean==null || (arrTelNumberBean!=null && arrTelNumberBean.isEmpty()))
 		{
 			
@@ -82,7 +90,7 @@ try
 		
 		
 		
-		jsonResponseObj.put("telnumbers",  telNumManager.getTelNumberBeanJson(arrTelNumberBean));
+
 		
 		Text okText = new OkText("Loading Phone number complete","my_id");		
 		arrOkText.add(okText);
