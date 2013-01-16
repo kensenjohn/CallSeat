@@ -14,10 +14,9 @@ public abstract class PaymentChannel {
 
 	public static PaymentChannel getPaymentChannel() {
 		PaymentChannel paymentChannel = null;
-		String sPaymentChannel = applicationConfig
-				.get(Constants.PROP_PAYMENT_CHANNEL);
-		if (sPaymentChannel != null
-				&& "stripe".equalsIgnoreCase(sPaymentChannel)) {
+		String sPaymentChannel = applicationConfig.get(Constants.PROP_PAYMENT_CHANNEL);
+		if (sPaymentChannel != null	&& "stripe".equalsIgnoreCase(sPaymentChannel))
+        {
 			paymentChannel = new StripePaymentChannel();
 		}
 		return paymentChannel;
