@@ -287,7 +287,6 @@
 					setUserCookie('<%=Constants.COOKIE_APP_USERID%>',varUserId);
 					
 					var varFirstName = jsonResponseObj.first_name;
-					//alert(varFirstName);
 					parent.credentialSuccess(jsonResponseObj,varSource);
 					
 					if(varSource == 'search_phone_number.jsp')
@@ -328,21 +327,7 @@
 		
 		document.cookie=cookieName + "=" + c_value;
 	}
-	
-	/*function displayMessages(varArrMessages)
-	{
-		if(varArrMessages!=undefined)
-		{
-			for(var i = 0; i<varArrMessages.length; i++)
-			{
-				var txtMessage =  varArrMessages[i].text;
-				var txtMssgLocation = varArrMessages[i].txt_loc_id;
-				//alert( varArrMessages[i].text );
-				
-				$("#"+txtMssgLocation).text(txtMessage);
-			}
-		}
-	}*/
+
 	function displayAlert(varMessage, isError)
 	{
 		var varTitle = 'Status';

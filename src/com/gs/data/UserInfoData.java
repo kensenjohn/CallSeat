@@ -1,6 +1,7 @@
 package com.gs.data;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,4 +53,52 @@ public class UserInfoData {
 		}
 		return iNumOfRecs;
 	}
+
+    public ArrayList<UserInfoBean> getGuestUserInfoByByCellPhone(String sCellphoneNumber, String sAdminId)
+    {
+        ArrayList<UserInfoBean> arrUserInfoBean = new ArrayList<UserInfoBean>();
+        if(sCellphoneNumber!=null && !"".equalsIgnoreCase(sCellphoneNumber) && sAdminId!=null && !"".equalsIgnoreCase(sAdminId))
+        {
+            String sQuery = "SELECT GTU.* FROM GTUSERINFO GTU, GTGUESTS GTG WHERE GTU.CELL_PHONE = ? and GTG.FK_USERINFOID = GTU.USERINFOID " +
+                    " AND GTG.FK_ADMINID= ? ";
+
+            ArrayList<Object> aParams = DBDAO.createConstraint(sCellphoneNumber, sAdminId );
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData("admin",sQuery,aParams,true,"UserInfoData.java", "updateGuestUserInfo()");
+
+            if(arrResult!=null && !arrResult.isEmpty())
+            {
+                for(HashMap<String, String> hmResult : arrResult )
+                {
+                    UserInfoBean userInfoBean = new UserInfoBean(hmResult) ;
+                    arrUserInfoBean.add(userInfoBean);
+                }
+            }
+        }
+        return arrUserInfoBean;
+    }
+
+    public ArrayList<UserInfoBean> getGuestUserInfoByByHomePhone(String sCellphoneNumber, String sAdminId)
+    {
+        ArrayList<UserInfoBean> arrUserInfoBean = new ArrayList<UserInfoBean>();
+        if(sCellphoneNumber!=null && !"".equalsIgnoreCase(sCellphoneNumber) && sAdminId!=null && !"".equalsIgnoreCase(sAdminId))
+        {
+            String sQuery = "SELECT * FROM GTUSERINFO GTU, GTGUESTS GTG WHERE GTU.PHONE_NUM = ? and GTG.FK_USERINFOID = GTU.USERINFOID " +
+                    " AND GTG.FK_ADMINID= ? ";
+
+            ArrayList<Object> aParams = DBDAO.createConstraint(sCellphoneNumber, sAdminId );
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData("admin",sQuery,aParams,true,"UserInfoData.java", "updateGuestUserInfo()");
+
+            if(arrResult!=null && !arrResult.isEmpty())
+            {
+                for(HashMap<String, String> hmResult : arrResult )
+                {
+                    UserInfoBean userInfoBean = new UserInfoBean(hmResult) ;
+                    arrUserInfoBean.add(userInfoBean);
+                }
+            }
+        }
+        return arrUserInfoBean;
+    }
 }

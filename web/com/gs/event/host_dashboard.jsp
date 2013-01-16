@@ -143,18 +143,7 @@
 			  }
 			});
 	}
-	
-	/*function credentialSuccess(jsonResponse,varSource)
-	{
-		$("#login_name_display").text(jsonResponse.first_name);
-		$("#login_name_display").addClass("bold_text");
-		resetAdminId(jsonResponse.user_id);
-	}
-	function resetAdminId(tmpAdminId)
-	{
-		varAdminID = tmpAdminId;
-		setAllGuestButtonClick();
-	}*/
+
 	//TODO: load the lobby after login with current admin's user.
 </script>
 <jsp:include page="../common/footer_top.jsp"/>

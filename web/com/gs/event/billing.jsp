@@ -580,33 +580,6 @@ function savePhoneNumbers(jsonResult)
 
 
     }
-
-/*function displayErrorMessage(varMessage)
-{
-	$("#status_mssg").addClass("error_mssg");
-	$("#status_mssg").addClass("small");
-	$("#status_mssg").text( varMessage );
-}
-function displayMessages(varArrMessages, isError)
-{
-	if(varArrMessages!=undefined)
-	{
-		$("#status_mssg").removeClass();
-		if(isError == true )
-		{
-			$("#status_mssg").addClass("error_mssg");
-		}
-		else
-		{
-			$("#status_mssg").addClass("success_mssg");
-		}
-		for(var i = 0; i<varArrMessages.length; i++)
-		{
-			$("#status_mssg").text( varArrMessages[i].text );
-			//alert( varArrMessages[i].text );
-		}
-	}
-}*/
 </script>
 <jsp:include page="../common/footer_bottom_fancybox.jsp"/> 
 </html>

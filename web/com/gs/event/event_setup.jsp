@@ -570,30 +570,6 @@
 
 		});
 		
-		/*if(!varIsSignedIn)
-		{
-			$("#phone_num_tab").attr("href","/web/com/gs/common/credential.jsp?admin_id="+varAdminID
-					+"&event_id"+varEventID+"&source=phone_tab");
-			
-			$("#phone_num_tab").fancybox({
-				'width'				: '80%',
-				'height'			: '80%',
-				'autoScale'			: false,
-				'transitionIn'		: 'none',
-				'transitionOut'		: 'none',
-				'type'				: 'iframe',
-				'padding'			: 0,
-				'margin'			: 0
-			});
-			
-			$("#login_name_display").removeAttr('href');
-			$("#login_name_display").attr('href','/web/com/gs/common/credential.jsp?admin_id='+varAdminID+'&event_id='+varEventID);
-		}
-		else
-		{
-			phoneNumTab();
-		}*/
-		
 		if(varIsNewEventCreateClicked)
 		{
 			$('#div_event_summary').show();

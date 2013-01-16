@@ -208,11 +208,16 @@
 					var jsonResponseObj = varResponseObj.payload;
 					
 					var varAdminBean = jsonResponseObj.admin_bean;
-					
+
+
 					if(varAdminBean!= undefined)
 					{
 						displayAdminUserInfo(varAdminBean);
 					}
+                    else
+                    {
+                        updateTopNavAccountName($('#register_fname').val());
+                    }
 					
 					var varIsMessageExist = varResponseObj.is_message_exist;
 					if(varIsMessageExist == true)
@@ -226,7 +231,16 @@
 				}					
 			}
 		}
-	}
+    }
+
+    function updateTopNavAccountName(varAccountName)
+    {
+        if(varAccountName!='')
+        {
+            parent.$('#login_name_display').text( varAccountName );
+        }
+
+    }
 	function displayAdminUserInfo(varAdminBean)
 	{
 		var varUserInfo = varAdminBean.user_info_bean;
@@ -235,7 +249,8 @@
 			$('#login_email').val(varUserInfo.email);
 			$('#register_fname').val(varUserInfo.first_name);
 			$('#register_lname').val(varUserInfo.last_name);
-			
+
+            updateTopNavAccountName(varUserInfo.first_name);
 		}
 	}
 	function getDataAjax(actionUrl,dataString,methodType, callBackMethod)

@@ -26,21 +26,4 @@
 			'margin'			: 0
 		});
 	 });
-	
-	/*function credentialSuccess(varFirstName,varSource)
-	{
-		//alert('credentialSuccess')
-		$("#get_phone_num_div").hide();
-		$("#login_name_display").text(varFirstName);
-		$("#login_name_display").addClass("bold_text");
-		
-		alert('varSource = ' + varSource);
-		resetPhoneNumber();
-		if(varSource == 'phone_tab')
-		{
-			viewPhoneNumberTab();
-		}
-		
-	}*/
-	
 </script>

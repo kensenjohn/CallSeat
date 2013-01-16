@@ -38,7 +38,7 @@ if(cookies!=null)
 		<jsp:include page="top_nav.jsp">
 			<jsp:param name="referrer_source" value="sign_out.jsp"/>	
 		</jsp:include>
-		<div class="main_body">
+		<div class="blank_scratch_area">
 			<div>
 				<h2>Thank for using our application. </h2> <br><br>
 				<h3><a id="go_home" href="/web/com/gs/welcome.jsp">Go back to Home Page</a></h3>

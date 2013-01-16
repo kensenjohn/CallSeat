@@ -5,7 +5,8 @@
 <jsp:include page="../common/header_top.jsp"/>
 <jsp:include page="../common/security.jsp"/>
 <%@include file="../common/header_bottom.jsp"%>
-	<body style="height:auto;">
+<link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
+<body style="height:auto;">
 <%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
@@ -225,6 +226,7 @@
 			</div>
 		</div>
 	</body>
+    <script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
 	<script type="text/javascript">
 		var varAdminId = '<%=sAdminId%>';
 		var varEventId = '<%=sEventId%>';
@@ -345,7 +347,7 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg , true );
+                        displayMssgBoxMessages( varArrErrorMssg , true );
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -381,7 +383,7 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg , true );
+                        displayMssgBoxMessages( varArrErrorMssg , true );
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -448,7 +450,7 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg , true );
+                        displayMssgBoxMessages( varArrErrorMssg , true );
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -530,7 +532,7 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg , true );
+                        displayMssgBoxMessages( varArrErrorMssg , true );
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -597,7 +599,57 @@
 			$("#frm_event_assign").attr("method","POST");
 			$("#frm_event_assign").submit();
 		}
-		function displayMessages(varArrMessages, isError)
+        function displayMssgBoxAlert(varMessage, isError)
+        {
+            var varTitle = 'Status';
+            var varType = 'info';
+            if(isError)
+            {
+                varTitle = 'Error';
+                varType = 'error';
+            }
+            else
+            {
+                varTitle = 'Status';
+                varType = 'info';
+            }
+
+            if(varMessage!='')
+            {
+                $.msgBox({
+                    title: varTitle,
+                    content: varMessage,
+                    type: varType
+                });
+            }
+        }
+
+        function displayMssgBoxMessages(varArrMessages, isError)
+        {
+            if(varArrMessages!=undefined)
+            {
+
+
+                var varMssg = '';
+                var isFirst = true;
+                for(var i = 0; i<varArrMessages.length; i++)
+                {
+                    if(isFirst == false)
+                    {
+                        varMssg = varMssg + '\n';
+                    }
+                    varMssg = varMssg + varArrMessages[i].text;
+                }
+
+                if(varMssg!='')
+                {
+                    displayMssgBoxAlert(varMssg,isError);
+                }
+            }
+
+
+        }
+		/*function displayMessages(varArrMessages, isError)
 		{
 			if(varArrMessages!=undefined)
 			{
@@ -617,7 +669,7 @@
 					}
 				}
 			}
-		}
+		}*/
 	</script>
 	<jsp:include page="../common/footer_bottom_fancybox.jsp"/> 
 </html>

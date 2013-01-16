@@ -98,108 +98,141 @@ try
 	{
 		if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId))
 		{
-			
-			UserInfoBean userInfoBean = new UserInfoBean();
-			userInfoBean.setUserInfoId(Utility.getNewGuid());
-			userInfoBean.setFirstName(sFirstName);
-			userInfoBean.setLastName(sLastName);
-			userInfoBean.setCellPhone(sCellNumber);
-			userInfoBean.setPhoneNum(sHomeNumber);
-			userInfoBean.setEmail(sEmailAddr);
-			userInfoBean.setCreateDate(DateSupport.getEpochMillis());
-			userInfoBean.setHumanCreateDate(DateSupport.getUTCDateTime());
-			
-			UserInfoManager userInforManager = new UserInfoManager();
-			
-			userInfoBean = userInforManager.createUserInfoBean(userInfoBean);
-			
-			if(userInfoBean!=null && userInfoBean.getUserInfoId()!=null && !"".equalsIgnoreCase(userInfoBean.getUserInfoId()))
-			{
-				GuestBean guestBean = new GuestBean();
-				guestBean.setGuestId(Utility.getNewGuid());
-				guestBean.setUserInfoId(userInfoBean.getUserInfoId());
-				guestBean.setAdminId(sAdminId);
-				guestBean.setCreateDate(DateSupport.getEpochMillis());
-				guestBean.setIsTemporary("1");
-				guestBean.setDeleteRow("0");
-				guestBean.setTotalSeat(sInvitedNumOfSeats);
-				guestBean.setRsvpSeat(sRsvpNumOfSeats);
-				guestBean.setHumanCreateDate(DateSupport.getUTCDateTime());
-				
-				GuestManager guestManager = new GuestManager();
-				
-				guestBean = guestManager.createGuest(guestBean);
-				
-				
-				
-				if (guestBean!=null && guestBean.getGuestId() !=null && !"".equalsIgnoreCase(guestBean.getGuestId()))
-				{
-					jsonResponseObj.put("guest_id",guestBean.getGuestId());
-					
-					if(sEventIdSelected!=null && !"".equalsIgnoreCase(sEventIdSelected) && !"all".equalsIgnoreCase(sEventIdSelected))
-					{
-						
-						
-						EventGuestBean eventGuestBean = new EventGuestBean();
-						eventGuestBean.setEventGuestId(Utility.getNewGuid());
-						eventGuestBean.setEventId(sEventIdSelected);
-						eventGuestBean.setGuestId( guestBean.getGuestId() );
-						eventGuestBean.setTotalNumberOfSeats( sInvitedNumOfSeats );
-						eventGuestBean.setRsvpSeats( sRsvpNumOfSeats );
-						eventGuestBean.setIsTemporary("1");
-						eventGuestBean.setDeleteRow("0");
-						
-						EventGuestManager eventGuestManager = new EventGuestManager();
-						Integer iNumOfEventGuestRecs = eventGuestManager.assignGuestToEvent( eventGuestBean );
-						
-						if(iNumOfEventGuestRecs<=0)
-						{
-							sMessage = "The guest could not be added to Event";
-							jsonResponseObj.put(Constants.J_RESP_SUCCESS,false);
-							
-							appLogging.warn("The guest could not be added to Event");
-							
-							Text errorText = new ErrorText("The guest could not be added to Event","err_mssg") ;		
-							arrErrorText.add(errorText);
-							
-							responseStatus = RespConstants.Status.ERROR;
-							isError = true;
-						}
-						else
-						{
-							Text okText = new OkText("The guest was assigned successfully to the event successfully.","err_mssg") ;		
-							arrErrorText.add(okText);
-							
-							responseStatus = RespConstants.Status.OK;
-							
-							jsonResponseObj.put("event_id",guestBean.getGuestId());
-							jsonResponseObj.put(Constants.J_RESP_SUCCESS,true);
-						}
-					}
-					else if( "all".equalsIgnoreCase(sEventIdSelected) || "".equalsIgnoreCase(sEventIdSelected) )
-					{
-						appLogging.info("Guest creation was successful : " + guestBean.getGuestId());
-						Text okText = new OkText("The guest was created successfully.","err_mssg") ;		
-						arrErrorText.add(okText);
-						
-						responseStatus = RespConstants.Status.OK;
-					}
-					
-					
-				} else
-				{
-					sMessage = "The guest could not be created at this time. Please try again later.";
-					appLogging.error("Error creating Guest " + guestBean.getGuestId());
-					
-				}
-				
-			}
+            UserInfoManager userInforManager = new UserInfoManager();
+
+            ArrayList<UserInfoBean> arrCellPhoneUserInfoBean = userInforManager.getUserInfoBeanByCellPhone(sCellNumber, sAdminId );
+            ArrayList<UserInfoBean> arrHomePhoneUserInfoBean = userInforManager.getUserInfoBeanByHomePhone(sHomeNumber, sAdminId );
+
+            if((arrCellPhoneUserInfoBean==null || arrCellPhoneUserInfoBean.isEmpty()) && (arrHomePhoneUserInfoBean == null && arrHomePhoneUserInfoBean.isEmpty()) )
+            {
+                UserInfoBean userInfoBean = new UserInfoBean();
+                userInfoBean.setUserInfoId(Utility.getNewGuid());
+                userInfoBean.setFirstName(sFirstName);
+                userInfoBean.setLastName(sLastName);
+                userInfoBean.setCellPhone(sCellNumber);
+                userInfoBean.setPhoneNum(sHomeNumber);
+                userInfoBean.setEmail(sEmailAddr);
+                userInfoBean.setCreateDate(DateSupport.getEpochMillis());
+                userInfoBean.setHumanCreateDate(DateSupport.getUTCDateTime());
+
+
+
+                userInfoBean = userInforManager.createUserInfoBean(userInfoBean);
+
+                if(userInfoBean!=null && userInfoBean.getUserInfoId()!=null && !"".equalsIgnoreCase(userInfoBean.getUserInfoId()))
+                {
+                    GuestBean guestBean = new GuestBean();
+                    guestBean.setGuestId(Utility.getNewGuid());
+                    guestBean.setUserInfoId(userInfoBean.getUserInfoId());
+                    guestBean.setAdminId(sAdminId);
+                    guestBean.setCreateDate(DateSupport.getEpochMillis());
+                    guestBean.setIsTemporary("1");
+                    guestBean.setDeleteRow("0");
+                    guestBean.setTotalSeat(sInvitedNumOfSeats);
+                    guestBean.setRsvpSeat(sRsvpNumOfSeats);
+                    guestBean.setHumanCreateDate(DateSupport.getUTCDateTime());
+
+                    GuestManager guestManager = new GuestManager();
+
+                    guestBean = guestManager.createGuest(guestBean);
+
+
+
+                    if (guestBean!=null && guestBean.getGuestId() !=null && !"".equalsIgnoreCase(guestBean.getGuestId()))
+                    {
+                        jsonResponseObj.put("guest_id",guestBean.getGuestId());
+
+                        if(sEventIdSelected!=null && !"".equalsIgnoreCase(sEventIdSelected) && !"all".equalsIgnoreCase(sEventIdSelected))
+                        {
+
+
+                            EventGuestBean eventGuestBean = new EventGuestBean();
+                            eventGuestBean.setEventGuestId(Utility.getNewGuid());
+                            eventGuestBean.setEventId(sEventIdSelected);
+                            eventGuestBean.setGuestId( guestBean.getGuestId() );
+                            eventGuestBean.setTotalNumberOfSeats( sInvitedNumOfSeats );
+                            eventGuestBean.setRsvpSeats( sRsvpNumOfSeats );
+                            eventGuestBean.setIsTemporary("1");
+                            eventGuestBean.setDeleteRow("0");
+
+                            EventGuestManager eventGuestManager = new EventGuestManager();
+                            Integer iNumOfEventGuestRecs = eventGuestManager.assignGuestToEvent( eventGuestBean );
+
+                            if(iNumOfEventGuestRecs<=0)
+                            {
+                                sMessage = "The guest could not be added to Event";
+                                jsonResponseObj.put(Constants.J_RESP_SUCCESS,false);
+
+                                appLogging.warn("The guest could not be added to Event");
+
+                                Text errorText = new ErrorText("The guest could not be added to Event","err_mssg") ;
+                                arrErrorText.add(errorText);
+
+                                responseStatus = RespConstants.Status.ERROR;
+                                isError = true;
+                            }
+                            else
+                            {
+                                Text okText = new OkText("The guest was assigned successfully to the event successfully.","err_mssg") ;
+                                arrErrorText.add(okText);
+
+                                responseStatus = RespConstants.Status.OK;
+
+                                jsonResponseObj.put("event_id",guestBean.getGuestId());
+                                jsonResponseObj.put(Constants.J_RESP_SUCCESS,true);
+                            }
+                        }
+                        else if( "all".equalsIgnoreCase(sEventIdSelected) || "".equalsIgnoreCase(sEventIdSelected) )
+                        {
+                            appLogging.info("Guest creation was successful : " + guestBean.getGuestId());
+                            Text okText = new OkText("The guest was created successfully.","err_mssg") ;
+                            arrErrorText.add(okText);
+
+                            responseStatus = RespConstants.Status.OK;
+                        }
+
+
+                    } else
+                    {
+                        sMessage = "The guest could not be created at this time. Please try again later.";
+                        appLogging.error("Error creating Guest " + guestBean.getGuestId());
+
+                    }
+
+                }
+            }
+            else
+            {
+                sMessage =  "A guest with the same";
+                boolean isFirst = true;
+                if( arrCellPhoneUserInfoBean != null &&  !arrCellPhoneUserInfoBean.isEmpty())
+                {
+                    sMessage = sMessage + " cellphone number ";
+                    isFirst = false;
+                }
+
+                if( arrHomePhoneUserInfoBean != null &&  !arrHomePhoneUserInfoBean.isEmpty())
+                {
+                    if(!isFirst)
+                    {
+                        sMessage = sMessage + "and";
+                    }
+                    sMessage = sMessage + " home phone number ";
+                }
+                sMessage = sMessage + "exists. Please  click on \"Invite Guest\" to edit this guest.";
+
+                Text errorText = new ErrorText(sMessage,"err_mssg") ;
+                arrErrorText.add(errorText);
+
+                responseStatus = RespConstants.Status.ERROR;
+
+                appLogging.error("Guest with same cellphone or home phone number already exists.");
+            }
 			
 		}
 		else
 		{
 			sMessage = "The Viewer could not be identified.";
-			jsonResponseObj.put(Constants.J_RESP_SUCCESS,false);
 		}
 	}
 	

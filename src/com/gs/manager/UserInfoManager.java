@@ -9,6 +9,8 @@ import com.gs.common.DateSupport;
 import com.gs.common.Utility;
 import com.gs.data.UserInfoData;
 
+import java.util.ArrayList;
+
 public class UserInfoManager {
 
 	private static final Logger appLogging = LoggerFactory
@@ -71,5 +73,27 @@ public class UserInfoManager {
 		}
 		return iNumOfRecs;
 	}
+
+    public ArrayList<UserInfoBean> getUserInfoBeanByCellPhone(String sCellPhone , String sAdminId)
+    {
+        ArrayList<UserInfoBean> arrUserInfoBean = new ArrayList<UserInfoBean>();
+        if(sCellPhone!=null && !"".equalsIgnoreCase(sCellPhone))
+        {
+            UserInfoData userinfoData = new UserInfoData();
+            arrUserInfoBean = userinfoData.getGuestUserInfoByByCellPhone(sCellPhone, sAdminId );
+        }
+        return arrUserInfoBean;
+    }
+
+    public ArrayList<UserInfoBean> getUserInfoBeanByHomePhone(String sHomePhone , String sAdminId)
+    {
+        ArrayList<UserInfoBean> arrUserInfoBean = new ArrayList<UserInfoBean>();
+        if(sHomePhone!=null && !"".equalsIgnoreCase(sHomePhone))
+        {
+            UserInfoData userinfoData = new UserInfoData();
+            arrUserInfoBean = userinfoData.getGuestUserInfoByByHomePhone(sHomePhone, sAdminId);
+        }
+        return arrUserInfoBean;
+    }
 
 }
