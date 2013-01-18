@@ -103,7 +103,7 @@ try
             ArrayList<UserInfoBean> arrCellPhoneUserInfoBean = userInforManager.getUserInfoBeanByCellPhone(sCellNumber, sAdminId );
             ArrayList<UserInfoBean> arrHomePhoneUserInfoBean = userInforManager.getUserInfoBeanByHomePhone(sHomeNumber, sAdminId );
 
-            if((arrCellPhoneUserInfoBean==null || arrCellPhoneUserInfoBean.isEmpty()) && (arrHomePhoneUserInfoBean == null && arrHomePhoneUserInfoBean.isEmpty()) )
+            if((arrCellPhoneUserInfoBean==null || arrCellPhoneUserInfoBean.isEmpty()) && (arrHomePhoneUserInfoBean == null || arrHomePhoneUserInfoBean.isEmpty()) )
             {
                 UserInfoBean userInfoBean = new UserInfoBean();
                 userInfoBean.setUserInfoId(Utility.getNewGuid());
