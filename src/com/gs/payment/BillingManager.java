@@ -24,11 +24,11 @@ public class BillingManager {
 		PaymentChannel paymentChannel = PaymentChannel.getPaymentChannel();
 		BillingService billingService = new OnlineBillingService(paymentChannel);
 
-		BillingResponse billingResponse = billingService
-				.chargePrice(billingMetaData);
+		BillingResponse billingResponse = billingService.chargePrice(billingMetaData);
 
-		if (Constants.BILLING_RESPONSE_CODES.SUCCESS.equals(billingResponse
-				.getBillingResponseCode())) {
+		if (Constants.BILLING_RESPONSE_CODES.SUCCESS.equals(billingResponse.getBillingResponseCode()))
+        {
+            billingMetaData.setPaymentChannelCustomerId(billingResponse.getPaymentChannelCustomerId());
 			saveBillingInfo(billingMetaData);
 		}
 

@@ -24,6 +24,7 @@ public class BillingMetaData {
 	private String cardLast4 = "";
 
 	private String email = "";
+    private String paymentChannelCustomerId = "";
 
 	public String getAdminId() {
 		return adminId;
@@ -185,4 +186,11 @@ public class BillingMetaData {
 		this.email = email;
 	}
 
+    public String getPaymentChannelCustomerId() {
+        return paymentChannelCustomerId;
+    }
+
+    public void setPaymentChannelCustomerId(String paymentChannelCustomerId) {
+        this.paymentChannelCustomerId = paymentChannelCustomerId;
+    }
 }

@@ -13,8 +13,7 @@ public class OnlineBillingService implements BillingService {
 	@Override
 	public BillingResponse chargePrice(BillingMetaData billingMetaData) {
 
-		BillingResponse billingResponse = this.paymentChannel
-				.validateUserInput(billingMetaData);
+		BillingResponse billingResponse = this.paymentChannel.validateUserInput(billingMetaData);
 		if (billingResponse != null
 				&& Constants.BILLING_RESPONSE_CODES.SUCCESS
 						.equals(billingResponse.getBillingResponseCode())) {

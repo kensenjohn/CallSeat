@@ -69,7 +69,16 @@
                             billingMetaData.setCountry(purchaseResponseTransactionBean.getCountry());
                             billingMetaData.setCreditCardNum("");
                             billingMetaData.setSecureNum("");
-                            billingMetaData.setPrice(checkoutBean.getGrandTotal().toString());
+                            if(checkoutBean.getFormattedGrandTotal()!=null && !"".equalsIgnoreCase(checkoutBean.getFormattedGrandTotal())
+                                    && checkoutBean.getFormattedGrandTotal().length()>1)
+                            {
+                                billingMetaData.setPrice(checkoutBean.getFormattedGrandTotal().substring(1));
+                            }
+                            else
+                            {
+                                throw new Exception();
+                            }
+
                             billingMetaData.setCardLast4(purchaseResponseTransactionBean.getCreditCardLast4Digits());
                             billingMetaData.setStripeToken(purchaseResponseTransactionBean.getStripeToken());
                             billingMetaData.setStripeTokenUsed(true);

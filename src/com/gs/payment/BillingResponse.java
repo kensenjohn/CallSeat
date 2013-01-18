@@ -7,6 +7,7 @@ public class BillingResponse {
 	private Constants.BILLING_RESPONSE_CODES billingResponseCode;
 	private String message = "";
 	private String tokenId = "";
+    private String paymentChannelCustomerId = "";
 
 	public Constants.BILLING_RESPONSE_CODES getBillingResponseCode() {
 		return billingResponseCode;
@@ -33,12 +34,22 @@ public class BillingResponse {
 		this.tokenId = tokenId;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("BillingResponse [Code=").append(billingResponseCode)
-				.append(", message=").append(message).append("]");
-		return builder.toString();
-	}
+    public String getPaymentChannelCustomerId() {
+        return paymentChannelCustomerId;
+    }
+
+    public void setPaymentChannelCustomerId(String paymentChannelCustomerId) {
+        this.paymentChannelCustomerId = paymentChannelCustomerId;
+    }
+
+    @Override
+    public String toString() {
+        return "BillingResponse{" +
+                "billingResponseCode=" + billingResponseCode +
+                ", message='" + message + '\'' +
+                ", tokenId='" + tokenId + '\'' +
+                ", paymentChannelCustomerId='" + paymentChannelCustomerId + '\'' +
+                '}';
+    }
 
 }

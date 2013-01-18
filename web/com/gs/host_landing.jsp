@@ -26,7 +26,7 @@ if(cookies!=null)
 <%@include file="common/security.jsp"%>
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 
 <jsp:include page="common/header_bottom.jsp"/>
-
+<link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
 <body >
 		<jsp:include page="common/top_nav.jsp">
 			<jsp:param name="referrer_source" value="host_landing.jsp"/>	
@@ -35,24 +35,34 @@ if(cookies!=null)
 			<div class="blank_scratch_area">
                 <div class="row">
                     <div class="offset3 span9">
-                        <h1 style="color:#525451">Seat your guests with a phone call</h1>
+                        &nbsp;
                     </div>
                 </div>
                 <div class="row">
                     <div class="offset3 span9">
-                        <h3 style="color:#525451">Create custom phone numbers for seating and RSVP</h3>
+                        <h1 style="color:#f5f5f5">Seat your guests with a phone call or text</h1>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="offset3 span9">
+                        <h3 style="color:#f5f5f5">Personalized phone numbers for seating information and RSVP </h3>
                     </div>
                 </div>
 					
                 <div class="row">
 
-                    <div class="offset3 span3">
+                    <div class="offset3 span9">
                         <form id="frm_event_dt" name="frm_event_dt">
                             <input type="text" id="tmp_email" class="ispn3 inp-large" placeholder="Email" name="tmp_email">
                             <input type="text" id="event_date" class="ispn3 inp-large" placeholder="Select date of wedding" name="event_date" readonly>
-                            <input type="button" class="btn btn-large btn-blue" id="event_dt_sbt" value="Create Phone Number"/>
                         </form>
                     </div>
+                </div>
+                <div class="row">
+                    <div class="offset3 span9">
+                            <input type="button" class="btn btn-large btn-blue" id="event_dt_sbt" value="Create New Seating Plan"/>
+                    </div>
+
                     <div class="span3">
                         <form id="call_forward" name="call_forward"  method="POST">
                                         <input type="hidden" id="hid_tmp_email" name="hid_tmp_email" value="">
@@ -67,8 +77,13 @@ if(cookies!=null)
                 </div>
                 <div class="row">
                     <div class="offset4 span3">
+                        &nbsp;
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="offset3 span3">
                         <div id="div_goto_lobby" style="<%=!isSignedIn?"display:none;":""%>">
-                            <h3><a id="link_goto_lobby" href="<%=isSignedIn ? "event/host_dashboard.jsp?host_lobby_admin_id="+sAdminIdSecure:""%>">Goto lobby</a></h3>
+                            <input type="button" class="btn btn-large btn-blue" id="show_me_lobby" value="Show me my Seating Plans"/>
                         </div>
                     </div>
                 </div>
@@ -85,12 +100,12 @@ if(cookies!=null)
                     <div class="span3" style="text-align: center;  background-color:#EDEEF1; border-radius: 15px; min-height: 134px; ">
                         <h1 style="padding-top:25px;">Step 2</h1>
                         <h4 style="padding:5px;">Personalize telephone numbers</h4>
-                        <span class="fld_txt_small">Direct numbers with no extensions.</span>
+                        <span class="fld_txt_small">Get direct phone numbers with no extensions.</span>
                     </div>
                     <div class="span3" style="text-align: center;  background-color:#EDEEF1; border-radius: 15px; min-height: 134px; ">
                         <h1 style="padding-top:25px;">Step 3</h1>
                         <h4 style="padding:5px;">RSVP and seating by phone</h4>
-                        <span class="fld_txt_small">Guests call to respond and for details</span>
+                        <span class="fld_txt_small">Guests call to RSVP and get seating details.</span>
                     </div>
                 </div>
             </div>
@@ -101,7 +116,7 @@ if(cookies!=null)
 </body>
 <script type="text/javascript" src="/web/js/jquery.datepick.js"></script> 
 <script type="text/javascript" src="/web/js/credential.js"></script>
-
+<script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
 <jsp:include page="common/footer_top.jsp"/>
 	<script type="text/javascript">
 	$(document).ready(function() {
@@ -111,6 +126,10 @@ if(cookies!=null)
 				{
 					callSubmitEvent();
 				});
+        $("#show_me_lobby").click(function()
+            {
+                $('#frm_lobby_admin').submit();
+            });
 		
 		$("#event_dt_sbt").keypress( function(event){
 			if ( event.which == 13 ) {
@@ -143,7 +162,7 @@ if(cookies!=null)
 		
 		if(!jsonResult.success)
 		{
-			alert('Please enter a date');
+            displayMssgBoxAlert('A date must be selected to create a seating plan. Please select a date from the calendar pop up.', true);
 		}
 		else 
 		{
@@ -154,5 +173,55 @@ if(cookies!=null)
 			$("#call_forward").submit();
 		}
 	}
+    function displayMssgBoxAlert(varMessage, isError)
+    {
+        var varTitle = 'Status';
+        var varType = 'info';
+        if(isError)
+        {
+            varTitle = 'Error';
+            varType = 'error';
+        }
+        else
+        {
+            varTitle = 'Status';
+            varType = 'info';
+        }
+
+        if(varMessage!='')
+        {
+            $.msgBox({
+                title: varTitle,
+                content: varMessage,
+                type: varType
+            });
+        }
+    }
+
+    function displayMssgBoxMessages(varArrMessages, isError)
+    {
+        if(varArrMessages!=undefined)
+        {
+
+
+            var varMssg = '';
+            var isFirst = true;
+            for(var i = 0; i<varArrMessages.length; i++)
+            {
+                if(isFirst == false)
+                {
+                    varMssg = varMssg + '\n';
+                }
+                varMssg = varMssg + varArrMessages[i].text;
+            }
+
+            if(varMssg!='')
+            {
+                displayMssgBoxAlert(varMssg,isError);
+            }
+        }
+
+
+    }
 	</script>
 <jsp:include page="common/footer_bottom.jsp"/>

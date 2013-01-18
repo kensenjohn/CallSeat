@@ -3,6 +3,7 @@ package com.gs.payment;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.stripe.model.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -108,43 +109,62 @@ public class StripePaymentChannel extends PaymentChannel {
 								+ " Token : "
 								+ billingMetaData.getStripeToken()
 								+ ExceptionHandler.getStackTrace(e));
-				billingResponse
-						.setBillingResponseCode(Constants.BILLING_RESPONSE_CODES.GENERAL_ERROR);
+				billingResponse.setBillingResponseCode(Constants.BILLING_RESPONSE_CODES.GENERAL_ERROR);
 				billingResponse.setMessage("Payment authentication error.");
 			}
-			if (token != null
-					&& token.getId().equalsIgnoreCase(
-							billingMetaData.getStripeToken())) {
+			if (token != null && token.getId().equalsIgnoreCase(billingMetaData.getStripeToken()))
+            {
 				Stripe.apiKey = getSecretKey();
-				Map<String, Object> chargeParams = new HashMap<String, Object>();
-				chargeParams.put("currency", "usd");
-				chargeParams.put("description",
-						"Ch:" + billingMetaData.getEventId() + "_"
-								+ billingMetaData.getZip() + "_"
-								+ billingMetaData.getEmail());
-				chargeParams.put("card", billingMetaData.getStripeToken()); // obtained
-																			// with
 
-				Double dPrice = ParseUtil.sToD(billingMetaData.getPrice());
-				dPrice = dPrice * 100;
-				int iTmpPrice = dPrice.intValue();
-				Integer iPrice = new Integer(iTmpPrice);
-				// Stripe.js
-				chargeParams.put("amount", iPrice);
+                Map<String, Object> customerParams = new HashMap<String, Object>();
+                customerParams.put("card", billingMetaData.getStripeToken());
+                customerParams.put("description","Event ID " + billingMetaData.getEventId()+ " Customer for email = " + billingMetaData.getEmail());
 
-				com.stripe.model.Charge charge = null;
+
+
+
+
 				try {
-					charge = Charge.create(chargeParams);
+                    Customer customer = Customer.create(customerParams);
 
-					billingResponse
-							.setBillingResponseCode(Constants.BILLING_RESPONSE_CODES.SUCCESS);
-					billingResponse.setMessage("Successfully charged.");
-					appLogging.info("Succeffully charged. " + " Token : "
-							+ billingMetaData.getStripeToken() + "_"
-							+ billingMetaData.getEventId() + "_"
-							+ billingMetaData.getZip() + "_"
-							+ billingMetaData.getEmail() + "_"
-							+ billingMetaData.getPrice());
+                    if(customer!=null)
+                    {
+                        appLogging.info("Customer object.  Customer ID :"
+                                + customer.getId() );
+
+                        Map<String, Object> chargeParams = new HashMap<String, Object>();
+                        chargeParams.put("currency", "usd");
+                        chargeParams.put("description",	"Ch:" + billingMetaData.getEventId() + "_" + billingMetaData.getZip() + "_"
+                                + billingMetaData.getEmail());
+                        chargeParams.put("customer", customer.getId()); // obtained
+
+
+                        Double dPrice = ParseUtil.sToD(billingMetaData.getPrice());
+                        dPrice = dPrice * 100;  //converting to cents
+                        int iTmpPrice = dPrice.intValue();
+                        Integer iPrice = new Integer(iTmpPrice);
+                        // Stripe.js
+                        chargeParams.put("amount", iPrice);
+
+                        Charge charge = Charge.create(chargeParams);
+
+
+                        billingResponse.setBillingResponseCode(Constants.BILLING_RESPONSE_CODES.SUCCESS);
+                        billingResponse.setMessage("Successfully charged.");
+                        billingResponse.setPaymentChannelCustomerId(customer.getId());
+                        appLogging.info("Successfully charged. " + " Token : "
+                                + billingMetaData.getStripeToken() + "_"
+                                + billingMetaData.getEventId() + "_"
+                                + billingMetaData.getZip() + "_"
+                                + billingMetaData.getEmail() + "_"
+                                + iPrice+"_cents");
+
+
+                    }
+
+
+
+
 				} catch (StripeException e) {
 					appLogging
 							.error("There was an charging customer with a price. "
@@ -162,11 +182,6 @@ public class StripePaymentChannel extends PaymentChannel {
 							.setBillingResponseCode(Constants.BILLING_RESPONSE_CODES.GENERAL_ERROR);
 					billingResponse.setMessage("Payment authentication error.");
 				}
-
-				if (charge == null) {
-
-				}
-
 			} else {
 
 			}

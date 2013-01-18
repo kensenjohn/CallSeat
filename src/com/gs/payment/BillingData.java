@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
+import com.gs.common.ParseUtil;
 import com.gs.common.Utility;
 import com.gs.common.db.DBDAO;
 
@@ -51,8 +52,8 @@ public class BillingData {
 		if (billingMetaData != null && sBillingAddressId != null
 				&& !"".equalsIgnoreCase(sBillingAddressId)) {
 			String sQuery = "INSERT INTO GTBILLCREDITCARD ( BILLCREDITCARDID  , FK_BILLADDRESSID  , FK_ADMINID , FK_EVENTID , "
-					+ "   CREDITCARDNUM , SECURITYCODE, AMOUNT ) "
-					+ " VALUES ( ?,?,? ,?,?,? ,? )";
+					+ "   CREDITCARDNUM , SECURITYCODE, AMOUNT, PAYMENT_CHANNEL_CUSTOMERID ) "
+					+ " VALUES ( ?,?,? ,?,?,? ,?,? )";
 
 			String sTmpUID = Utility.getNewGuid();
 			ArrayList<Object> aParam = new ArrayList<Object>();
@@ -61,9 +62,10 @@ public class BillingData {
 			aParam.add(sBillingAddressId);
 			aParam.add(billingMetaData.getAdminId());
 			aParam.add(billingMetaData.getEventId());
-			aParam.add(billingMetaData.getCreditCardNum());
+			aParam.add("xxxx-xxxx-xxxx-" + ParseUtil.checkNull(billingMetaData.getCardLast4()));
 			aParam.add(billingMetaData.getSecureNum());
 			aParam.add(billingMetaData.getPrice());
+            aParam.add(billingMetaData.getPaymentChannelCustomerId());
 
 			iNumOfRecs = DBDAO.putRowsQuery(sQuery, aParam, ADMIN_DB,
 					"BillingData.java", "insertBillingCreditCard()");
