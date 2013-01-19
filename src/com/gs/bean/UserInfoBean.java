@@ -2,6 +2,8 @@ package com.gs.bean;
 
 import java.util.HashMap;
 
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -32,6 +34,8 @@ public class UserInfoBean {
 	private String email = "";
 	private String cellPhone = "";
 	private String phoneNum = "";
+    private String humanCellPhone = "";
+    private String humanPhoneNum = "";
 	private String humanCreateDate = "";
 	private String timezone = "";
 
@@ -72,7 +76,30 @@ public class UserInfoBean {
 		this.humanCreateDate = ParseUtil.checkNull(hmUserInfo
 				.get("HUMAN_CREATEDATE"));
 		this.timezone = ParseUtil.checkNull(hmUserInfo.get("TIMEZONE"));
-	}
+
+
+        this.humanCellPhone = getHumanFormattedPhoneNumber(this.cellPhone);
+        this.humanPhoneNum = getHumanFormattedPhoneNumber(this.phoneNum);
+    }
+
+    public String getHumanFormattedPhoneNumber(String sTmpPhoneNumber)
+    {
+        String sHumanFormattedPhones = "";
+        if(sTmpPhoneNumber!=null && !"".equalsIgnoreCase(sTmpPhoneNumber))
+        {
+            try {
+                PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+                com.google.i18n.phonenumbers.Phonenumber.PhoneNumber apiPhoneNumber = phoneUtil.parse(sTmpPhoneNumber, "US");
+                sHumanFormattedPhones = phoneUtil.format(apiPhoneNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+
+            }
+            catch(Exception e)
+            {
+                sHumanFormattedPhones = "";
+            }
+        }
+        return sHumanFormattedPhones;
+    }
 
 	public String getTimezone() {
 		return timezone;
@@ -221,7 +248,23 @@ public class UserInfoBean {
 		this.isUserInfoExists = isUserInfoExists;
 	}
 
-	public JSONObject toJson() {
+    public String getHumanCellPhone() {
+        return humanCellPhone;
+    }
+
+    public void setHumanCellPhone(String humanCellPhone) {
+        this.humanCellPhone = humanCellPhone;
+    }
+
+    public String getHumanPhoneNum() {
+        return humanPhoneNum;
+    }
+
+    public void setHumanPhoneNum(String humanPhoneNum) {
+        this.humanPhoneNum = humanPhoneNum;
+    }
+
+    public JSONObject toJson() {
 
 		JSONObject jsonObject = new JSONObject();
 		try {
@@ -238,6 +281,8 @@ public class UserInfoBean {
 			jsonObject.put("email", this.email);
 			jsonObject.put("cell_phone", this.cellPhone);
 			jsonObject.put("phone_num", this.phoneNum);
+            jsonObject.put("human_formatted_cell_phone", this.humanCellPhone);
+            jsonObject.put("human_formatted_phone_num", this.humanPhoneNum);
 			jsonObject.put("time_zone", this.timezone);
 			jsonObject.put("userinfo_id", this.userInfoId);
 

@@ -39,11 +39,11 @@
 			create_header : function ()
 			{
 				var valHeader = '<thead><tr> ' + 
-				'<th style="width:23%" >Guest Name</th>'+
-				'<th style="width:5%" >Cell</th>'+
+				'<th style="width:25%" >Guest Name</th>'+
+				'<th style="width:10%" >Cell</th>'+
 				'<th style="width:6%"  >Invited</th>'+
 				'<th style="width:15%" >RSVP</th>'+
-				'<th style="width:25%" >&nbsp;</th>'+
+				'<th style="width:18%" >&nbsp;</th>'+
 				'</tr></thead>';
 				return valHeader; 
 			},
@@ -76,7 +76,9 @@
 							
 							valRows = valRows + '<tr id="guest_'+tmpGuest.guest_id+'" '+varOddClass+'>' + 
 									'<td  >' + tmpGuest.guest_bean.user_info.first_name + ' ' + tmpGuest.guest_bean.user_info.last_name + '</td>' + 
-									'<td >' + tmpGuest.guest_bean.user_info.cell_phone + '</td>' +
+									'<td >'
+                                        + tmpGuest.guest_bean.user_info.human_formatted_cell_phone +
+                                    '</td>' +
 									'<td >' + tmpGuest.total_seats + '</td>' +
 									'<td >' + tmpGuest.rsvp_seats + '</td>' +
 									'<td  >' + this.create_action_urls( tmpGuest ) + ' </td>';

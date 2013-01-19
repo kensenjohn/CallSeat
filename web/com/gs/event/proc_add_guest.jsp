@@ -7,6 +7,8 @@
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="java.util.*"%>
 <%@page import="com.gs.json.*"%>
+<%@ page import="com.google.i18n.phonenumbers.PhoneNumberUtil" %>
+<%@ page import="com.google.i18n.phonenumbers.Phonenumber" %>
 <%
 JSONObject jsonResponseObj = new JSONObject();
 
@@ -29,12 +31,14 @@ try
 	String sEmailAddr =  ParseUtil.checkNull(request.getParameter("email_addr"));
 	String sInvitedNumOfSeats =  ParseUtil.checkNull(request.getParameter("invited_num_of_seats"));
 	String sRsvpNumOfSeats =  ParseUtil.checkNull(request.getParameter("rsvp_num_of_seats"));
-	String sCellNumber =  ParseUtil.checkNull(request.getParameter("cell_num"));
-	String sHomeNumber =  ParseUtil.checkNull(request.getParameter("home_num"));
+	String sCellNumberHumanFormat =  ParseUtil.checkNull(request.getParameter("cell_num"));
+	String sHomeNumberHumanFormat =  ParseUtil.checkNull(request.getParameter("home_num"));
 	String sEventIdSelected =  ParseUtil.checkNull(request.getParameter("dd_event_list"));
 
 	boolean isGuestCreate =  ParseUtil.sTob(request.getParameter("is_guest_create"));
 	boolean isGuestAddToEvent =  ParseUtil.sTob(request.getParameter("is_guest_add_event"));
+
+    Integer iCountryCode = 1; // 1 -> USA & Canada
 	
 	boolean isError = false;
 	if(sFirstName==null || "".equalsIgnoreCase(sFirstName))
@@ -53,14 +57,60 @@ try
 		responseStatus = RespConstants.Status.ERROR;
 		isError = true;
 	}
+    String sCellNumber = "";
+    if(sCellNumberHumanFormat!=null&& !"".equalsIgnoreCase(sCellNumberHumanFormat))
+    {
+        sCellNumber = Utility.convertHumanToInternationalTelNum(sCellNumberHumanFormat);
+    }
 	if(sCellNumber==null || "".equalsIgnoreCase(sCellNumber))
 	{
-		Text errorText = new ErrorText("Please enter the Cell Number.","cell_num") ;		
+		Text errorText = new ErrorText("We were unable to recognize the cellphone number. Please enter a valid cellphone number.<br>","cell_num") ;
 		arrErrorText.add(errorText);
 		
 		responseStatus = RespConstants.Status.ERROR;
 		isError = true;
 	}
+    else
+    {
+        com.google.i18n.phonenumbers.Phonenumber.PhoneNumber cellPhoneNumber = new Phonenumber.PhoneNumber();
+        cellPhoneNumber.setCountryCode(iCountryCode);
+        cellPhoneNumber.setNationalNumber(ParseUtil.sToL(sCellNumber.substring(1)));
+        PhoneNumberUtil cellPhoneNumberUtil = PhoneNumberUtil.getInstance();
+        if(!cellPhoneNumberUtil.isValidNumber(cellPhoneNumber))
+        {
+            Text errorText = new ErrorText("We were unable to recognize the cellphone number. Please enter a valid cellphone number.<br>","cell_num") ;
+            arrErrorText.add(errorText);
+
+            responseStatus = RespConstants.Status.ERROR;
+            isError = true;
+        }
+        else
+        {
+            sCellNumber = ParseUtil.iToS(iCountryCode)+sCellNumber.substring(1);
+        }
+    }
+
+    String sHomeNumber = "";
+    if(sHomeNumberHumanFormat!=null&& !"".equalsIgnoreCase(sHomeNumberHumanFormat))
+    {
+        sHomeNumber = Utility.convertHumanToInternationalTelNum(sHomeNumberHumanFormat);
+
+        com.google.i18n.phonenumbers.Phonenumber.PhoneNumber homePhoneNumber = new Phonenumber.PhoneNumber();
+        homePhoneNumber.setCountryCode(iCountryCode);
+        homePhoneNumber.setNationalNumber(ParseUtil.sToL(sHomeNumber.substring(1)));
+        PhoneNumberUtil homePhoneNumberUtil = PhoneNumberUtil.getInstance();
+        if(!homePhoneNumberUtil.isValidNumber(homePhoneNumber ))
+        {
+            PhoneNumberUtil.ValidationResult validationResult = homePhoneNumberUtil.isPossibleNumberWithReason(homePhoneNumber);
+            Text errorText = new ErrorText("We were unable to recognize the home phone number. Please enter a valid home phone number.<br>","home_num") ;
+            arrErrorText.add(errorText);
+
+            responseStatus = RespConstants.Status.ERROR;
+            isError = true;
+        }
+
+        sHomeNumber = ParseUtil.iToS(iCountryCode)+sHomeNumber.substring(1);
+    }
 	
 	if(isGuestAddToEvent)
 	{
@@ -69,7 +119,7 @@ try
 		{
 			appLogging.warn("Invited number of guests was invalid : " + sInvitedNumOfSeats );
 			
-			Text errorText = new ErrorText("Enter a number more than 0.","invited_num_of_seats") ;		
+			Text errorText = new ErrorText("We were unable to recognize the number of seats this guest was invited to. Please enter a valid invited seats number greater than 0.","invited_num_of_seats") ;
 			arrErrorText.add(errorText);
 			
 			responseStatus = RespConstants.Status.ERROR;
@@ -83,7 +133,7 @@ try
 		{
 			appLogging.warn("RSVP number of guests was invalid : " + sRsvpNumOfSeats );
 			
-			Text errorText = new ErrorText("Enter 0 if no RSVP.","rsvp_num_of_seats") ;		
+			Text errorText = new ErrorText("We were unable to recognize the number of seats this guest sent an RSVP.","rsvp_num_of_seats") ;
 			arrErrorText.add(errorText);
 			
 			responseStatus = RespConstants.Status.ERROR;
@@ -248,7 +298,7 @@ try
 }
 catch(Exception e)
 {
-	Text errorText = new ErrorText("Your request to add guest was lost. Please try again later.","err_mssg") ;		
+	Text errorText = new ErrorText("We were unable to complete your reques. Please try again later.","err_mssg") ;
 	arrErrorText.add(errorText);
 	
 	responseStatus = RespConstants.Status.ERROR;

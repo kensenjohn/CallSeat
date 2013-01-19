@@ -31,7 +31,7 @@ if(cookies!=null)
         }
 	}
 }
-//response.sendRedirect("/web/com/gs/welcome.jsp");
+response.sendRedirect("/web/com/gs/welcome.jsp");
 %>
 <body>
 	<div class="container rounded-corners">

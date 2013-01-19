@@ -588,6 +588,9 @@ public class GuestData {
 			userInfoBean.setDeleteRow(ParseUtil.checkNull(hmGuests
 					.get("USER_DELROW")));
 
+            userInfoBean.setHumanCellPhone( userInfoBean.getHumanFormattedPhoneNumber(userInfoBean.getCellPhone()) );
+            userInfoBean.setHumanPhoneNum( userInfoBean.getHumanFormattedPhoneNumber(userInfoBean.getPhoneNum()) );
+
 			guestBean.setUserInfoBean(userInfoBean);
 		}
 
