@@ -313,8 +313,7 @@ public class TelNumberManager {
 		if (telNumberMetaData != null) {
 			GuestData guestData = new GuestData();
 
-			ArrayList<GuestBean> arrGuestBean = guestData
-					.getGuestsByTelNumber(telNumberMetaData);
+			ArrayList<GuestBean> arrGuestBean = guestData.getGuestsByTelNumber(telNumberMetaData);
 
 			if (arrGuestBean != null && !arrGuestBean.isEmpty()) {
 				ArrayList<String> arrGuestId = new ArrayList<String>();

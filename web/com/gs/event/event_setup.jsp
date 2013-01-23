@@ -369,6 +369,7 @@
 				<!-- The phone number summary -->
 				<div  class="row" id="div_phone_numbers"  style="display:none;">
 					<div class="offset_0_5 span9">
+                            <form id="frm_phone_numbers" >
 							<div class="row">
 								<div class="span2">
 									<h4>Seating</h4>
@@ -401,6 +402,30 @@
 											<span class="fld_txt" id="seating_secret_key"></span>
 										</div>
 									</div>
+                                    <div class="row" id="seating_div_error_call_forward">
+                                        <div class="span2"   style="text-align:right;">
+                                            <span class="fld_name" >Forward Calls to :  </span>
+                                        </div>
+                                        <div class="span4">
+                                            <input type="text" id="seating_call_forward" name="seating_call_forward" value="">
+                                        </div>
+                                    </div>
+                                    <div class="row" id="seating_div_sms_confirmation">
+                                        <div class="span2"   style="text-align:right;">
+                                            <input type="checkbox" id="seating_sms_confirmation" name="seating_sms_confirmation" style="width: 30px;"/>
+                                        </div>
+                                        <div class="span4">
+                                            <span class="fld_txt">Send text to the guest's cellphone after the call</span>
+                                        </div>
+                                    </div>
+                                    <div class="row" id="seating_div_email_confirmation">
+                                        <div class="span2"   style="text-align:right;">
+                                            <input type="checkbox" id="seating_email_confirmation" name="seating_email_confirmation" style="width: 30px;"/>
+                                        </div>
+                                        <div class="span4">
+                                            <span class="fld_txt" >Send email to the guest after the call</span>
+                                        </div>
+                                    </div>
 								</div>
 							</div>
 							<div class="row">
@@ -408,6 +433,11 @@
 									&nbsp;
 								</div>
 							</div>
+                            <div class="row">
+                                <div class="span2">
+                                    &nbsp;
+                                </div>
+                            </div>
 							<div class="row">
 								<div class="span2">
 									<h4>RSVP</h4>
@@ -439,16 +469,45 @@
 											<span class="fld_txt" id="rsvp_secret_key"></span>
 										</div>
 									</div>
+                                    <div class="row" id="rsvp_div_error_call_forward">
+                                        <div class="span2"   style="text-align:right;">
+                                            <span class="fld_name" >Forward Calls to :  </span>
+                                        </div>
+                                        <div class="span4">
+                                            <input type="text" id="rsvp_call_forward" value="">
+                                        </div>
+                                    </div>
+                                    <div class="row" id="rsvp_div_sms_confirmation">
+                                        <div class="span2"   style="text-align:right;">
+                                           <input type="checkbox" id="rsvp_sms_confirmation" name="rsvp_sms_confirmation" style="width: 30px;"/>
+                                        </div>
+                                        <div class="span4">
+                                            <span class="fld_txt" >Send text confirmation to guest after RSVP</span>
+                                        </div>
+                                    </div>
+                                    <div class="row" id="rsvp_div_email_confirmation">
+                                        <div class="span2"   style="text-align:right;">
+                                            <input type="checkbox" id="rsvp_email_confirmation" name="rsvp_email_confirmation" style="width: 30px;"/>
+                                        </div>
+                                        <div class="span4">
+                                            <span class="fld_txt" >Send Email confirmation to guest after RSVP</span>
+                                        </div>
+                                    </div>
 								</div>
 							</div>
+
+                            </form>
 							<div class="row">
 								<div class="span3">
 									 &nbsp;
 								</div>
 							</div>
 							<div class="row" id="div_get_own_phone">
+                                <div class="span2">
+                                    <button id="btn_save_phone_number" name="btn_save_phone_number" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="btn">Save Changes</button>
+                                </div>
 								<div class="span3">
-									 <button id="bt_get_own_phone" name="bt_get_own_phone" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="btn">Get a direct phone number</button>
+									 <button id="bt_get_own_phone" name="bt_get_own_phone" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="btn btn-blue">Purchase direct phone numbers</button>
 								</div>
 							</div>
 					</div>				
@@ -494,7 +553,7 @@
 <script type="text/javascript" src="/web/js/jquery.eventguests.1.0.0.js"></script>
 <script type="text/javascript" src="/web/js/credential.js"></script>
 <script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
-
+<script type="text/javascript" src="/web/js/general.js"></script>
 <script type="text/javascript">
 	var varEventID = '<%=sEventId%>';
 	var varAdminID = '<%=sAdminId%>';
@@ -649,6 +708,19 @@
 		{
 			loadEventSummary();
 		}
+
+
+        $('#rsvp_call_forward').keydown( function(e){
+            FormatPhone(e, this);
+        });
+
+        $('#seating_call_forward').keydown( function(e){
+            FormatPhone(e, this);
+        });
+
+        $('#btn_save_phone_number').click( function(e){
+            savePhoneNumberFeatures();
+        });
 		
 	});
 	
@@ -660,6 +732,54 @@
 	        $("#loading_wheel").hide();
 	    }
 	});
+
+    function savePhoneNumberFeatures()
+    {
+        var actionUrl = "proc_phone_number_features.jsp";
+        var dataString = $('#frm_phone_numbers').serialize()+'&action=save' +"&admin_id="+varAdminID+"&event_id="+varEventID;
+        var methodType = "POST";
+
+        getDataAjax(actionUrl,dataString,methodType, savePhoneNumberFeaturesResult);
+    }
+
+    function savePhoneNumberFeaturesResult(jsonResult)
+    {
+        if(jsonResult!=undefined)
+        {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined )
+            {
+
+                var varIsMessageExist = varResponseObj.is_message_exist;
+                if(varIsMessageExist == true)
+                {
+                    var jsonResponseMessage = varResponseObj.messages;
+                    var varArrErrorMssg = jsonResponseMessage.error_mssg
+                    displayMessages( varArrErrorMssg );
+                }
+
+            }
+            else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+            {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                //alert(varIsPayloadExist);
+                displayMssgBoxAlert("Your changes were successfully updated.");
+                /*if(varIsPayloadExist == true)
+                {
+                    var jsonResponseObj = varResponseObj.payload;
+                    processTelNumbers( jsonResponseObj );
+                }*/
+            }
+            else
+            {
+                displayMssgBoxAlert("There was an error processing your request. Please try again later.");
+            }
+        }
+        else
+        {
+            displayMssgBoxAlert("There was an error processing your request. Please try again later.");
+        }
+    }
 	
 	function phoneNumTab()
 	{

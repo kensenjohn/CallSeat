@@ -2,6 +2,7 @@ package com.gs.call.twilio.twiml;
 
 import java.util.ArrayList;
 
+import com.twilio.sdk.verbs.*;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
 import org.slf4j.Logger;
@@ -16,21 +17,12 @@ import com.gs.common.Configuration;
 import com.gs.common.Constants;
 import com.gs.common.ExceptionHandler;
 import com.gs.common.ParseUtil;
-import com.twilio.sdk.verbs.Dial;
-import com.twilio.sdk.verbs.Gather;
-import com.twilio.sdk.verbs.Hangup;
-import com.twilio.sdk.verbs.Pause;
-import com.twilio.sdk.verbs.Say;
-import com.twilio.sdk.verbs.TwiMLException;
-import com.twilio.sdk.verbs.TwiMLResponse;
-import com.twilio.sdk.verbs.Verb;
 
 public class DemoCallTwiml {
-	Configuration applicationConfig = Configuration
-			.getInstance(Constants.APPLICATION_PROP);
+	Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
-	private String VOICE_ACTOR = applicationConfig
-			.get(Constants.PROP_TWILIO_VOICE);
+	private String VOICE_ACTOR = applicationConfig.get(Constants.PROP_TWILIO_VOICE);
+    private String VOICE_RECORDING_DOMAIN = applicationConfig.get(Constants.PROP_VOICE_RECORDING_DOMAIN);
 	private Say sayThankYou = new Say("Thank You.");
 
 	Logger appLogging = LoggerFactory.getLogger("AppLogging");
@@ -171,9 +163,10 @@ public class DemoCallTwiml {
 			appLogging.info("Gathering Secret Key from user : attempt : "
 					+ iNumOfCallAttempt + " from : "
 					+ twilioIncomingBean.getFrom());
-			Say saySorryWrongSecretKey = new Say(
-					"I am sorry, The key you entered was not valid.");
-			saySorryWrongSecretKey.setVoice(VOICE_ACTOR);
+			//Say saySorryWrongSecretKey = new Say("I am sorry, The key you entered was not valid.");
+			//saySorryWrongSecretKey.setVoice(VOICE_ACTOR);
+
+            Play playSorryInvalid = new Play(VOICE_RECORDING_DOMAIN+"/invalid_entry_1.wav");
 
 			Gather gatherSecretKey = new Gather();
 
@@ -181,19 +174,19 @@ public class DemoCallTwiml {
 			gatherSecretKey.setAction(TwimlSupport.buildURL(twilioIncomingBean,
 					Constants.CALL_TYPE.DEMO_GATHER_SECRET_KEY).toString());
 
-			Say sayGetSecretKey = new Say(
-					"Please enter your secret key followed by the pound sign.");
-			sayGetSecretKey.setVoice(VOICE_ACTOR);
+			//Say sayGetSecretKey = new Say("Please enter your secret key followed by the pound sign.");
+			//sayGetSecretKey.setVoice(VOICE_ACTOR);
+            Play playGatherSecretKey = new Play(VOICE_RECORDING_DOMAIN+"/gather_secret_key_1.wav");
 
 			try {
 				TwiMLResponse response = new TwiMLResponse();
 
 				if (iNumOfCallAttempt > 0) {
 					// previous attempt errored out, so apologize
-					response.append(saySorryWrongSecretKey);
+					response.append(playSorryInvalid);
 				}
 
-				gatherSecretKey.append(sayGetSecretKey);
+				gatherSecretKey.append(playGatherSecretKey);
 				response.append(gatherSecretKey);
 
 				callResponse.setResponse(response);
@@ -213,34 +206,36 @@ public class DemoCallTwiml {
 		if (callResponse != null) {
 
 			int iNumOfCallAttempt = twilioIncomingBean.getCallAttemptNumber();
-			appLogging.info("Get event Num from user : attempt : "
-					+ iNumOfCallAttempt + " from : "
-					+ twilioIncomingBean.getFrom());
-			Say sayWelcome = new Say("Welcome to the Seating portal");
-			sayWelcome.setVoice(VOICE_ACTOR);
 
-			Say saySorryWrongEvent = new Say(
-					"I am sorry, The event number was not valid.");
-			saySorryWrongEvent.setVoice(VOICE_ACTOR);
+			//Say sayWelcome = new Say("Welcome to call seat.");
+			//sayWelcome.setVoice(VOICE_ACTOR);
+
+            Play playWelcome = new Play(VOICE_RECORDING_DOMAIN+"/welcome_to_callseat_1.wav");
+
+			//Say saySorryWrongEvent = new Say("I am sorry, The event number was not valid.");
+			//saySorryWrongEvent.setVoice(VOICE_ACTOR);
+
+            Play playSorryInvalid = new Play(VOICE_RECORDING_DOMAIN+"/invalid_entry_1.wav");
 
 			Gather gatherEventNum = new Gather();
 
 			gatherEventNum.setMethod("POST");
 			URLCodec urlEncoder = new URLCodec();
-			gatherEventNum.setAction(TwimlSupport.buildURL(twilioIncomingBean,
-					Constants.CALL_TYPE.DEMO_GATHER_EVENT_NUM).toString());
+			gatherEventNum.setAction(TwimlSupport.buildURL(twilioIncomingBean,Constants.CALL_TYPE.DEMO_GATHER_EVENT_NUM).toString());
 
-			Say sayGetEventNum = new Say(
-					"Please enter the event number followed by the pound sign.");
-			sayGetEventNum.setVoice(VOICE_ACTOR);
+			//Say sayGetEventNum = new Say("Please enter the event number followed by the pound sign.");
+			//sayGetEventNum.setVoice(VOICE_ACTOR);
+
+            Play playGatherEventNumber = new Play(VOICE_RECORDING_DOMAIN+"/gather_event_number_1.wav");
+
 
 			try {
 				TwiMLResponse response = new TwiMLResponse();
-				gatherEventNum.append(sayGetEventNum);
+				gatherEventNum.append(playGatherEventNumber);
 				if (iNumOfCallAttempt == 0) {
-					response.append(sayWelcome);
+					response.append(playWelcome);
 				} else {
-					response.append(saySorryWrongEvent);
+					response.append(playSorryInvalid);
 				}
 
 				response.append(gatherEventNum);

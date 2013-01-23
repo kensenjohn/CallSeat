@@ -4,6 +4,7 @@ import java.util.Enumeration;
 
 import javax.servlet.http.HttpServletRequest;
 
+import com.gs.common.ParseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,10 +28,9 @@ public class IncomingCallManager {
 		CallResponse callResponse = new CallResponse();
 		if (incomingCallBean != null) {
 			ProcessCalls processCalls = null;
-			if (Constants.CALL_SERVICE.TWILIO.getCallService()
-					.equalsIgnoreCase(SELECTED_CALL_SERVICE)) {
+			if (Constants.CALL_SERVICE.TWILIO.getCallService().equalsIgnoreCase(SELECTED_CALL_SERVICE))
+            {
 				TwilioIncomingCallBean twilioIncominCallBean = (TwilioIncomingCallBean) incomingCallBean;
-
 				processCalls = new ProcessTwilioCalls(twilioIncominCallBean);
 			}
 
@@ -121,7 +121,9 @@ public class IncomingCallManager {
 						twilioIncomingCallBean.setCallerInputEventId(value);
 					} else if ("input_secret_key".equalsIgnoreCase(paramKey)) {
 						twilioIncomingCallBean.setCallerInputSecretKey(value);
-					}
+					} else if ("call_attempt".equalsIgnoreCase(paramKey)) {
+                        twilioIncomingCallBean.setCallAttemptNumber(ParseUtil.sToI(value));
+                    }
 				}
 			}
 		}

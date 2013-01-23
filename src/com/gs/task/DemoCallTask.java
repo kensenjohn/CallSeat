@@ -43,8 +43,7 @@ public class DemoCallTask extends Task {
 			try {
 				switch (incomingCallBean.getCallType()) {
 				case DEMO_FIRST_REQUEST:
-					callResponse = demoTwiml.getEventNumFromUser(callResponse,
-							twilioIncomingCallBean);
+					callResponse = demoTwiml.getEventNumFromUser(callResponse,twilioIncomingCallBean);
 					break;
 				case DEMO_GATHER_EVENT_NUM:
 					boolean isValidEventNum = processEventNum(incomingCallBean);
@@ -63,41 +62,33 @@ public class DemoCallTask extends Task {
 				case DEMO_GATHER_SECRET_KEY:
 					ArrayList<TelNumberBean> arrTelNumBean = processSecretKey(incomingCallBean);
 
-					twilioIncomingCallBean
-							.setCallerInputSecretKey(twilioIncomingCallBean
-									.getDigits());
-					if (arrTelNumBean != null && !arrTelNumBean.isEmpty()) {
-						callResponse = processTelephoneNumber(callResponse,
-								arrTelNumBean, twilioIncomingCallBean);
-						String sTelNumType = TwimlSupport
-								.getTelNumberType(arrTelNumBean);
-						if (Constants.EVENT_TASK.DEMO_RSVP.getTask()
-								.equalsIgnoreCase(sTelNumType)) {
-							callResponse = demoTwiml.getRsvpResponse(
-									callResponse, twilioIncomingCallBean);
+					twilioIncomingCallBean.setCallerInputSecretKey(twilioIncomingCallBean.getDigits());
+					if (arrTelNumBean != null && !arrTelNumBean.isEmpty())
+                    {
+						callResponse = processTelephoneNumber(callResponse,	arrTelNumBean, twilioIncomingCallBean);
+						String sTelNumType = TwimlSupport.getTelNumberType(arrTelNumBean);
 
-						} else if (Constants.EVENT_TASK.DEMO_SEATING.getTask()
-								.equalsIgnoreCase(sTelNumType)) {
-
-							callResponse = processSeatingResponse(callResponse,
-									twilioIncomingCallBean);
-							callResponse = demoTwiml.getSeatingResponse(
-									callResponse, twilioIncomingCallBean);
-						} else {
+                        if (Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(sTelNumType))
+                        {
+							callResponse = demoTwiml.getRsvpResponse(callResponse, twilioIncomingCallBean);
 
 						}
-						/*
-						 * callResponse = demoTwiml.getSecretKeyFromUser(
-						 * callResponse, twilioIncomingCallBean);
-						 */
+                        else if (Constants.EVENT_TASK.DEMO_SEATING.getTask().equalsIgnoreCase(sTelNumType))
+                        {
+
+							callResponse = processSeatingResponse(callResponse,	twilioIncomingCallBean);
+							callResponse = demoTwiml.getSeatingResponse(callResponse, twilioIncomingCallBean);
+						} else
+                        {
+
+						}
 					} else {
 						callResponse = demoTwiml.getSecretKeyFromUser(
 								callResponse, twilioIncomingCallBean);
 					}
 					break;
 				case DEMO_GATHER_RSVP_NUM:
-					callResponse = processRsvpDigits(callResponse,
-							twilioIncomingCallBean);
+					callResponse = processRsvpDigits(callResponse,twilioIncomingCallBean);
 					break;
 				}
 			} catch (TwiMLException e) {
@@ -143,12 +134,10 @@ public class DemoCallTask extends Task {
 				&& !"".equalsIgnoreCase(twilioIncomingCallBean.getDigits())) {
 
 			TelNumberMetaData telNumMetaData = new TelNumberMetaData();
-			telNumMetaData.setSecretEventIdentifier(ParseUtil
-					.checkNull(twilioIncomingCallBean.getDigits()));
+			telNumMetaData.setSecretEventIdentifier(ParseUtil.checkNull(twilioIncomingCallBean.getDigits()));
 
 			TelNumberManager telNumManager = new TelNumberManager();
-			ArrayList<TelNumberBean> arrTelNumBean = telNumManager
-					.getTelNumbersFromSecretEventNum(telNumMetaData);
+			ArrayList<TelNumberBean> arrTelNumBean = telNumManager.getTelNumbersFromSecretEventNum(telNumMetaData);
 			if (arrTelNumBean != null && !arrTelNumBean.isEmpty()) {
 				isValidEventNum = true;
 			}
@@ -158,8 +147,7 @@ public class DemoCallTask extends Task {
 		return isValidEventNum;
 	}
 
-	private CallResponse processSeatingResponse(CallResponse callResponse,
-			IncomingCallBean incomingCallBean) {
+	private CallResponse processSeatingResponse(CallResponse callResponse,IncomingCallBean incomingCallBean) {
 
 		String sGuestTelNumber = incomingCallBean.getFrom();
 
@@ -168,8 +156,7 @@ public class DemoCallTask extends Task {
 		telNumMetaData.setAdminId(super.adminId);
 		telNumMetaData.setEventId(super.eventId);
 		TelNumberManager telNumManager = new TelNumberManager();
-		EventGuestBean eventGuestBean = telNumManager
-				.getTelNumGuestDetails(telNumMetaData);
+		EventGuestBean eventGuestBean = telNumManager.getTelNumGuestDetails(telNumMetaData);
 
 		EventData eventData = new EventData();
 		EventBean eventBean = eventData.getEvent(eventGuestBean.getEventId());
@@ -178,8 +165,7 @@ public class DemoCallTask extends Task {
 		guestTableMetaData.setGuestId(eventGuestBean.getGuestId());
 
 		GuestTableManager guestTableManager = new GuestTableManager();
-		ArrayList<TableGuestsBean> arrTableGuestBean = guestTableManager
-				.getGuestsAssignments(guestTableMetaData);
+		ArrayList<TableGuestsBean> arrTableGuestBean = guestTableManager.getGuestsAssignments(guestTableMetaData);
 
 		callResponse.setEventGuestBean(eventGuestBean);
 		callResponse.setEventBean(eventBean);
@@ -262,9 +248,7 @@ public class DemoCallTask extends Task {
 		return callResponse;
 	}
 
-	private CallResponse processTelephoneNumber(CallResponse callResponse,
-			ArrayList<TelNumberBean> arrTelNumBean,
-			IncomingCallBean incomingCallBean) {
+	private CallResponse processTelephoneNumber(CallResponse callResponse,ArrayList<TelNumberBean> arrTelNumBean,IncomingCallBean incomingCallBean) {
 		if (arrTelNumBean != null && !arrTelNumBean.isEmpty()) {
 			for (TelNumberBean telNumBean : arrTelNumBean) {
 				String sEventId = telNumBean.getEventId();
@@ -279,8 +263,7 @@ public class DemoCallTask extends Task {
 				telNumMetaData.setAdminId(super.adminId);
 				telNumMetaData.setEventId(super.eventId);
 				TelNumberManager telNumManager = new TelNumberManager();
-				EventGuestBean eventGuestBean = telNumManager
-						.getTelNumGuestDetails(telNumMetaData);
+				EventGuestBean eventGuestBean = telNumManager.getTelNumGuestDetails(telNumMetaData);
 
 				EventData eventData = new EventData();
 				EventBean eventBean = eventData.getEvent(eventGuestBean

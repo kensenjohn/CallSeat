@@ -65,6 +65,7 @@ public class Constants {
 	public static String PROP_SMS_SERVICE = "sms_service";
 
 	public static String PROP_TWILIO_VOICE = "twilio_voice";
+    public static String PROP_VOICE_RECORDING_DOMAIN = "voice_recording_domain";
 
 	public enum CALL_SERVICE {
 		TWILIO("twilio");
@@ -366,6 +367,27 @@ public class Constants {
             return this.taxType;
         }
 
+    }
+
+    public enum EVENT_FEATURES
+    {
+        SEATING_CALL_FORWARD_NUMBER("SEATING_CALL_FORWARD_NUMBER"),
+        RSVP_CALL_FORWARD_NUMBER("RSVP_CALL_FORWARD_NUMBER"),
+        SEATING_SMS_GUEST_AFTER_CALL("SEATING_SMS_GUEST_AFTER_CALL"),
+        SEATING_EMAIL_GUEST_AFTER_CALL("SEATING_EMAIL_GUEST_AFTER_CALL"),
+        RSVP_SMS_CONFIRMATION("RSVP_SMS_CONFIRMATION"),
+        RSVP_EMAIL_CONFIRMATION("RSVP_EMAIL_CONFIRMATION");
+
+        private String eventFeature = "";
+        EVENT_FEATURES(String eventFeature)
+        {
+            this.eventFeature = eventFeature;
+        }
+
+        public String getEventFeature()
+        {
+            return this.eventFeature;
+        }
     }
 
 }
