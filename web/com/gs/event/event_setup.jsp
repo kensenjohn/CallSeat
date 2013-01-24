@@ -311,6 +311,40 @@
                                     <span class="fld_txt_small" id="e_summ_rsvp_extension" ></span>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="span1">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span5">
+                                    <h4>Phone Features</h4>
+                                </div>
+                            </div>
+                            <div class="row" id="div_phone_feature_total_minutes">
+                                <div class="offset1 span4">
+                                    <span class="fld_txt_small"> Total calling minutes: </span>
+                                    <span class="fld_txt_small" id="e_summ_total_minutes" ></span>
+                                </div>
+                            </div>
+                            <div class="row" id="div_phone_feature_minutes_used">
+                                <div class="offset1 span4">
+                                    <span class="fld_txt_small"> Minutes used: </span>
+                                    <span class="fld_txt_small" id="e_summ_minutes_used" ></span>
+                                </div>
+                            </div>
+                            <div class="row" id="div_phone_feature_total_texts">
+                                <div class="offset1 span4">
+                                    <span class="fld_txt_small"> Total Text Messages: </span>
+                                    <span class="fld_txt_small" id="e_summ_total_texts" ></span>
+                                </div>
+                            </div>
+                            <div class="row" id="div_phone_feature_texts_sent">
+                                <div class="offset1 span4">
+                                    <span class="fld_txt_small"> Text Messages sent: </span>
+                                    <span class="fld_txt_small" id="e_summ_texts_sent" ></span>
+                                </div>
+                            </div>
 							<div class="row">
 								<div class="span1">
 									&nbsp;
@@ -474,7 +508,7 @@
                                             <span class="fld_name" >Forward Calls to :  </span>
                                         </div>
                                         <div class="span4">
-                                            <input type="text" id="rsvp_call_forward" value="">
+                                            <input type="text" id="rsvp_call_forward"  name="rsvp_call_forward"value="">
                                         </div>
                                     </div>
                                     <div class="row" id="rsvp_div_sms_confirmation">
@@ -625,6 +659,7 @@
 			{
 				toggleActionNavs('li_phone_num');
 				displayPhoneNumberView('li_phone_num');
+                loadEventFeatures();
 			}
 
 		});
@@ -733,6 +768,15 @@
 	    }
 	});
 
+    function loadEventFeatures()
+    {
+        var actionUrl = "proc_phone_number_features.jsp";
+        var dataString = $('#frm_phone_numbers').serialize()+'&action=load' +"&admin_id="+varAdminID+"&event_id="+varEventID;
+        var methodType = "POST";
+
+        getDataAjax(actionUrl,dataString,methodType, loadPhoneNumberFeaturesResult);
+    }
+
     function savePhoneNumberFeatures()
     {
         var actionUrl = "proc_phone_number_features.jsp";
@@ -740,6 +784,72 @@
         var methodType = "POST";
 
         getDataAjax(actionUrl,dataString,methodType, savePhoneNumberFeaturesResult);
+    }
+
+    function loadPhoneNumberFeaturesResult(jsonResult)
+    {
+        if(jsonResult!=undefined)
+        {
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined )
+            {
+
+                var varIsMessageExist = varResponseObj.is_message_exist;
+                if(varIsMessageExist == true)
+                {
+                    var jsonResponseMessage = varResponseObj.messages;
+                    var varArrErrorMssg = jsonResponseMessage.error_mssg
+                    displayMessages( varArrErrorMssg );
+                }
+
+            }
+            else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
+            {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true)
+                {
+                    var jsonResponseObj = varResponseObj.payload;
+
+                    var varJsonAllEventFeatures = jsonResponseObj.all_features;
+                    var varMapFeatureValue = varJsonAllEventFeatures.map_feature_value;
+
+                    if(varMapFeatureValue != undefined)
+                    {
+                        $('#seating_call_forward').val(   varMapFeatureValue.SEATING_CALL_FORWARD_NUMBER_HUMAN );
+                        $('#rsvp_call_forward').val(   varMapFeatureValue.RSVP_CALL_FORWARD_NUMBER_HUMAN );
+
+                        if(varMapFeatureValue.SEATING_SMS_GUEST_AFTER_CALL == 'true')
+                        {
+                            $('#seating_sms_confirmation').prop('checked', true);
+                        }
+
+                        if(varMapFeatureValue.SEATING_EMAIL_GUEST_AFTER_CALL == 'true')
+                        {
+                            $('#seating_email_confirmation').prop('checked', true);
+                        }
+
+                        if(varMapFeatureValue.RSVP_SMS_CONFIRMATION == 'true')
+                        {
+                            $('#rsvp_sms_confirmation').prop('checked', true);;
+                        }
+
+                        if(varMapFeatureValue.RSVP_EMAIL_CONFIRMATION == 'true')
+                        {
+                            $('#rsvp_email_confirmation').prop('checked', true);
+                        }
+
+                    }
+                }
+            }
+            else
+            {
+                displayMssgBoxAlert("There was an error processing your request. Please try again later.");
+            }
+        }
+        else
+        {
+            displayMssgBoxAlert("There was an error processing your request. Please try again later.");
+        }
     }
 
     function savePhoneNumberFeaturesResult(jsonResult)
@@ -755,7 +865,7 @@
                 {
                     var jsonResponseMessage = varResponseObj.messages;
                     var varArrErrorMssg = jsonResponseMessage.error_mssg
-                    displayMessages( varArrErrorMssg );
+                    displayMssgBoxMessages( varArrErrorMssg , true);
                 }
 
             }

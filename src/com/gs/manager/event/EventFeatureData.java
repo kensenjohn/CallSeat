@@ -48,7 +48,15 @@ public class EventFeatureData {
                 HashMap<String,String> hmEventFeature = new HashMap<String, String>();
                 for(HashMap<String, String> hmResult : arrResult )
                 {
-                    hmEventFeature.put(hmResult.get("FEATURE_NAME"), hmResult.get("FEATUREVALUE"));
+                    String sFeatureNameKey = ParseUtil.checkNull(hmResult.get("FEATURE_NAME"));
+                    String sFeatureValue = ParseUtil.checkNull(hmResult.get("FEATUREVALUE"));
+                    hmEventFeature.put(sFeatureNameKey,sFeatureValue )
+                    ;
+                    if( Constants.EVENT_FEATURES.RSVP_CALL_FORWARD_NUMBER.getEventFeature().equalsIgnoreCase( sFeatureNameKey )
+                            || Constants.EVENT_FEATURES.SEATING_CALL_FORWARD_NUMBER.getEventFeature().equalsIgnoreCase( sFeatureNameKey ) )
+                    {
+                        hmEventFeature.put(sFeatureNameKey+"_HUMAN", Utility.getHumanFormattedNumber(sFeatureValue));
+                    }
                 }
                 eventFeatureBean.setHmFeatureValue(hmEventFeature);
             }
@@ -175,7 +183,7 @@ public class EventFeatureData {
 
                     String sFeatureId = ParseUtil.checkNull(hmFeatureId.get(sFeatureName));
 
-                    ArrayList<Object> aParams = DBDAO.createConstraint(Utility.getNewGuid(),sFeatureId,sEventId,ParseUtil.checkNull(mapFeatureValue.getValue()) );
+                    ArrayList<Object> aParams = DBDAO.createConstraint(ParseUtil.checkNull(mapFeatureValue.getValue()) , sFeatureId,sEventId  );
 
                     iNumOfRows = DBDAO.putRowsQuery(sQuery,aParams,ADMIN_DB,sourceFile,"updateEventFeatures()");
                 }

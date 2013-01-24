@@ -1,5 +1,7 @@
 package com.gs.common;
 
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+
 import java.io.StringWriter;
 import java.util.Random;
 import java.util.UUID;
@@ -122,5 +124,29 @@ public class Utility {
 		}
 		return sTmpTelNum;
 	}
+
+    public static String getHumanFormattedNumber(String sTelephoneNum )
+    {
+        return getHumanFormattedNumber(sTelephoneNum, "US");
+    }
+
+    public static String getHumanFormattedNumber(String sTelephoneNum, String sCountryCode)
+    {
+        String sHumanFormattedPhones = "";
+        if(sTelephoneNum!=null && !"".equalsIgnoreCase(sTelephoneNum) && sCountryCode!=null && !"".equalsIgnoreCase(sCountryCode))
+        {
+            try {
+                PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+                com.google.i18n.phonenumbers.Phonenumber.PhoneNumber apiPhoneNumber = phoneUtil.parse(sTelephoneNum, sCountryCode);
+                sHumanFormattedPhones = phoneUtil.format(apiPhoneNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
+
+            }
+            catch(Exception e)
+            {
+                sHumanFormattedPhones = "";
+            }
+        }
+        return sHumanFormattedPhones;
+    }
 
 }

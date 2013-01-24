@@ -1,6 +1,10 @@
 package com.gs.bean;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -46,6 +50,39 @@ public class EventFeatureBean {
                 ", hmFeatureValue=" + hmFeatureValue +
                 ", hmFeatureId=" + hmFeatureId +
                 '}';
+    }
+
+    public JSONObject toJson() {
+
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("event_id", this.eventId);
+
+            JSONObject jsonMapFeatureValue = new JSONObject();
+            if(hmFeatureValue!=null && !hmFeatureValue.isEmpty())
+            {
+                for(Map.Entry<String,String> mapHmFeatureValue : hmFeatureValue.entrySet() )
+                {
+                    jsonMapFeatureValue.put(mapHmFeatureValue.getKey(), mapHmFeatureValue.getValue());
+                }
+            }
+
+            JSONObject jsonMapFeatureId = new JSONObject();
+            if(hmFeatureId!=null && !hmFeatureId.isEmpty())
+            {
+                for(Map.Entry<String,String> mapHmFeatureId : hmFeatureId.entrySet() )
+                {
+                    jsonMapFeatureId.put(mapHmFeatureId.getKey(), mapHmFeatureId.getValue());
+                }
+            }
+
+            jsonObject.put("map_feature_value", jsonMapFeatureValue);
+            jsonObject.put("map_feature_id", jsonMapFeatureId);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 
 }

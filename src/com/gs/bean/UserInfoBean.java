@@ -4,6 +4,7 @@ import java.util.HashMap;
 
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import com.gs.common.Utility;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -87,16 +88,7 @@ public class UserInfoBean {
         String sHumanFormattedPhones = "";
         if(sTmpPhoneNumber!=null && !"".equalsIgnoreCase(sTmpPhoneNumber))
         {
-            try {
-                PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
-                com.google.i18n.phonenumbers.Phonenumber.PhoneNumber apiPhoneNumber = phoneUtil.parse(sTmpPhoneNumber, "US");
-                sHumanFormattedPhones = phoneUtil.format(apiPhoneNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
-
-            }
-            catch(Exception e)
-            {
-                sHumanFormattedPhones = "";
-            }
+            sHumanFormattedPhones = Utility.getHumanFormattedNumber(sTmpPhoneNumber, "US");
         }
         return sHumanFormattedPhones;
     }

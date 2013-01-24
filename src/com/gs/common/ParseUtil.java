@@ -53,7 +53,8 @@ public class ParseUtil {
 		if (sInput != null && !"".equalsIgnoreCase(sInput)) {
 			if ("true".equalsIgnoreCase(sInput) || "1".equalsIgnoreCase(sInput)
 					|| "yes".equalsIgnoreCase(sInput)
-					|| "y".equalsIgnoreCase(sInput)) {
+					|| "y".equalsIgnoreCase(sInput)
+                    || "on".equalsIgnoreCase(sInput)) {
 				bOutput = true;
 			}
 		}

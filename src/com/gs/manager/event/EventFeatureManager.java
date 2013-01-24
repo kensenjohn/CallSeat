@@ -77,7 +77,7 @@ public class EventFeatureManager {
             EventFeatureBean tmpEventFeaturesBean = eventFeatureData.getEventFeatures(eventFeatures);
 
             eventFeaturesBean.setHmFeatureId(tmpEventFeaturesBean.getHmFeatureId());
-
+            eventFeaturesBean.setHmFeatureValue(hmFeatureValue);
             iNumOfRows = eventFeatureData.updateEventFeatures(eventFeaturesBean);
 
         }
