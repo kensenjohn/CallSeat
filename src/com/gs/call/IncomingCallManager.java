@@ -51,7 +51,7 @@ public class IncomingCallManager {
 			while (allReqParams.hasMoreElements()) {
 				String paramKey = (String) allReqParams.nextElement();
 				if (paramKey != null && !"".equalsIgnoreCase(paramKey)) {
-					String value = httpRequest.getParameter(paramKey);
+					String value = ParseUtil.checkNull(httpRequest.getParameter(paramKey));
 					if ("callSid".equalsIgnoreCase(paramKey)) {
 						twilioIncomingCallBean.setCallid(value);
 					} else if ("accountSid".equalsIgnoreCase(paramKey)) {
@@ -92,7 +92,7 @@ public class IncomingCallManager {
 					} else if ("toState".equalsIgnoreCase(paramKey)) {
 						twilioIncomingCallBean.setToState(value);
 					} else if ("callDuration".equalsIgnoreCase(paramKey)) {
-						twilioIncomingCallBean.setCallDuration(value);
+						twilioIncomingCallBean.setActualCallDuration(value);
 					} else if ("calledState".equalsIgnoreCase(paramKey)) {
 						twilioIncomingCallBean.setCalledState(value);
 					} else if ("calledCountry".equalsIgnoreCase(paramKey)) {
@@ -102,7 +102,7 @@ public class IncomingCallManager {
 					} else if ("calledZip".equalsIgnoreCase(paramKey)) {
 						twilioIncomingCallBean.setCalledZip(value);
 					} else if ("duration".equalsIgnoreCase(paramKey)) {
-						twilioIncomingCallBean.setDuration(value);
+						twilioIncomingCallBean.setBillDuration(value);
 					} else if ("caller".equalsIgnoreCase(paramKey)) {
 						twilioIncomingCallBean.setCaller(value);
 					} else if ("callerCity".equalsIgnoreCase(paramKey)) {
@@ -123,6 +123,8 @@ public class IncomingCallManager {
 						twilioIncomingCallBean.setCallerInputSecretKey(value);
 					} else if ("call_attempt".equalsIgnoreCase(paramKey)) {
                         twilioIncomingCallBean.setCallAttemptNumber(ParseUtil.sToI(value));
+                    } else if ("call_log_id".equalsIgnoreCase(paramKey)) {
+                        twilioIncomingCallBean.setCallLogId(value);
                     }
 				}
 			}

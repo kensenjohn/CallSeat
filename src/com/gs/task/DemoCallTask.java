@@ -2,13 +2,10 @@ package com.gs.task;
 
 import java.util.ArrayList;
 
+import com.gs.bean.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gs.bean.EventBean;
-import com.gs.bean.EventGuestBean;
-import com.gs.bean.TableGuestsBean;
-import com.gs.bean.TelNumberBean;
 import com.gs.bean.twilio.IncomingCallBean;
 import com.gs.bean.twilio.TwilioIncomingCallBean;
 import com.gs.call.CallResponse;
@@ -25,6 +22,8 @@ import com.gs.manager.event.GuestTableMetaData;
 import com.gs.manager.event.TelNumberManager;
 import com.gs.manager.event.TelNumberMetaData;
 import com.twilio.sdk.verbs.TwiMLException;
+
+import com.gs.common.CallTransaction;
 
 public class DemoCallTask extends Task {
 
@@ -271,6 +270,12 @@ public class DemoCallTask extends Task {
 
 				callResponse.setEventGuestBean(eventGuestBean);
 				callResponse.setEventBean(eventBean);
+
+                CallTransactionBean callTransactionBean = new CallTransactionBean();
+                callTransactionBean.setAdminId(super.adminId);
+                callTransactionBean.setEventId(super.eventId);
+                callTransactionBean.setGuestId(eventGuestBean.getGuestId());
+                CallTransaction.getInstance().updateTransaction(incomingCallBean,callTransactionBean );
 
 			}
 		}

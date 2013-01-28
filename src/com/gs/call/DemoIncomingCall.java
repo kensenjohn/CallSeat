@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.gs.bean.CallTransactionBean;
+import com.gs.common.CallTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,7 +60,8 @@ public class DemoIncomingCall extends HttpServlet {
 
 		IncomingCallBean incomingCallBean = incominManager.getIncomingCallRequest(request);
 
-		if ("demo_get_event_num".equalsIgnoreCase(sCallType)) {
+        CallTransaction callTransaction = CallTransaction.getInstance();
+        if ("demo_get_event_num".equalsIgnoreCase(sCallType)) {
             appLogging.debug("Step 2 : Demo get event number ");
 			if (incomingCallBean != null && incomingCallBean.getTo() != null
 					&& !"".equalsIgnoreCase(incomingCallBean.getTo())) {
@@ -108,12 +111,18 @@ public class DemoIncomingCall extends HttpServlet {
 				}
 				callResponse = incominManager.processCall(incomingCallBean);
 			}
-		} else {
+		}
+        else if ("end_call".equalsIgnoreCase(sCallType)) {
+            CallTransactionBean callTransactionBean = new CallTransactionBean();
+            callTransaction.updateTransaction(incomingCallBean,callTransactionBean );
+        }
+        else {
             // Step 1 : The first request comes in here.
             appLogging.info("Step 1 : Demo incoming request entry ");
-			if (incomingCallBean != null && incomingCallBean.getTo() != null
-					&& !"".equalsIgnoreCase(incomingCallBean.getTo())) {
-				incomingCallBean.setCallType(Constants.CALL_TYPE.DEMO_FIRST_REQUEST);
+			if (incomingCallBean != null && incomingCallBean.getTo() != null && !"".equalsIgnoreCase(incomingCallBean.getTo())) {
+
+                incomingCallBean.setCallType(Constants.CALL_TYPE.DEMO_FIRST_REQUEST);
+                callTransaction.createTransaction(incomingCallBean);
 				appLogging.info("Step 1 : Incoming request Demo To : " + incomingCallBean.getTo());
 				callResponse = incominManager.processCall(incomingCallBean);
 			}

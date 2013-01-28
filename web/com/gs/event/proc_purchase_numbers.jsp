@@ -109,6 +109,14 @@
                                 String sPurchasedRsvpNum =  telNumManager.purchaseTelephoneNumber(adminAccountMeta,purchaseResponseTransactionBean.getRsvpTelNumber() );
                                 String sPurchasedSeatingNum = telNumManager.purchaseTelephoneNumber(adminAccountMeta,purchaseResponseTransactionBean.getSeatingTelNumber() );
 
+                                if(pricingGroupBean!=null)
+                                {
+                                    EventFeatureManager eventFeatureManager = new EventFeatureManager();
+                                    eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.PREMIUM_TOTAL_CALL_MINUTES,ParseUtil.iToS(pricingGroupBean.getMaxMinutes()));
+                                    eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.PREMIUM_TOTAL_TEXT_MESSAGES,ParseUtil.iToS(pricingGroupBean.getSmsCount()));
+
+                                }
+
                                 if(sPurchasedRsvpNum!=null && !"".equalsIgnoreCase(sPurchasedRsvpNum)
                                         && sPurchasedSeatingNum!=null && !"".equalsIgnoreCase(sPurchasedSeatingNum)){
 

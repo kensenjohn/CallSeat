@@ -17,14 +17,14 @@ public class TwilioIncomingCallBean extends IncomingCallBean {
 	private String toCountry = "";
 	private String toState = "";
 
-	private String callDuration = "";
+	private String actualCallDuration = "";
 
 	private String calledState = "";
 	private String calledCountry = "";
 	private String calledCity = "";
 	private String calledZip = "";
 
-	private String duration = "";
+	private String billDuration = "";
 
 	private String caller = "";
 	private String callerCity = "";
@@ -34,6 +34,9 @@ public class TwilioIncomingCallBean extends IncomingCallBean {
 
 	private String callerInputEventId = "";
 	private String callerInputSecretKey = "";
+    private String callLogId = "";
+
+    private String toNumberType = "";
 
 	public String getCallid() {
 		return this.callid;
@@ -163,14 +166,6 @@ public class TwilioIncomingCallBean extends IncomingCallBean {
 		this.toState = toState;
 	}
 
-	public String getCallDuration() {
-		return callDuration;
-	}
-
-	public void setCallDuration(String callDuration) {
-		this.callDuration = callDuration;
-	}
-
 	public String getCalledState() {
 		return calledState;
 	}
@@ -201,14 +196,6 @@ public class TwilioIncomingCallBean extends IncomingCallBean {
 
 	public void setCalledZip(String calledZip) {
 		this.calledZip = calledZip;
-	}
-
-	public String getDuration() {
-		return duration;
-	}
-
-	public void setDuration(String duration) {
-		this.duration = duration;
 	}
 
 	public String getCaller() {
@@ -275,7 +262,39 @@ public class TwilioIncomingCallBean extends IncomingCallBean {
 		this.callerInputSecretKey = callerInputSecretKey;
 	}
 
-	@Override
+    public String getCallLogId() {
+        return callLogId;
+    }
+
+    public void setCallLogId(String callLogId) {
+        this.callLogId = callLogId;
+    }
+
+    public String getToNumberType() {
+        return toNumberType;
+    }
+
+    public void setToNumberType(String toNumberType) {
+        this.toNumberType = toNumberType;
+    }
+
+    public String getActualCallDuration() {
+        return actualCallDuration;
+    }
+
+    public void setActualCallDuration(String actualCallDuration) {
+        this.actualCallDuration = actualCallDuration;
+    }
+
+    public String getBillDuration() {
+        return billDuration;
+    }
+
+    public void setBillDuration(String billDuration) {
+        this.billDuration = billDuration;
+    }
+
+    @Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("TwilioIncomingCallBean [digits=").append(digits)
@@ -287,12 +306,14 @@ public class TwilioIncomingCallBean extends IncomingCallBean {
 				.append(", fromCountry=").append(fromCountry)
 				.append(", toZip=").append(toZip).append(", toCity=")
 				.append(toCity).append(", toCountry=").append(toCountry)
-				.append(", toState=").append(toState).append(", callDuration=")
-				.append(callDuration).append(", calledState=")
+				.append(", toState=").append(toState)
+                .append(", actualCallDuration=").append(actualCallDuration)
+                .append(", calledState=")
 				.append(calledState).append(", calledCountry=")
 				.append(calledCountry).append(", calledCity=")
 				.append(calledCity).append(", calledZip=").append(calledZip)
-				.append(", duration=").append(duration).append(", caller=")
+				.append(", billDuration=").append(billDuration)
+                .append(", caller=")
 				.append(caller).append(", callerCity=").append(callerCity)
 				.append(", callerState=").append(callerState)
 				.append(", callerCountry=").append(callerCountry)
@@ -303,7 +324,10 @@ public class TwilioIncomingCallBean extends IncomingCallBean {
 				.append(", callStatus=").append(callStatus).append(", callid=")
 				.append(callid).append(", accountid=").append(accountid)
 				.append(", callAttemptNumber=").append(callAttemptNumber)
-				.append(", callType=").append(callType).append("]");
+				.append(", callType=").append(callType)
+                .append(", call_log_id=").append(callLogId)
+                .append(", to_number_type=").append(toNumberType)
+                .append("]");
 		return builder.toString();
 	}
 

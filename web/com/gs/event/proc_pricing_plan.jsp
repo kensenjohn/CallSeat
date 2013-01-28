@@ -75,7 +75,7 @@ try
     else
     {
         EventPricingGroupManager eventPricingManager = new EventPricingGroupManager();
-        ArrayList<PricingGroupBean> arrPricingBean = eventPricingManager.getPricingGroups();
+        ArrayList<PricingGroupBean> arrPricingBean = eventPricingManager.getPremiumPricingGroups();
 
         JSONArray jsonPricingGroupArray = eventPricingManager.getPricingGroupJsonArray(arrPricingBean);
         if(arrPricingBean!=null && !arrPricingBean.isEmpty() && jsonPricingGroupArray!=null)

@@ -2,6 +2,8 @@ package com.gs.call;
 
 import java.util.ArrayList;
 
+import com.gs.bean.CallTransactionBean;
+import com.gs.common.CallTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,11 +33,18 @@ public abstract class ProcessCalls {
         {
             appLogging.info("Incoming Call Type : " +  this.incomingCallBean.getCallType()  );
 
+            CallTransaction callTransaction = CallTransaction.getInstance();
             if ((Constants.CALL_TYPE.DEMO_FIRST_REQUEST.equals(this.incomingCallBean.getCallType()))
                     || Constants.CALL_TYPE.DEMO_GATHER_EVENT_NUM.equals(this.incomingCallBean.getCallType())
                     || Constants.CALL_TYPE.DEMO_GATHER_SECRET_KEY.equals(this.incomingCallBean.getCallType()))
             {
-                appLogging.info("Identified Task as DemoCallTask : " + incomingCallBean.getFrom() );
+                if(  Constants.CALL_TYPE.DEMO_GATHER_EVENT_NUM.equals(this.incomingCallBean.getCallType())
+                ||  Constants.CALL_TYPE.DEMO_GATHER_SECRET_KEY.equals(this.incomingCallBean.getCallType()) )
+                {
+                    CallTransactionBean callTransactionBean = new CallTransactionBean();
+                    callTransaction.updateTransaction(incomingCallBean,callTransactionBean );
+                }
+                appLogging.info("Identified Task as DemoCallTask : " + incomingCallBean.getFrom() + " - " + this.incomingCallBean.getCallType());
                 task = new DemoCallTask("", "");
             }
             else if (Constants.CALL_TYPE.DEMO_GATHER_RSVP_NUM.equals(this.incomingCallBean.getCallType()))
@@ -43,6 +52,7 @@ public abstract class ProcessCalls {
                 TwilioIncomingCallBean twilioIncomingCall = (TwilioIncomingCallBean) this.incomingCallBean;
                 String sEventIdentifier = twilioIncomingCall.getCallerInputEventId();
                 String sEventSecretKey = twilioIncomingCall.getCallerInputSecretKey();
+
 
                 TelNumberMetaData telNumMetaData = new TelNumberMetaData();
                 telNumMetaData.setSecretEventIdentifier(sEventIdentifier);
@@ -57,6 +67,12 @@ public abstract class ProcessCalls {
                                 && telNumberBean.isTelNumBeanSet()) {
                             String sEventId = telNumberBean.getEventId();
                             String sAdminId = telNumberBean.getAdminId();
+
+
+                            CallTransactionBean callTransactionBean = new CallTransactionBean();
+                            callTransactionBean.setAdminId(sAdminId);
+                            callTransactionBean.setEventId(sEventId);
+                            callTransaction.updateTransaction(incomingCallBean,callTransactionBean );
 
                             task = new DemoCallTask(sEventId, sAdminId);
                         }

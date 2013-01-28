@@ -44,6 +44,50 @@ public class PricingGroupData {
 		return pricingGroupBean;
 	}
 
+    public ArrayList<PricingGroupBean> getDemoPricingGroups() {
+
+        ArrayList<PricingGroupBean> arrPricingGroupBean = new ArrayList<PricingGroupBean>();
+
+        String sQuery = "select * from GTPRICEGROUP GPG WHERE GPG.PRICEGROUPNAME ='Demo'";
+
+        ArrayList<Object> aParams = new ArrayList<Object>();
+
+        ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(
+                ADMIN_DB, sQuery, aParams, false, "PricingGroupData.java",
+                "getDemoPricingGroups()");
+
+        if (arrResult != null && !arrResult.isEmpty()) {
+            for (HashMap<String, String> hmResult : arrResult) {
+                PricingGroupBean pricingGroupBean = new PricingGroupBean(hmResult);
+
+                arrPricingGroupBean.add(pricingGroupBean);
+            }
+        }
+        return arrPricingGroupBean;
+    }
+
+    public ArrayList<PricingGroupBean> getPremiumPricingGroups() {
+
+        ArrayList<PricingGroupBean> arrPricingGroupBean = new ArrayList<PricingGroupBean>();
+
+        String sQuery = "select * from GTPRICEGROUP GPG WHERE GPG.PRICEGROUPNAME !='Demo'";
+
+        ArrayList<Object> aParams = new ArrayList<Object>();
+
+        ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(
+                ADMIN_DB, sQuery, aParams, false, "PricingGroupData.java",
+                "getPremiumPricingGroups()");
+
+        if (arrResult != null && !arrResult.isEmpty()) {
+            for (HashMap<String, String> hmResult : arrResult) {
+                PricingGroupBean pricingGroupBean = new PricingGroupBean(hmResult);
+
+                arrPricingGroupBean.add(pricingGroupBean);
+            }
+        }
+        return arrPricingGroupBean;
+    }
+
 	public ArrayList<PricingGroupBean> getAllPricingGroups() {
 
 		ArrayList<PricingGroupBean> arrPricingGroupBean = new ArrayList<PricingGroupBean>();

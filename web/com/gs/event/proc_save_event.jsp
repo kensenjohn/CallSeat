@@ -80,6 +80,22 @@ try
 					
 					if(eventBean!=null && eventBean.getEventId()!=null && !"".equalsIgnoreCase(eventBean.getEventId()))
 					{
+                        EventPricingGroupManager eventPricingManager = new EventPricingGroupManager();
+                        ArrayList<PricingGroupBean> arrPricingBean = eventPricingManager.getDemoPricingGroups();
+                        if( arrPricingBean !=null )
+                        {
+                            for(PricingGroupBean pricingGroupBean : arrPricingBean )
+                            {
+                                if(pricingGroupBean!=null)
+                                {
+                                    EventFeatureManager eventFeatureManager = new EventFeatureManager();
+                                    eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.DEMO_TOTAL_CALL_MINUTES,ParseUtil.iToS(pricingGroupBean.getMaxMinutes()));
+                                    eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.DEMO_TOTAL_TEXT_MESSAGES,ParseUtil.iToS(pricingGroupBean.getSmsCount()));
+                                    break;
+                                }
+
+                            }
+                        }
 						TelNumberManager telNumberManager = new TelNumberManager();
 						telNumberManager.setEventDemoNumber(eventBean.getEventId(),adminBean.getAdminId());
 						

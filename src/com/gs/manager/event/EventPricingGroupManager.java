@@ -23,6 +23,24 @@ public class EventPricingGroupManager {
 
     Logger appLogging = LoggerFactory.getLogger("AppLogging");
 
+    public ArrayList<PricingGroupBean> getPremiumPricingGroups() {
+
+        PricingGroupData pricingGroupData = new PricingGroupData();
+
+        ArrayList<PricingGroupBean> arrPricingGroupBean = pricingGroupData.getPremiumPricingGroups();
+
+        return arrPricingGroupBean;
+    }
+
+    public ArrayList<PricingGroupBean> getDemoPricingGroups() {
+
+        PricingGroupData pricingGroupData = new PricingGroupData();
+
+        ArrayList<PricingGroupBean> arrPricingGroupBean = pricingGroupData.getDemoPricingGroups();
+
+        return arrPricingGroupBean;
+    }
+
 	public ArrayList<PricingGroupBean> getPricingGroups() {
 
 		PricingGroupData pricingGroupData = new PricingGroupData();

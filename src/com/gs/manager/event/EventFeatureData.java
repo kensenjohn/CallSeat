@@ -156,9 +156,12 @@ public class EventFeatureData {
 
                     String sFeatureId = ParseUtil.checkNull(hmFeatureId.get(sFeatureName));
 
-                    ArrayList<Object> aParams = DBDAO.createConstraint(Utility.getNewGuid(),sFeatureId,sEventId,ParseUtil.checkNull(mapFeatureValue.getValue()) );
+                    if(sFeatureId!=null && !"".equalsIgnoreCase(sFeatureId))
+                    {
+                        ArrayList<Object> aParams = DBDAO.createConstraint(Utility.getNewGuid(),sFeatureId,sEventId,ParseUtil.checkNull(mapFeatureValue.getValue()) );
 
-                    iNumOfRows = DBDAO.putRowsQuery(sQuery,aParams,ADMIN_DB,sourceFile,"createEventFeatures()");
+                        iNumOfRows = DBDAO.putRowsQuery(sQuery,aParams,ADMIN_DB,sourceFile,"createEventFeatures()");
+                    }
                 }
             }
         }

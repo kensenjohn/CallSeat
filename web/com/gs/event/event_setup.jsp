@@ -81,6 +81,23 @@
 			
 			if(eventBean!=null && eventBean.getEventId()!=null && !"".equalsIgnoreCase(eventBean.getEventId()))
 			{
+                EventPricingGroupManager eventPricingManager = new EventPricingGroupManager();
+                ArrayList<PricingGroupBean> arrPricingBean = eventPricingManager.getDemoPricingGroups();
+                if( arrPricingBean !=null )
+                {
+                    for(PricingGroupBean pricingGroupBean : arrPricingBean )
+                    {
+                        if(pricingGroupBean!=null)
+                        {
+                            EventFeatureManager eventFeatureManager = new EventFeatureManager();
+                            eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.DEMO_TOTAL_CALL_MINUTES,ParseUtil.iToS(pricingGroupBean.getMaxMinutes()));
+                            eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.DEMO_TOTAL_TEXT_MESSAGES,ParseUtil.iToS(pricingGroupBean.getSmsCount()));
+                            break;
+                        }
+
+                    }
+                }
+
 				TelNumberManager telNumberManager = new TelNumberManager();
 				telNumberManager.setEventDemoNumber(eventBean.getEventId(),adminBean.getAdminId());
 			}
@@ -318,31 +335,48 @@
                             </div>
                             <div class="row">
                                 <div class="span5">
-                                    <h4>Phone Features</h4>
+                                    <h4>Phone Calls</h4>
                                 </div>
                             </div>
-                            <div class="row" id="div_phone_feature_total_minutes">
-                                <div class="offset1 span4">
-                                    <span class="fld_txt_small"> Total calling minutes: </span>
-                                    <span class="fld_txt_small" id="e_summ_total_minutes" ></span>
+                            <div class="row">
+                                <div class="offset1 span7">
+                                    <table>
+                                        <tr>
+                                            <td><span class="fld_txt_small"> Minutes remaining: </span></td>
+                                            <td><span class="fld_txt_small" id="e_summ_minutes_remaining" ></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="fld_txt_small"> Minutes used: </span></td>
+                                            <td><span class="fld_txt_small" id="e_summ_minutes_used" ></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="fld_txt_small"> Total minutes: </span></td>
+                                            <td><span class="fld_txt_small" id="e_summ_total_minutes" ></span></td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
-                            <div class="row" id="div_phone_feature_minutes_used">
-                                <div class="offset1 span4">
-                                    <span class="fld_txt_small"> Minutes used: </span>
-                                    <span class="fld_txt_small" id="e_summ_minutes_used" ></span>
+                            <div class="row">
+                                <div class="span5">
+                                    <h4>Text Messages</h4>
                                 </div>
                             </div>
-                            <div class="row" id="div_phone_feature_total_texts">
-                                <div class="offset1 span4">
-                                    <span class="fld_txt_small"> Total Text Messages: </span>
-                                    <span class="fld_txt_small" id="e_summ_total_texts" ></span>
-                                </div>
-                            </div>
-                            <div class="row" id="div_phone_feature_texts_sent">
-                                <div class="offset1 span4">
-                                    <span class="fld_txt_small"> Text Messages sent: </span>
-                                    <span class="fld_txt_small" id="e_summ_texts_sent" ></span>
+                            <div class="row">
+                                <div class="offset1 span7">
+                                    <table>
+                                        <tr>
+                                            <td><span class="fld_txt_small"> Text remaining: </span></td>
+                                            <td><span class="fld_txt_small" id="e_summ_texts_remaining" ></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="fld_txt_small"> Text sent: </span></td>
+                                            <td><span class="fld_txt_small" id="e_summ_texts_sent" ></span></td>
+                                        </tr>
+                                        <tr>
+                                            <td><span class="fld_txt_small"> Total Text: </span></td>
+                                            <td><span class="fld_txt_small" id="e_summ_total_texts" ></span></td>
+                                        </tr>
+                                    </table>
                                 </div>
                             </div>
 							<div class="row">
@@ -536,11 +570,11 @@
 									 &nbsp;
 								</div>
 							</div>
-							<div class="row" id="div_get_own_phone">
+							<div class="row">
                                 <div class="span2">
                                     <button id="btn_save_phone_number" name="btn_save_phone_number" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="btn">Save Changes</button>
                                 </div>
-								<div class="span3">
+								<div class="span3"  id="div_get_own_phone">
 									 <button id="bt_get_own_phone" name="bt_get_own_phone" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="btn btn-blue">Purchase direct phone numbers</button>
 								</div>
 							</div>
