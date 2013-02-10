@@ -15,8 +15,8 @@ import java.util.Map;
  */
 public class EventFeatureBean {
     private String eventId = "";
-    private HashMap<String,String> hmFeatureValue = new HashMap<String, String>();
-    private HashMap<String,String> hmFeatureId = new HashMap<String, String>();
+    private HashMap<String,String> hmFeatureValue = new HashMap<String, String>(); // HashMap<FEATURE_NAME , FEATURE_VALUE>
+    private HashMap<String,String> hmFeatureId = new HashMap<String, String>();  // HashMap<FEATURE_NAME , FEATURE_ID>
 
 
     public String getEventId() {

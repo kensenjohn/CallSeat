@@ -4,6 +4,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import com.gs.bean.usage.PhoneCallUsageBean;
+import com.gs.bean.usage.TextMessageUsageBean;
+import com.gs.common.usage.PhoneCallUsage;
+import com.gs.common.usage.TextMessageUsage;
+import com.gs.common.usage.Usage;
+import com.gs.common.usage.UsageMetaData;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -309,6 +315,28 @@ public class EventManager {
 
 				}
 			}
+
+            // Usage Summary
+            {
+                UsageMetaData usageMetaData = new UsageMetaData();
+                usageMetaData.setEventId(sEventId);
+                usageMetaData.setAdminId(sAdminId);
+
+                // Phone Call Usage Summary
+                Usage phoneCallUsage = new PhoneCallUsage();
+                PhoneCallUsageBean phoneCallUsageBean = (PhoneCallUsageBean)phoneCallUsage.getUsage(usageMetaData);
+                appLogging.info("Phone Call Usage : "  + phoneCallUsageBean );
+
+                eventSummaryBean.setPhoneCallUsageBean(phoneCallUsageBean);
+
+
+                // Text Message Usage Summary
+                Usage textMessageUsage = new TextMessageUsage();
+                TextMessageUsageBean textMessageUsageBean = (TextMessageUsageBean)textMessageUsage.getUsage(usageMetaData);
+
+                eventSummaryBean.setTextMessageUsageBean(textMessageUsageBean);
+            }
+
 
 		}
 		return eventSummaryBean;

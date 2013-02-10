@@ -62,11 +62,8 @@ public class DemoIncomingCall extends HttpServlet {
 
         CallTransaction callTransaction = CallTransaction.getInstance();
         if ("demo_get_event_num".equalsIgnoreCase(sCallType)) {
-            appLogging.debug("Step 2 : Demo get event number ");
-			if (incomingCallBean != null && incomingCallBean.getTo() != null
-					&& !"".equalsIgnoreCase(incomingCallBean.getTo())) {
+			if (incomingCallBean != null && incomingCallBean.getTo() != null && !"".equalsIgnoreCase(incomingCallBean.getTo())) {
 
-                appLogging.info("Step 2 : Event Number Processing Demo To : " + incomingCallBean.getTo());
 				int iNumOfAttempts = incomingCallBean.getCallAttemptNumber();
 
 				if (iNumOfAttempts <= 2) {
@@ -78,11 +75,8 @@ public class DemoIncomingCall extends HttpServlet {
 				callResponse = incominManager.processCall(incomingCallBean);
 			}
 		} else if ("demo_get_secret_key".equalsIgnoreCase(sCallType)) {
-            appLogging.debug("Step 3 : Demo get secret key ");
 			if (incomingCallBean != null && incomingCallBean.getTo() != null && !"".equalsIgnoreCase(incomingCallBean.getTo()))
             {
-
-                appLogging.info("Step 3 : Secret Key Processing Demo To : " + incomingCallBean.getTo());
 				int iNumOfAttempts = incomingCallBean.getCallAttemptNumber();
 
 				if (iNumOfAttempts <= 2) {
@@ -95,10 +89,7 @@ public class DemoIncomingCall extends HttpServlet {
 				callResponse = incominManager.processCall(incomingCallBean);
 			}
 		} else if ("demo_rsvp_ans".equalsIgnoreCase(sCallType)) {
-            appLogging.info("Step 5 : Demo RSVP numbers");
-			if (incomingCallBean != null && incomingCallBean.getTo() != null
-					&& !"".equalsIgnoreCase(incomingCallBean.getTo())) {
-                appLogging.info("Step 5 : RSVP ans Demo To : " + incomingCallBean.getTo());
+			if (incomingCallBean != null && incomingCallBean.getTo() != null && !"".equalsIgnoreCase(incomingCallBean.getTo())) {
 
 				int iNumOfAttempts = incomingCallBean.getCallAttemptNumber();
 
@@ -118,12 +109,10 @@ public class DemoIncomingCall extends HttpServlet {
         }
         else {
             // Step 1 : The first request comes in here.
-            appLogging.info("Step 1 : Demo incoming request entry ");
 			if (incomingCallBean != null && incomingCallBean.getTo() != null && !"".equalsIgnoreCase(incomingCallBean.getTo())) {
 
                 incomingCallBean.setCallType(Constants.CALL_TYPE.DEMO_FIRST_REQUEST);
                 callTransaction.createTransaction(incomingCallBean);
-				appLogging.info("Step 1 : Incoming request Demo To : " + incomingCallBean.getTo());
 				callResponse = incominManager.processCall(incomingCallBean);
 			}
 		}

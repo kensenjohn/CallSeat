@@ -1,5 +1,7 @@
 package com.gs.bean;
 
+import com.gs.bean.usage.PhoneCallUsageBean;
+import com.gs.bean.usage.TextMessageUsageBean;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,6 +23,9 @@ public class EventSummaryBean {
     private String telephonyRSVPSecretKey = "";
     private String telephonySeatingSecretKey = "";
     private boolean isDemoMode = true;
+
+    private PhoneCallUsageBean phoneCallUsageBean = new PhoneCallUsageBean();
+    private TextMessageUsageBean textMessageUsageBean = new TextMessageUsageBean();
 
 	public String getEventId() {
 		return eventId;
@@ -142,6 +147,22 @@ public class EventSummaryBean {
         isDemoMode = demoMode;
     }
 
+    public PhoneCallUsageBean getPhoneCallUsageBean() {
+        return phoneCallUsageBean;
+    }
+
+    public void setPhoneCallUsageBean(PhoneCallUsageBean phoneCallUsageBean) {
+        this.phoneCallUsageBean = phoneCallUsageBean;
+    }
+
+    public TextMessageUsageBean getTextMessageUsageBean() {
+        return textMessageUsageBean;
+    }
+
+    public void setTextMessageUsageBean(TextMessageUsageBean textMessageUsageBean) {
+        this.textMessageUsageBean = textMessageUsageBean;
+    }
+
     @Override
     public String toString() {
         return "EventSummaryBean{" +
@@ -182,6 +203,9 @@ public class EventSummaryBean {
             jsonObject.put("telephony_rsvp_secret_key", this.telephonyRSVPSecretKey);
             jsonObject.put("telephony_seating_secret_key", this.telephonySeatingSecretKey);
             jsonObject.put("is_demo_numbers", this.isDemoMode);
+
+            jsonObject.put("phone_call_usage", this.phoneCallUsageBean.toJson());
+            jsonObject.put("text_message_usage", this.textMessageUsageBean.toJson());
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

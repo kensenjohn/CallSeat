@@ -146,6 +146,8 @@ public class Constants {
 	public static String PROP_AMAZON_ACCESS_KEY = "amazon_access_key";
 	public static String PROP_AMAZON_ACCESS_SECRET = "amazon_secret_key";
 
+    public static String PROP_APPLICATION_DOMAIN = "application_domain";
+
 	public static String PROP_ENABLE_SINGLE_EMAIL_SEND = "enable_single_email_send";
 	public static String PROP_ENABLE_BULK_EMAIL_SEND = "enable_bulk_email_send";
 
@@ -380,7 +382,11 @@ public class Constants {
         DEMO_TOTAL_CALL_MINUTES("DEMO_TOTAL_CALL_MINUTES"),
         DEMO_TOTAL_TEXT_MESSAGES("DEMO_TOTAL_TEXT_MESSAGES"),
         PREMIUM_TOTAL_CALL_MINUTES("PREMIUM_TOTAL_CALL_MINUTES"),
-        PREMIUM_TOTAL_TEXT_MESSAGES("PREMIUM_TOTAL_TEXT_MESSAGES");
+        PREMIUM_TOTAL_TEXT_MESSAGES("PREMIUM_TOTAL_TEXT_MESSAGES"),
+        DEMO_FINAL_CALL_MINUTES_USED("DEMO_FINAL_CALL_MINUTES_USED"),
+        DEMO_FINAL_TEXT_MESSAGES_SENT("DEMO_FINAL_TEXT_MESSAGES_SENT"),
+        PREMIUM_FINAL_CALL_MINUTES_USED("PREMIUM_FINAL_CALL_MINUTES_USED"),
+        PREMIUM_FINAL_TEXT_MESSAGES_SENT("PREMIUM_FINAL_TEXT_MESSAGES_SENT");
 
         private String eventFeature = "";
         EVENT_FEATURES(String eventFeature)

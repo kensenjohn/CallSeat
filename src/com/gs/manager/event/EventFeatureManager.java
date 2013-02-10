@@ -2,10 +2,12 @@ package com.gs.manager.event;
 
 import com.gs.bean.EventFeatureBean;
 import com.gs.common.Constants;
+import com.gs.common.ParseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -82,5 +84,41 @@ public class EventFeatureManager {
 
         }
         return iNumOfRows;
+    }
+
+    public static Integer getIntegerValueFromEventFeature(String sEventId , Constants.EVENT_FEATURES eventFeature )
+    {
+        return ParseUtil.sToI( getValueFromEventFeature(sEventId, eventFeature ) );
+    }
+
+    public static String getStringValueFromEventFeature(String sEventId , Constants.EVENT_FEATURES eventFeature )
+    {
+        return ParseUtil.checkNull( getValueFromEventFeature(sEventId, eventFeature ) );
+    }
+
+    private static String getValueFromEventFeature(String sEventId , Constants.EVENT_FEATURES eventFeature )
+    {
+        String sDataValue = "";
+        if(sEventId!=null && !"".equalsIgnoreCase(sEventId ) && eventFeature!=null && !"".equalsIgnoreCase(eventFeature.getEventFeature() ))
+        {
+            EventFeatureManager eventFeatureManager = new EventFeatureManager();
+            EventFeatureBean eventFeatureBean = eventFeatureManager.getEventFeatures(sEventId , eventFeature );
+            if(eventFeatureBean!=null)
+            {
+                HashMap<String, String> hmFeatureValue = eventFeatureBean.getHmFeatureValue();
+                if( hmFeatureValue!=null && !hmFeatureValue.isEmpty() )
+                {
+                    for( Map.Entry<String,String> mapFeatureValue : hmFeatureValue.entrySet() )
+                    {
+                        if( eventFeature.getEventFeature().equalsIgnoreCase(mapFeatureValue.getKey()) )
+                        {
+                            sDataValue = ParseUtil.checkNull(mapFeatureValue.getValue());
+                        }
+                    }
+                }
+            }
+        }
+
+        return sDataValue;
     }
 }

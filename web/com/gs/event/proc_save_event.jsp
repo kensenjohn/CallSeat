@@ -56,7 +56,7 @@ try
 		{
 			if(sEventName==null || "".equalsIgnoreCase(sEventName))
 			{
-				Text errorText = new ErrorText("Admin user was not recognized. Please log in again.","e_summ_event_name") ;		
+				Text errorText = new ErrorText("We were unable to recognize the Admin. Please log in again.","e_summ_event_name") ;
 				arrErrorText.add(errorText);
 				
 				responseStatus = RespConstants.Status.ERROR;
@@ -82,6 +82,7 @@ try
 					{
                         EventPricingGroupManager eventPricingManager = new EventPricingGroupManager();
                         ArrayList<PricingGroupBean> arrPricingBean = eventPricingManager.getDemoPricingGroups();
+                        appLogging.info("Demo Pricing Bean selected " + arrPricingBean );
                         if( arrPricingBean !=null )
                         {
                             for(PricingGroupBean pricingGroupBean : arrPricingBean )
@@ -107,7 +108,7 @@ try
 					}
 					else
 					{
-						Text errorText = new ErrorText("New was not created. Please try again later.","e_summ_event_name") ;		
+						Text errorText = new ErrorText("New event was not created. Please try again later.","e_summ_event_name") ;
 						arrErrorText.add(errorText);
 						
 						responseStatus = RespConstants.Status.ERROR;
@@ -140,7 +141,8 @@ try
 					}
 					else
 					{
-						
+
+                        jsonResponseObj.put("update_event",true);
 						responseStatus = RespConstants.Status.OK;
 					}
 				

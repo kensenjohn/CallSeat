@@ -7,6 +7,13 @@
 <%@page import="com.gs.manager.event.*"%>
 <%@page import="com.gs.common.*" %>
 <%@page import="com.gs.phone.account.*" %>
+<%@ page import="com.gs.common.usage.UsageMetaData" %>
+<%@ page import="com.gs.bean.usage.PhoneCallUsageBean" %>
+<%@ page import="com.gs.common.usage.PhoneCallUsage" %>
+<%@ page import="com.gs.common.usage.Usage" %>
+<%@ page import="com.gs.bean.usage.UsageBean" %>
+<%@ page import="com.gs.common.usage.TextMessageUsage" %>
+<%@ page import="com.gs.bean.usage.TextMessageUsageBean" %>
 
 <%@include file="../common/security.jsp" %>
 <%
@@ -114,6 +121,26 @@
                                     EventFeatureManager eventFeatureManager = new EventFeatureManager();
                                     eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.PREMIUM_TOTAL_CALL_MINUTES,ParseUtil.iToS(pricingGroupBean.getMaxMinutes()));
                                     eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.PREMIUM_TOTAL_TEXT_MESSAGES,ParseUtil.iToS(pricingGroupBean.getSmsCount()));
+
+
+                                    UsageMetaData usageMetaData = new UsageMetaData();
+                                    usageMetaData.setEventId(sEventId);
+                                    usageMetaData.setAdminId(sAdminId);
+
+                                    Usage phoneCallUsage = new PhoneCallUsage();
+                                    PhoneCallUsageBean phoneCallUsageBean = (PhoneCallUsageBean)phoneCallUsage.getUsage(usageMetaData);
+                                    jspLogging.error("Phone CAll Usage : " + phoneCallUsageBean );
+                                    if(phoneCallUsageBean!=null)
+                                    {
+                                        eventFeatureManager.createEventFeatures(sEventId , Constants.EVENT_FEATURES.DEMO_FINAL_CALL_MINUTES_USED, ParseUtil.iToS(phoneCallUsageBean.getNumOfDemoMinutesUsed()) );
+                                    }
+
+                                    Usage textMessageUsage = new TextMessageUsage();
+                                    TextMessageUsageBean textMessageUsageBean = (TextMessageUsageBean)textMessageUsage.getUsage(usageMetaData);
+                                    if(textMessageUsageBean!=null)
+                                    {
+                                        eventFeatureManager.createEventFeatures(sEventId , Constants.EVENT_FEATURES.DEMO_FINAL_TEXT_MESSAGES_SENT, ParseUtil.iToS(textMessageUsageBean.getNumOfDemoTextSent()) );
+                                    }
 
                                 }
 
@@ -246,9 +273,9 @@
     }
     catch(Exception e)
     {
-    jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
-    jsonResponseObj.put("message", "Oops!! Your request was not processed. Please try again later.");
-    appLogging.error("Error purchasing phone number package." + ExceptionHandler.getStackTrace(e) );
-    out.println(jsonResponseObj);
+        jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
+        jsonResponseObj.put("message", "Oops!! Your request was not processed. Please try again later.");
+        appLogging.error("Error purchasing phone number package." + ExceptionHandler.getStackTrace(e) );
+        out.println(jsonResponseObj);
     }
 %>

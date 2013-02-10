@@ -342,16 +342,12 @@
                                 <div class="offset1 span7">
                                     <table>
                                         <tr>
-                                            <td><span class="fld_txt_small"> Minutes remaining: </span></td>
-                                            <td><span class="fld_txt_small" id="e_summ_minutes_remaining" ></span></td>
+                                            <td  style="text-align:right;" ><span class="fld_txt_small"> Minutes remaining: </span></td>
+                                            <td  style="text-align:left;"><span class="fld_txt_small" id="e_summ_call_minutes_remaining" >0</span></td>
                                         </tr>
                                         <tr>
-                                            <td><span class="fld_txt_small"> Minutes used: </span></td>
-                                            <td><span class="fld_txt_small" id="e_summ_minutes_used" ></span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span class="fld_txt_small"> Total minutes: </span></td>
-                                            <td><span class="fld_txt_small" id="e_summ_total_minutes" ></span></td>
+                                            <td style="text-align:right;" ><span class="fld_txt_small"> Minutes used: </span></td>
+                                            <td style="text-align:left;"><span class="fld_txt_small" id="e_summ_call_minutes_used" >0</span></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -365,16 +361,12 @@
                                 <div class="offset1 span7">
                                     <table>
                                         <tr>
-                                            <td><span class="fld_txt_small"> Text remaining: </span></td>
-                                            <td><span class="fld_txt_small" id="e_summ_texts_remaining" ></span></td>
+                                            <td  style="text-align:right;" ><span class="fld_txt_small"> Text remaining: </span></td>
+                                            <td  style="text-align:left;"><span class="fld_txt_small" id="e_summ_text_mmsg_remaining" >0</span></td>
                                         </tr>
                                         <tr>
-                                            <td><span class="fld_txt_small"> Text sent: </span></td>
-                                            <td><span class="fld_txt_small" id="e_summ_texts_sent" ></span></td>
-                                        </tr>
-                                        <tr>
-                                            <td><span class="fld_txt_small"> Total Text: </span></td>
-                                            <td><span class="fld_txt_small" id="e_summ_total_texts" ></span></td>
+                                            <td  style="text-align:right;" ><span class="fld_txt_small"> Text sent: </span></td>
+                                            <td  style="text-align:left;"><span class="fld_txt_small" id="e_summ_text_mmsg_sent" >0</span></td>
                                         </tr>
                                     </table>
                                 </div>
@@ -1087,8 +1079,6 @@
 			}
 			else  if( jsonResult.status == 'ok' && varResponseObj !=undefined)
 			{
-                displayMssgBoxAlert('Successfully created seating plan.', false);
-				
 				$("#primary_header").text( $("#e_summ_event_name").val() );
 				$("#secondary_header").text( '('+$("#e_summ_event_date").val()+')' );
 				
@@ -1099,6 +1089,15 @@
 					var jsonResponseObj = varResponseObj.payload;
 					if(jsonResponseObj.create_event == true)
 					{
+                        //$("#save_event").show();
+                        $("#create_event").val('Save Changes');
+
+                        $("#create_event").unbind('click');
+                        $("#create_event").click(function(){
+                            saveEvent();
+                        });
+
+                        displayMssgBoxAlert('Your new seating plan was successfully created.', false);
 						//alert(jsonResponseObj.event_bean.event_id)
 						varEventID = jsonResponseObj.event_bean.event_id;
 						
@@ -1106,7 +1105,12 @@
 
                         loadEventSummary();
 					}
+                    else if(jsonResponseObj.update_event == true)
+                    {
+                        displayMssgBoxAlert('Your changes to the seating plan were successfully updated.', false);
+                    }
 				}
+
 				
 			}
 		}
@@ -1273,6 +1277,23 @@
 			$("#e_summ_total_rsvp").text(eventSummary.total_guest_rsvp);
 			$("#e_summ_rsvp_telnum").text(eventSummary.rsvp_tel_number);
 			$("#e_summ_seating_telnum").text(eventSummary.seating_tel_number);
+
+            // phone usage summary
+            var varPhoneUsage = eventSummary.phone_call_usage;
+            var varRemainingMinutes = eval(varPhoneUsage.telnum_premium_mins_remain) + eval( varPhoneUsage.telnum_demo_mins_remain );
+            $("#e_summ_call_minutes_remaining").text(varRemainingMinutes);
+
+            var varUsedMinutes = eval(varPhoneUsage.telnum_premium_mins_used) + eval( varPhoneUsage.telnum_demo_mins_used );
+            $("#e_summ_call_minutes_used").text(varUsedMinutes);
+
+            // text message summary
+            var varTextMessageUsage = eventSummary.text_message_usage;
+
+            var varRemainingTxtMssg = eval(varTextMessageUsage.telnum_premium_text_mssg_remaining) + eval( varTextMessageUsage.telnum_demo_text_mssg_remaining );
+            $("#e_summ_text_mmsg_remaining").text(varRemainingTxtMssg);
+
+            var varTxtMssgSent = eval(varTextMessageUsage.telnum_premium_text_mssg_sent) + eval( varTextMessageUsage.telnum_demo_text_mssg_sent );
+            $("#e_summ_text_mmsg_sent").text(varTxtMssgSent);
 
             if( eventSummary.is_demo_numbers == true )
             {

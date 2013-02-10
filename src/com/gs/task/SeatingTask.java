@@ -2,12 +2,14 @@ package com.gs.task;
 
 import java.util.ArrayList;
 
+import com.gs.bean.CallTransactionBean;
 import com.gs.bean.EventBean;
 import com.gs.bean.EventGuestBean;
 import com.gs.bean.TableGuestsBean;
 import com.gs.bean.twilio.IncomingCallBean;
 import com.gs.call.CallResponse;
 import com.gs.call.twilio.twiml.SeatingTwiml;
+import com.gs.common.CallTransaction;
 import com.gs.common.Constants;
 import com.gs.data.event.EventData;
 import com.gs.manager.event.GuestTableManager;
@@ -68,6 +70,15 @@ public class SeatingTask extends Task
 		callResponse.setEventGuestBean(eventGuestBean);
 		callResponse.setEventBean(eventBean);
 		callResponse.setArrTableGuestBean(arrTableGuestBean);
+
+        CallTransactionBean callTransactionBean = new CallTransactionBean();
+        callTransactionBean.setAdminId(super.adminId);
+        callTransactionBean.setEventId(super.eventId);
+        if(eventGuestBean!=null && !"".equalsIgnoreCase(eventGuestBean.getGuestId()))
+        {
+            callTransactionBean.setGuestId(eventGuestBean.getGuestId());
+        }
+        CallTransaction.getInstance().updateTransaction(incomingCallBean,callTransactionBean );
 
 		return callResponse;
 	}

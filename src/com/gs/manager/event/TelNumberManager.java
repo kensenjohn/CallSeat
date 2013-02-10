@@ -242,6 +242,7 @@ public class TelNumberManager {
 			AdminTelephonyAccountMeta adminAccountMeta, String sTelephoneNum)
 			throws TwilioRestException {
 
+        appLogging.info("Purchase the Telephone Num : " + sTelephoneNum + " adminid : " + adminAccountMeta.getAdminId());
 		String sPurchasedPhoneNum = "777-888-9999";
 		if (adminAccountMeta != null
 				&& !"".equalsIgnoreCase(adminAccountMeta.getAdminId())) {
@@ -281,10 +282,16 @@ public class TelNumberManager {
 				} else if (Constants.ENVIRONMENT.PROD.getEnv()
 						.equalsIgnoreCase(sEnvironment)) {
 					// Buy the first number returned
+                    String sApplicationDomain = ParseUtil.checkNull(applicationConfig.get(Constants.PROP_APPLICATION_DOMAIN));
 					Map<String, String> params = new HashMap<String, String>();
 					params.put("PhoneNumber", sTelephoneNum);
-					IncomingPhoneNumber purchasedNumber = mainAccount
-							.getIncomingPhoneNumberFactory().create(params);
+                    params.put("VoiceUrl", sApplicationDomain+"/IncomingCall");
+                    params.put("VoiceMethod", "POST");
+                    params.put("VoiceFallbackUrl",  sApplicationDomain+"/IncomingCall");
+                    params.put("VoiceFallbackMethod", "POST");
+                    params.put("StatusCallback",  sApplicationDomain+"/IncomingCall?incoming_call_type=end_call");
+                    params.put("StatusCallbackMethod", "POST");
+					IncomingPhoneNumber purchasedNumber = mainAccount.getIncomingPhoneNumberFactory().create(params);
 
 					sPurchasedPhoneNum = purchasedNumber.getPhoneNumber();
 				}

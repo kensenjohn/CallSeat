@@ -2,6 +2,8 @@ package com.gs.task;
 
 import java.util.ArrayList;
 
+import com.gs.bean.CallTransactionBean;
+import com.gs.common.CallTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -70,6 +72,14 @@ public class RsvpTask extends Task {
 					.getTotalNumberOfSeats());
 			int iRsvpSeatsSel = ParseUtil.sToI(rsvpNum);
 
+
+
+            CallTransactionBean callTransactionBean = new CallTransactionBean();
+            callTransactionBean.setAdminId(super.adminId);
+            callTransactionBean.setEventId(super.eventId);
+            callTransactionBean.setGuestId(tmpEventGuestBean.getGuestId());
+            CallTransaction.getInstance().updateTransaction(incomingCallBean,callTransactionBean );
+
 			RsvpTwiml rsvpTwiml = new RsvpTwiml();
 
 			if (iRsvpSeatsSel <= iTotalSeats) {
@@ -136,6 +146,15 @@ public class RsvpTask extends Task {
 
 		callResponse.setEventGuestBean(eventGuestBean);
 		callResponse.setEventBean(eventBean);
+
+        CallTransactionBean callTransactionBean = new CallTransactionBean();
+        callTransactionBean.setAdminId(super.adminId);
+        callTransactionBean.setEventId(super.eventId);
+        if(eventGuestBean!=null && !"".equalsIgnoreCase(eventGuestBean.getGuestId()))
+        {
+            callTransactionBean.setGuestId(eventGuestBean.getGuestId());
+        }
+        CallTransaction.getInstance().updateTransaction(incomingCallBean,callTransactionBean );
 
 		return callResponse;
 	}

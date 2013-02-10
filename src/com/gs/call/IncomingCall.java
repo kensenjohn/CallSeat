@@ -8,7 +8,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.gs.bean.CallTransactionBean;
 import com.gs.bean.twilio.IncomingCallBean;
+import com.gs.common.CallTransaction;
 import com.gs.common.Constants;
 import com.twilio.sdk.verbs.TwiMLResponse;
 
@@ -54,6 +56,7 @@ public class IncomingCall extends HttpServlet
 
 		IncomingCallBean incomingCallBean = incominManager.getIncomingCallRequest(request);
 
+        CallTransaction callTransaction = CallTransaction.getInstance();
 		if ("rsvp_ans".equalsIgnoreCase(sCallType))
 		{
 			if (incomingCallBean != null && incomingCallBean.getTo() != null
@@ -62,12 +65,18 @@ public class IncomingCall extends HttpServlet
 				incomingCallBean.setCallType(Constants.CALL_TYPE.RSVP_DIGIT_RESP);
 				callResponse = incominManager.processCall(incomingCallBean);
 			}
-		} else
+		}
+        else if ("end_call".equalsIgnoreCase(sCallType)) {
+            CallTransactionBean callTransactionBean = new CallTransactionBean();
+            callTransaction.updateTransaction(incomingCallBean,callTransactionBean );
+        }
+        else
 		{
 			if (incomingCallBean != null && incomingCallBean.getTo() != null
 					&& !"".equalsIgnoreCase(incomingCallBean.getTo()))
 			{
 				incomingCallBean.setCallType(Constants.CALL_TYPE.FIRST_REQUEST);
+                callTransaction.createTransaction(incomingCallBean);
 				callResponse = incominManager.processCall(incomingCallBean);
 			}
 		}

@@ -46,18 +46,26 @@
                 {
                     sSeatingCallForward = Utility.convertHumanToInternationalTelNum(sSeatingCallForwardHumanNumber);
                 }
-                com.google.i18n.phonenumbers.Phonenumber.PhoneNumber seatingPhoneNumber = new Phonenumber.PhoneNumber();
-                seatingPhoneNumber.setCountryCode(1);
-                seatingPhoneNumber.setNationalNumber(ParseUtil.sToL(sSeatingCallForward.substring(1)));
-                PhoneNumberUtil seatingNumberUtil = PhoneNumberUtil.getInstance();
-                if(!seatingNumberUtil.isValidNumber(seatingPhoneNumber))
-                {
-                    Text errorText = new ErrorText("We were unable to save the forwarding number for Seating. Please enter a valid Seating forward call number.<br>","cell_num") ;
-                    arrErrorText.add(errorText);
 
-                    responseStatus = RespConstants.Status.ERROR;
-                    isError = true;
+                if(sSeatingCallForward!=null && !"".equalsIgnoreCase(sSeatingCallForward))
+                {
+                    com.google.i18n.phonenumbers.Phonenumber.PhoneNumber seatingPhoneNumber = new Phonenumber.PhoneNumber();
+                    seatingPhoneNumber.setCountryCode(1);
+                    seatingPhoneNumber.setNationalNumber(ParseUtil.sToL(sSeatingCallForward.substring(1)));
+
+                    PhoneNumberUtil seatingNumberUtil = PhoneNumberUtil.getInstance();
+                    if(!seatingNumberUtil.isValidNumber(seatingPhoneNumber))
+                    {
+                        Text errorText = new ErrorText("We were unable to save the forwarding number for Seating. Please enter a valid Seating forward call number.<br>","cell_num") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
+                        isError = true;
+                    }
                 }
+
+
+
 
                 //RSVP Forwarding Number
                 EventFeatureBean rsvpCallForwardEventFeatureBean =  eventFeatureManager.getEventFeatures(sEventId, Constants.EVENT_FEATURES.RSVP_CALL_FORWARD_NUMBER);
@@ -67,18 +75,22 @@
                     sRsvpCallForward = Utility.convertHumanToInternationalTelNum(sRsvpCallForwardHumanNumber);
                 }
 
-                com.google.i18n.phonenumbers.Phonenumber.PhoneNumber rsvpPhoneNumber = new Phonenumber.PhoneNumber();
-                rsvpPhoneNumber.setCountryCode(1);
-                rsvpPhoneNumber.setNationalNumber(ParseUtil.sToL(sRsvpCallForward.substring(1)));
-                PhoneNumberUtil rsvpNumberUtil = PhoneNumberUtil.getInstance();
-                if(!rsvpNumberUtil.isValidNumber(rsvpPhoneNumber))
+                if(sRsvpCallForward!=null && !"".equalsIgnoreCase(sRsvpCallForward))
                 {
-                    Text errorText = new ErrorText("We were unable to save the forwarding number for RSVP. Please enter a valid RSVP forward call number.<br>","cell_num") ;
-                    arrErrorText.add(errorText);
+                    com.google.i18n.phonenumbers.Phonenumber.PhoneNumber rsvpPhoneNumber = new Phonenumber.PhoneNumber();
+                    rsvpPhoneNumber.setCountryCode(1);
+                    rsvpPhoneNumber.setNationalNumber(ParseUtil.sToL(sRsvpCallForward.substring(1)));
+                    PhoneNumberUtil rsvpNumberUtil = PhoneNumberUtil.getInstance();
+                    if(!rsvpNumberUtil.isValidNumber(rsvpPhoneNumber))
+                    {
+                        Text errorText = new ErrorText("We were unable to save the forwarding number for RSVP. Please enter a valid RSVP forward call number.<br>","cell_num") ;
+                        arrErrorText.add(errorText);
 
-                    responseStatus = RespConstants.Status.ERROR;
-                    isError = true;
+                        responseStatus = RespConstants.Status.ERROR;
+                        isError = true;
+                    }
                 }
+
 
                 if(!isError)
                 {
@@ -94,8 +106,6 @@
                     }
 
                     // Saving RSVP Call Forward number
-
-
                     if(rsvpCallForwardEventFeatureBean!=null && rsvpCallForwardEventFeatureBean.getHmFeatureValue()!=null &&
                             !rsvpCallForwardEventFeatureBean.getHmFeatureValue().isEmpty())
                     {
