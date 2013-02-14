@@ -18,6 +18,7 @@ import com.twilio.sdk.verbs.TwiMLResponse;
 public class TwimlSupport {
 
 	private static final String DEMO_ENTRY_SERVLET = "DemoIncomingCall";
+    private static final String PREMIUM_ENTRY_SERVLET = "IncomingCall";
 	private static Logger appLogging = LoggerFactory.getLogger("AppLogging");
 
 	private static Configuration applicationConfig = Configuration
@@ -59,6 +60,13 @@ public class TwimlSupport {
 			strURl.append("input_secret_key=").append(
 					twilioIncomingBean.getCallerInputSecretKey());
 			break;
+        case RSVP_DIGIT_RESP:
+            strURl.append("/").append(PREMIUM_ENTRY_SERVLET).append("?")
+                    .append("incoming_call_type=");
+            strURl.append("rsvp_ans&amp;").append("call_attempt=")
+                    .append(twilioIncomingBean.getCallAttemptNumber() + 1)
+                    .append("&amp;");
+            break;
 
 		}
 		appLogging.debug("Build URL : " + strURl.toString() + " from : "

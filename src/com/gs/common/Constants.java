@@ -113,7 +113,8 @@ public class Constants {
 	}
 
 	public enum CALL_TYPE {
-		FIRST_REQUEST, RSVP_DIGIT_RESP, DEMO_FIRST_REQUEST, DEMO_GATHER_EVENT_NUM, DEMO_GATHER_SECRET_KEY, DEMO_GATHER_RSVP_NUM, DEMO_GATHER_SEATING_NUM, DEMO_ERROR_HANGUP;
+		FIRST_REQUEST, RSVP_DIGIT_RESP, DEMO_FIRST_REQUEST, DEMO_GATHER_EVENT_NUM, DEMO_GATHER_SECRET_KEY, DEMO_GATHER_RSVP_NUM,
+        DEMO_GATHER_SEATING_NUM, DEMO_ERROR_HANGUP;
 
 	}
 
@@ -181,6 +182,20 @@ public class Constants {
 			return this.emailTemplate;
 		}
 	}
+
+    public enum SMS_TEMPLATE {
+        SMS_RSVP_CONFIRMATION("SMS_RSVP_CONFIRMATION"), SMS_SEATING_CONFIRMATION("SMS_SEATING_CONFIRMATION");
+
+        private String smsTemplate = "";
+
+        SMS_TEMPLATE(String smsTemplate) {
+            this.smsTemplate = smsTemplate;
+        }
+
+        public String getSmsTemplate() {
+            return this.smsTemplate;
+        }
+    }
 
 	public final static String PROP_ENVIRONMENT = "environment";
 
@@ -397,6 +412,32 @@ public class Constants {
         public String getEventFeature()
         {
             return this.eventFeature;
+        }
+    }
+
+    public enum TIME_UNIT
+    {
+        SECONDS,
+        MINUTES,
+        HOURS;
+    }
+
+    public enum SCHEDULER_STATUS
+    {
+        NEW_SCHEDULE("NEW_SCHEDULE"),
+        PICKED_TO_PROCESS("PICKED_TO_PROCESS"),
+        COMPLETE("COMPLETE"),
+        ERROR("ERROR");
+
+        private String schedulerStatus = "";
+        SCHEDULER_STATUS( String schedulerStatus )
+        {
+            this.schedulerStatus = schedulerStatus;
+        }
+
+        public String getSchedulerStatus()
+        {
+            return this.schedulerStatus;
         }
     }
 

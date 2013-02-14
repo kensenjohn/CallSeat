@@ -1,5 +1,7 @@
 package com.gs.call.twilio.twiml;
 
+import com.gs.bean.twilio.IncomingCallBean;
+import com.gs.bean.twilio.TwilioIncomingCallBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,7 +68,8 @@ public class RsvpTwiml
 	}
 
 	public CallResponse getRsvpDigitsFail(CallResponse callResponse, String sMessage,
-			Constants.RSVP_STATUS rsvpStaus)
+			Constants.RSVP_STATUS rsvpStaus,
+            TwilioIncomingCallBean twilioIncomingBean)
 	{
 		if (callResponse != null && callResponse.getEventGuestBean() != null)
 		{
@@ -81,16 +84,19 @@ public class RsvpTwiml
 				Gather gatherRsvp = new Gather();
 
 				gatherRsvp.setMethod("POST");
-				gatherRsvp.setAction("/IncomingCall?incoming_call_type=rsvp_ans");
+				//gatherRsvp.setAction("/IncomingCall?incoming_call_type=rsvp_ans");
+                gatherRsvp.setAction(TwimlSupport.buildURL(twilioIncomingBean,
+                        Constants.CALL_TYPE.RSVP_DIGIT_RESP).toString());
 
 				Say sayInfo = new Say(
-						"Please try again or hang up and try later. Enter a number from from zero to "
+						"Please enter a R S V P number from zero to "
 								+ eventGuestBean.getTotalNumberOfSeats()
-								+ " seats to RSVP for this invite. When you are done press the pound sign");
+								+ " seats followed by the pound sign");
 				sayInfo.setVoice(VOICE_ACTOR);
+                sayInfo.setLoop(2);
 
 				Say sayThankYou = new Say(
-						"Thank You for your response. Please hold while I process the RSVP seats.");
+						"Thank You for your response.");
 				sayThankYou.setVoice(VOICE_ACTOR);
 
 				try
@@ -118,10 +124,11 @@ public class RsvpTwiml
 		return callResponse;
 	}
 
-	public CallResponse getFirstResponse(CallResponse callResponse)
+	public CallResponse getFirstResponse(CallResponse callResponse,IncomingCallBean incomingCallBean )
 	{
-		if (callResponse != null && callResponse.getEventGuestBean() != null)
+		if (callResponse != null && callResponse.getEventGuestBean() != null && incomingCallBean!=null)
 		{
+            TwilioIncomingCallBean twilioIncomingBean = (TwilioIncomingCallBean)incomingCallBean;
 			EventGuestBean eventGuestBean = callResponse.getEventGuestBean();
 
 			TwiMLResponse response = new TwiMLResponse();
@@ -132,17 +139,18 @@ public class RsvpTwiml
 			Gather gatherRsvp = new Gather();
 
 			gatherRsvp.setMethod("POST");
-			gatherRsvp.setAction("/IncomingCall?incoming_call_type=rsvp_ans");
+			//gatherRsvp.setAction("/IncomingCall?incoming_call_type=rsvp_ans");
+            gatherRsvp.setAction(TwimlSupport.buildURL(twilioIncomingBean,
+                    Constants.CALL_TYPE.RSVP_DIGIT_RESP).toString());
 
 			Say sayInfo = new Say(
-					"You have been been invited for "
+					"You have been been invited to "
 							+ eventGuestBean.getTotalNumberOfSeats()
-							+ " seats. Please enter the number of seats you would like to RSVP to after the beep. "
-							+ " Enter a the number of seats you would like to RSVP for followed by the pound sign.");
+							+ " seats. Please R S V P by entering the number of seats.");
 			sayInfo.setVoice(VOICE_ACTOR);
 			// sayInfo.setLoop(3);
 
-			Say sayThankYou = new Say("Thank You.");
+			Say sayThankYou = new Say("Thank You for your response.");
 			sayThankYou.setVoice(VOICE_ACTOR);
 
 			try

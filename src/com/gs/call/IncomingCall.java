@@ -62,7 +62,15 @@ public class IncomingCall extends HttpServlet
 			if (incomingCallBean != null && incomingCallBean.getTo() != null
 					&& !"".equalsIgnoreCase(incomingCallBean.getTo()))
 			{
-				incomingCallBean.setCallType(Constants.CALL_TYPE.RSVP_DIGIT_RESP);
+                int iNumOfAttempts = incomingCallBean.getCallAttemptNumber();
+
+                if (iNumOfAttempts <= 2) {
+                    incomingCallBean
+                            .setCallType(Constants.CALL_TYPE.RSVP_DIGIT_RESP);
+                } else {
+                    incomingCallBean
+                            .setCallType(Constants.CALL_TYPE.DEMO_ERROR_HANGUP);
+                }
 				callResponse = incominManager.processCall(incomingCallBean);
 			}
 		}

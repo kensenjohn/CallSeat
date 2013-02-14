@@ -8,11 +8,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class DateSupport {
-	private static final DateTimeFormatter PRETTY_DATE_2 = DateTimeFormat
-			.forPattern(Constants.PRETTY_DATE_PATTERN_2);
+	private static final DateTimeFormatter PRETTY_DATE_2 = DateTimeFormat.forPattern(Constants.PRETTY_DATE_PATTERN_2);
 
-	private static final Logger appLogging = LoggerFactory
-			.getLogger("AppLogging");
+	private static final Logger appLogging = LoggerFactory.getLogger("AppLogging");
 
 	public static Long getEpochMillis() {
 		DateTime dt = new DateTime();
@@ -56,6 +54,25 @@ public class DateSupport {
 		DateTime afterMinus = srcTime.minusHours(iNumOfHours);
 		return afterMinus.getMillis();
 	}
+
+    public static Long addTime(Long epochDate, Integer iNumOfTimeUnits, Constants.TIME_UNIT timeUnit )
+    {
+        DateTime srcTime = new DateTime(epochDate);
+        DateTime afterAddition = new DateTime();
+        if(Constants.TIME_UNIT.SECONDS.equals(timeUnit))
+        {
+            afterAddition.plusSeconds( iNumOfTimeUnits );
+        }
+        else if( Constants.TIME_UNIT.MINUTES.equals(timeUnit) )
+        {
+            afterAddition.plusMinutes( iNumOfTimeUnits );
+        }
+        else if( Constants.TIME_UNIT.HOURS.equals(timeUnit) )
+        {
+            afterAddition.plusHours( iNumOfTimeUnits );
+        }
+        return afterAddition.getMillis();
+    }
 
     public static Integer getYear(Long epochDate)
     {

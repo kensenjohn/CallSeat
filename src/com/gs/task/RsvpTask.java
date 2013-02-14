@@ -3,6 +3,7 @@ package com.gs.task;
 import java.util.ArrayList;
 
 import com.gs.bean.CallTransactionBean;
+import com.gs.bean.InformGuestBean;
 import com.gs.common.CallTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,7 @@ public class RsvpTask extends Task {
 			if (Constants.CALL_TYPE.FIRST_REQUEST.equals(incomingCallBean
 					.getCallType())) {
 				callResponse = processFirstResponseTask(incomingCallBean);
-				callResponse = rsvpTwiml.getFirstResponse(callResponse);
+				callResponse = rsvpTwiml.getFirstResponse(callResponse,incomingCallBean);
 			} else if (Constants.CALL_TYPE.RSVP_DIGIT_RESP
 					.equals(incomingCallBean.getCallType())) {
 				callResponse = processRsvpDigits(incomingCallBean);
@@ -105,12 +106,20 @@ public class RsvpTask extends Task {
 					callResponse = rsvpTwiml.getRsvpDigitsSuccess(callResponse,
 							"You have successfully updated the number of seats for RSVP to "
 									+ eventGuestBean.getRsvpSeats());
+
+                    InformGuestBean informGuestBean = new InformGuestBean();
+                    informGuestBean.setEventId( super.eventId );
+                    informGuestBean.setAdminId( super.eventId );
+                    informGuestBean.setGuestId( eventGuestBean.getGuestId() );
+                    informGuestBean.setEventTask( Constants.EVENT_TASK.RSVP );
+
+                    InformGuestTask.sendRSVPConfirmation( informGuestBean );
 				} else {
 					callResponse = rsvpTwiml
 							.getRsvpDigitsFail(
 									callResponse,
 									"Your request could not be processed as this time. Please try again later.",
-									Constants.RSVP_STATUS.RSVP_UPDATE_FAIL);
+									Constants.RSVP_STATUS.RSVP_UPDATE_FAIL,twilioIncomingCallBean);
 
 				}
 
@@ -119,8 +128,8 @@ public class RsvpTask extends Task {
 				callResponse = rsvpTwiml
 						.getRsvpDigitsFail(
 								callResponse,
-								"Your R S V P exceeded the total number of seats you have been allocated.",
-								Constants.RSVP_STATUS.RSVP_EXCEED_TOTAL_SEATS);
+								"Your R S V P number exceeded the total number of seats you have been invited to.",
+								Constants.RSVP_STATUS.RSVP_EXCEED_TOTAL_SEATS,twilioIncomingCallBean);
 			}
 		}
 		return callResponse;

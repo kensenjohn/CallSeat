@@ -23,7 +23,6 @@ public class SeatingTask extends Task
 	public SeatingTask(String eventId, String adminId)
 	{
 		super(eventId, adminId);
-		// TODO Auto-generated constructor stub
 	}
 
 	@Override
