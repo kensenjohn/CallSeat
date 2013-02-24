@@ -2,6 +2,8 @@ package com.gs.call.twilio.twiml;
 
 import java.util.ArrayList;
 
+import com.gs.bean.InformGuestBean;
+import com.gs.task.InformGuestTask;
 import com.twilio.sdk.verbs.*;
 import org.apache.commons.codec.EncoderException;
 import org.apache.commons.codec.net.URLCodec;
@@ -97,6 +99,14 @@ public class DemoCallTwiml {
 
 				callResponse.setResponse(response);
 				callResponse.setTwilResponseSuccess(true);
+
+                InformGuestBean informGuestBean = new InformGuestBean();
+                informGuestBean.setEventId( eventBean.getEventId() );
+                informGuestBean.setAdminId( eventBean.getEventAdminId() );
+                informGuestBean.setGuestId( callResponse.getEventGuestBean().getGuestId() );
+                informGuestBean.setEventTask( Constants.EVENT_TASK.SEATING );
+
+                InformGuestTask.sendSeatingConfirmation( informGuestBean );
 			} catch (TwiMLException e) {
 				callResponse.setTwilResponseSuccess(false);
 				appLogging.info(ExceptionHandler.getStackTrace(e));
@@ -284,6 +294,15 @@ public class DemoCallTwiml {
 
 				callResponse.setResponse(response);
 				callResponse.setTwilResponseSuccess(true);
+
+                EventBean eventBean = callResponse.getEventBean();
+                InformGuestBean informGuestBean = new InformGuestBean();
+                informGuestBean.setEventId( eventBean.getEventId() );
+                informGuestBean.setAdminId( eventBean.getEventAdminId() );
+                informGuestBean.setGuestId( eventGuestBean.getGuestId() );
+                informGuestBean.setEventTask( Constants.EVENT_TASK.RSVP );
+
+                InformGuestTask.sendRSVPConfirmation(informGuestBean);
 			} catch (TwiMLException e) {
 				callResponse.setTwilResponseSuccess(false);
 				appLogging.info(ExceptionHandler.getStackTrace(e));

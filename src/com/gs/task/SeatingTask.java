@@ -2,10 +2,7 @@ package com.gs.task;
 
 import java.util.ArrayList;
 
-import com.gs.bean.CallTransactionBean;
-import com.gs.bean.EventBean;
-import com.gs.bean.EventGuestBean;
-import com.gs.bean.TableGuestsBean;
+import com.gs.bean.*;
 import com.gs.bean.twilio.IncomingCallBean;
 import com.gs.call.CallResponse;
 import com.gs.call.twilio.twiml.SeatingTwiml;
@@ -63,8 +60,7 @@ public class SeatingTask extends Task
 		guestTableMetaData.setGuestId(eventGuestBean.getGuestId());
 
 		GuestTableManager guestTableManager = new GuestTableManager();
-		ArrayList<TableGuestsBean> arrTableGuestBean = guestTableManager
-				.getGuestsAssignments(guestTableMetaData);
+		ArrayList<TableGuestsBean> arrTableGuestBean = guestTableManager.getGuestsAssignments(guestTableMetaData);
 
 		callResponse.setEventGuestBean(eventGuestBean);
 		callResponse.setEventBean(eventBean);

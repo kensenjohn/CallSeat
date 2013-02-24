@@ -1,7 +1,11 @@
 package com.gs.call.twilio.twiml;
 
+import com.gs.bean.EventBean;
+import com.gs.bean.InformGuestBean;
 import com.gs.bean.twilio.IncomingCallBean;
 import com.gs.bean.twilio.TwilioIncomingCallBean;
+import com.gs.manager.event.EventManager;
+import com.gs.task.InformGuestTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +26,7 @@ public class RsvpTwiml
 
 	private String VOICE_ACTOR = applicationConfig.get(Constants.PROP_TWILIO_VOICE);
 
-	Logger appLogging = LoggerFactory.getLogger("AppLogging");
+	Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 
 	public CallResponse getRsvpDigitsSuccess(CallResponse callResponse, String sMessage)
 	{
@@ -58,6 +62,18 @@ public class RsvpTwiml
 
 				callResponse.setResponse(response);
 				callResponse.setTwilResponseSuccess(true);
+
+
+                EventManager eventManager = new EventManager();
+                EventBean eventBean = eventManager.getEvent( eventGuestBean.getEventId() );
+                //EventBean eventBean = callResponse.getEventBean();
+                InformGuestBean informGuestBean = new InformGuestBean();
+                informGuestBean.setEventId( eventGuestBean.getEventId() );
+                informGuestBean.setAdminId(eventBean.getEventAdminId());
+                informGuestBean.setGuestId(eventGuestBean.getGuestId());
+                informGuestBean.setEventTask(Constants.EVENT_TASK.RSVP);
+                appLogging.info("RSVP TWIML invoking send RSVP Confirmation\n informGuestBean : " + informGuestBean + " \n Event bean : " + eventBean + " \n Guest Bean : " + eventGuestBean);
+                InformGuestTask.sendRSVPConfirmation(informGuestBean);
 			} catch (TwiMLException e)
 			{
 				callResponse.setTwilResponseSuccess(false);

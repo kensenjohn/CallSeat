@@ -125,9 +125,16 @@ public class SmsScheduleBean {
     @Override
     public String toString() {
         return "SmsScheduleBean{" +
-                "eventId='" + eventId + '\'' +
+                "smsScheduleId='" + smsScheduleId + '\'' +
+                ", smsTemplateId='" + smsTemplateId + '\'' +
+                ", eventId='" + eventId + '\'' +
                 ", adminId='" + adminId + '\'' +
                 ", guestId='" + guestId + '\'' +
+                ", humanCreateDate='" + humanCreateDate + '\'' +
+                ", humanScheduledSendDate='" + humanScheduledSendDate + '\'' +
+                ", scheduleStatus='" + scheduleStatus + '\'' +
+                ", scheduledSendDate=" + scheduledSendDate +
+                ", createDate=" + createDate +
                 '}';
     }
 }

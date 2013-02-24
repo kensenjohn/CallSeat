@@ -125,4 +125,18 @@ public class EventGuestBean {
 		}
 		return jsonObject;
 	}
+
+    @Override
+    public String toString() {
+        return "EventGuestBean{" +
+                "eventGuestId='" + eventGuestId + '\'' +
+                ", eventId='" + eventId + '\'' +
+                ", guestId='" + guestId + '\'' +
+                ", isTemporary='" + isTemporary + '\'' +
+                ", deleteRow='" + deleteRow + '\'' +
+                ", totalNumberOfSeats='" + totalNumberOfSeats + '\'' +
+                ", rsvpSeats='" + rsvpSeats + '\'' +
+                ", guestBean=" + guestBean +
+                '}';
+    }
 }

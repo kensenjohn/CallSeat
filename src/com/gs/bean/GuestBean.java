@@ -108,7 +108,7 @@ public class GuestBean {
 		return "GuestBean [guestID=" + guestID + ", userInfoId=" + userInfoId
 				+ ", adminId=" + adminId + ", createDate=" + createDate
 				+ ", totalSeat=" + totalSeat + ", rsvpSeat=" + rsvpSeat
-				+ ", isTmp=" + isTmp + ", delRow=" + delRow + "]";
+				+ ", isTmp=" + isTmp + ", delRow=" + delRow + ", UserinfoBean=" + (userInfoBean!=null?userInfoBean:"No Data") + "]";
 	}
 
 	public JSONObject toJson() {

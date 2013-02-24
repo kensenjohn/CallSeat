@@ -19,21 +19,35 @@ public class ScheduledExecutions implements ServletContextListener {
 	Configuration processSchedulerConfig = Configuration
 			.getInstance(Constants.PROCESS_SCHEDULER_PROP);
 	private ScheduledExecutorService mailScheduler;
+    private ScheduledExecutorService smsCreatorScheduler;
+    private ScheduledExecutorService smsSenderScheduler;
 
 	private static final Logger schedulerLogging = LoggerFactory
 			.getLogger(Constants.SCHEDULER_LOGS);
 
 	@Override
 	public void contextInitialized(ServletContextEvent arg0) {
+        smsCreatorScheduler = Executors.newSingleThreadScheduledExecutor();
+        smsCreatorScheduler.scheduleWithFixedDelay(new SmsCreatorThread(),
+                ParseUtil.sToL(processSchedulerConfig.get(Constants.PROP_SMS_CREATORL_INIT_DELAY)),
+                ParseUtil.sToL(processSchedulerConfig.get(Constants.PROP_SMS_CREATOR_PROC_DELAY)),
+                TimeUnit.SECONDS  );
+        schedulerLogging.info("smsCreatorScheduler  : startup context");
+
+        smsSenderScheduler = Executors.newSingleThreadScheduledExecutor();
+        smsSenderScheduler.scheduleWithFixedDelay(new SmsSenderThread(),
+                ParseUtil.sToL(processSchedulerConfig.get(Constants.PROP_SMS_SENDER_INIT_DELAY)),
+                ParseUtil.sToL(processSchedulerConfig.get(Constants.PROP_SMS_SENDER_PROC_DELAY)),
+                TimeUnit.MINUTES  );
+        schedulerLogging.info("smsSenderScheduler  : startup context :start delay "  + processSchedulerConfig.get(Constants.PROP_SMS_SENDER_PROC_DELAY) );
+
+
 		mailScheduler = Executors.newSingleThreadScheduledExecutor();
 		mailScheduler.scheduleWithFixedDelay(new SingleMailmanThread(),
-				ParseUtil.sToL(processSchedulerConfig
-						.get(Constants.PROP_STANNDARD_MAIL_INIT_DELAY)),
-				ParseUtil.sToL(processSchedulerConfig
-						.get(Constants.PROP_STANNDARD_MAIL_PROC_DELAY)),
-				TimeUnit.SECONDS);
-		schedulerLogging.info("mailScheduler  : startup context");
-
+                ParseUtil.sToL(processSchedulerConfig.get(Constants.PROP_STANNDARD_MAIL_INIT_DELAY)),
+                ParseUtil.sToL(processSchedulerConfig.get(Constants.PROP_STANNDARD_MAIL_PROC_DELAY)),
+                TimeUnit.SECONDS);
+        schedulerLogging.info("mailScheduler  : startup context");
 	}
 
 	@Override
@@ -42,6 +56,18 @@ public class ScheduledExecutions implements ServletContextListener {
 			mailScheduler.shutdownNow();
 			schedulerLogging.info("mailScheduler  : shut down ");
 		}
+
+        if(smsCreatorScheduler!=null)
+        {
+            smsCreatorScheduler.shutdownNow();
+            schedulerLogging.info("smsCreatorScheduler  : shut down ");
+        }
+
+        if(smsSenderScheduler!=null)
+        {
+            smsSenderScheduler.shutdownNow();
+            schedulerLogging.info("smsSenderScheduler  : shut down ");
+        }
 
 	}
 }

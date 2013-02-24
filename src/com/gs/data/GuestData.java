@@ -339,7 +339,7 @@ public class GuestData {
 			ArrayList<Object> aParams = DBDAO.createConstraint(
 					telNumMetaData.getGuestTelNumber(),
 					telNumMetaData.getGuestTelNumber());
-
+            appLogging.info(sQuery + ": " + aParams );
 			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(
 					ADMIN_DB, sQuery, aParams, false, "GuestData.java",
 					"getGuestsByTelNumber()");

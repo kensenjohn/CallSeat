@@ -151,6 +151,7 @@ public class GuestTableManager {
 
 				for (Integer indexRows : setIndexResRows) {
 					boolean isNewTable = false;
+
 					TableGuestsBean tableGuestBean = hmTableGuests
 							.get(indexRows);
 

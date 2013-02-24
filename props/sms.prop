@@ -1,0 +1,5 @@
+enable_sms_creator=true
+schedule_pickuptime_padding=5
+schedule_sms_delay=15
+sms_sender_delay=6
+enable_sms_sender=true

@@ -94,17 +94,28 @@ public class Utility {
 	}
 
 	public static String convertHumanToInternationalTelNum(String sHuman) {
+        String sInternationalTelNum = "";
 		if (sHuman != null && !"".equalsIgnoreCase(sHuman)) {
 			sHuman = sHuman.trim();
-			sHuman = sHuman.replace("+", "");
-			sHuman = sHuman.replace("(", "");
-			sHuman = sHuman.replace(")", "");
-			sHuman = sHuman.replace("-", "");
-			sHuman = sHuman.replace(" ", "");
+			/*sHuman = sHuman.replaceAll("+", "");
+			sHuman = sHuman.replaceAll("\\(", "");
+			sHuman = sHuman.replaceAll("\\)", "");
+			sHuman = sHuman.replaceAll("-", "");
+			sHuman = sHuman.replaceAll(" ", "");
 
-			sHuman = "1" + sHuman;
+			sHuman = "1" + sHuman;    */
+            try {
+                PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
+                com.google.i18n.phonenumbers.Phonenumber.PhoneNumber apiPhoneNumber = phoneUtil.parse(sHuman, "US");
+                sInternationalTelNum = phoneUtil.format(apiPhoneNumber, PhoneNumberUtil.PhoneNumberFormat.E164);
+            }
+            catch(Exception e)
+            {
+                sInternationalTelNum = "";
+            }
+
 		}
-		return sHuman;
+		return sInternationalTelNum;
 	}
 
 	public static String convertInternationalToHumanTelNum(String sTelephoneNum) {
@@ -139,7 +150,6 @@ public class Utility {
                 PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
                 com.google.i18n.phonenumbers.Phonenumber.PhoneNumber apiPhoneNumber = phoneUtil.parse(sTelephoneNum, sCountryCode);
                 sHumanFormattedPhones = phoneUtil.format(apiPhoneNumber, PhoneNumberUtil.PhoneNumberFormat.NATIONAL);
-
             }
             catch(Exception e)
             {

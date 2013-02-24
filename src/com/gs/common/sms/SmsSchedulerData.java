@@ -4,6 +4,8 @@ import com.gs.bean.sms.SmsScheduleBean;
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
 import com.gs.common.db.DBDAO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,6 +22,7 @@ public class SmsSchedulerData {
     Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
     private String ADMIN_DB = applicationConfig.get(Constants.ADMIN_DB);
     private String sourceFile = "SmsSchedulerData.java";
+    private static final Logger smsLogging = LoggerFactory.getLogger(Constants.SMS_LOGS);
     public Integer createSchedule( SmsScheduleBean smsRequestSchedulerBean )
     {
         Integer iNumberOfRows = 0;
@@ -54,6 +57,53 @@ public class SmsSchedulerData {
         return iNumberOfRows;
     }
 
+    public ArrayList<SmsScheduleBean> getArrSchedule(Long lStartTime, Long lEndTime, Constants.SCHEDULER_STATUS scheduleStatus,
+                                                     Constants.SCHEDULE_PICKUP_TYPE schedulePickupType )
+    {
+        ArrayList<SmsScheduleBean> arrSchedulerBean = new ArrayList<SmsScheduleBean>();
+        if(schedulePickupType!=null && scheduleStatus!=null && lStartTime>0)
+        {
+            String sQuery = "SELECT * FROM GTSMSSCHEDULE WHERE ";
+            ArrayList<Object> aParams = new ArrayList<Object>();
+
+            sQuery = sQuery + " SCHEDULE_STATUS = ? ";
+            aParams.add( scheduleStatus.getSchedulerStatus() );
+
+            if(Constants.SCHEDULE_PICKUP_TYPE.NEW_RECORDS.equals( schedulePickupType ))
+            {
+                sQuery = sQuery + " AND SCHEDULEDSENDDATE >= ? AND SCHEDULEDSENDDATE <= ? ";
+                aParams.add(lStartTime);
+                aParams.add(lEndTime);
+            }
+            else if(Constants.SCHEDULE_PICKUP_TYPE.OLD_RECORDS.equals( schedulePickupType ))
+            {
+                sQuery = sQuery + " AND SCHEDULEDSENDDATE < ? ";
+                aParams.add(lStartTime);
+            }
+            else if(Constants.SCHEDULE_PICKUP_TYPE.CURRENT_RECORD.equals( schedulePickupType ))
+            {
+                sQuery = sQuery + " AND SCHEDULEDSENDDATE = ? ";
+                aParams.add(lStartTime);
+            }
+
+
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(ADMIN_DB,sQuery,aParams,true,sourceFile,"getArrSchedule()");
+            smsLogging.info("Query : " + sQuery + " Params : " + aParams  + " result : " + arrResult);
+            if(arrResult!=null && !arrResult.isEmpty() )
+            {
+                for( HashMap<String, String> hmResult : arrResult )
+                {
+                    SmsScheduleBean  smsScheduleBean = new SmsScheduleBean(hmResult);
+                    arrSchedulerBean.add( smsScheduleBean );
+                }
+            }
+        }
+
+
+        return arrSchedulerBean;
+    }
+
     public SmsScheduleBean getGuestScheduler( SmsScheduleBean smsRequestSchedulerBean , Constants.SCHEDULER_STATUS scheduleStatus )
     {
         /*
@@ -68,9 +118,10 @@ public class SmsSchedulerData {
                 && smsRequestSchedulerBean.getGuestId()!=null && !"".equalsIgnoreCase(smsRequestSchedulerBean.getGuestId())
                 && scheduleStatus !=null)
         {
-            String sQuery = "SELECT * FROM GTSMSSCHEDULE WHERE FK_EVENTID = ? AND FK_ADMINID = ? AND FK_GUESTID = ? AND SCHEDULE_STATUS = ?";
+            String sQuery = "SELECT * FROM GTSMSSCHEDULE WHERE FK_EVENTID = ? AND FK_ADMINID = ? AND FK_GUESTID = ? AND SCHEDULE_STATUS = ?" +
+                    " AND FK_SMSTEMPLATEID = ?";
             ArrayList<Object> aParams = DBDAO.createConstraint( smsRequestSchedulerBean.getEventId() , smsRequestSchedulerBean.getAdminId(),
-                    smsRequestSchedulerBean.getGuestId() , scheduleStatus.getSchedulerStatus() );
+                    smsRequestSchedulerBean.getGuestId() , scheduleStatus.getSchedulerStatus(), smsRequestSchedulerBean.getSmsTemplateId() );
 
             ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(ADMIN_DB,sQuery,aParams,true,sourceFile,"getGuestScheduler()");
 

@@ -12,6 +12,7 @@ public class Constants {
 	public static String PROCESS_SCHEDULER_PROP = PROP_FILE_PATH
 			+ "process_scheduler.prop";
 	public static String EMAILER_PROP = PROP_FILE_PATH + "emailer.prop";
+    public static String SMS_PROP = PROP_FILE_PATH + "sms.prop";
 	public static String ANALYTICS_PROP = PROP_FILE_PATH + "analytics.prop";
 
 	public static String ADMIN_DB = "admin_db";
@@ -20,6 +21,7 @@ public class Constants {
 	public static String DB_LOGS = "DBLogging";
 	public static String SCHEDULER_LOGS = "SchedulerLogging";
 	public static String EMAILER_LOGS = "EmailerLogging";
+    public static String SMS_LOGS = "SmsLogging";
 
 	public static String DB_ERROR_LOGS = "DataBaseErrors";
 	public static String JSP_LOGS = "JspLogging";
@@ -27,6 +29,7 @@ public class Constants {
 	public static String CONFIG_LOGS = "ConfiguLogging";
 
 	public static String DATE_PATTERN = "yyyy-MM-dd hh:mm:ss";
+    public static String DATE_PATTERN_TZ = "yyyy-MM-dd HH:mm:ss z";
 	public static String PRETTY_DATE_PATTERN_1 = "MM/dd/yyyy hh:mm z";
 	public static String PRETTY_DATE_PATTERN_2 = "MM/dd/yyyy";
 	public static String TIME_PATTERN = "hh mm";
@@ -144,6 +147,12 @@ public class Constants {
 	public static String PROP_STANNDARD_MAIL_INIT_DELAY = "standard_mail.initial_delay";
 	public static String PROP_STANNDARD_MAIL_PROC_DELAY = "standard_mail.delay_between_call";
 
+    public static String PROP_SMS_CREATORL_INIT_DELAY = "sms_creator.initial_delay";
+    public static String PROP_SMS_CREATOR_PROC_DELAY = "sms_creator.delay_between_call";
+
+    public static String PROP_SMS_SENDER_INIT_DELAY = "sms_sender.initial_delay";
+    public static String PROP_SMS_SENDER_PROC_DELAY = "sms_sender.delay_between_call";
+
 	public static String PROP_AMAZON_ACCESS_KEY = "amazon_access_key";
 	public static String PROP_AMAZON_ACCESS_SECRET = "amazon_secret_key";
 
@@ -151,6 +160,15 @@ public class Constants {
 
 	public static String PROP_ENABLE_SINGLE_EMAIL_SEND = "enable_single_email_send";
 	public static String PROP_ENABLE_BULK_EMAIL_SEND = "enable_bulk_email_send";
+    public static String PROP_ENABLE_SMS_CREATOR = "enable_sms_creator";
+    public static String PROP_ENABLE_SMS_SENDER = "enable_sms_sender";
+
+
+    public static String PROP_SMS_SCHEDULE_PICKUPTIME_PADDING = "schedule_pickuptime_padding";
+    public static String PROP_SMS_SCHEDULE_SMS_DELAY = "schedule_sms_delay";
+    public static String PROP_SMS_SENDER_DELAY = "sms_sender_delay";
+
+
 
 	public static String OWSAPI_POLICY_FILE = "owsapi_policy";
 
@@ -439,6 +457,25 @@ public class Constants {
         {
             return this.schedulerStatus;
         }
+    }
+
+    public enum SCHEDULE_PICKUP_TYPE
+    {
+        NEW_RECORDS("NEW_RECORDS"),
+        OLD_RECORDS("OLD_RECORDS"),
+        CURRENT_RECORD("CURRENT_RECORDS");
+
+        private String scedhuledPickupType = "";
+        SCHEDULE_PICKUP_TYPE(String scedhuledPickupType)
+        {
+            this.scedhuledPickupType = scedhuledPickupType;
+        }
+
+        public String getScheduledPickupType()
+        {
+            return this.scedhuledPickupType;
+        }
+
     }
 
 }

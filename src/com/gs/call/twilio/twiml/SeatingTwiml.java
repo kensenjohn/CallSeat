@@ -2,6 +2,8 @@ package com.gs.call.twilio.twiml;
 
 import java.util.ArrayList;
 
+import com.gs.bean.InformGuestBean;
+import com.gs.task.InformGuestTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -25,11 +27,12 @@ public class SeatingTwiml
 
 	private String VOICE_ACTOR = applicationConfig.get(Constants.PROP_TWILIO_VOICE);
 
-	Logger appLogging = LoggerFactory.getLogger("AppLogging");
+	Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 
 	public CallResponse getFirstResponse(CallResponse callResponse)
 	{
-		Pause pause = new Pause();
+        //Verb pauseVerb = new Verb(Verb.V_PAUSE,null);
+        Pause pause = new Pause();
 		pause.setLength(1);
 
 		boolean isCallForward = false;
@@ -72,7 +75,16 @@ public class SeatingTwiml
 							+ " at table number " + tableGuestBean.getTableNum() + ".";
 					isFirst = false;
 				}
-			} else
+
+                InformGuestBean informGuestBean = new InformGuestBean();
+                informGuestBean.setEventId( eventBean.getEventId() );
+                informGuestBean.setAdminId( eventBean.getEventAdminId() );
+                informGuestBean.setGuestId( callResponse.getEventGuestBean().getGuestId() );
+                informGuestBean.setEventTask( Constants.EVENT_TASK.SEATING );
+
+                InformGuestTask.sendSeatingConfirmation( informGuestBean );
+			}
+            else
 			{
 				sSeatingMessage = "Your call will now be forwarded to an usher. The usher will provide you with more assistance.";
 				isCallForward = true;

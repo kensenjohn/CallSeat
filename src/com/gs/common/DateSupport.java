@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 public class DateSupport {
 	private static final DateTimeFormatter PRETTY_DATE_2 = DateTimeFormat.forPattern(Constants.PRETTY_DATE_PATTERN_2);
+    private static final DateTimeFormatter DATE_PATTERN_TZ = DateTimeFormat.forPattern(Constants.DATE_PATTERN_TZ);  // yyyy-MM-dd HH:mm:ss z
 
 	private static final Logger appLogging = LoggerFactory.getLogger("AppLogging");
 
@@ -19,13 +20,11 @@ public class DateSupport {
 
 	public static String getUTCDateTime() {
 		DateTimeZone zoneUTC = DateTimeZone.UTC;
-		final DateTimeFormatter formatter1 = DateTimeFormat
-				.forPattern("yyyy-MM-dd HH:mm:ss z");
 		DateTime localDateTime = new DateTime();
 
 		DateTime utcTime = localDateTime.withZone(zoneUTC);
 
-		return formatter1.print(utcTime);
+		return DATE_PATTERN_TZ.print(utcTime);
 	}
 
 	public static Long getMillis(String sDate, String sPattern, String sTimeZone) {
@@ -38,14 +37,24 @@ public class DateSupport {
 
 	}
 
+    public static String getTimeByZone(Long epochDate, String sTimeZone, String sPattern) {
+
+        if(sPattern==null || "".equalsIgnoreCase(sPattern))
+        {
+            sPattern = Constants.DATE_PATTERN_TZ;
+        }
+        final DateTimeFormatter dateTimePattern = DateTimeFormat.forPattern(sPattern);
+
+        DateTimeZone timeZone = DateTimeZone.forID(sTimeZone);
+
+        DateTime localDateTime = new DateTime(epochDate,timeZone);
+        DateTime currentDateTime = new DateTime();
+        return dateTimePattern.print(localDateTime);
+    }
+
 	public static String getTimeByZone(Long epochDate, String sTimeZone) {
-		DateTimeZone timeZone = DateTimeZone.forID(sTimeZone);
 
-		DateTime localDateTime = new DateTime(epochDate);
-		DateTime localTime = localDateTime.withZone(timeZone);
-
-		return PRETTY_DATE_2.print(localTime);
-
+        return getTimeByZone(epochDate, sTimeZone, Constants.DATE_PATTERN_TZ);
 	}
 	
 	public static Long subtractHours(Long epochDate, Integer iNumOfHours)
@@ -55,21 +64,40 @@ public class DateSupport {
 		return afterMinus.getMillis();
 	}
 
-    public static Long addTime(Long epochDate, Integer iNumOfTimeUnits, Constants.TIME_UNIT timeUnit )
+    public static Long subtractTime(Long epochDate, Integer iNumOfTimeUnits, Constants.TIME_UNIT timeUnit )
     {
-        DateTime srcTime = new DateTime(epochDate);
-        DateTime afterAddition = new DateTime();
+        // DateTime srcTime = new DateTime(epochDate);
+        DateTime afterAddition = new DateTime(epochDate);
         if(Constants.TIME_UNIT.SECONDS.equals(timeUnit))
         {
-            afterAddition.plusSeconds( iNumOfTimeUnits );
+            afterAddition = afterAddition.minusSeconds( iNumOfTimeUnits );
         }
         else if( Constants.TIME_UNIT.MINUTES.equals(timeUnit) )
         {
-            afterAddition.plusMinutes( iNumOfTimeUnits );
+            afterAddition = afterAddition.minusMinutes( iNumOfTimeUnits );
         }
         else if( Constants.TIME_UNIT.HOURS.equals(timeUnit) )
         {
-            afterAddition.plusHours( iNumOfTimeUnits );
+            afterAddition = afterAddition.minusHours( iNumOfTimeUnits );
+        }
+        return afterAddition.getMillis();
+    }
+
+    public static Long addTime(Long epochDate, Integer iNumOfTimeUnits, Constants.TIME_UNIT timeUnit )
+    {
+        // DateTime srcTime = new DateTime(epochDate);
+        DateTime afterAddition = new DateTime(epochDate);
+        if(Constants.TIME_UNIT.SECONDS.equals(timeUnit))
+        {
+            afterAddition = afterAddition.plusSeconds( iNumOfTimeUnits );
+        }
+        else if( Constants.TIME_UNIT.MINUTES.equals(timeUnit) )
+        {
+            afterAddition = afterAddition.plusMinutes( iNumOfTimeUnits );
+        }
+        else if( Constants.TIME_UNIT.HOURS.equals(timeUnit) )
+        {
+            afterAddition = afterAddition.plusHours( iNumOfTimeUnits );
         }
         return afterAddition.getMillis();
     }

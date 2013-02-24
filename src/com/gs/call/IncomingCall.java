@@ -12,10 +12,14 @@ import com.gs.bean.CallTransactionBean;
 import com.gs.bean.twilio.IncomingCallBean;
 import com.gs.common.CallTransaction;
 import com.gs.common.Constants;
+import com.gs.common.ExceptionHandler;
 import com.twilio.sdk.verbs.TwiMLResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class IncomingCall extends HttpServlet
 {
+    Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 	/**
 	 * 
 	 */
@@ -50,44 +54,52 @@ public class IncomingCall extends HttpServlet
 	private CallResponse performTask(HttpServletRequest request)
 	{
 		CallResponse callResponse = new CallResponse();
-		String sCallType = request.getParameter("incoming_call_type");
+        try
+        {
 
-		IncomingCallManager incominManager = new IncomingCallManager();
+            String sCallType = request.getParameter("incoming_call_type");
 
-		IncomingCallBean incomingCallBean = incominManager.getIncomingCallRequest(request);
+            IncomingCallManager incominManager = new IncomingCallManager();
 
-        CallTransaction callTransaction = CallTransaction.getInstance();
-		if ("rsvp_ans".equalsIgnoreCase(sCallType))
-		{
-			if (incomingCallBean != null && incomingCallBean.getTo() != null
-					&& !"".equalsIgnoreCase(incomingCallBean.getTo()))
-			{
-                int iNumOfAttempts = incomingCallBean.getCallAttemptNumber();
+            IncomingCallBean incomingCallBean = incominManager.getIncomingCallRequest(request);
 
-                if (iNumOfAttempts <= 2) {
-                    incomingCallBean
-                            .setCallType(Constants.CALL_TYPE.RSVP_DIGIT_RESP);
-                } else {
-                    incomingCallBean
-                            .setCallType(Constants.CALL_TYPE.DEMO_ERROR_HANGUP);
+            CallTransaction callTransaction = CallTransaction.getInstance();
+            if ("rsvp_ans".equalsIgnoreCase(sCallType))
+            {
+                if (incomingCallBean != null && incomingCallBean.getTo() != null
+                        && !"".equalsIgnoreCase(incomingCallBean.getTo()))
+                {
+                    int iNumOfAttempts = incomingCallBean.getCallAttemptNumber();
+
+                    if (iNumOfAttempts <= 2) {
+                        incomingCallBean
+                                .setCallType(Constants.CALL_TYPE.RSVP_DIGIT_RESP);
+                    } else {
+                        incomingCallBean
+                                .setCallType(Constants.CALL_TYPE.DEMO_ERROR_HANGUP);
+                    }
+                    callResponse = incominManager.processCall(incomingCallBean);
                 }
-				callResponse = incominManager.processCall(incomingCallBean);
-			}
-		}
-        else if ("end_call".equalsIgnoreCase(sCallType)) {
-            CallTransactionBean callTransactionBean = new CallTransactionBean();
-            callTransaction.updateTransaction(incomingCallBean,callTransactionBean );
+            }
+            else if ("end_call".equalsIgnoreCase(sCallType)) {
+                CallTransactionBean callTransactionBean = new CallTransactionBean();
+                callTransaction.updateTransaction(incomingCallBean,callTransactionBean );
+            }
+            else
+            {
+                if (incomingCallBean != null && incomingCallBean.getTo() != null
+                        && !"".equalsIgnoreCase(incomingCallBean.getTo()))
+                {
+                    incomingCallBean.setCallType(Constants.CALL_TYPE.FIRST_REQUEST);
+                    callTransaction.createTransaction(incomingCallBean);
+                    callResponse = incominManager.processCall(incomingCallBean);
+                }
+            }
         }
-        else
-		{
-			if (incomingCallBean != null && incomingCallBean.getTo() != null
-					&& !"".equalsIgnoreCase(incomingCallBean.getTo()))
-			{
-				incomingCallBean.setCallType(Constants.CALL_TYPE.FIRST_REQUEST);
-                callTransaction.createTransaction(incomingCallBean);
-				callResponse = incominManager.processCall(incomingCallBean);
-			}
-		}
+        catch(Exception e)
+        {
+            appLogging.error("Exception while Incoming Call Request\n" + e.getMessage() + "\n" + ExceptionHandler.getStackTrace(e));
+        }
 		return callResponse;
 
 	}

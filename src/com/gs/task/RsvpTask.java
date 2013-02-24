@@ -106,14 +106,6 @@ public class RsvpTask extends Task {
 					callResponse = rsvpTwiml.getRsvpDigitsSuccess(callResponse,
 							"You have successfully updated the number of seats for RSVP to "
 									+ eventGuestBean.getRsvpSeats());
-
-                    InformGuestBean informGuestBean = new InformGuestBean();
-                    informGuestBean.setEventId( super.eventId );
-                    informGuestBean.setAdminId( super.eventId );
-                    informGuestBean.setGuestId( eventGuestBean.getGuestId() );
-                    informGuestBean.setEventTask( Constants.EVENT_TASK.RSVP );
-
-                    InformGuestTask.sendRSVPConfirmation( informGuestBean );
 				} else {
 					callResponse = rsvpTwiml
 							.getRsvpDigitsFail(

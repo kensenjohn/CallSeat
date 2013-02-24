@@ -1,4 +1,9 @@
 #all time in seconds
 standard_mail.initial_delay=0
 standard_mail.interval_delay=30
+sms_creator.initial_delay=0
+sms_creator.delay_between_call=300
+sms_sender.initial_delay=0
+sms_sender.delay_between_call=300
+
 

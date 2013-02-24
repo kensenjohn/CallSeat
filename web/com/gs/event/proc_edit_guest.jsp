@@ -7,6 +7,8 @@
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="java.util.*"%>
 <%@page import="com.gs.json.*"%>
+<%@ page import="com.google.i18n.phonenumbers.Phonenumber" %>
+<%@ page import="com.google.i18n.phonenumbers.PhoneNumberUtil" %>
 <%
 JSONObject jsonResponseObj = new JSONObject();
 
@@ -29,13 +31,13 @@ try
 	String sEmailAddr =  ParseUtil.checkNull(request.getParameter("email_addr"));
 	String sInvitedNumOfSeats =  ParseUtil.checkNull(request.getParameter("invited_num_of_seats"));
 	String sRsvpNumOfSeats =  ParseUtil.checkNull(request.getParameter("rsvp_num_of_seats"));
-	String sCellNumber =  ParseUtil.checkNull(request.getParameter("cell_num"));
-	String sHomeNumber =  ParseUtil.checkNull(request.getParameter("home_num"));
+	String sCellNumberHumanFormat =  ParseUtil.checkNull(request.getParameter("cell_num"));
+	String sHomeNumberHumanFormat =  ParseUtil.checkNull(request.getParameter("home_num"));
 	String sGuestId =  ParseUtil.checkNull(request.getParameter("guest_id"));
 	String sGuestUserInfoId =  ParseUtil.checkNull(request.getParameter("guest_userinfo_id"));
 	boolean isAllGuestEdit =  ParseUtil.sTob(request.getParameter("all_guest_edit"));
-	boolean isSingleGuestEventEdit =  ParseUtil.sTob(request.getParameter("is_single_guest_event_edit")); 
-	
+	boolean isSingleGuestEventEdit =  ParseUtil.sTob(request.getParameter("is_single_guest_event_edit"));
+    Integer iCountryCode = 1; // 1 -> USA & Canada
 	boolean isError = false;
 	if(sGuestId!=null && !"".equalsIgnoreCase(sGuestId) && sGuestUserInfoId!=null && !"".equalsIgnoreCase(sGuestUserInfoId) )
 	{
@@ -55,14 +57,75 @@ try
 			responseStatus = RespConstants.Status.ERROR;
 			isError = true;
 		}
-		if(sCellNumber==null || "".equalsIgnoreCase(sCellNumber))
-		{
-			Text errorText = new ErrorText("Please enter a valid Cell Number.","cell_num") ;		
-			arrErrorText.add(errorText);
-			
-			responseStatus = RespConstants.Status.ERROR;
-			isError = true;
-		}
+        String sCellNumber = "";
+        if(sCellNumberHumanFormat!=null&& !"".equalsIgnoreCase(sCellNumberHumanFormat))
+        {
+            sCellNumber = Utility.convertHumanToInternationalTelNum(sCellNumberHumanFormat);
+
+            if(sCellNumber!=null && !"".equalsIgnoreCase(sCellNumber) && sCellNumber.length()>0)
+            {
+                sCellNumber = sCellNumber.substring(1);
+            }
+        }
+
+        if(sCellNumber==null || "".equalsIgnoreCase(sCellNumber))
+        {
+            Text errorText = new ErrorText("We were unable to recognize the cellphone number. Please enter a valid cellphone number.<br>","cell_num") ;
+            arrErrorText.add(errorText);
+
+            responseStatus = RespConstants.Status.ERROR;
+            isError = true;
+        }
+        else
+        {
+            com.google.i18n.phonenumbers.Phonenumber.PhoneNumber cellPhoneNumber = new Phonenumber.PhoneNumber();
+            cellPhoneNumber.setCountryCode(iCountryCode);
+            cellPhoneNumber.setNationalNumber(ParseUtil.sToL(sCellNumber.substring(1)));
+            PhoneNumberUtil cellPhoneNumberUtil = PhoneNumberUtil.getInstance();
+            if(!cellPhoneNumberUtil.isValidNumber(cellPhoneNumber))
+            {
+                Text errorText = new ErrorText("We were unable to recognize the cellphone number. Please enter a valid cellphone number.<br>","cell_num") ;
+                arrErrorText.add(errorText);
+
+                responseStatus = RespConstants.Status.ERROR;
+                isError = true;
+            }
+            else
+            {
+                //sCellNumber = ParseUtil.iToS(iCountryCode)+sCellNumber.substring(1);
+            }
+        }
+
+        String sHomeNumber = "";
+        if(sHomeNumberHumanFormat!=null&& !"".equalsIgnoreCase(sHomeNumberHumanFormat))
+        {
+            sHomeNumber = Utility.convertHumanToInternationalTelNum(sHomeNumberHumanFormat);
+
+            if(sHomeNumber!=null && !"".equalsIgnoreCase(sHomeNumber) && sHomeNumber.length()>0)
+            {
+                sHomeNumber = sHomeNumber.substring(1);
+            }
+        }
+
+        if(sHomeNumber!=null && !"".equalsIgnoreCase(sHomeNumber))
+        {
+            com.google.i18n.phonenumbers.Phonenumber.PhoneNumber homePhoneNumber = new Phonenumber.PhoneNumber();
+            homePhoneNumber.setCountryCode(iCountryCode);
+            homePhoneNumber.setNationalNumber(ParseUtil.sToL(sHomeNumber.substring(1)));
+            PhoneNumberUtil homePhoneNumberUtil = PhoneNumberUtil.getInstance();
+            if(!homePhoneNumberUtil.isValidNumber(homePhoneNumber))
+            {
+                Text errorText = new ErrorText("We were unable to recognize the phone number. Please enter a valid phone number.<br>","home_num") ;
+                arrErrorText.add(errorText);
+
+                responseStatus = RespConstants.Status.ERROR;
+                isError = true;
+            }
+            else
+            {
+                //sCellNumber = ParseUtil.iToS(iCountryCode)+sCellNumber.substring(1);
+            }
+        }
 		
 		if(!isAllGuestEdit && isSingleGuestEventEdit)
 		{
