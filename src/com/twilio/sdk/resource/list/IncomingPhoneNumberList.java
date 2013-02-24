@@ -13,7 +13,7 @@ import com.twilio.sdk.resource.instance.IncomingPhoneNumber;
 /**
  * The Class IncomingPhoneNumberList.
  * 
- * For more information see {@see <a href="http://www.twilio.com/docs/api/rest/incoming-phone-numbers">http://www.twilio.com/docs/api/rest/incoming-phone-numbers}
+ * For more information see <a href="http://www.twilio.com/docs/api/rest/incoming-phone-numbers">http://www.twilio.com/docs/api/rest/incoming-phone-numbers</a>
  */
 public class IncomingPhoneNumberList extends ListResource<IncomingPhoneNumber>
 		implements IncomingPhoneNumberFactory {
@@ -68,7 +68,7 @@ public class IncomingPhoneNumberList extends ListResource<IncomingPhoneNumber>
 	 * @see com.twilio.sdk.resource.factory.IncomingPhoneNumberFactory#create(java.util.Map)
 	 */
 	public IncomingPhoneNumber create(Map<String, String> params) throws TwilioRestException {
-		TwilioRestResponse response = this.getClient().request(
+		TwilioRestResponse response = this.getClient().safeRequest(
 				this.getResourceLocation(), "POST", params);
 		return makeNew(this.getClient(), response.toMap());
 	}

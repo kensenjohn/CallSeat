@@ -1,11 +1,7 @@
 package com.twilio.sdk.verbs;
 
-import java.util.ArrayList;
-
-
-// TODO: Auto-generated Javadoc
 /*
-Copyright (c) 2008 Twilio, Inc.
+Copyright (c) 2012 Twilio, Inc.
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
@@ -30,33 +26,39 @@ OTHER DEALINGS IN THE SOFTWARE.
 */
 
 /**
- * The Class TwiMLResponse.
+ * Class for the &lt;Client> TwiML verb. A full reference can be found online
+ * at https://www.twilio.com/docs/api/twiml/client.
  */
-public class TwiMLResponse extends Verb {
+public class Client extends Verb {
     
     /**
-     * Instantiates a new twiml response.
+     * Instantiate a new client.
+     *
+     * @param name the name
      */
-    public TwiMLResponse() {
-        super(Verb.V_RESPONSE, null);
-        this.allowedVerbs = new ArrayList<String>();
-        this.allowedVerbs.add(Verb.V_CLIENT);
-        this.allowedVerbs.add(Verb.V_CONFERENCE);
-        this.allowedVerbs.add(Verb.V_DIAL);
-        this.allowedVerbs.add(Verb.V_ENQUEUE);
-        this.allowedVerbs.add(Verb.V_GATHER);
-        this.allowedVerbs.add(Verb.V_HANGUP);
-        this.allowedVerbs.add(Verb.V_LEAVE);
-        this.allowedVerbs.add(Verb.V_NUMBER);
-        this.allowedVerbs.add(Verb.V_PAUSE);
-        this.allowedVerbs.add(Verb.V_PLAY);
-        this.allowedVerbs.add(Verb.V_QUEUE);
-        this.allowedVerbs.add(Verb.V_RECORD);
-        this.allowedVerbs.add(Verb.V_REDIRECT);
-        this.allowedVerbs.add(Verb.V_SAY);
-        this.allowedVerbs.add(Verb.V_SMS);
-        this.allowedVerbs.add(Verb.V_REJECT);
+    public Client(String name) {
+        super(V_CLIENT, name);
+        this.allowedVerbs = null;
     }
 
+    /**
+     * Sets the method to use when requesting the URL.
+     *
+     * @param method the HTTP method to use when requesting the url
+     */
+    public void setMethod(String method){
+       this.set("method", method);
+    }
+
+    /**
+     * Sets a url to play to one party before both parties have been connected.
+     * This can be used to reject an incoming call or play TwiML to one
+     * party before connecting the two.
+     *
+     * @param url the new url
+     */
+    public void setUrl(String url){
+       this.set("url", url);
+    }
 }
 

@@ -12,7 +12,7 @@ import com.twilio.sdk.resource.InstanceResource;
 /**
  * The Class Sandbox.
  * 
- * For more information see {@see <a href="http://www.twilio.com/docs/api/rest/sandbox">http://www.twilio.com/docs/api/rest/sandbox}
+ * For more information see <a href="http://www.twilio.com/docs/api/rest/sandbox">http://www.twilio.com/docs/api/rest/sandbox</a>
  */
 public class Sandbox extends InstanceResource {
 	//private static final String SID_PROPERTY = "sid";
@@ -89,21 +89,12 @@ public class Sandbox extends InstanceResource {
 	}
 
 	/**
-	 * Gets the voice applicaiton sid.
+	 * Gets the application sid.
 	 *
-	 * @return the voice applicaiton sid
+	 * @return the application sid
 	 */
-	public String getVoiceApplicaitonSid() {
-		return this.getProperty("voice_application_sid");
-	}
-
-	/**
-	 * Gets the sms applicaiton sid.
-	 *
-	 * @return the sms applicaiton sid
-	 */
-	public String getSmsApplicaitonSid() {
-		return this.getProperty("sms_application_sid");
+	public String getApplicationSid() {
+		return this.getProperty("application_sid");
 	}
 
 	/**

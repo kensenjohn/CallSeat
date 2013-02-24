@@ -15,7 +15,7 @@ import com.twilio.sdk.resource.InstanceResource;
 /**
  * The Class Call.
  * 
- * For more information see {@see <a href="http://www.twilio.com/docs/api/rest/call">http://www.twilio.com/docs/api/rest/call}
+ * For more information see <a href="http://www.twilio.com/docs/api/rest/call">http://www.twilio.com/docs/api/rest/call</a>
  */
 public class Call extends InstanceResource {
 	
@@ -39,6 +39,9 @@ public class Call extends InstanceResource {
 	 */
 	public Call(TwilioRestClient client, String sid) {
 		super(client);
+		if (sid == null) { 
+		    throw new IllegalStateException("The Sid for a Call can not be null");
+		}
 		this.setProperty(SID_PROPERTY, sid);
 	}
 

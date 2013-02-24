@@ -10,7 +10,7 @@ import com.twilio.sdk.resource.instance.Participant;
 /**
  * The Class ParticipantList.
  * 
- * For more information see {@see <a href="http://www.twilio.com/docs/api/rest/participant">http://www.twilio.com/docs/api/rest/participant}
+ * For more information see <a href="http://www.twilio.com/docs/api/rest/participant">http://www.twilio.com/docs/api/rest/participant</a>
  */
 public class ParticipantList extends ListResource<Participant> {
 	
@@ -53,7 +53,7 @@ public class ParticipantList extends ListResource<Participant> {
 	@Override
 	protected String getResourceLocation() {
 		return "/" + TwilioRestClient.DEFAULT_VERSION + "/Accounts/"
-				+ this.getRequestAccountSid() + "/Conferernces/"
+				+ this.getRequestAccountSid() + "/Conferences/"
 				+ this.conferenceSid + "/Participants.json";
 	}
 

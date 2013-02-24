@@ -8,11 +8,10 @@ import java.util.Map;
 import com.twilio.sdk.TwilioRestClient;
 import com.twilio.sdk.resource.InstanceResource;
 
-// TODO: Auto-generated Javadoc
 /**
  * The Class Transcription.
  * 
- * For more information see {@see <a href="http://www.twilio.com/docs/api/rest/transcription">http://www.twilio.com/docs/api/rest/transcription}
+ * For more information see <a href="http://www.twilio.com/docs/api/rest/transcription">http://www.twilio.com/docs/api/rest/transcription</a>
  */
 public class Transcription extends InstanceResource {
 	
@@ -36,6 +35,9 @@ public class Transcription extends InstanceResource {
 	 */
 	public Transcription(TwilioRestClient client, String sid) {
 		super(client);
+	    if (sid == null) { 
+            throw new IllegalStateException("The Sid for a Transcription can not be null");
+        }
 		this.setProperty(SID_PROPERTY, sid);
 	}
 

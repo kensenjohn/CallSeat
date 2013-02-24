@@ -12,11 +12,11 @@ import com.twilio.sdk.resource.list.ParticipantList;
 // TODO: Auto-generated Javadoc
 /**
  * The Class Conference.
- * 
- * For more information see {@see <a href="http://www.twilio.com/docs/api/rest/conference">http://www.twilio.com/docs/api/rest/conference}
+ *
+ * For more information see <a href="http://www.twilio.com/docs/api/rest/conference">http://www.twilio.com/docs/api/rest/conference</a>
  */
 public class Conference extends InstanceResource {
-	
+
 	/** The Constant SID_PROPERTY. */
 	private static final String SID_PROPERTY = "sid";
 
@@ -27,6 +27,12 @@ public class Conference extends InstanceResource {
 	 */
 	public Conference(TwilioRestClient client) {
 		super(client);
+
+        //Object ac = properties.get("account_sid");
+        //if (ac != null && ac instanceof String) {
+        //    String accountSid = (String) ac;
+        //    this.setRequestAccountSid(accountSid);
+        //}
 	}
 
 	/**
@@ -37,6 +43,9 @@ public class Conference extends InstanceResource {
 	 */
 	public Conference(TwilioRestClient client, String sid) {
 		super(client);
+	    if (sid == null) {
+	        throw new IllegalStateException("The Sid for a Conference can not be null");
+	    }
 		this.setProperty(SID_PROPERTY, sid);
 	}
 
@@ -70,7 +79,7 @@ public class Conference extends InstanceResource {
 	public String getSid() {
 		return this.getProperty(SID_PROPERTY);
 	}
-	
+
 	/**
 	 * Gets the date created.
 	 *
@@ -100,7 +109,7 @@ public class Conference extends InstanceResource {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Gets the account sid.
 	 *
@@ -109,7 +118,7 @@ public class Conference extends InstanceResource {
 	public String getAccountSid() {
 		return this.getProperty("account_sid");
 	}
-	
+
 	/**
 	 * Gets the friendly name.
 	 *
@@ -118,7 +127,7 @@ public class Conference extends InstanceResource {
 	public String getFriendlyName() {
 		return this.getProperty("friendly_name");
 	}
-	
+
 	/**
 	 * Gets the status.
 	 *
@@ -127,16 +136,24 @@ public class Conference extends InstanceResource {
 	public String getStatus() {
 		return this.getProperty("status");
 	}
-	
+
 	/**
 	 * Get the participant list
-	 * 
-	 * @return
+	 *
 	 */
 	public ParticipantList getParticipants() {
 		ParticipantList list = new ParticipantList(this.getClient(), this.getSid());
 		list.setRequestAccountSid(this.getRequestAccountSid());
 		return list;
 	}
-	
+
+	/**
+	 * Retrieve a Participant from a conference
+	 */
+	public Participant getParticipant(String callSid) {
+		Participant participant = new Participant(this.getClient(), this.getSid(), callSid);
+		participant.setRequestAccountSid(this.getRequestAccountSid());
+		return participant;
+	}
+
 }

@@ -14,9 +14,9 @@ import com.twilio.sdk.resource.InstanceResource;
 /**
  * The Class IncomingPhoneNumber.
  * 
- * For more information see {@see <a
+ * For more information see <a
  * href="http://www.twilio.com/docs/api/rest/incoming-phone-numbers"
- * >http://www.twilio.com/docs/api/rest/incoming-phone-numbers}
+ * >http://www.twilio.com/docs/api/rest/incoming-phone-numbers</a>
  */
 public class IncomingPhoneNumber extends InstanceResource {
 
@@ -43,6 +43,9 @@ public class IncomingPhoneNumber extends InstanceResource {
 	 */
 	public IncomingPhoneNumber(TwilioRestClient client, String sid) {
 		super(client);
+		if (sid == null) { 
+            throw new IllegalStateException("The Sid for an IncomingPhoneNumber can not be null");
+        }
 		this.setProperty(SID_PROPERTY, sid);
 	}
 
@@ -157,20 +160,20 @@ public class IncomingPhoneNumber extends InstanceResource {
 	}
 
 	/**
-	 * Gets the voice applicaiton sid.
+	 * Gets the voice application sid.
 	 * 
-	 * @return the voice applicaiton sid
+	 * @return the voice application sid
 	 */
-	public String getVoiceApplicaitonSid() {
+	public String getVoiceApplicationSid() {
 		return this.getProperty("voice_application_sid");
 	}
 
 	/**
-	 * Gets the sms applicaiton sid.
+	 * Gets the sms application sid.
 	 * 
-	 * @return the sms applicaiton sid
+	 * @return the sms application sid
 	 */
-	public String getSmsApplicaitonSid() {
+	public String getSmsApplicationSid() {
 		return this.getProperty("sms_application_sid");
 	}
 

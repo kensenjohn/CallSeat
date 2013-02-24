@@ -11,11 +11,11 @@ import com.twilio.sdk.resource.InstanceResource;
 // TODO: Auto-generated Javadoc
 /**
  * The Class IncomingPhoneNumber.
- * 
- * For more information see {@see <a href="http://www.twilio.com/docs/api/rest/shortcodes">http://www.twilio.com/docs/api/rest/shortcodes}
+ *
+ * For more information see <a href="http://www.twilio.com/docs/api/rest/shortcodes">http://www.twilio.com/docs/api/rest/shortcodes</a>
  */
 public class ShortCode extends InstanceResource {
-	
+
 	/** The Constant SID_PROPERTY. */
 	private static final String SID_PROPERTY = "sid";
 
@@ -36,6 +36,9 @@ public class ShortCode extends InstanceResource {
 	 */
 	public ShortCode(TwilioRestClient client, String sid) {
 		super(client);
+        if (sid == null) {
+            throw new IllegalStateException("The Sid for a Recording can not be null");
+	    }
 		this.setProperty(SID_PROPERTY, sid);
 	}
 
@@ -56,7 +59,7 @@ public class ShortCode extends InstanceResource {
 	@Override
 	protected String getResourceLocation() {
 		return "/" + TwilioRestClient.DEFAULT_VERSION + "/Accounts/"
-				+ this.getRequestAccountSid() + "/SMS/Shortcodes/"
+				+ this.getRequestAccountSid() + "/SMS/ShortCodes/"
 				+ this.getSid() + ".json";
 	}
 
@@ -130,11 +133,11 @@ public class ShortCode extends InstanceResource {
 	}
 
 	/**
-	 * Gets the sms applicaiton sid.
+	 * Gets the sms application sid.
 	 *
-	 * @return the sms applicaiton sid
+	 * @return the sms application sid
 	 */
-	public String getSmsApplicaitonSid() {
+	public String getSmsApplicationSid() {
 		return this.getProperty("sms_application_sid");
 	}
 
@@ -146,7 +149,7 @@ public class ShortCode extends InstanceResource {
 	public String getApiVersion() {
 		return this.getProperty("api_version");
 	}
-	
+
 
 	/**
 	 * Gets the sms url.

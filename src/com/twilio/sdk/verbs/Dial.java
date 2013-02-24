@@ -34,15 +34,6 @@ OTHER DEALINGS IN THE SOFTWARE.
  */
 public class Dial extends Verb {
     
-    /**
-     * Instantiates a new dial.
-     */
-    public Dial() {
-        super(V_DIAL, null);
-        this.allowedVerbs = new ArrayList<String>();
-        this.allowedVerbs.add(Verb.V_NUMBER);
-        this.allowedVerbs.add(Verb.V_CONFERENCE);
-    }
     
     /**
      * Instantiates a new dial.
@@ -54,6 +45,15 @@ public class Dial extends Verb {
         this.allowedVerbs = new ArrayList<String>();
         this.allowedVerbs.add(Verb.V_NUMBER);
         this.allowedVerbs.add(Verb.V_CONFERENCE);
+        this.allowedVerbs.add(Verb.V_CLIENT);
+        this.allowedVerbs.add(Verb.V_QUEUE);
+    }
+
+    /**
+     * Instantiates a new dial.
+     */
+    public Dial() {
+        this(null);
     }
 
     /**
@@ -62,7 +62,7 @@ public class Dial extends Verb {
      * @param url the new action
      */
     public void setAction(String url){
-       this.set("action", url);   
+       this.set("action", url);
     }
     
     /**
@@ -110,7 +110,7 @@ public class Dial extends Verb {
      * @param callerId the new caller id
      */
     public void setCallerId(String callerId){
-       this.set(" callerId ", callerId);   
+       this.set(" callerId ", callerId);
     }
 
 }

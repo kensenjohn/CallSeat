@@ -13,7 +13,7 @@ import com.twilio.sdk.resource.instance.Sms;
 /**
  * The Class SmsList.
  * 
- * For more information see {@see <a href="http://www.twilio.com/docs/api/rest/sms">http://www.twilio.com/docs/api/rest/sms}
+ * For more information see <a href="http://www.twilio.com/docs/api/rest/sms">http://www.twilio.com/docs/api/rest/sms</a>
  */
 public class SmsList extends ListResource<Sms> implements SmsFactory {
 	
@@ -65,7 +65,7 @@ public class SmsList extends ListResource<Sms> implements SmsFactory {
 	 * @see com.twilio.sdk.resource.factory.SmsFactory#create(java.util.Map)
 	 */
 	public Sms create(Map<String, String> params) throws TwilioRestException {
-		TwilioRestResponse response = this.getClient().request(
+		TwilioRestResponse response = this.getClient().safeRequest(
 				this.getResourceLocation(), "POST", params);
 		return makeNew(this.getClient(), response.toMap());
 	}

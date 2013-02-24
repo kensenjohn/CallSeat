@@ -15,8 +15,7 @@ import com.twilio.sdk.TwilioRestResponse;
  * The Class JsonResponseParser.
  */
 public class JsonResponseParser implements ResponseParser {
-
-	public Map<String, Object> parse(TwilioRestResponse response) {
+	public Map<String, Object> parse(TwilioRestResponse response) {		
 		return this.parseJson(response.getResponseText());
 	}
 
@@ -49,7 +48,6 @@ public class JsonResponseParser implements ResponseParser {
 	/* (non-Javadoc)
 	 * @see com.twilio.sdk.parser.ResponseParser#getPagingPropertyKey(com.twilio.sdk.parser.ResponseParser.PagingProperty)
 	 */
-	@Override
 	public String getPagingPropertyKey(PagingProperty prop) {
 		switch (prop) {
 		case NEXT_PAGE_URI_KEY:

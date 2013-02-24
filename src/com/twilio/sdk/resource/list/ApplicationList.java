@@ -13,7 +13,7 @@ import com.twilio.sdk.resource.instance.Application;
 /**
  * The Class ApplicationList.
  * 
- * For more information see {@see <a href="http://www.twilio.com/docs/api/rest/applications">http://www.twilio.com/docs/api/rest/applications}
+ * For more information see <a href="http://www.twilio.com/docs/api/rest/applications">http://www.twilio.com/docs/api/rest/applications</a>
  */
 public class ApplicationList extends ListResource<Application> implements
 		ApplicationFactory {
@@ -60,14 +60,14 @@ public class ApplicationList extends ListResource<Application> implements
 	 */
 	@Override
 	protected String getListKey() {
-		return "Applications";
+		return "applications";
 	}
 
 	/* (non-Javadoc)
 	 * @see com.twilio.sdk.resource.factory.ApplicationFactory#create(java.util.Map)
 	 */
 	public Application create(Map<String, String> params) throws TwilioRestException {
-		TwilioRestResponse response = this.getClient().request(
+		TwilioRestResponse response = this.getClient().safeRequest(
 				this.getResourceLocation(), "POST", params);
 		return makeNew(this.getClient(), response.toMap());
 	}

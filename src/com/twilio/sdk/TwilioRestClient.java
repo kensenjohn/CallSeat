@@ -19,6 +19,7 @@ import org.apache.http.StatusLine;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpGet;
@@ -34,6 +35,7 @@ import org.apache.http.util.EntityUtils;
 
 import com.twilio.sdk.resource.instance.Account;
 import com.twilio.sdk.resource.list.AccountList;
+import com.twilio.sdk.resource.factory.AccountFactory;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -42,7 +44,7 @@ import com.twilio.sdk.resource.list.AccountList;
 public class TwilioRestClient {
 
 	/** The Constant VERSION. */
-	private static final String VERSION = "3.0";
+	private static final String VERSION = "3.3.13";
 
 	/** The endpoint. */
 	private String endpoint = "https://api.twilio.com";
@@ -60,8 +62,13 @@ public class TwilioRestClient {
 	private int numRetries = 3;
 
 	/**
+	 * The default HTTP Connection timeout, also used for socket timeout.
+	 */
+	private static final int CONNECTION_TIMEOUT = 10000;
+
+	/**
 	 * Gets the num retries.
-	 * 
+	 *
 	 * @return the num retries
 	 */
 	public int getNumRetries() {
@@ -70,7 +77,7 @@ public class TwilioRestClient {
 
 	/**
 	 * Sets the num retries.
-	 * 
+	 *
 	 * @param numRetries
 	 *            the new num retries
 	 */
@@ -82,22 +89,22 @@ public class TwilioRestClient {
 	private Account authAccount;
 
 	/** The httpclient. */
-	private DefaultHttpClient httpclient;
+	private HttpClient httpclient;
 
-	public void setHttpclient(DefaultHttpClient httpclient) {
+	public void setHttpclient(HttpClient httpclient) {
 		this.httpclient = httpclient;
 	}
 
 	/**
 	 * Explcitly construct a TwilioRestClient with the given API credentials.
-	 * 
+	 *
 	 * @param accountSid
 	 *            the 34 character Account identifier (starting with 'AC'). This
 	 *            can be found on your Twilio dashboard page.
 	 * @param authToken
 	 *            the 32 character AuthToken. This can be found on your Twilio
 	 *            dashboard page.
-	 * 
+	 *
 	 */
 	public TwilioRestClient(String accountSid, String authToken) {
 		this(accountSid, authToken, null);
@@ -106,7 +113,7 @@ public class TwilioRestClient {
 	/**
 	 * Explcitly construct a TwilioRestClient with the given API credentials and
 	 * endpoint.
-	 * 
+	 *
 	 * @param accountSid
 	 *            the 34 character Account identifier (starting with 'AC'). This
 	 *            can be found on your Twilio dashboard page.
@@ -131,13 +138,13 @@ public class TwilioRestClient {
 
 		ThreadSafeClientConnManager connMgr = new ThreadSafeClientConnManager();
 		connMgr.setDefaultMaxPerRoute(10);
-		this.httpclient = new DefaultHttpClient(connMgr);
+		setHttpclient(new DefaultHttpClient(connMgr));
 		httpclient.getParams().setParameter("http.protocol.version",
 				HttpVersion.HTTP_1_1);
 		httpclient.getParams().setParameter("http.socket.timeout",
-				new Integer(5000));
+				new Integer(CONNECTION_TIMEOUT));
 		httpclient.getParams().setParameter("http.connection.timeout",
-				new Integer(1000));
+				new Integer(CONNECTION_TIMEOUT));
 		httpclient.getParams().setParameter("http.protocol.content-charset",
 				"UTF-8");
 
@@ -150,7 +157,7 @@ public class TwilioRestClient {
 	// Check for a valid 32 character auth token
 	/**
 	 * Validate auth token.
-	 * 
+	 *
 	 * @param authToken
 	 *            the auth token
 	 */
@@ -164,7 +171,7 @@ public class TwilioRestClient {
 	// Check for a valid 34 character account sid starting with 'AC'
 	/**
 	 * Validate account sid.
-	 * 
+	 *
 	 * @param accountSid
 	 *            the account sid
 	 */
@@ -180,7 +187,7 @@ public class TwilioRestClient {
 
 	/**
 	 * Generate parameters.
-	 * 
+	 *
 	 * @param vars
 	 *            the vars
 	 * @return the list
@@ -199,12 +206,12 @@ public class TwilioRestClient {
 	}
 
 	/*
-	 * 
+	 *
 	 * Method builders
 	 */
 	/**
 	 * Builds the method.
-	 * 
+	 *
 	 * @param method
 	 *            the method
 	 * @param path
@@ -230,7 +237,7 @@ public class TwilioRestClient {
 
 	/**
 	 * Generate get request.
-	 * 
+	 *
 	 * @param path
 	 *            the path
 	 * @param params
@@ -245,7 +252,7 @@ public class TwilioRestClient {
 
 	/**
 	 * Generate post request.
-	 * 
+	 *
 	 * @param path
 	 *            the path
 	 * @param params
@@ -265,7 +272,7 @@ public class TwilioRestClient {
 
 	/**
 	 * Generate put request.
-	 * 
+	 *
 	 * @param path
 	 *            the path
 	 * @param params
@@ -285,7 +292,7 @@ public class TwilioRestClient {
 
 	/**
 	 * Generate delete request.
-	 * 
+	 *
 	 * @param path
 	 *            the path
 	 * @param params
@@ -301,12 +308,12 @@ public class TwilioRestClient {
 	}
 
 	/*
-	 * 
+	 *
 	 * Helper functions for building methods
 	 */
 	/**
 	 * Builds the entity body.
-	 * 
+	 *
 	 * @param params
 	 *            the params
 	 * @return the url encoded form entity
@@ -324,7 +331,7 @@ public class TwilioRestClient {
 
 	/**
 	 * Builds the uri.
-	 * 
+	 *
 	 * @param path
 	 *            the path
 	 * @return the uRI
@@ -335,7 +342,7 @@ public class TwilioRestClient {
 
 	/**
 	 * Builds the uri.
-	 * 
+	 *
 	 * @param path
 	 *            the path
 	 * @param queryStringParams
@@ -363,7 +370,7 @@ public class TwilioRestClient {
 
 	/**
 	 * sendRequst Sends a REST Request to the Twilio REST API.
-	 * 
+	 *
 	 * @param path
 	 *            the URL (absolute w.r.t. the endpoint URL - i.e.
 	 *            /2010-04-01/Accounts)
@@ -372,7 +379,7 @@ public class TwilioRestClient {
 	 * @param vars
 	 *            for POST or PUT, a map of data to send, for GET will be
 	 *            appended to the URL as querystring params
-	 * 
+	 *
 	 *            This method is public for backwards compatibility with the old
 	 *            twilio helper library
 	 * @return the twilio rest response
@@ -389,7 +396,7 @@ public class TwilioRestClient {
 
 			Header[] contentTypeHeaders = response.getHeaders("Content-Type");
 			String responseBody = "";
-			
+
 			if (entity != null) {
 				responseBody = EntityUtils.toString(entity);
 			}
@@ -417,7 +424,7 @@ public class TwilioRestClient {
 
 	/**
 	 * Request stream.
-	 * 
+	 *
 	 * @param path
 	 *            the path
 	 * @param method
@@ -447,7 +454,7 @@ public class TwilioRestClient {
 
 	/**
 	 * Setup request.
-	 * 
+	 *
 	 * @param path
 	 *            the path
 	 * @param method
@@ -481,21 +488,23 @@ public class TwilioRestClient {
 		HttpUriRequest request = buildMethod(method, path, params);
 
 		request.addHeader(new BasicHeader("X-Twilio-Client", "java-" + VERSION));
-		request.addHeader(new BasicHeader("User-Agent", "twilio-java-"
+		request.addHeader(new BasicHeader("User-Agent", "twilio-java/"
 				+ VERSION));
 		request.addHeader(new BasicHeader("Accept", "application/json"));
 
-		httpclient.getCredentialsProvider()
+		if (httpclient instanceof DefaultHttpClient) { // as DefaultHttpClient class has final method, I need httpClient to be a plain interface to be able to mock it
+            ((DefaultHttpClient) httpclient).getCredentialsProvider()
 				.setCredentials(
 						new AuthScope(AuthScope.ANY_HOST, AuthScope.ANY_PORT),
 						new UsernamePasswordCredentials(this.accountSid,
-								this.authToken));
+        						this.authToken));
+        }
 		return request;
 	}
 
 	/**
 	 * Make a request, handles retries + back-off for server/network errors
-	 * 
+	 *
 	 * @param path
 	 *            the URL (absolute w.r.t. the endpoint URL - i.e.
 	 *            /2010-04-01/Accounts)
@@ -532,13 +541,12 @@ public class TwilioRestClient {
 
 	/**
 	 * Perform a GET request against the given fully qualified uri. This is a
-	 * shortcut to {@see <a
-	 * href="this#request(String, String, Map)">this#request(String, String,
-	 * Map)} with method "GET" and no parameters
-	 * 
+	 * shortcut to {@link #request(String, String, Map)}
+	 * with method "GET" and no parameters
+	 *
 	 * @param fullUri
 	 *            The full uri, including protocol://hostname/path
-	 * @return {@see <a href="TwilioRestResponse">TwilioRestResponse} the
+	 * @return {@link TwilioRestResponse} the
 	 *         response from the query
 	 * @throws TwilioRestException
 	 *             the twilio rest exception
@@ -567,7 +575,7 @@ public class TwilioRestClient {
 
 	/**
 	 * Get the current endpoint this client is pointed at.
-	 * 
+	 *
 	 * @return String the api endpoint
 	 */
 	public String getEndpoint() {
@@ -576,7 +584,7 @@ public class TwilioRestClient {
 
 	/**
 	 * Set the endpoint this rest client uses.
-	 * 
+	 *
 	 * @param endpoint
 	 *            The location of the endpoint (e.g. https://api.twilio.com)
 	 */
@@ -588,26 +596,26 @@ public class TwilioRestClient {
 	 * Resource related methods
 	 */
 	/**
-	 * Get a list of Account objects. For more info: {@see <a
+	 * Get a list of Account objects. For more info: {@link <a
 	 * href="http://www.twilio.com/docs/api/rest/account"
-	 * >http://www.twilio.com/docs/api/rest/account}
-	 * 
+	 * >http://www.twilio.com/docs/api/rest/account</a>}
+	 *
 	 * @param params
 	 *            Filter the list with the given params. See the Twilio docs for
 	 *            available filters.
 	 * @return the list of accounts.
 	 */
 	public AccountList getAccounts(Map<String, String> params) {
-		AccountList list = new AccountList(this);
+		AccountList list = new AccountList(this, params);
 		list.setRequestAccountSid(this.accountSid);
 		return list;
 	}
 
 	/**
-	 * Get all accounts. For more info: {@see <a
+	 * Get all accounts. For more info: {@link <a
 	 * href="http://www.twilio.com/docs/api/rest/account"
-	 * >http://www.twilio.com/docs/api/rest/account}
-	 * 
+	 * >http://www.twilio.com/docs/api/rest/account</a>}
+	 *
 	 * @return the list of accounts.
 	 */
 	public AccountList getAccounts() {
@@ -615,9 +623,18 @@ public class TwilioRestClient {
 	}
 
 	/**
+	 * Return an account factory to create new subaccounts
+	 *
+	 * @return the list of accounts
+	 */
+	public AccountFactory getAccountFactory() {
+		return this.getAccounts();
+	}
+
+	/**
 	 * A shortcut for the most common case, returning the Account object for
 	 * this authenticated client.
-	 * 
+	 *
 	 * @return Account that maps to the authenticated account.
 	 */
 	public Account getAccount() {
@@ -626,7 +643,7 @@ public class TwilioRestClient {
 
 	/**
 	 * Get an account by account sid.
-	 * 
+	 *
 	 * @param sid
 	 *            The sid of the account you want to fetch.
 	 * @return the account

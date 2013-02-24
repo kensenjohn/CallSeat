@@ -12,7 +12,7 @@ import com.twilio.sdk.resource.InstanceResource;
 /**
  * The Class Sms.
  * 
- * For more information see {@see <a href="http://www.twilio.com/docs/api/rest/sms">http://www.twilio.com/docs/api/rest/sms}
+ * For more information see <a href="http://www.twilio.com/docs/api/rest/sms">http://www.twilio.com/docs/api/rest/sms</a>
  */
 public class Sms extends InstanceResource {
 	
@@ -36,6 +36,9 @@ public class Sms extends InstanceResource {
 	 */
 	public Sms(TwilioRestClient client, String sid) {
 		super(client);
+        if (sid == null) { 
+            throw new IllegalStateException("The Sid for an Sms can not be null");
+        }
 		this.setProperty(SID_PROPERTY, sid);
 	}
 
@@ -55,7 +58,7 @@ public class Sms extends InstanceResource {
 	@Override
 	protected String getResourceLocation() {
 		return "/" + TwilioRestClient.DEFAULT_VERSION + "/Accounts/"
-				+ this.getRequestAccountSid() + "/SMS/Messages" + this.getSid() + ".json";
+				+ this.getRequestAccountSid() + "/SMS/Messages/" + this.getSid() + ".json";
 	}
 
 	/*

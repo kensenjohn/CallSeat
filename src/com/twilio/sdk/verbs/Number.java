@@ -58,7 +58,16 @@ public class Number extends Verb {
      * @param url the new url
      */
     public void setUrl(String url){
-       this.set("url", url);   
+       this.set("url", url);
+    }
+
+    /**
+     * Sets the method.
+     *
+     * @param method the HTTP method to use when requesting the url
+     */
+    public void setMethod(String method){
+       this.set("method", method);
     }
 
 }

@@ -38,30 +38,33 @@ public abstract class InstanceResource extends Resource {
 		this.properties = new HashMap<String, Object>(properties);
 		this.setLoaded(true);
 	}
+	
+        private Object getAndLoadIfNecessary(String name) {
+        	Object prop = properties.get(name);
+        
+        	if (prop == null && !this.isLoaded()) {
+        	    try {
+        		this.load(new HashMap<String, String>());
+        		return properties.get(name);
+        	    } catch (TwilioRestException e) {
+        		throw new RuntimeException(e);
+        	    }
+        	}
+        	return prop;
+        }
 
 	/**
 	 * Gets the property.
 	 *
 	 * @param name the name
-	 * @return the property
+	 * @return the property, 
+	 * or null if it doesn't exist or is NULL in the response
 	 */
 	public String getProperty(String name) {
-		Object prop = properties.get(name);
-
-		if (prop == null && !this.isLoaded()) {
-			try {
-				this.load(new HashMap<String, String>());
-			} catch (TwilioRestException e) {
-				// TODO add log support
-				throw new RuntimeException(e);
-			}
-		}
-
-		prop = properties.get(name);
+		Object prop = getAndLoadIfNecessary(name);
 
 		if (prop == null) {
-			throw new IllegalArgumentException("Property " + name
-					+ " does not exist");
+			return null;
 		}
 
 		if (prop instanceof String) {
@@ -69,18 +72,31 @@ public abstract class InstanceResource extends Resource {
 		}
 
 		throw new IllegalArgumentException("Property " + name
-				+ " is an object.  Use getOjbect() instead.");
+				+ " is an object.  Use getObject() instead.");
 	}
 
-	/**
-	 * Sets the property.
-	 *
-	 * @param name the name
-	 * @param value the value
-	 */
-	protected void setProperty(String name, String value) {
-		properties.put(name, value);
+	protected Object getObject(String name) {
+	    	Object prop = getAndLoadIfNecessary(name);
+
+		if (prop == null) {
+			throw new IllegalArgumentException("Property " + name
+					+ " does not exist");
+		}
+		
+		return prop;
 	}
+	
+
+       /**
+        * Sets the property as an Object
+        *
+        * @param name the name
+        * @param value the value
+        */
+      protected void setProperty(String name, Object value) {
+	  	properties.put(name, value);
+      }
+
 	
 	/**
 	 * Update.

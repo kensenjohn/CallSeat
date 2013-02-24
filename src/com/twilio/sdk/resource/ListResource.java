@@ -35,7 +35,7 @@ public abstract class ListResource<T> extends Resource implements Iterable<T> {
 		/* (non-Javadoc)
 		 * @see java.util.Iterator#hasNext()
 		 */
-		@Override
+
 		public boolean hasNext() {
 			return itr.hasNext() || hasNextPage();
 		}
@@ -43,7 +43,6 @@ public abstract class ListResource<T> extends Resource implements Iterable<T> {
 		/* (non-Javadoc)
 		 * @see java.util.Iterator#next()
 		 */
-		@Override
 		public T next() {
 			// If we still have results on this page
 			if (itr.hasNext()) {
@@ -64,7 +63,6 @@ public abstract class ListResource<T> extends Resource implements Iterable<T> {
 		/* (non-Javadoc)
 		 * @see java.util.Iterator#remove()
 		 */
-		@Override
 		public void remove() {
 			throw new UnsupportedOperationException();
 		}
@@ -73,9 +71,8 @@ public abstract class ListResource<T> extends Resource implements Iterable<T> {
 	/* (non-Javadoc)
 	 * @see java.lang.Iterable#iterator()
 	 */
-	@Override
 	public Iterator<T> iterator() {
-		return this.new ListIterator(getPageData().iterator());
+		return new ListIterator(getPageData().iterator());
 	}
 
 	/**
@@ -290,19 +287,27 @@ public abstract class ListResource<T> extends Resource implements Iterable<T> {
 
 		// Right now only json responses are used
 		Map<String, Object> list = response.toMap();
-
-		if (list.get(this.getListKey()) instanceof List) {
+        Object content = list.get(this.getListKey());
+		if (content instanceof List) {
 			List<Object> objs = (List<Object>) list.get(this.getListKey());
 
 			for (Object o : objs) {
-				if (o instanceof Map) {
-					T instance = this.makeNew(this.getClient(),
-							(Map<String, Object>) o);
-					returnList.add(instance);
-				}
-			}
+                extract_object(returnList, o);
+            }
 		}
+        else if (content instanceof Map) { /* Some filters on lists returns only one element, this makes the response consistent */
+            extract_object(returnList, ((Map) content).values().iterator().next());
+        }
 
 		return returnList;
 	}
+
+    private void extract_object(List<T> returnList, Object o) {
+        if (o instanceof Map) {
+            T instance = this.makeNew(this.getClient(),
+                    (Map<String, Object>) o);
+            ((Resource)instance).setRequestAccountSid(this.getRequestAccountSid());
+            returnList.add(instance);
+        }
+    }
 }
