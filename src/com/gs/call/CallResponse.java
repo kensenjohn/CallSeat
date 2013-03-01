@@ -18,6 +18,9 @@ public class CallResponse
 
 	private boolean isTwilResponseSuccess = false;
 
+    private boolean isEventGuestBeanExists = false;
+    private boolean isEventBeanExists = false;
+
 	public boolean isSuccess()
 	{
 		return isSuccess;
@@ -36,6 +39,11 @@ public class CallResponse
 	public void setEventGuestBean(EventGuestBean eventGuestBean)
 	{
 		this.eventGuestBean = eventGuestBean;
+
+        if(this.eventGuestBean!=null)
+        {
+            this.isEventGuestBeanExists = true;
+        }
 	}
 
 	public TwiMLResponse getResponse()
@@ -66,6 +74,11 @@ public class CallResponse
 	public void setEventBean(EventBean eventBean)
 	{
 		this.eventBean = eventBean;
+
+        if(this.eventBean!=null)
+        {
+            this.isEventBeanExists = true;
+        }
 	}
 
 	public ArrayList<TableGuestsBean> getArrTableGuestBean()
@@ -78,4 +91,11 @@ public class CallResponse
 		this.arrTableGuestBean = arrTableGuestBean;
 	}
 
+    public boolean isEventGuestBeanExists() {
+        return isEventGuestBeanExists;
+    }
+
+    public boolean isEventBeanExists() {
+        return isEventBeanExists;
+    }
 }

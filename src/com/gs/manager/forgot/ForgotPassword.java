@@ -1,5 +1,6 @@
 package com.gs.manager.forgot;
 
+import com.gs.bean.email.EmailScheduleBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -183,7 +184,7 @@ public class ForgotPassword implements ForgotInfoManager {
 			// This must be changed so that user will have to click link to
 			// generate the new password.
 			MailCreator dummeEailCreator = new SingleEmailCreator();
-			dummeEailCreator.create(emailQueueBean);
+			dummeEailCreator.create(emailQueueBean , new EmailScheduleBean());
 
 			// Now here we will be putting the correct password in the email
 			// text and

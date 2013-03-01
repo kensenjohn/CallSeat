@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gs.bean.email.EmailScheduleBean;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -577,7 +578,7 @@ public class TelNumberManager {
 			emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
 
 			MailCreator eailCreator = new SingleEmailCreator();
-			eailCreator.create(emailQueueBean);
+			eailCreator.create(emailQueueBean , new EmailScheduleBean());
 
 		}
 

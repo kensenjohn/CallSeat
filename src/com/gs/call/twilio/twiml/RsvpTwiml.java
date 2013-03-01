@@ -4,8 +4,11 @@ import com.gs.bean.EventBean;
 import com.gs.bean.InformGuestBean;
 import com.gs.bean.twilio.IncomingCallBean;
 import com.gs.bean.twilio.TwilioIncomingCallBean;
+import com.gs.common.ParseUtil;
+import com.gs.manager.event.EventFeatureManager;
 import com.gs.manager.event.EventManager;
 import com.gs.task.InformGuestTask;
+import com.twilio.sdk.verbs.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,11 +17,6 @@ import com.gs.call.CallResponse;
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
 import com.gs.common.ExceptionHandler;
-import com.twilio.sdk.verbs.Gather;
-import com.twilio.sdk.verbs.Hangup;
-import com.twilio.sdk.verbs.Say;
-import com.twilio.sdk.verbs.TwiMLException;
-import com.twilio.sdk.verbs.TwiMLResponse;
 
 public class RsvpTwiml
 {
@@ -139,6 +137,85 @@ public class RsvpTwiml
 
 		return callResponse;
 	}
+
+    public CallResponse getCallForwardingResponse(CallResponse callResponse,IncomingCallBean incomingCallBean )
+    {
+        if (callResponse != null && incomingCallBean!=null)
+        {
+            EventBean eventBean = callResponse.getEventBean();
+
+            TwilioIncomingCallBean twilioIncomingBean = (TwilioIncomingCallBean)incomingCallBean;
+            String sFromNumber = ParseUtil.checkNull( twilioIncomingBean.getFrom() );
+            String sToNumber = ParseUtil.checkNull( twilioIncomingBean.getTo() );
+
+            TwiMLResponse response = new TwiMLResponse();
+
+            Say sayWelcome = new Say("Welcome to " + eventBean.getEventName() + "'s seating app.");
+            sayWelcome.setVoice(VOICE_ACTOR);
+
+            boolean isCallForward = false;
+            String sMessage = "";
+            String sCallForwaringNum = EventFeatureManager.getStringValueFromEventFeature(eventBean.getEventId(), Constants.EVENT_FEATURES.SEATING_CALL_FORWARD_NUMBER);
+            if( sCallForwaringNum!=null && !"".equalsIgnoreCase(sCallForwaringNum) )
+            {
+                sMessage = "Your call will now be forwarded to an usher. The usher will provide you with more assistance.";
+                isCallForward = true;
+            }
+            else
+            {
+                sMessage = "We are sorry we were unable to process your RSVP. Please call again later.";
+                isCallForward = false;
+            }
+
+            Say sayMessage = new Say(sMessage);
+            sayMessage.setVoice(VOICE_ACTOR);
+
+            Say sayThankYou = new Say("Thank You, and enjoy your day.");
+            sayThankYou.setVoice(VOICE_ACTOR);
+
+            try
+            {
+                //Verb pauseVerb = new Verb(Verb.V_PAUSE,null);
+                Pause pause = new Pause();
+                pause.setLength(1);
+
+                response.append(sayWelcome);
+
+                response.append(pause);
+
+                response.append(sayMessage);
+                response.append(pause);
+
+                if (isCallForward)
+                {
+                    response.append(callForwardUsher(sCallForwaringNum));
+                }
+
+                response.append(sayThankYou);
+
+                callResponse.setResponse(response);
+                callResponse.setTwilResponseSuccess(true);
+
+            }
+            catch (TwiMLException e)
+            {
+                callResponse.setTwilResponseSuccess(false);
+                appLogging.info(ExceptionHandler.getStackTrace(e));
+            }
+
+        }
+
+        return callResponse;
+    }
+
+    private Verb callForwardUsher(String sForwardingNumber)
+    {
+        Dial dialUsher = new Dial(sForwardingNumber);
+        dialUsher.setTimeout(60);
+        // dialUsher.append(verb)
+
+        return dialUsher;
+    }
 
 	public CallResponse getFirstResponse(CallResponse callResponse,IncomingCallBean incomingCallBean )
 	{

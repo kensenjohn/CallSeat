@@ -22,6 +22,7 @@ public class MailingServiceData {
 			+ " MODIFIEDDATE , HUMANCREATEDATE, HUMANMODIFYDATE ) "
 			+ " VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?, ? )";
 	private static String queryEmailsTemplate = "SELECT * FROM GTEMAILTEMPLATE WHERE EMAILTEMPLATENAME = ?";
+    private static String queryEmailsTemplateById = "SELECT * FROM GTEMAILTEMPLATE WHERE EMAILTEMPLATEID = ?";
 
 	Configuration applicationConfig = Configuration
 			.getInstance(Constants.APPLICATION_PROP);
@@ -50,6 +51,25 @@ public class MailingServiceData {
 		}
 		return emailTemplateBean;
 	}
+
+    public EmailTemplateBean getEmailTemplateById( String sTemplateId  )
+    {
+        EmailTemplateBean emailTemplateBean = new EmailTemplateBean();
+        if(sTemplateId!=null && !"".equalsIgnoreCase(sTemplateId))
+        {
+            ArrayList<Object> aParams = DBDAO.createConstraint( sTemplateId );
+            ArrayList<HashMap<String, String>> arrHmEmailTemplate = DBDAO.getDBData(
+                    ADMIN_DB, queryEmailsTemplateById, aParams, false,"MailingServiceData.java", "getEmailTemplateById()");
+            if (arrHmEmailTemplate != null && !arrHmEmailTemplate.isEmpty()) {
+                for (HashMap<String, String> hmEmailTemplate : arrHmEmailTemplate) {
+                    emailTemplateBean = new EmailTemplateBean(hmEmailTemplate);
+                }
+            }
+
+        }
+        return emailTemplateBean;
+    }
+
 
 	public ArrayList<EmailQueueBean> getEmailsFromQueue(
 			Constants.EMAIL_STATUS emailStatus) {

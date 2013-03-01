@@ -69,8 +69,15 @@ public class DemoCallTask extends Task {
 
                         if (Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(sTelNumType))
                         {
-							callResponse = demoTwiml.getRsvpResponse(callResponse, twilioIncomingCallBean);
-
+                            if(callResponse!=null && callResponse.getEventGuestBean()!=null
+                                    && callResponse.isEventBeanExists() && callResponse.isEventGuestBeanExists())
+                            {
+                                callResponse = demoTwiml.getCallForwardingResponse(callResponse,incomingCallBean);
+                            }
+                            else
+                            {
+                                callResponse = demoTwiml.getRsvpResponse(callResponse, twilioIncomingCallBean);
+                            }
 						}
                         else if (Constants.EVENT_TASK.DEMO_SEATING.getTask().equalsIgnoreCase(sTelNumType))
                         {
@@ -257,6 +264,11 @@ public class DemoCallTask extends Task {
 				super.adminId = sAdminId;
 				super.eventId = sEventId;
 
+
+                EventData eventData = new EventData();
+                EventBean eventBean = eventData.getEvent( super.eventId );
+                callResponse.setEventBean(eventBean);
+
 				TelNumberMetaData telNumMetaData = new TelNumberMetaData();
 				telNumMetaData.setGuestTelNumber(sGuestTelNumber);
 				telNumMetaData.setAdminId(super.adminId);
@@ -264,17 +276,18 @@ public class DemoCallTask extends Task {
 				TelNumberManager telNumManager = new TelNumberManager();
 				EventGuestBean eventGuestBean = telNumManager.getTelNumGuestDetails(telNumMetaData);
 
-				EventData eventData = new EventData();
-				EventBean eventBean = eventData.getEvent(eventGuestBean
-						.getEventId());
-
-				callResponse.setEventGuestBean(eventGuestBean);
-				callResponse.setEventBean(eventBean);
+                if(eventGuestBean!=null && eventGuestBean.getGuestId()!=null && !"".equalsIgnoreCase(eventGuestBean.getGuestId() ))
+                {
+                    callResponse.setEventGuestBean(eventGuestBean);
+                }
 
                 CallTransactionBean callTransactionBean = new CallTransactionBean();
                 callTransactionBean.setAdminId(super.adminId);
                 callTransactionBean.setEventId(super.eventId);
-                callTransactionBean.setGuestId(eventGuestBean.getGuestId());
+                if(eventGuestBean!=null && !"".equalsIgnoreCase(eventGuestBean.getGuestId()))
+                {
+                    callTransactionBean.setGuestId(eventGuestBean.getGuestId());
+                }
                 CallTransaction.getInstance().updateTransaction(incomingCallBean,callTransactionBean );
 
 			}

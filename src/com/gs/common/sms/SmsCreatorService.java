@@ -15,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created with IntelliJ IDEA.
@@ -228,27 +229,35 @@ public class SmsCreatorService {
                     && !"".equalsIgnoreCase(sGuestId) )
             {
                 GuestTableManager guestTableManager = new GuestTableManager();
-                ArrayList<String> arrTableId = guestTableManager.getEventGuestTables(sGuestId, sEventID);
+                //ArrayList<String> arrTableId = guestTableManager.getEventGuestTables(sGuestId, sEventID);
 
-                if(arrTableId!=null && !arrTableId.isEmpty())
+                GuestTableMetaData guestTableMetaData = new GuestTableMetaData();
+                guestTableMetaData.setGuestId( sGuestId );
+                guestTableMetaData.setEventId( sEventID );
+
+
+                ArrayList<TableGuestsBean> arrTableGuestBean = guestTableManager.getGuestsEventTableAssignments( guestTableMetaData );
+
+                if(arrTableGuestBean!=null && !arrTableGuestBean.isEmpty())
                 {
                     String sSmsBody  =  ParseUtil.checkNull(smsTemplateBean.getSmsBody());
                     TableManager tableManager = new TableManager();
                     boolean isFirstTable = true;
                     boolean isTableExists = false;
-                    String sTableText = "table";
-                    for( String sTableId : arrTableId )
+                    String sTableText = "";
+                    for( TableGuestsBean  tableGuestBean : arrTableGuestBean )
                     {
+                        int numOfSeats = ParseUtil.sToI(tableGuestBean.getGuestAssignedSeats());
+
                         if( !isFirstTable)
                         {
                             sTableText = sTableText + ", ";
                         }
-                        TableBean tableBean = tableManager.getTable( sTableId );
 
-                        Integer iTableNum = ParseUtil.sToI( tableBean.getTableNum() );
+                        Integer iTableNum = ParseUtil.sToI( tableGuestBean.getTableNum() );
                         if(iTableNum>0)
                         {
-                            sTableText = sTableText + " " + iTableNum;
+                            sTableText = sTableText + " table " + iTableNum;
                             isTableExists = true;
                         }
                         isFirstTable = false;
@@ -257,7 +266,6 @@ public class SmsCreatorService {
                     if( isTableExists )
                     {
                         sSmsBody = sSmsBody.replaceAll("__TABLE_LIST__",sTableText );
-                        sSmsBody = sSmsBody + ".";
 
                         smsObject.setMessage(sSmsBody);
                         smsObject.setSmsObjectExist( true );
@@ -283,9 +291,8 @@ public class SmsCreatorService {
                 smsBody = smsBody.replaceAll( "__EVENT_NAME__", ParseUtil.checkNull( eventBean.getEventName() ) );
                 smsObject.setMessage( smsBody );
             }
-
-
         }
         return smsObject;
     }
+
 }

@@ -1,5 +1,6 @@
 package com.gs.manager;
 
+import com.gs.bean.email.EmailScheduleBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -203,7 +204,7 @@ public class AdminManager {
 			emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
 
 			MailCreator mailCreator = new SingleEmailCreator();
-			mailCreator.create(emailQueueBean);
+			mailCreator.create(emailQueueBean, new EmailScheduleBean());
 		}
 
 	}
@@ -352,7 +353,7 @@ public class AdminManager {
 			// This must be changed so that user will have to click link to
 			// generate the new password.
 			MailCreator dummeEailCreator = new SingleEmailCreator();
-			dummeEailCreator.create(emailQueueBean);
+			dummeEailCreator.create(emailQueueBean, new EmailScheduleBean());
 
 			// Now here we will be putting the correct password in the email
 			// text and

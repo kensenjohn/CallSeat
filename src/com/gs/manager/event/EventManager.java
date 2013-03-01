@@ -165,9 +165,8 @@ public class EventManager {
 
 					if (tmpArrEventBean != null && !tmpArrEventBean.isEmpty()) {
 						for (EventBean eventBean : tmpArrEventBean) {
-							eventBean.setHumanEventDate(DateSupport
-									.getTimeByZone(eventBean.getEventDate(),
-											adminUserInfoBean.getTimezone()));
+							eventBean.setHumanEventDate(DateSupport.getTimeByZone(eventBean.getEventDate(),adminUserInfoBean.getTimezone(),
+                                    Constants.PRETTY_DATE_PATTERN_2 ));
 
 							arrEventBean.add(eventBean);
 						}
@@ -219,7 +218,7 @@ public class EventManager {
 
 					eventSummaryBean.setEventDate(DateSupport.getTimeByZone(
 							eventBean.getEventDate(),
-							adminUserInfoBean.getTimezone()));
+							adminUserInfoBean.getTimezone(), Constants.PRETTY_DATE_PATTERN_2 ));
 				}
 
 			}

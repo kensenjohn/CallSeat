@@ -1,8 +1,12 @@
 package com.gs.call.twilio.twiml;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import com.gs.bean.EventFeatureBean;
 import com.gs.bean.InformGuestBean;
+import com.gs.manager.event.EventFeatureManager;
 import com.gs.task.InformGuestTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,7 +54,8 @@ public class SeatingTwiml
 
 			String sSeatingMessage = "";
 			boolean isFirst = true;
-			if (arrTableGuestBean != null && !arrTableGuestBean.isEmpty())
+            String sCallForwaringNum = "";
+            if (arrTableGuestBean != null && !arrTableGuestBean.isEmpty())
 			{
 				sSeatingMessage = " You have been assigned ";
 				for (TableGuestsBean tableGuestBean : arrTableGuestBean)
@@ -72,7 +77,7 @@ public class SeatingTwiml
 					}
 
 					sSeatingMessage = sSeatingMessage + numOfSeats + " " + sSeats
-							+ " at table number " + tableGuestBean.getTableNum() + ".";
+							+ " at table number " + tableGuestBean.getTableNum();
 					isFirst = false;
 				}
 
@@ -86,8 +91,13 @@ public class SeatingTwiml
 			}
             else
 			{
-				sSeatingMessage = "Your call will now be forwarded to an usher. The usher will provide you with more assistance.";
-				isCallForward = true;
+
+                sCallForwaringNum = EventFeatureManager.getStringValueFromEventFeature( eventBean.getEventId(), Constants.EVENT_FEATURES.SEATING_CALL_FORWARD_NUMBER );
+                if( sCallForwaringNum!=null && !"".equalsIgnoreCase(sCallForwaringNum) )
+                {
+                    sSeatingMessage = "Your call will now be forwarded to an usher. The usher will provide you with more assistance.";
+                    isCallForward = true;
+                }
 			}
 
 			Say sayMessage = new Say(sSeatingMessage);
@@ -106,7 +116,7 @@ public class SeatingTwiml
 
 				if (isCallForward)
 				{
-					response.append(callForwardUsher(callResponse));
+					response.append(callForwardUsher(sCallForwaringNum));
 				}
 
 				response.append(sayThankYou);
@@ -122,9 +132,9 @@ public class SeatingTwiml
 		return callResponse;
 	}
 
-	private Verb callForwardUsher(CallResponse callResponse)
+	private Verb callForwardUsher(String sForwardingNumber)
 	{
-		Dial dialUsher = new Dial("267-250-2719");
+		Dial dialUsher = new Dial(sForwardingNumber);
 		dialUsher.setTimeout(60);
 		// dialUsher.append(verb)
 

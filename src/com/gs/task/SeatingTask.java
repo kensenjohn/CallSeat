@@ -13,10 +13,12 @@ import com.gs.manager.event.GuestTableManager;
 import com.gs.manager.event.GuestTableMetaData;
 import com.gs.manager.event.TelNumberManager;
 import com.gs.manager.event.TelNumberMetaData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class SeatingTask extends Task
 {
-
+    Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 	public SeatingTask(String eventId, String adminId)
 	{
 		super(eventId, adminId);
@@ -53,14 +55,19 @@ public class SeatingTask extends Task
 		TelNumberManager telNumManager = new TelNumberManager();
 		EventGuestBean eventGuestBean = telNumManager.getTelNumGuestDetails(telNumMetaData);
 
+        //appLogging.info("SeatingTask Admin Id : " + super.adminId + " Event Id : " + super.eventId + " event guest bean : " + eventGuestBean );
+
 		EventData eventData = new EventData();
 		EventBean eventBean = eventData.getEvent(eventGuestBean.getEventId());
 
 		GuestTableMetaData guestTableMetaData = new GuestTableMetaData();
-		guestTableMetaData.setGuestId(eventGuestBean.getGuestId());
+		guestTableMetaData.setGuestId( eventGuestBean.getGuestId() );
+        guestTableMetaData.setEventId( super.eventId );
 
 		GuestTableManager guestTableManager = new GuestTableManager();
-		ArrayList<TableGuestsBean> arrTableGuestBean = guestTableManager.getGuestsAssignments(guestTableMetaData);
+		ArrayList<TableGuestsBean> arrTableGuestBean = guestTableManager.getGuestsEventTableAssignments(guestTableMetaData);
+
+        //appLogging.info("SeatingTask  Guest Id : " + eventGuestBean.getGuestId() + "  New Guest Tables :  " + arrTableGuestBean );
 
 		callResponse.setEventGuestBean(eventGuestBean);
 		callResponse.setEventBean(eventBean);

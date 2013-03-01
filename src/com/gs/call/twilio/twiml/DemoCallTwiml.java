@@ -1,8 +1,12 @@
 package com.gs.call.twilio.twiml;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
-import com.gs.bean.InformGuestBean;
+import com.gs.bean.*;
+import com.gs.bean.twilio.IncomingCallBean;
+import com.gs.manager.event.EventFeatureManager;
 import com.gs.task.InformGuestTask;
 import com.twilio.sdk.verbs.*;
 import org.apache.commons.codec.EncoderException;
@@ -10,9 +14,6 @@ import org.apache.commons.codec.net.URLCodec;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gs.bean.EventBean;
-import com.gs.bean.EventGuestBean;
-import com.gs.bean.TableGuestsBean;
 import com.gs.bean.twilio.TwilioIncomingCallBean;
 import com.gs.call.CallResponse;
 import com.gs.common.Configuration;
@@ -49,6 +50,7 @@ public class DemoCallTwiml {
 			ArrayList<TableGuestsBean> arrTableGuestBean = callResponse
 					.getArrTableGuestBean();
 
+            String sCallForwaringNum = "";
 			String sSeatingMessage = "";
 			boolean isFirst = true;
 			if (arrTableGuestBean != null && !arrTableGuestBean.isEmpty()) {
@@ -74,8 +76,12 @@ public class DemoCallTwiml {
 					isFirst = false;
 				}
 			} else {
-				sSeatingMessage = "Your call will now be forwarded to an usher. The usher will provide you with more assistance.";
-				isCallForward = true;
+                sCallForwaringNum = EventFeatureManager.getStringValueFromEventFeature( eventBean.getEventId(), Constants.EVENT_FEATURES.SEATING_CALL_FORWARD_NUMBER );
+                if( sCallForwaringNum!=null && !"".equalsIgnoreCase(sCallForwaringNum) )
+                {
+                    sSeatingMessage = "Your call will now be forwarded to an usher. The usher will provide you with more assistance.";
+                    isCallForward = true;
+                }
 			}
 
 			Say sayMessage = new Say(sSeatingMessage);
@@ -92,7 +98,7 @@ public class DemoCallTwiml {
 				response.append(pause);
 
 				if (isCallForward) {
-					response.append(callForwardUsher(callResponse));
+					response.append(callForwardUsher(sCallForwaringNum));
 				}
 
 				response.append(sayThankYou);
@@ -115,8 +121,78 @@ public class DemoCallTwiml {
 		return callResponse;
 	}
 
-	private Verb callForwardUsher(CallResponse callResponse) {
-		Dial dialUsher = new Dial("267-250-2719");
+    public CallResponse getCallForwardingResponse(CallResponse callResponse,IncomingCallBean incomingCallBean )
+    {
+        if (callResponse != null && incomingCallBean!=null)
+        {
+            EventBean eventBean = callResponse.getEventBean();
+
+            TwilioIncomingCallBean twilioIncomingBean = (TwilioIncomingCallBean)incomingCallBean;
+            String sFromNumber = ParseUtil.checkNull( twilioIncomingBean.getFrom() );
+            String sToNumber = ParseUtil.checkNull( twilioIncomingBean.getTo() );
+
+            TwiMLResponse response = new TwiMLResponse();
+
+            Say sayWelcome = new Say("Welcome to " + eventBean.getEventName() + "'s seating app.");
+            sayWelcome.setVoice(VOICE_ACTOR);
+
+            boolean isCallForward = false;
+            String sMessage = "";
+            String sCallForwaringNum = EventFeatureManager.getStringValueFromEventFeature(eventBean.getEventId(), Constants.EVENT_FEATURES.SEATING_CALL_FORWARD_NUMBER);
+            if( sCallForwaringNum!=null && !"".equalsIgnoreCase(sCallForwaringNum) )
+            {
+                sMessage = "Your call will now be forwarded to an usher. The usher will provide you with more assistance.";
+                isCallForward = true;
+            }
+            else
+            {
+                sMessage = "We are sorry we were unable to process your RSVP. Please call again later.";
+                isCallForward = false;
+            }
+
+            Say sayMessage = new Say(sMessage);
+            sayMessage.setVoice(VOICE_ACTOR);
+
+            Say sayThankYou = new Say("Thank You, and enjoy your day.");
+            sayThankYou.setVoice(VOICE_ACTOR);
+
+            try
+            {
+                //Verb pauseVerb = new Verb(Verb.V_PAUSE,null);
+                Pause pause = new Pause();
+                pause.setLength(1);
+
+                response.append(sayWelcome);
+
+                response.append(pause);
+
+                response.append(sayMessage);
+                response.append(pause);
+
+                if (isCallForward)
+                {
+                    response.append(callForwardUsher(sCallForwaringNum));
+                }
+
+                response.append(sayThankYou);
+
+                callResponse.setResponse(response);
+                callResponse.setTwilResponseSuccess(true);
+
+            }
+            catch (TwiMLException e)
+            {
+                callResponse.setTwilResponseSuccess(false);
+                appLogging.info(ExceptionHandler.getStackTrace(e));
+            }
+
+        }
+
+        return callResponse;
+    }
+
+	private Verb callForwardUsher(String sTelNumber) {
+		Dial dialUsher = new Dial(sTelNumber);
 		dialUsher.setTimeout(60);
 		// dialUsher.append(verb)
 

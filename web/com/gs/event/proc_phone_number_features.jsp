@@ -47,12 +47,15 @@
                     sSeatingCallForward = Utility.convertHumanToInternationalTelNum(sSeatingCallForwardHumanNumber);
                 }
 
+                appLogging.info("international number = " + sSeatingCallForward + " human seating call number:" + sSeatingCallForwardHumanNumber );
+
                 if(sSeatingCallForward!=null && !"".equalsIgnoreCase(sSeatingCallForward))
                 {
                     com.google.i18n.phonenumbers.Phonenumber.PhoneNumber seatingPhoneNumber = new Phonenumber.PhoneNumber();
                     seatingPhoneNumber.setCountryCode(1);
-                    seatingPhoneNumber.setNationalNumber(ParseUtil.sToL(sSeatingCallForward.substring(1)));
+                    seatingPhoneNumber.setNationalNumber(ParseUtil.sToL(sSeatingCallForward.substring(2)));
 
+                    appLogging.info("country code = " + seatingPhoneNumber.getCountryCode() + " national number:" + seatingPhoneNumber.getNationalNumber() );
                     PhoneNumberUtil seatingNumberUtil = PhoneNumberUtil.getInstance();
                     if(!seatingNumberUtil.isValidNumber(seatingPhoneNumber))
                     {
@@ -79,7 +82,7 @@
                 {
                     com.google.i18n.phonenumbers.Phonenumber.PhoneNumber rsvpPhoneNumber = new Phonenumber.PhoneNumber();
                     rsvpPhoneNumber.setCountryCode(1);
-                    rsvpPhoneNumber.setNationalNumber(ParseUtil.sToL(sRsvpCallForward.substring(1)));
+                    rsvpPhoneNumber.setNationalNumber(ParseUtil.sToL(sRsvpCallForward.substring(2)));
                     PhoneNumberUtil rsvpNumberUtil = PhoneNumberUtil.getInstance();
                     if(!rsvpNumberUtil.isValidNumber(rsvpPhoneNumber))
                     {

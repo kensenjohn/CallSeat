@@ -69,23 +69,7 @@ public class PhoneCallUsage implements Usage {
         Integer iTotalMinutesAllocated = 0;
         if(usageMetaData!=null)
         {
-            EventFeatureManager eventFeatureManager = new EventFeatureManager();
-            EventFeatureBean eventFeatureBean = eventFeatureManager.getEventFeatures(usageMetaData.getEventId(),eventFeatures);
-            if(eventFeatureBean!=null)
-            {
-                HashMap<String,String> hmFeatureValue = eventFeatureBean.getHmFeatureValue();
-                if(hmFeatureValue!=null && !hmFeatureValue.isEmpty())
-                {
-                    for(Map.Entry<String,String> mapFeatureValue : hmFeatureValue.entrySet())
-                    {
-                        if( eventFeatures.getEventFeature().equalsIgnoreCase(mapFeatureValue.getKey()))
-                        {
-                            iTotalMinutesAllocated = ParseUtil.sToI(mapFeatureValue.getValue());
-                        }
-                    }
-                }
-            }
-
+            iTotalMinutesAllocated = EventFeatureManager.getIntegerValueFromEventFeature( usageMetaData.getEventId() , eventFeatures);
         }
         return iTotalMinutesAllocated;
     }

@@ -1,3 +1,6 @@
 enable_single_email_send=true
 enable_bulk_email_send=false
-
+enable_email_creator=true
+schedule_pickuptime_padding=3
+schedule_sms_delay=2
+email_sender_delay=6

@@ -153,7 +153,10 @@ public class Constants {
     public static String PROP_SMS_SENDER_INIT_DELAY = "sms_sender.initial_delay";
     public static String PROP_SMS_SENDER_PROC_DELAY = "sms_sender.delay_between_call";
 
-	public static String PROP_AMAZON_ACCESS_KEY = "amazon_access_key";
+    public static String PROP_EMAIL_CREATORL_INIT_DELAY = "email_creator.initial_delay";
+    public static String PROP_EMAIL_CREATOR_PROC_DELAY = "email_creator.delay_between_call";
+
+    public static String PROP_AMAZON_ACCESS_KEY = "amazon_access_key";
 	public static String PROP_AMAZON_ACCESS_SECRET = "amazon_secret_key";
 
     public static String PROP_APPLICATION_DOMAIN = "application_domain";
@@ -164,9 +167,16 @@ public class Constants {
     public static String PROP_ENABLE_SMS_SENDER = "enable_sms_sender";
 
 
-    public static String PROP_SMS_SCHEDULE_PICKUPTIME_PADDING = "schedule_pickuptime_padding";
+    public static String PROP_SMS_SCHEDULE_PICKUPTIME_PADDING = "schedule_sms_pickuptime_padding";
     public static String PROP_SMS_SCHEDULE_SMS_DELAY = "schedule_sms_delay";
     public static String PROP_SMS_SENDER_DELAY = "sms_sender_delay";
+
+    public static String PROP_EMAIL_SCHEDULE_PICKUPTIME_PADDING = "schedule_email_pickuptime_padding";
+    public static String PROP_EMAIL_SCHEDULE_EMAIL_DELAY = "schedule_email_delay";
+    public static String PROP_EMAIL_SENDER_DELAY = "email_sender_delay";
+
+    public static String PROP_ENABLE_EMAIL_CREATOR = "enable_email_creator";
+
 
 
 
@@ -187,8 +197,11 @@ public class Constants {
 	}
 
 	public enum EMAIL_TEMPLATE {
-		REGISTRATION("REGISTRATION"), NEWPASSWORD("NEWPASSWORD"), NEWTELNUMBERPURCHASE(
-				"NEWTELNUMBERPURCHASE");
+		REGISTRATION("REGISTRATION"),
+        NEWPASSWORD("NEWPASSWORD"),
+        NEWTELNUMBERPURCHASE("NEWTELNUMBERPURCHASE"),
+        RSVP_CONFIRMATION_EMAIL("RSVP_CONFIRMATION"),
+        SEATING_CONFIRMATION_EMAIL("SEATING_CONFIRMATION");
 
 		private String emailTemplate = "";
 
@@ -477,5 +490,7 @@ public class Constants {
         }
 
     }
+
+    public static Integer MAX_SMS_LENGTH = 160;
 
 }
