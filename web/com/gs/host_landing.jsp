@@ -137,6 +137,12 @@ if(cookies!=null)
 			   }
 		} );
 
+        $('#event_date').live("keypress", function(event) {
+            if ( event.which == 13 ) {
+                callSubmitEvent();
+            }
+        });
+
 	});
 	function callSubmitEvent()
 	{

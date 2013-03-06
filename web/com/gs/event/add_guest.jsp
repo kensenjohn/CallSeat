@@ -263,7 +263,82 @@
             $('#home_num').keydown( function(e){
                 FormatPhone(e, this);
             });
+
+
+            $('#first_name').live("keypress", function(event) {
+                if ( event.which == 13 ) {
+                    $('#first_name').blur();
+                    enterButtonActivation();
+                }
+            });
+
+            $('#last_name').live("keypress", function(event) {
+                if ( event.which == 13 ) {
+                    enterButtonActivation();
+                    $('#last_name').blur();
+                }
+            });
+
+            $('#cell_num').live("keypress", function(event) {
+                if ( event.which == 13 ) {
+                    enterButtonActivation();
+                    $('#cell_num').blur();
+                }
+            });
+
+            $('#home_num').live("keypress", function(event) {
+                if ( event.which == 13 ) {
+                    $('#home_num').blur();
+                    enterButtonActivation();
+                }
+            });
+
+            $('#email_addr').live("keypress", function(event) {
+                if ( event.which == 13 ) {
+                    enterButtonActivation();
+                    $('#email_addr').blur();
+                }
+            });
+
+            $('#invited_num_of_seats').live("keypress", function(event) {
+                if ( event.which == 13 ) {
+                    enterButtonActivation();
+                    $('#invited_num_of_seats').blur();
+                }
+            });
+
+            $('#rsvp_num_of_seats').live("keypress", function(event) {
+                if ( event.which == 13 ) {
+                    enterButtonActivation();
+                    $('#rsvp_num_of_seats').blur();
+                }
+            });
 		});
+
+        function enterButtonActivation()
+        {
+            if(varIsAllGuest && !varIsAllGuestEdit)
+            {
+                addGuest();
+                //loadEvents(); //load all events only if there are guests.
+            }
+            else if(varIsAllGuest && varIsAllGuestEdit)
+            {
+                loadGuest();
+                saveGuestInfo();
+            }
+            else if(varIsSingleEventGuestEdit)
+            {
+                loadSingleEventGuest();
+                getEventName();
+                saveGuestInfo();
+            }
+            else
+            {
+                addGuest();
+                getEventName();
+            }
+        }
 		
 		function getEventName()
 		{

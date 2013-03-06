@@ -28,7 +28,7 @@
 		<div  class="fnbx_scratch_area">
 				<div class="row" >
 					<div class="offset1 span10">
-						<h2 class="txt txt_center">Invite <%=sGuestFirstName%></h2>
+						<h2 class="txt txt_center">Invite guest  to Seating Plans. Guest Name: <%=sGuestFirstName%> </h2>
 					</div>
 				</div>
 				<div class="row">
@@ -297,8 +297,8 @@
 		function create_header()
 		{
 			var valHeader = '<thead><tr> ' + 
-			'<th style="width:7%" class="tbl_th">Invited</th>'+
-			'<th style="width:27%" class="tbl_th">Event Name</th>'+
+			'<th style="width:7%" class="tbl_th">Is Invited</th>'+
+			'<th style="width:27%" class="tbl_th">Seating Plan Name</th>'+
 			'<th style="width:18%" class="tbl_th">Invited for seats</th>'+
 			'<th style="width:18%" class="tbl_th">RSVP to seats</th><th style="width:30%" class="tbl_th"></th>'+
 			'</tr></thead>';

@@ -117,8 +117,42 @@
 				loadTableDetails();
 				$("#add_table").click(editTable);
 			}
+
+            $('#table_name').live("keypress", function(event) {
+                if ( event.which == 13 ) {
+                    $('#table_name').blur();
+                    enterButtonActivation();
+                }
+            });
+
+            $('#table_num').live("keypress", function(event) {
+                if ( event.which == 13 ) {
+                    enterButtonActivation();
+                    $('#table_num').blur();
+                }
+            });
+
+            $('#num_of_seats').live("keypress", function(event) {
+                if ( event.which == 13 ) {
+                    enterButtonActivation();
+                    $('#num_of_seats').blur();
+                }
+            });
 			
 		});
+
+        function enterButtonActivation()
+        {
+            if(!varIsTableExists)
+            {
+                addTable();
+            }
+            else
+            {
+                loadTableDetails();
+                editTable();
+            }
+        }
 		
 		function loadTableDetails()
 		{

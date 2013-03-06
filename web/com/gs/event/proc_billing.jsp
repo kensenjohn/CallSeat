@@ -7,6 +7,9 @@
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="java.util.*"%>
 <%@page import="com.gs.json.*"%>
+<%@page import="com.validate.*"%>
+
+
 
 <%
         JSONObject jsonResponseObj = new JSONObject();
@@ -40,48 +43,63 @@
                     && sPurchaseState!=null && !"".equalsIgnoreCase(sPurchaseState)
                     && sPurchaseStripeToken!=null && !"".equalsIgnoreCase(sPurchaseStripeToken))
             {
-                PurchaseTransactionManager purchaseTransactionManager = new PurchaseTransactionManager();
 
-                PurchaseTransactionBean requestPurchaseTransactionBean = new  PurchaseTransactionBean();
-                requestPurchaseTransactionBean.setAdminId(sAdminId);
-                requestPurchaseTransactionBean.setEventId(sEventId);
-
-                PurchaseTransactionBean responsePurchaseTransactionBean = purchaseTransactionManager.getPurchaseTransactionByEventAdmin(requestPurchaseTransactionBean);
-
-                Integer iNumOfRows = 0;
-                if(responsePurchaseTransactionBean != null && responsePurchaseTransactionBean.getPurchaseTransactionId()!=null && !"".equalsIgnoreCase(responsePurchaseTransactionBean.getPurchaseTransactionId()))
+                ValidateStatusBean validateStatusBean = ValidateStateZipCode.validate(sPurchaseState,sPurchaseZipcode);
+                if(validateStatusBean.isValid() )
                 {
-                    responsePurchaseTransactionBean.setFirstName(sPurchaseFirstName);
-                    responsePurchaseTransactionBean.setLastName(sPurchaseLastName);
-                    responsePurchaseTransactionBean.setState(sPurchaseState);
-                    responsePurchaseTransactionBean.setZipcode(sPurchaseZipcode);
-                    responsePurchaseTransactionBean.setCountry(sPurchaseCountry);
-                    responsePurchaseTransactionBean.setStripeToken(sPurchaseStripeToken);
-                    responsePurchaseTransactionBean.setCreditCardLast4Digits(sPurchaseLast4CreditCard);
-                    // update Transaction with latest phone numbers
-                    appLogging.error("Purchase transaction record." + responsePurchaseTransactionBean );
+                    PurchaseTransactionManager purchaseTransactionManager = new PurchaseTransactionManager();
 
-                    iNumOfRows = purchaseTransactionManager.modifyPurchaseTransaction(responsePurchaseTransactionBean);
+                    PurchaseTransactionBean requestPurchaseTransactionBean = new  PurchaseTransactionBean();
+                    requestPurchaseTransactionBean.setAdminId(sAdminId);
+                    requestPurchaseTransactionBean.setEventId(sEventId);
+
+                    PurchaseTransactionBean responsePurchaseTransactionBean = purchaseTransactionManager.getPurchaseTransactionByEventAdmin(requestPurchaseTransactionBean);
+
+                    Integer iNumOfRows = 0;
+                    if(responsePurchaseTransactionBean != null && responsePurchaseTransactionBean.getPurchaseTransactionId()!=null && !"".equalsIgnoreCase(responsePurchaseTransactionBean.getPurchaseTransactionId()))
+                    {
+                        responsePurchaseTransactionBean.setFirstName(sPurchaseFirstName);
+                        responsePurchaseTransactionBean.setLastName(sPurchaseLastName);
+                        responsePurchaseTransactionBean.setState(sPurchaseState);
+                        responsePurchaseTransactionBean.setZipcode(sPurchaseZipcode);
+                        responsePurchaseTransactionBean.setCountry(sPurchaseCountry);
+                        responsePurchaseTransactionBean.setStripeToken(sPurchaseStripeToken);
+                        responsePurchaseTransactionBean.setCreditCardLast4Digits(sPurchaseLast4CreditCard);
+                        // update Transaction with latest phone numbers
+                        appLogging.error("Purchase transaction record." + responsePurchaseTransactionBean );
+
+                        iNumOfRows = purchaseTransactionManager.modifyPurchaseTransaction(responsePurchaseTransactionBean);
+                    }
+                    else
+                    {
+                        // shouldn't come here. This means there was no transaction record previously created.
+                    }
+
+                    if(iNumOfRows>0)
+                    {
+                        Text okText = new OkText("Transaction records were created.","my_id");
+                        arrOkText.add(okText);
+                        responseStatus = RespConstants.Status.OK;
+                    }
+                    else
+                    {
+                        appLogging.error("Transaction records were not created." + responsePurchaseTransactionBean );
+                        Text errorText = new ErrorText("Your request was not processed. Please try again later.","my_id") ;
+                        arrErrorText.add(errorText);
+
+                        responseStatus = RespConstants.Status.ERROR;
+                    }
                 }
                 else
                 {
-                   // shouldn't come here. This means there was no transaction record previously created.
-                }
+                    appLogging.error("Invalid state and zip code used. state : " + sPurchaseState + " zipcode : " + sPurchaseZipcode );
 
-                if(iNumOfRows>0)
-                {
-                    Text okText = new OkText("Transaction records were created.","my_id");
-                    arrOkText.add(okText);
-                    responseStatus = RespConstants.Status.OK;
-                }
-                else
-                {
-                    appLogging.error("Transaction records were not created." + responsePurchaseTransactionBean );
-                    Text errorText = new ErrorText("Your request was not processed. Please try again later.","my_id") ;
+                    Text errorText = new ErrorText("We were unable to identify a valid zip code.","my_id") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
                 }
+
 
             }
 

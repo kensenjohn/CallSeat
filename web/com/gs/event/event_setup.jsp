@@ -27,7 +27,7 @@
 	boolean isNewEventClicked= ParseUtil.sTob(request.getParameter("lobby_create_new"));
 	
 	jspLogging.info("Invoked by landing page : " + isFromLanding);
-	String sEventTitle = "New Event";
+	String sEventTitle = "New Seating Plan";
 	
 	//UserInfoManager userInfo = new UserInfoManager();	
 	//userInfo.createUserInfoBean(new UserInfoBean());
@@ -211,7 +211,7 @@
 						
 							<div class="row">
 								<div class="span5">
-									<h4>Event </h4>
+									<h4>Seating Plan </h4>
 								</div>
 							</div>
 							<div  class="row">
@@ -254,7 +254,7 @@
 												if(isNewEventClicked)
 												{
 		%>
-													<input type="button" class="btn ispn2" id="create_event" name="create_event" value="Create New Event"/>									
+													<input type="button" class="btn ispn2" id="create_event" name="create_event" value="Create Seating Plan"/>
 		<%											
 												}
 												else
@@ -290,18 +290,18 @@
 							<div class="row">
 								<div class="offset1 span5">
 									<span class="fld_name"> Seating: </span>
-									<span class="fld_txt" id="e_summ_seating_telnum" ><span class="fld_txt_small">Create a new event to see your telephone number. </span> </span>
+									<span class="fld_txt" id="e_summ_seating_telnum" ><span class="fld_txt_small">Create a new seating plan to see your telephone number. </span> </span>
 								</div>
 							</div>
                             <div class="row" id="div_seating_event_num" style="display:none;">
                                 <div class="offset2 span4">
-                                    <span class="fld_txt_small"> Event Number: </span>
+                                    <span class="fld_txt_small" style="font-weight:bold;"> Plan Id: </span>
                                     <span class="fld_txt_small" id="e_summ_seating_event_num" ></span>
                                 </div>
                             </div>
                             <div class="row" id="div_seating_extension" style="display:none;">
                                 <div class="offset2 span4">
-                                    <span class="fld_txt_small"> Extension: </span>
+                                    <span class="fld_txt_small" style="font-weight:bold;"> Extension: </span>
                                     <span class="fld_txt_small" id="e_summ_seating_extension" ></span>
                                 </div>
                             </div>
@@ -313,18 +313,18 @@
 							<div class="row">
 								<div class="offset1 span5">
 									<span class="fld_name"> RSVP : </span>
-									<span class="fld_txt" id="e_summ_rsvp_telnum" ><span class="fld_txt_small">Create a new event to see your telephone number.</span></span>
+									<span class="fld_txt" id="e_summ_rsvp_telnum" ><span class="fld_txt_small">Create a new seating plan to see your telephone number.</span></span>
 								</div>
 							</div>
                             <div class="row" id="div_rsvp_event_num" style="display:none;">
                                 <div class="offset2 span4">
-                                    <span class="fld_txt_small"> Event Number: </span>
+                                    <span class="fld_txt_small" style="font-weight:bold;"> Plan Id: </span>
                                     <span class="fld_txt_small" id="e_summ_rsvp_event_num" ></span>
                                 </div>
                             </div>
                             <div class="row" id="div_rsvp_extension" style="display:none;">
                                 <div class="offset2 span4">
-                                    <span class="fld_txt_small"> Extension: </span>
+                                    <span class="fld_txt_small" style="font-weight:bold;"> Extension: </span>
                                     <span class="fld_txt_small" id="e_summ_rsvp_extension" ></span>
                                 </div>
                             </div>
@@ -383,7 +383,7 @@
                             </div>
 							<div class="row">
 								<div class="span5">
-									<h4>Seating Plan</h4>
+									<h4>Overview</h4>
 								</div>
 							</div>
 							<div class="row">
@@ -447,8 +447,8 @@
 										<div class="span2" style="display:none;"><label id="seating_search">Advanced Search</label></div>
 									</div>
 									<div class="row"  id="seating_div_event_id" >
-										<div class="span2"   style="text-align:right;"> 
-											<span class="fld_name" >Event Number :  </span>
+										<div class="span2"   style="text-align:right;">
+											<span class="fld_txt_small" style="font-weight:bold;">Plan Id :  </span>
 										</div>
 										<div class="span4">
 											<span class="fld_txt" id="seating_event_id"></span>
@@ -456,7 +456,7 @@
 									</div>
 									<div class="row" id="seating_div_secret_key" >
 										<div class="span2"   style="text-align:right;">
-											<span class="fld_name" >Extension :  </span>
+											<span class="fld_txt_small" style="font-weight:bold;">Extension :  </span>
 										</div>
 										<div class="span4">
 											<span class="fld_txt" id="seating_secret_key"></span>
@@ -515,7 +515,7 @@
 									</div>
 									<div class="row" id="rsvp_div_event_id">
 										<div class="span2"   style="text-align:right;">
-											<span class="fld_name" >Event Number :  </span>
+											<span class="fld_txt_small" style="font-weight:bold;">Plan Id :  </span>
 										</div>
 										<div class="span4">
 											<span class="fld_txt" id="rsvp_event_id"></span>
@@ -523,7 +523,7 @@
 									</div>
 									<div class="row" id="rsvp_div_secret_key">
 										<div class="span2"   style="text-align:right;">
-											<span class="fld_name" >Extension :  </span>
+											<span class="fld_txt_small" style="font-weight:bold;">Extension :  </span>
 										</div>
 										<div class="span4">
 											<span class="fld_txt" id="rsvp_secret_key"></span>
@@ -781,6 +781,34 @@
 
         $('#btn_save_phone_number').click( function(e){
             savePhoneNumberFeatures();
+        });
+
+
+        $('#e_summ_event_name').live("keypress", function(event) {
+            if ( event.which == 13 ) {
+                if(varIsNewEventCreateClicked)
+                {
+                    createEvent();
+                }
+                else
+                {
+                    saveEvent();
+                }
+                $('#e_summ_event_name').blur();
+            }
+        });
+        $('#e_summ_event_date').live("keypress", function(event) {
+            if ( event.which == 13 ) {
+                if(varIsNewEventCreateClicked)
+                {
+                    createEvent();
+                }
+                else
+                {
+                    saveEvent();
+                }
+                $('#e_summ_event_date').blur();
+            }
         });
 		
 	});

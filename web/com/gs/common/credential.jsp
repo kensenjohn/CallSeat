@@ -213,6 +213,47 @@
 		$("#link_forgot_password").click(submitForgotPassword);
 		$("#link_to_login").click( showLogin );
 		$("#link_to_signup").click( showSignUp );
+
+
+
+        $('#login_email').live("keypress", function(event) {
+            if ( event.which == 13 ) {
+                loginUser();
+            }
+        });
+        $('#login_password').live("keypress", function(event) {
+            if ( event.which == 13 ) {
+                loginUser();
+            }
+        });
+
+
+        // Automated Enter button when Regtistration PRocess is running.
+        $('#register_email').live("keypress", function(event) {
+            if ( event.which == 13 ) {
+                registerUser();
+            }
+        });
+        $('#register_fname').live("keypress", function(event) {
+            if ( event.which == 13 ) {
+                registerUser();
+            }
+        });
+        $('#register_lname').live("keypress", function(event) {
+            if ( event.which == 13 ) {
+                registerUser();
+            }
+        });
+        $('#register_pass').live("keypress", function(event) {
+            if ( event.which == 13 ) {
+                registerUser();
+            }
+        });
+        $('#register_pass_conf').live("keypress", function(event) {
+            if ( event.which == 13 ) {
+                registerUser();
+            }
+        });
 	});
 	function showLogin()
 	{
