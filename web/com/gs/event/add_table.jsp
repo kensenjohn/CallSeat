@@ -7,7 +7,9 @@
 </jsp:include>
 <jsp:include page="../common/security.jsp"/>
 <jsp:include page="../common/header_bottom.jsp"/>
-	<body style="height:auto;">
+<link type="text/css" rel="stylesheet" href="/web/css/jquery.select-to-autocomplete.css" />
+<link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
+<body style="height:auto;">
 	<%
 		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
@@ -70,7 +72,17 @@
 							</div>
 							<div class="row">
 								<div class="span2" >
-									<input type="text" id="table_num" name="table_num"/>
+                                    <select  id="table_num" name="table_num" >
+                                        <option value=""></option>
+                                        <%
+                                            for(int numOfTables = 1; numOfTables<100; numOfTables++ )
+                                            {
+                                        %>
+                                                <option value="<%=numOfTables%>"><%=numOfTables%></option>
+                                        <%
+                                            }
+                                        %>
+                                    </select>
 								</div>
 							</div>
 							<div class="row">
@@ -80,7 +92,17 @@
 							</div>
 							<div class="row">
 								<div class="span2" >
-									<input type="text" id="num_of_seats" name="num_of_seats"/>
+                                    <select  id="num_of_seats" name="num_of_seats" >
+                                        <option value=""></option>
+                                        <%
+                                            for(int numOfSeats = 1; numOfSeats<100; numOfSeats++ )
+                                            {
+                                        %>
+                                                <option value="<%=numOfSeats%>"><%=numOfSeats%></option>
+                                        <%
+                                            }
+                                        %>
+                                    </select>
 								</div>
 							</div>
 							 <div class="span8">
@@ -104,6 +126,9 @@
 				</div>
 		</div>
 	</body>
+    <script type="text/javascript" src="/web/js/jquery.select-to-autocomplete.js"></script>
+    <script type="text/javascript" src="/web/js/jquery-ui-1.8.13.custom.min.js"></script>
+    <script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
 	<script type="text/javascript">
 		var varIsTableExists = <%=isTableExists%>;
 		$(document).ready(function() {
@@ -138,7 +163,6 @@
                     $('#num_of_seats').blur();
                 }
             });
-			
 		});
 
         function enterButtonActivation()
@@ -205,7 +229,7 @@
 			{
 				for(var i = 0; i<varArrMessages.length; i++)
 				{
-					alert( varArrMessages[i].text);
+                    displayMssgBoxAlert(varArrMessages[i].text,false);
 				}
 			}
 		}
@@ -223,7 +247,8 @@
 					{
 						var jsonResponseMessage = varResponseObj.messages;
 						var varArrErrorMssg = jsonResponseMessage.error_mssg
-						displayMessages( varArrErrorMssg );
+						//displayMessages( varArrErrorMssg );
+                        displayMssgBoxMessages( varArrErrorMssg , true);
 					}
 				}
 				else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
@@ -256,6 +281,58 @@
 			$('#table_num').val( varTableDetail.table_num);
 			$('#num_of_seats').val( varTableDetail.num_of_seats);
 		}
+
+
+        function displayMssgBoxAlert(varMessage, isError)
+        {
+            var varTitle = 'Status';
+            var varType = 'info';
+            if(isError)
+            {
+                varTitle = 'Error';
+                varType = 'error';
+            }
+            else
+            {
+                varTitle = 'Status';
+                varType = 'info';
+            }
+
+            if(varMessage!='')
+            {
+                $.msgBox({
+                    title: varTitle,
+                    content: varMessage,
+                    type: varType
+                });
+            }
+        }
+
+        function displayMssgBoxMessages(varArrMessages, isError)
+        {
+            if(varArrMessages!=undefined)
+            {
+
+
+                var varMssg = '';
+                var isFirst = true;
+                for(var i = 0; i<varArrMessages.length; i++)
+                {
+                    if(isFirst == false)
+                    {
+                        varMssg = varMssg + '\n';
+                    }
+                    varMssg = varMssg + varArrMessages[i].text;
+                }
+
+                if(varMssg!='')
+                {
+                    displayMssgBoxAlert(varMssg,isError);
+                }
+            }
+
+
+        }
 	</script>
 	<jsp:include page="../common/footer_bottom_fancybox.jsp"/> 
 </html>

@@ -1,5 +1,9 @@
 package com.gs.bean;
 
+import com.gs.common.ParseUtil;
+
+import java.util.HashMap;
+
 public class EventTableBean
 {
 	// EVENTTABLEID VARCHAR(45) NOT NULL,
@@ -12,6 +16,18 @@ public class EventTableBean
 	private String isTmp = "";
 	private String delRow = "";
 	private String assignToEvent = "";
+
+    public EventTableBean()
+    {
+
+    }
+
+    public EventTableBean( HashMap<String,String> hmResult )
+    {
+        this.eventTableId = ParseUtil.checkNull( hmResult.get("EVENTTABLEID") );
+        this.eventId = ParseUtil.checkNull( hmResult.get("FK_EVENTID") );
+        this.tableId = ParseUtil.checkNull( hmResult.get("FK_TABLEID") );
+    }
 
 	public String getEventTableId()
 	{

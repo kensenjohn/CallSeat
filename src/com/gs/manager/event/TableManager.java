@@ -55,6 +55,14 @@ public class TableManager {
 
 	}
 
+    public  ArrayList<EventTableBean> getTableByNum(String sTableNum, String sEventId) {
+        TableData tableData = new TableData();
+
+        ArrayList<EventTableBean> arrEventTableBean = tableData.getTableByNumber( sTableNum, sEventId );
+
+        return arrEventTableBean;
+    }
+
 	public TableBean getTable(String sTableId) {
 		TableData tableData = new TableData();
 

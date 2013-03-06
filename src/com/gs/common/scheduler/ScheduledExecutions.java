@@ -77,5 +77,11 @@ public class ScheduledExecutions implements ServletContextListener {
             schedulerLogging.info("smsSenderScheduler  : shut down ");
         }
 
+        if( mailCreator != null )
+        {
+            mailCreator.shutdownNow();
+            schedulerLogging.info("mailCreator  : shut down ");
+        }
+
 	}
 }

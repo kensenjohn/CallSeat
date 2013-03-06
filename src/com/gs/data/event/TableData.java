@@ -3,6 +3,7 @@ package com.gs.data.event;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.gs.bean.EventTableBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,6 +19,28 @@ public class TableData {
 			.getInstance(Constants.APPLICATION_PROP);
 
 	private String ADMIN_DB = applicationConfig.get(Constants.ADMIN_DB);
+
+    public ArrayList<EventTableBean>  getTableByNumber(String sTableNum, String sEventId)
+    {
+
+        ArrayList<EventTableBean>  arrEventTableBean = new ArrayList<EventTableBean>();
+
+        if (sTableNum != null && !"".equalsIgnoreCase(sTableNum) && ParseUtil.sToI(sTableNum)>0
+                && sEventId != null && !"".equalsIgnoreCase(sEventId)) {
+            String sQuery = "select * from GTEVENTTABLES GTET, GTTABLE GTT where GTET.FK_TABLEID=GTT.TABLEID and GTET.FK_EVENTID=? and GTT.TABLENUM=?";
+
+            ArrayList<Object> arrParams = DBDAO.createConstraint(sEventId,sTableNum);
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(ADMIN_DB, sQuery, arrParams, false, "TableData.java", "getTableByNumber()");
+
+            for (HashMap<String, String> hmResult : arrResult) {
+                EventTableBean eventTableGuestBean = new EventTableBean( hmResult );
+
+                arrEventTableBean.add( eventTableGuestBean );
+            }
+        }
+        return arrEventTableBean;
+    }
 
 	public TableBean getTableById(String sTableId) {
 		TableBean tableBean = new TableBean();
