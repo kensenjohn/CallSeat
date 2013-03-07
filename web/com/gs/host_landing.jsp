@@ -120,7 +120,7 @@ if(cookies!=null)
 <jsp:include page="common/footer_top.jsp"/>
 	<script type="text/javascript">
 	$(document).ready(function() {
-		$("#event_date").datepick();
+		$("#event_date").datepick({ minDate: 0, maxDate: "+1Y" });
 		$("#event_dt_sbt").click( 
 				function()
 				{

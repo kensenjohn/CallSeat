@@ -99,6 +99,18 @@ public class DateSupport {
         {
             afterAddition = afterAddition.plusHours( iNumOfTimeUnits );
         }
+        else if( Constants.TIME_UNIT.DAYS.equals(timeUnit) )
+        {
+            afterAddition = afterAddition.plusDays( iNumOfTimeUnits );
+        }
+        else if( Constants.TIME_UNIT.MONTHS.equals(timeUnit) )
+        {
+            afterAddition = afterAddition.plusMonths( iNumOfTimeUnits );
+        }
+        else if( Constants.TIME_UNIT.YEARS.equals(timeUnit) )
+        {
+            afterAddition = afterAddition.plusYears( iNumOfTimeUnits );
+        }
         return afterAddition.getMillis();
     }
 

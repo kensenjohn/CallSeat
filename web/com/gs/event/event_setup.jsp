@@ -7,6 +7,10 @@
 <%@ page import="com.gs.manager.event.*" %>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
+<%@ page import="org.joda.time.DateTimeZone" %>
+<%@ page import="com.gs.json.RespConstants" %>
+<%@ page import="com.gs.json.ErrorText" %>
+<%@ page import="com.gs.json.Text" %>
 
 
 <jsp:include page="../common/header_top.jsp">
@@ -70,37 +74,57 @@
 		
 		if(adminBean!=null)
 		{
-			EventCreationMetaDataBean eventMeta = new EventCreationMetaDataBean();
-			eventMeta.setAdminBean(adminBean);
-			eventMeta.setEventDate(sEventDate);
-			eventMeta.setEventDatePattern("MM/dd/yyyy");
-			eventMeta.setEventTimeZone("UTC");
-			
-			EventManager eventManager = new EventManager();
-			eventBean = eventManager.createEvent(eventMeta);
-			
-			if(eventBean!=null && eventBean.getEventId()!=null && !"".equalsIgnoreCase(eventBean.getEventId()))
-			{
-                EventPricingGroupManager eventPricingManager = new EventPricingGroupManager();
-                ArrayList<PricingGroupBean> arrPricingBean = eventPricingManager.getDemoPricingGroups();
-                if( arrPricingBean !=null )
+            Long lCurrentTime = DateSupport.getEpochMillis();
+            Long lEventCreateDate = DateSupport.getMillis( sEventDate + " 00:00:00","MM/dd/yyyy HH:mm:ss", DateTimeZone.UTC.getID() );
+            Long lFutureDateLimit = DateSupport.addTime( lCurrentTime , 1 , Constants.TIME_UNIT.YEARS  );
+            if( lEventCreateDate < lCurrentTime )
+            {
+                //Text errorText = new ErrorText("We were unable to create a seating plan for the selected date. Please select a date in the future.","e_summ_event_name") ;
+                //arrErrorText.add(errorText);
+
+                //responseStatus = RespConstants.Status.ERROR;
+            }
+            else if (lEventCreateDate  > lFutureDateLimit )
+            {
+                //Text errorText = new ErrorText("We were unable to create a seating plan for the selected date. Please select a date within a year from today.","e_summ_event_name") ;
+                //arrErrorText.add(errorText);
+
+                //responseStatus = RespConstants.Status.ERROR;
+            }
+            else
+            {
+                EventCreationMetaDataBean eventMeta = new EventCreationMetaDataBean();
+                eventMeta.setAdminBean(adminBean);
+                eventMeta.setEventDate(sEventDate);
+                eventMeta.setEventDatePattern("MM/dd/yyyy");
+                eventMeta.setEventTimeZone("UTC");
+
+                EventManager eventManager = new EventManager();
+                eventBean = eventManager.createEvent(eventMeta);
+
+                if(eventBean!=null && eventBean.getEventId()!=null && !"".equalsIgnoreCase(eventBean.getEventId()))
                 {
-                    for(PricingGroupBean pricingGroupBean : arrPricingBean )
+                    EventPricingGroupManager eventPricingManager = new EventPricingGroupManager();
+                    ArrayList<PricingGroupBean> arrPricingBean = eventPricingManager.getDemoPricingGroups();
+                    if( arrPricingBean !=null )
                     {
-                        if(pricingGroupBean!=null)
+                        for(PricingGroupBean pricingGroupBean : arrPricingBean )
                         {
-                            EventFeatureManager eventFeatureManager = new EventFeatureManager();
-                            eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.DEMO_TOTAL_CALL_MINUTES,ParseUtil.iToS(pricingGroupBean.getMaxMinutes()));
-                            eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.DEMO_TOTAL_TEXT_MESSAGES,ParseUtil.iToS(pricingGroupBean.getSmsCount()));
-                            break;
+                            if(pricingGroupBean!=null)
+                            {
+                                EventFeatureManager eventFeatureManager = new EventFeatureManager();
+                                eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.DEMO_TOTAL_CALL_MINUTES,ParseUtil.iToS(pricingGroupBean.getMaxMinutes()));
+                                eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.DEMO_TOTAL_TEXT_MESSAGES,ParseUtil.iToS(pricingGroupBean.getSmsCount()));
+                                break;
+                            }
+
                         }
-
                     }
-                }
 
-				TelNumberManager telNumberManager = new TelNumberManager();
-				telNumberManager.setEventDemoNumber(eventBean.getEventId(),adminBean.getAdminId());
-			}
+                    TelNumberManager telNumberManager = new TelNumberManager();
+                    telNumberManager.setEventDemoNumber(eventBean.getEventId(),adminBean.getAdminId());
+                }
+            }
 		}
 		
 		jspLogging.debug("Admin Bean : " + adminBean);
@@ -1100,9 +1124,11 @@
 				{
 					var jsonResponseMessage = varResponseObj.messages;
 					var varArrErrorMssg = jsonResponseMessage.error_mssg
-					displayMessages( varArrErrorMssg );
+					//displayMessages( varArrErrorMssg );
+
+                    displayMssgBoxMessages( varArrErrorMssg , true);
 					
-					displayStatus('Changes were not saved.');
+					//displayStatus('Changes were not saved.');
 				}
 			}
 			else  if( jsonResult.status == 'ok' && varResponseObj !=undefined)
