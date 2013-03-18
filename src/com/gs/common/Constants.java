@@ -432,7 +432,9 @@ public class Constants {
         DEMO_FINAL_CALL_MINUTES_USED("DEMO_FINAL_CALL_MINUTES_USED"),
         DEMO_FINAL_TEXT_MESSAGES_SENT("DEMO_FINAL_TEXT_MESSAGES_SENT"),
         PREMIUM_FINAL_CALL_MINUTES_USED("PREMIUM_FINAL_CALL_MINUTES_USED"),
-        PREMIUM_FINAL_TEXT_MESSAGES_SENT("PREMIUM_FINAL_TEXT_MESSAGES_SENT");
+        PREMIUM_FINAL_TEXT_MESSAGES_SENT("PREMIUM_FINAL_TEXT_MESSAGES_SENT"),
+        USAGE_LIMIT_REACHED_ACTION("USAGE_LIMIT_REACHED_ACTION"),
+        SEATINGPLAN_TELNUMBER_TYPE("SEATINGPLAN_TELNUMBER_TYPE");
 
         private String eventFeature = "";
         EVENT_FEATURES(String eventFeature)
@@ -490,6 +492,42 @@ public class Constants {
         public String getScheduledPickupType()
         {
             return this.scedhuledPickupType;
+        }
+
+    }
+
+    public enum USAGE_LIMIT_REACHED_ACTION
+    {
+        AUTO_EXTEND("AUTO_EXTEND"),
+        STOP_USAGE("STOP_USAGE");
+
+        private String action = "";
+        USAGE_LIMIT_REACHED_ACTION(String action)
+        {
+            this.action =action;
+        }
+
+        public String getAction()
+        {
+            return this.action;
+        }
+
+    }
+
+    public enum TELNUMBER_TYPE
+    {
+        DEMO("DEMO"),
+        PREMIUM("PREMIUM");
+
+        private String type = "";
+        TELNUMBER_TYPE(String type)
+        {
+            this.type = type;
+        }
+
+        public String getType()
+        {
+            return this.type;
         }
 
     }

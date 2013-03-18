@@ -2,6 +2,7 @@ package com.gs.call.twilio.twiml;
 
 import java.util.ArrayList;
 
+import com.twilio.sdk.verbs.Reject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -104,4 +105,28 @@ public class TwimlSupport {
 		}
 		return callResponse;
 	}
+
+    public static CallResponse rejectCall( CallResponse callResponse )
+    {
+        if (callResponse != null )
+        {
+            TwiMLResponse response = new TwiMLResponse();
+            try
+            {
+                Reject reject = new Reject();
+                response.append( reject  ) ;
+
+
+                callResponse.setResponse(response);
+                callResponse.setTwilResponseSuccess(true);
+            }
+            catch (TwiMLException e)
+            {
+                callResponse.setTwilResponseSuccess(false);
+                appLogging.info(ExceptionHandler.getStackTrace(e));
+            }
+
+        }
+        return callResponse;
+    }
 }

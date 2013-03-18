@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.gs.bean.CallTransactionBean;
 import com.gs.bean.InformGuestBean;
+import com.gs.call.twilio.twiml.TwimlSupport;
 import com.gs.common.CallTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,15 +40,24 @@ public class RsvpTask extends Task {
 			if (Constants.CALL_TYPE.FIRST_REQUEST.equals(incomingCallBean
 					.getCallType())) {
 				callResponse = processFirstResponseTask(incomingCallBean);
-                if(callResponse!=null && callResponse.getEventGuestBean()!=null
-                        && callResponse.isEventBeanExists() && callResponse.isEventGuestBeanExists())
+
+                if( !isCallUsageLimitReached( callResponse ) )
                 {
-                    callResponse = rsvpTwiml.getCallForwardingResponse(callResponse,incomingCallBean);
+                    if(callResponse!=null && callResponse.getEventGuestBean()!=null
+                            && callResponse.isEventBeanExists() && callResponse.isEventGuestBeanExists())
+                    {
+                        callResponse = rsvpTwiml.getCallForwardingResponse(callResponse,incomingCallBean);
+                    }
+                    else
+                    {
+                        callResponse = rsvpTwiml.getFirstResponse(callResponse,incomingCallBean);
+                    }
                 }
                 else
                 {
-                    callResponse = rsvpTwiml.getFirstResponse(callResponse,incomingCallBean);
+                    callResponse = TwimlSupport.rejectCall( callResponse );
                 }
+
 
 			} else if (Constants.CALL_TYPE.RSVP_DIGIT_RESP
 					.equals(incomingCallBean.getCallType())) {

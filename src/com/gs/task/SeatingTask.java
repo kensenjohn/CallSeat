@@ -6,6 +6,7 @@ import com.gs.bean.*;
 import com.gs.bean.twilio.IncomingCallBean;
 import com.gs.call.CallResponse;
 import com.gs.call.twilio.twiml.SeatingTwiml;
+import com.gs.call.twilio.twiml.TwimlSupport;
 import com.gs.common.CallTransaction;
 import com.gs.common.Constants;
 import com.gs.data.event.EventData;
@@ -34,7 +35,14 @@ public class SeatingTask extends Task
 			if (Constants.CALL_TYPE.FIRST_REQUEST.equals(incomingCallBean.getCallType()))
 			{
 				callResponse = processFirstResponseTask(incomingCallBean);
-				callResponse = seatingTwiml.getFirstResponse(callResponse);
+                if( !isCallUsageLimitReached( callResponse ) )
+                {
+                    callResponse = seatingTwiml.getFirstResponse(callResponse);
+                }
+                else
+                {
+                    callResponse = TwimlSupport.rejectCall( callResponse );
+                }
 			}
 		}
 		return callResponse;

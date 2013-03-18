@@ -122,6 +122,15 @@
                                     eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.PREMIUM_TOTAL_CALL_MINUTES,ParseUtil.iToS(pricingGroupBean.getMaxMinutes()));
                                     eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.PREMIUM_TOTAL_TEXT_MESSAGES,ParseUtil.iToS(pricingGroupBean.getSmsCount()));
 
+                                    if ( EventFeatureManager.isEventFeatureExists( sEventId, Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE ) )
+                                    {
+                                        eventFeatureManager.updateEventFeatures( sEventId , Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE, Constants.TELNUMBER_TYPE.PREMIUM.getType()  );
+                                    }
+                                    else
+                                    {
+                                        eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE,Constants.TELNUMBER_TYPE.PREMIUM.getType());
+                                    }
+
 
                                     UsageMetaData usageMetaData = new UsageMetaData();
                                     usageMetaData.setEventId(sEventId);

@@ -115,6 +115,7 @@
                                 EventFeatureManager eventFeatureManager = new EventFeatureManager();
                                 eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.DEMO_TOTAL_CALL_MINUTES,ParseUtil.iToS(pricingGroupBean.getMaxMinutes()));
                                 eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.DEMO_TOTAL_TEXT_MESSAGES,ParseUtil.iToS(pricingGroupBean.getSmsCount()));
+                                eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE, Constants.TELNUMBER_TYPE.DEMO.getType() );
                                 break;
                             }
 
@@ -159,6 +160,16 @@
 	
 
 	String sGateAdminId = sAdminId;
+
+
+    // identifying whether
+    boolean isPremiumSeatingPlanTelnum = false;
+    String sEventTelnumType = ParseUtil.checkNull( EventFeatureManager.getStringValueFromEventFeature(sEventId, Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE) );
+    if(sEventTelnumType!=null && Constants.TELNUMBER_TYPE.PREMIUM.getType().equalsIgnoreCase(sEventTelnumType))
+    {
+        isPremiumSeatingPlanTelnum = true;
+    }
+
 %>
 	<%@include file="../common/gatekeeper.jsp"%>
 <%
@@ -579,7 +590,43 @@
                                     </div>
 								</div>
 							</div>
+                            <div class="row">
+                                <div class="span2">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span2">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span7">
+                                    <h4>When call minutes or text message limit is reached</h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="offset1">
+                                    <%
+                                        if(isPremiumSeatingPlanTelnum)
+                                        {
+                                    %>
+                                            <div class="row">
+                                                <div class="span7">
+                                                    <input id="limit_reached_auto_extend" name="usage_limit_reached_action" value="<%=Constants.USAGE_LIMIT_REACHED_ACTION.AUTO_EXTEND.getAction()%>"  type="radio"  style="width:10px"> &nbsp;&nbsp;<span>Automatically switch to next pricing tier.</span><span class="fld_txt_small">(Your credit card will be charged the price difference.)</span>
+                                                </div>
+                                            </div>
+                                    <%
+                                        }
+                                    %>
 
+                                    <div class="row">
+                                        <div class="span7">
+                                            <input id="limit_reached_stop_access" name="usage_limit_reached_action"  value="<%=Constants.USAGE_LIMIT_REACHED_ACTION.STOP_USAGE.getAction()%>"  type="radio"   style="width:10px" > &nbsp;&nbsp;<span>Stop access to event.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             </form>
 							<div class="row">
 								<div class="span3">
@@ -891,6 +938,7 @@
                     var varJsonAllEventFeatures = jsonResponseObj.all_features;
                     var varMapFeatureValue = varJsonAllEventFeatures.map_feature_value;
 
+                    var varUsageLimitAction = 'STOP_USAGE'; //default action
                     if(varMapFeatureValue != undefined)
                     {
                         $('#seating_call_forward').val(   varMapFeatureValue.SEATING_CALL_FORWARD_NUMBER_HUMAN );
@@ -916,7 +964,24 @@
                             $('#rsvp_email_confirmation').prop('checked', true);
                         }
 
+                        varUsageLimitAction = varMapFeatureValue.USAGE_LIMIT_REACHED_ACTION;
                     }
+
+                    var varUsageLimitAction = 'STOP_USAGE'; //default action
+                    var varTmpUsageLimitAction = varMapFeatureValue.USAGE_LIMIT_REACHED_ACTION;
+                    if(varMapFeatureValue != undefined && varTmpUsageLimitAction != undefined && varTmpUsageLimitAction != '' )
+                    {
+                        varUsageLimitAction = varTmpUsageLimitAction;
+                    }
+                    if( varUsageLimitAction == 'AUTO_EXTEND' )
+                    {
+                        $('#limit_reached_auto_extend').prop('checked', true);
+                    }
+                    else if (  varUsageLimitAction == 'STOP_USAGE'  )
+                    {
+                        $('#limit_reached_stop_access').prop('checked', true);
+                    }
+
                 }
             }
             else

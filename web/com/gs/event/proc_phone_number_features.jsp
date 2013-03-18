@@ -33,6 +33,7 @@
             String sRsvpCallForwardHumanNumber = ParseUtil.checkNull(request.getParameter("rsvp_call_forward"));
             boolean isRsvpSmsConfirmation = ParseUtil.sTob( request.getParameter("rsvp_sms_confirmation") );
             boolean isRsvpEmailConfirmation = ParseUtil.sTob( request.getParameter("rsvp_email_confirmation") );
+            String sUsageLimitReachedAction = ParseUtil.checkNull(request.getParameter("usage_limit_reached_action"));
 
             EventFeatureManager eventFeatureManager = new EventFeatureManager();
             appLogging.info("Editing Phone number features Action = " + sAction + " Admin:" + sAdminId);
@@ -169,6 +170,23 @@
                     else
                     {
                         eventFeatureManager.createEventFeatures(sEventId,Constants.EVENT_FEATURES.RSVP_EMAIL_CONFIRMATION,isRsvpEmailConfirmation?"true":"false");
+                    }
+
+                    // Save Usage Limit Reached Action
+                    if( sUsageLimitReachedAction==null || (sUsageLimitReachedAction!=null && "".equalsIgnoreCase(sUsageLimitReachedAction)) )
+                    {
+                        sUsageLimitReachedAction = Constants.USAGE_LIMIT_REACHED_ACTION.STOP_USAGE.getAction();
+                    }
+
+                    boolean isUsageLimitReachedFeatureExists = EventFeatureManager.isEventFeatureExists( sEventId , Constants.EVENT_FEATURES.USAGE_LIMIT_REACHED_ACTION  );
+                    if( isUsageLimitReachedFeatureExists )
+                    {
+                        eventFeatureManager.updateEventFeatures(sEventId,Constants.EVENT_FEATURES.USAGE_LIMIT_REACHED_ACTION,sUsageLimitReachedAction);
+
+                    }
+                    else
+                    {
+                        eventFeatureManager.createEventFeatures(sEventId,Constants.EVENT_FEATURES.USAGE_LIMIT_REACHED_ACTION,sUsageLimitReachedAction);
                     }
 
                     Text okText = new OkText("Your changes were saved successfully.","err_mssg") ;

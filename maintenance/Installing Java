@@ -1,0 +1,22 @@
+This makes it tricky to download on a Linux installation without or you don’t have access to its GUI. Trying to use wget will download an HTML page insisting you accept the licence. There are a couple of ways to get round ‘Accept Licence’ issue including the plain old download on local machine and upload to the remote machine. The simplest I got was to add the authentication parameter that’s used by the download server to verify if you have accepted the license to the JDK download URL used by wget.
+
+The solution to get the precious AuthParam cookie, in this post I use Google Chrome to retrieve it. On the download page right click and select “Inspect Element”. Select the “Network” tab on the debugging window. After accepting the licence on the browser click on the file to download it. Quickly cancel the download and check the Network output. Right click the last result and copy the link.
+
+1) Go to Java download page
+2) Accept Licence
+3) Go to chrome webkit and get the link to download.
+    This link should have "Authorization token"
+    ex : http://download.oracle.com/otn-pub/java/jdk/7u17-b02/jdk-7u17-linux-i586.tar.gz?AuthParam=1363323229_bc58a018e01b0a81fc8130d890960490
+
+4) wget <URL>
+5) extract the tar folder
+6) copy and paste the folder to the desired location
+
+
+setting JAVA_HOME
+
+in file : /etc/profile
+export JAVA_HOME=/usr/local/java
+export JRE_HOME=/usr/local/java/jre
+export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME/bin:/usr/local/mysql/bin
+export CATALINA_HOME=/usr/local/apache-tomcat

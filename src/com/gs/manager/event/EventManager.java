@@ -324,7 +324,7 @@ public class EventManager {
                 // Phone Call Usage Summary
                 Usage phoneCallUsage = new PhoneCallUsage();
                 PhoneCallUsageBean phoneCallUsageBean = (PhoneCallUsageBean)phoneCallUsage.getUsage(usageMetaData);
-                appLogging.info("Phone Call Usage : "  + phoneCallUsageBean );
+                //appLogging.info("Phone Call Usage : "  + phoneCallUsageBean );
 
                 eventSummaryBean.setPhoneCallUsageBean(phoneCallUsageBean);
 

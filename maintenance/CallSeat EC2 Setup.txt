@@ -1,0 +1,261 @@
+Setting up the Amazon EC2 instance.
+1) Go to the amazon AWS website
+
+2) Under EC2 Dashboard
+
+    2.1) Create an Elastic IP (If there already exists one that you can reuse, then use it)
+        2.1.1) Network and Security > Elastic IP > Allocate New Address
+        2.1.2) Select in drop down EC2 > Click yes Allocate
+        2.1.3) Note down this IP address
+                example: 23.23.45.213
+
+    2.2) Create EC2 Instance - Goto EC2 Dashboard
+        2.2.1) Launch Instance
+        2.2.2) Classic Wizard > Ubuntu Server 12.04.1 LTS (32 bits) > Ec2 Classic, Availaibity Zone(No Preference) (select size of instance) > Continue
+        2.2.3) Userdata > add the following
+                example : elastic-ip=<ELASTIC IP>|hostname=<HOST NAME OF INSTANCE>
+                          elastic-ip=23.23.45.213|hostname=callseat
+        2.2.4) Click Continue >Select default volume > Select security key > Select firewall settings > Go through Overview> Select Launch
+                Above steps can further be broken down for further details and fine tuning. Fornow we assume you are creating
+                default instance.
+        2.2.5) The security key above is necessary for SSHing into the instance.
+
+    2.3) Associate Elastic IP
+        2.3.1) Under EC2 Instance - Make sure the instance has a name for convenience sake.
+        2.3.2) Network and Security > Elastic IP > Select the IP address
+        2.3.3) Click Associate Address > from drop down select the instance > Yes associate
+        2.3.4) Now Instance will always have an IP address.
+               Warning : Every time EC2 instance is restarted, the IP address get unallocated.
+                         We write a script which uses information from step 2.2.3) to allocate the IP address automatically when instance restarts.
+
+    2.4) SSH into the instance (This will work only with the PEM file an instance is currently running)
+        2.4.1) You will need the security key (Pem file) that you generated in step 2.2.4)
+        2.4.2) ssh -i <pemfile_path> ubuntu@<Elastic IP>
+
+
+    2.5) Install Java (cannot be donaloded directly as it requires authorization cookie)
+        2.5.1) Google to Java SE download page using Chrome of Firefox with Firebug
+        2.5.2) Accept Licence > Click on the version you want to download > Open Chrome webkit and find the link with the Authtoken.
+        2.5.3) This link should have "Authorization token"
+                   ex : http://download.oracle.com/otn-pub/java/jdk/7u17-b02/jdk-7u17-linux-i586.tar.gz?AuthParam=1363323229_bc58a018e01b0a81fc8130d890960490
+        2.5.4) execute :  wget <URL>
+        2.5.5) extract folder
+        2.5.6) set JAVA_HOME and JRE_HOME in /etc/profile
+                in file : /etc/profile
+                export JAVA_HOME=/usr/local/java
+                export JRE_HOME=/usr/local/java/jre
+                export PATH=$PATH:$JAVA_HOME/bin:$JRE_HOME
+        2.5.7) change user and group to root (recursively to sub folders as well)
+                chown -R root java
+                chgrp -R root java
+
+    2.6) Generate Access Credentials (Access Keys and X509 Certificate)
+        2.6.1) From Ec2 Dash Board > Click Username(top menu) > Security Credentials
+        2.6.2) Under "Access Keys" > Create New Access Key > rename to pk.pem
+        2.6.3) Under X509 Certificate > Create New certificate > rename to cert.pem
+        3.6.4) Keep in secure location
+
+
+    2.7) Install EC2 tools in the Instance (Requires step 2.6 to be completed)
+        2.7.1) Download the Ec2 tools into the Instance using wget. (Link for tools can be got from here http://aws.amazon.com/developertools/351)
+        2.7.2) The above page will haev a link to the "S3" location where it is located.
+        2.7.3) sudo wget http://s3.amazonaws.com/ec2-downloads/ec2-api-tools.zip&token=A80325AA4DAB186C80828ED5138633E3F49160D9
+                Note: The link might be different. Always get latest.
+        2.7.4) Extract the file from the ZIP. Rename folder to "ec-tools"
+        2.7.5) Note down the full path. ex: /usr/local/ec-tools
+        2.7.6) Copy the two files from step 2.6 into /usr/local/ec-tools (use pem file from step 2.2.5 to SCP. Make sure it has write permission)
+                   ex:  sudo scp -i  <pemfile_path>  pk.pem ubuntu@<ELASTIC_IP>:usr/local/ec-tools
+                        sudo scp -i  <pemfile_path>  cert.pem ubuntu@<ELASTIC_IP>:usr/local/ec-tools
+
+    2.8) Automatic Elastic IP assignment on startup (Use a shell script in /etc/rc.local. Requires step 2.7 and 2.2.3  )
+        2.8.1) sudo nano /etc/rc.local
+        2.8.2) add the following
+                export EC2_HOME=/usr/local/ec2-tools
+                export JAVA_HOME=/usr/local/java
+                export PATH=$PATH:$EC2_HOME/bin
+
+                INSTANCE_ID=$(curl -s http://169.254.169.254/latest/meta-data/instance-id)
+                USERDATA=$(curl -s http://169.254.169.254/latest/user-data)
+
+                ELASTIC_IP=$(echo $USERDATA | awk 'BEGIN{RS="|";FS="="} /elastic-ip/ {print $2}')
+
+                if [ -n "${ELASTIC_IP}" ]
+                then
+                ec2-associate-address -K /usr/local/ec2-tools/pk.pem -C /usr/local/ec2-tools/cert.pem -i $INSTANCE_ID $ELASTIC_IP
+                else
+                echo "No Elastic IP passed."
+                fi
+        2.8.3) Make sure to change EC2_HOME, JAVA_HOME, and paths of the pk.pem and cert.pem files to what you have in your system
+        2.8.4) Now restart instance to make sure the change is working.
+
+    2.9) Setup Tomcat (Requires 2.5)
+        2.9.1) Find link to Tomcat 7 download from http://tomcat.apache.org/download-70.cgi
+        2.9.2) execute the download link using "Wget" <tomcat _download_ link>
+                ex: sudo wget http://mirror.cogentco.com/pub/apache/tomcat/tomcat-7/v7.0.37/bin/apache-tomcat-7.0.37.tar.gz
+        2.9.3) Extract the Tar, and rename folder to "tomcat" > /usr/local/tomcat
+        2.9.4) create user "tomcat" and group "tomcat"
+                ex: sudo useradd tomcat
+                    (this should create a group with the same name as well)
+        2.9.5) change owner and group of the tomcat folder
+                    ex: sudo chown -R tomcat tomcat
+                        sudo chgrp -R tomcat tomcat
+        2.9.6) add JAVA_HOME to catalina.sh (This should be first valid instruction)
+                    ex: sudo nano /usr/local/tomcat/bin/catalina.sh
+                        (add the following JAVA_HOME=/usr/local/java)
+        2.9.7) add CATALINA_HOME to /etc/profile
+               add CATALINA_HOME to PATH
+        2.9.8) to start tomcat on Instance boot
+                a) create file /etc/init.d/tomcat
+                    #!/bin/bash
+                    #
+                    # tomcat
+                    #
+                    # chkconfig:
+                    # description:  Start up the Tomcat servlet engine.
+
+                    # Source function library.
+                    # /etc/init.d/functions
+
+
+                    RETVAL=$?
+                    CATALINA_HOME="/usr/local/tomcat"
+                    echo "Selected tomcat option : " $CATALINA_HOME
+                    case "$1" in
+                     start)
+                            if [ -f $CATALINA_HOME/bin/startup.sh ];
+                              then
+                                echo $"Starting Tomcat"
+                                sudo $CATALINA_HOME/bin/startup.sh
+                            fi
+                            ;;
+                     stop)
+                            if [ -f $CATALINA_HOME/bin/shutdown.sh ];
+                              then
+                                echo $"Stopping Tomcat"
+                                sudo $CATALINA_HOME/bin/shutdown.sh
+                            fi
+                            ;;
+                     restart)
+                            echo $"Restarting Tomcat"
+                            if [ -f $CATALINA_HOME/bin/shutdown.sh ];
+                              then
+                                echo $"Stopping Tomcat"
+                                sudo $CATALINA_HOME/bin/shutdown.sh
+                            fi
+
+                            if [ -f $CATALINA_HOME/bin/startup.sh ];
+                              then
+                                echo $"Starting Tomcat"
+                                sudo $CATALINA_HOME/bin/startup.sh
+                            fi
+                            ;;
+                     *)
+                            echo $"Usage: $0 {start|stop}"
+                            exit 1
+                            ;;
+                     esac
+
+                     exit $RETVAL
+
+                b) Make sure CATALINE_HOME is specified correctly. Save file
+                c) Set permissions to execute
+                    ex:  sudo chmod 755 tomcat
+                d) add the following to /etc/rc.local
+                    sudo /etc/init.d/tomcat restart
+
+        2.9.9) Access the webpage using port 8080 in the browser. You should see Tomcat welcome screen
+
+
+    3.0) Install Apache (this should include mod_jk and SSL support)
+        3.0.1) sudo apt-get install libapache2-mod-jk
+                Access the website now (port 80)- you should see default Apache page with following header
+                "It works!"
+
+        3.0.2) Enable SSL
+                sudo a2ensite default-ssl
+
+                Access the website now (port 80) with https.
+                You should see a warning, for the certificate. Add exception and you will be taken to th Apache welcome page
+        3.0.3) Create a folder /etc/apache2/ssl-certs
+        3.0.4) Copy the .crt file and .key file to the folder created above ssl-certs
+                ex: beta.kensenjohn.com.crt
+                    beta.kensenjohn.com.key
+        3.0.5) Add following lines to /etc/apache2/sites-enabled/default-ssl -> restart apache
+                        SSLCertificateFile    /etc/apache2/ssl-certs/beta.kensenjohn.com.crt
+                        SSLCertificateKeyFile /etc/apache2/ssl-certs/beta.kensenjohn.com.key
+
+        3.0.6) Accessing page should have the certificate data you uploaded. If self signed then it will throw the warning.
+
+    3.1) Adding Mod_jk to redirect call to Tomcat
+        3.1.1) Create workers.properties file
+                ex: sudo nano /etc/apache2/workers.properties
+                3.1.1.a) Add the following properties
+                            # Define 1 real worker named ajp13
+                            worker.list=ajp13
+
+                            # Set properties for worker named ajp13 to use ajp13 protocol,
+                            # and run on port 8009
+                            worker.ajp13.type=ajp13
+                            worker.ajp13.host=localhost
+                            worker.ajp13.port=8009
+                            worker.ajp13.lbfactor=1
+
+
+
+        3.1.2) Change the location of the worker propertes in file /etc/apache2/mods-available/jk,conf
+                    ex: JkWorkersFile /etc/apache2/workers.properties
+        3.1.3) Specify what URL to mount
+                                            sudo nano default-ssl
+                                            Add : JkMount /* ajp13
+
+
+
+    3.2) Install Mysql
+        3.2.1) Use wget to download tar version directly from Mysql site
+        3.2.2) extract the tar and rename folder to desired name
+        3.2.3) create user mysql and change user/group of folder to mysql
+                sudo useradd mysql
+                sudo chown -R mysql
+                sudo chgrp -R mysql
+        3.2.4)
+                shell> chown -R mysql .
+                shell> chgrp -R mysql .
+                shell> scripts/mysql_install_db --user=mysql
+                if you get the following error
+                /usr/local/mysql/bin/mysqld: error while loading shared libraries: libaio.so.1: cannot open shared object file: No such file or directory
+                execute the following command
+                sudo apt-get install libaio1 libaio-dev
+                shell> scripts/mysql_install_db --user=mysql
+                shell> chown -R root .
+                shell> chown -R mysql data
+                # Next command is optional
+                shell> cp support-files/my-medium.cnf /etc/my.cnf
+                shell> bin/mysqld_safe --user=mysql &
+                # Next command is optional
+                shell> cp support-files/mysql.server /etc/init.d/mysql.server
+
+
+                create the mysql command
+                shell>  cd /usr/bin
+                shell> ln -s /usr/local/mysql/bin/mysql mysql
+
+                create the log folder
+                shell> cd /var/log/
+                shell> mkdir mysql
+                shell> cd mysql
+                shell> create a file in mysql.log
+                shell> chown mysql:mysql mysql.log
+                shell> sudo nano /etc/my.cnf
+                add the following line
+                [mysqld]
+                log=/var/log/mysql.log
+
+        3.2.5) to enable start of mysql when instance reboots
+                add line to /etc/rc.local
+
+                sudo /etc/init.d/mysql.server restart
+
+
+
+
+

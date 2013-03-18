@@ -86,6 +86,33 @@ public class EventFeatureManager {
         return iNumOfRows;
     }
 
+    public static boolean isEventFeatureExists( String sEventId , Constants.EVENT_FEATURES eventFeature )
+    {
+        boolean isExists = false;
+        if(sEventId!=null && !"".equalsIgnoreCase(sEventId ) && eventFeature!=null && !"".equalsIgnoreCase(eventFeature.getEventFeature() ))
+        {
+            EventFeatureData eventFeatureData = new EventFeatureData();
+            EventFeatureBean eventFeaturesBean = eventFeatureData.getEventFeaturesValues(sEventId,eventFeature);
+
+            if( eventFeaturesBean!=null )
+            {
+                HashMap<String, String> hmEventFeatureId = eventFeaturesBean.getHmFeatureId();
+                if(hmEventFeatureId!=null && !hmEventFeatureId.isEmpty())
+                {
+                    for(Map.Entry<String,String> mapEventFeature : hmEventFeatureId.entrySet() )
+                    {
+                        if( mapEventFeature.getKey().equalsIgnoreCase( eventFeature.getEventFeature() ))
+                        {
+                            isExists = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return isExists;
+    }
+
     public static Integer getIntegerValueFromEventFeature(String sEventId , Constants.EVENT_FEATURES eventFeature )
     {
         return ParseUtil.sToI( getValueFromEventFeature(sEventId, eventFeature ) );
