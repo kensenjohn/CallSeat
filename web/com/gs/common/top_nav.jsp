@@ -34,8 +34,56 @@ if(reqSession!=null)
 	    	<div class="span2 nav_link"><a id="how_it_works" class="bold_text"  href="#">How It Works</a></div>
 	    	<div class="offset1 span7">
 	    		<div class="row">
-	    			<div class="offset2 span3 nav_link" style="text-align:right;">
+	    			<div class="offset1 span4 nav_link" style="text-align:right;">
 <%
+        if("host_landing.jsp".equalsIgnoreCase(sRefererSource))
+        {
+
+%>                      <style>
+                        .share {
+                        width: 250px;
+                        height: 20px;
+                        background: #000;
+                        float: left;
+                        white-space: nowrap;
+                        padding-top: 5px;
+                        padding-bottom: 5px;
+                        padding-left: 0px;
+                        padding-right: 7px;
+                        background-color:rgba(255, 255, 255, 0.5);
+                        border-radius: 5px;
+
+                        box-shadow: 0px 0px 10px #888;
+                        vertical-align: top;
+                        }
+                        </style>
+                        <div class="share">
+                                <script>(function(d, s, id) {
+                                    var js, fjs = d.getElementsByTagName(s)[0];
+                                    if (d.getElementById(id)) return;
+                                    js = d.createElement(s); js.id = id;
+                                    js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
+                                    fjs.parentNode.insertBefore(js, fjs);
+                                }(document, 'script', 'facebook-jssdk'));</script>
+                                <div class="fb-send" data-href="https://www.callseat.com" data-font="tahoma"></div>
+                        <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://www.callseat.com" data-text="Checkout this site" data-via="smarasoft" data-count="none" data-dnt="true">Tweet</a>
+                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+                        <!-- Place this tag where you want the share button to render. -->
+                        <div class="g-plus" data-action="share" data-annotation="none" data-href="https://www.callseat.com"></div>
+
+                        <!-- Place this tag after the last share tag. -->
+                        <script type="text/javascript">
+                            (function() {
+                                var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+                                po.src = 'https://apis.google.com/js/plusone.js';
+                                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+                            })();
+                        </script>
+                        <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
+                        <script type="IN/Share" data-url="https://www.callseat.com"></script>
+                        </div>
+ <%
+        }
 		if(isTmpSignedIn)
 		{
 %>
