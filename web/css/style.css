@@ -20,11 +20,26 @@ h4 {font-size:115%; color:#37291C; margin : 0px; clear:both }
 .fld_txt_small{ font-size:12px; color:#2F241A; margin : 0px; clear:both  }
 .fld_link_txt{ font-size:12px; color:#7F7F7F; margin : 0px; clear:both ; text-decoration: underline;cursor: pointer; }
 
-.welcome_img{width:100%; height:560px;text-align:center; margin:0px; padding:0px;background-image:url(/web/img/welcome1.jpg);background-repeat:repeat-x;}
-.welcome_img h1 {font-size:225%; color:#FFFFFF; margin : 0px; clear:both }
-.welcome_img h3 {font-size:140%; color:#FFFFFF; margin : 0px; clear:both }
+@media (max-width: 849px) {
+    .welcome_img{width:100%; height:560px;text-align:center; margin:0px; padding:0px;background-image:url(/web/img/welcome_small.jpg);background-repeat:repeat-x;}
+    .welcome_img h1 {font-size:225%; color:#FFFFFF; margin : 0px; clear:both }
+    .welcome_img h3 {font-size:140%; color:#FFFFFF; margin : 0px; clear:both }
 /*4183C7 h2=6483C4  h1*/
+}
 
+@media (max-width: 1698px) {
+    .welcome_img{width:100%; height:560px;text-align:center; margin:0px; padding:0px;background-image:url(/web/img/welcome_medium.jpg);background-repeat:repeat-x;}
+    .welcome_img h1 {font-size:225%; color:#FFFFFF; margin : 0px; clear:both }
+    .welcome_img h3 {font-size:140%; color:#FFFFFF; margin : 0px; clear:both }
+    /*4183C7 h2=6483C4  h1*/
+}
+
+@media (min-width: 1900px) {
+    .welcome_img{width:100%; height:560px;text-align:center; margin:0px; padding:0px;background-image:url(/web/img/welcome_large.jpg );background-repeat:repeat-x;}
+    .welcome_img h1 {font-size:225%; color:#FFFFFF; margin : 0px; clear:both }
+    .welcome_img h3 {font-size:140%; color:#FFFFFF; margin : 0px; clear:both }
+    /*4183C7 h2=6483C4  h1*/
+}
 
 input,textarea {  width: 210px;}
 textarea {  height: auto;}
