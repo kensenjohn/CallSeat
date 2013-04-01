@@ -35,7 +35,7 @@ public class Constants {
 	public static String TIME_PATTERN = "hh mm";
 
 	public static String ROOT_FOLDER = "5ec93f8053404960b7936e8699fc49cc";
-	public static String DEFAULT_EVENT_NAME = "Our Day";
+	public static String DEFAULT_EVENT_NAME = "New Seating";
 
 	public static String J_RESP_SUCCESS = "success";
 	public static String J_RESP_ERR_MSSG = "error_message";

@@ -40,16 +40,25 @@ if(cookies!=null)
                 </div>
                 <div class="row">
                     <div class="offset3 span9">
-                        <h1 style="color:#f5f5f5">Seat your guests with a phone call or text</h1>
+                        <div class="slide-caption">
+                            <h1 style="color:#f5f5f5">Seat your guests with a phone call or text</h1>
+                            <h3 style="color:#f5f5f5">Personalized phone numbers for seating information and RSVP </h3>
+                            <form id="frm_event_dt" name="frm_event_dt">
+                                <input type="text" id="tmp_email" class="ispn3 inp-large" placeholder="Email" name="tmp_email">
+                                <input type="text" id="event_date" class="ispn3 inp-large" placeholder="Select date of wedding" name="event_date" readonly>
+                            </form>
+                            <div class="row">
+                                <div class="span3">
+                                    <input type="button" class="btn btn-large btn-blue" id="event_dt_sbt" value="Create New Seating Plan"/>
+                                </div>
+                                <div class="span3">
+                                    <input type="button" class="btn btn-large btn-blue" id="show_me_lobby" style="<%=!isSignedIn?"display:none;":""%>" value="Show me my Seating Plans"/>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="offset3 span9">
-                        <h3 style="color:#f5f5f5">Personalized phone numbers for seating information and RSVP </h3>
-                    </div>
-                </div>
-					
-                <div class="row">
+               <!-- <div class="row">
 
                     <div class="offset3 span9">
                         <form id="frm_event_dt" name="frm_event_dt">
@@ -57,10 +66,10 @@ if(cookies!=null)
                             <input type="text" id="event_date" class="ispn3 inp-large" placeholder="Select date of wedding" name="event_date" readonly>
                         </form>
                     </div>
-                </div>
+                </div> -->
                 <div class="row">
                     <div class="offset3 span9">
-                            <input type="button" class="btn btn-large btn-blue" id="event_dt_sbt" value="Create New Seating Plan"/>
+                        <!-- <input type="button" class="btn btn-large btn-blue" id="event_dt_sbt" value="Create New Seating Plan"/>  -->
                     </div>
 
                     <div class="span3">
@@ -83,7 +92,7 @@ if(cookies!=null)
                 <div class="row">
                     <div class="offset3 span3">
                         <div id="div_goto_lobby" style="<%=!isSignedIn?"display:none;":""%>">
-                            <input type="button" class="btn btn-large btn-blue" id="show_me_lobby" value="Show me my Seating Plans"/>
+                            <!--<input type="button" class="btn btn-large btn-blue" id="show_me_lobby" value="Show me my Seating Plans"/>-->
                         </div>
                     </div>
                 </div>
@@ -120,7 +129,7 @@ if(cookies!=null)
 <jsp:include page="common/footer_top.jsp"/>
 	<script type="text/javascript">
 	$(document).ready(function() {
-		$("#event_date").datepick({ minDate: 0, maxDate: "+1Y" });
+		$("#event_date").datepick({ minDate: 1, maxDate: "+1Y" });
 		$("#event_dt_sbt").click( 
 				function()
 				{

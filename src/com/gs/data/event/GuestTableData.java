@@ -83,9 +83,9 @@ public class GuestTableData {
 				+ " GET.FK_EVENTID = GE.EVENTID AND GT.TABLEID = ? AND GTG.FK_TABLEID = GT.TABLEID AND "
 				+ " GTG.FK_GUESTID = GG.GUESTID ";
 
-		String sTableGuestQuery = "select * from GTTABLEGUESTS GTG, GTEVENTTABLES GET, GTTABLE GT WHERE "
+		String sTableGuestQuery = "select * from GTTABLEGUESTS GTG, GTEVENTTABLES GTE, GTTABLE GT WHERE "
 				+ " GT.TABLEID=GTG.FK_TABLEID AND GTG.FK_TABLEID=? "
-				+ " AND GET.FK_TABLEID = GTG.FK_TABLEID AND GET.FK_EVENTID = ? ";
+				+ " AND GTE.FK_TABLEID = GTG.FK_TABLEID AND GTE.FK_EVENTID = ? ";
 
 		ArrayList<Object> aTableGuestParams = DBDAO.createConstraint(sTableId,
 				sEventId);
@@ -567,7 +567,7 @@ public class GuestTableData {
 			ArrayList<HashMap<String, String>> arrTableGuestsRes = DBDAO
 					.getDBData(ADMIN_DB, sQuery, aParams, false,
 							"GuestTableData.java", "getTableGuests()");
-			appLogging.error(sQuery + ": " + aParams);
+			//appLogging.info(sQuery + ": " + aParams);
 
 			if (arrTableGuestsRes != null && !arrTableGuestsRes.isEmpty()) {
 				Integer iTableGuestNum = 0;

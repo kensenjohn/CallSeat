@@ -39,7 +39,7 @@ try
 		
 		if(isSuccess)
 		{ 
-			Text okText = new ErrorText("An email with your new password has been sent to the email address specified.","success_mssg") ;		
+			Text okText = new ErrorText("An email with a link to reset your password has been sent to the email address specified.","success_mssg") ;
 			arrOkText.add(okText);
 			
 			responseStatus = RespConstants.Status.OK;
@@ -47,7 +47,7 @@ try
 		}
 		else
 		{
-			Text errorText = new ErrorText("An email with your new password has been sent to the email address specified.","success_mssg") ;	 	
+			Text errorText = new ErrorText("An email with a link to reset your password has been sent to the email address specified.","success_mssg") ;
 			arrOkText.add(errorText);
 			
 			responseStatus = RespConstants.Status.OK;

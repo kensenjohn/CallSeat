@@ -41,20 +41,20 @@ if(reqSession!=null)
 
 %>                      <style>
                         .share {
-                        width: 250px;
-                        height: 20px;
-                        background: #000;
-                        float: left;
-                        white-space: nowrap;
-                        padding-top: 5px;
-                        padding-bottom: 5px;
-                        padding-left: 0px;
-                        padding-right: 7px;
-                        background-color:rgba(255, 255, 255, 0.5);
-                        border-radius: 5px;
+                            width: 250px;
+                            height: 20px;
+                            background: #000;
+                            float: left;
+                            white-space: nowrap;
+                            padding-top: 5px;
+                            padding-bottom: 5px;
+                            padding-left: 0px;
+                            padding-right: 7px;
+                            background-color:rgba(255, 255, 255, 0.5);
+                            border-radius: 5px;
 
-                        box-shadow: 0px 0px 10px #888;
-                        vertical-align: top;
+                            box-shadow: 0px 0px 10px #888;
+                            vertical-align: top;
                         }
                         </style>
                         <div class="share">
@@ -65,7 +65,7 @@ if(reqSession!=null)
                                     js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
                                     fjs.parentNode.insertBefore(js, fjs);
                                 }(document, 'script', 'facebook-jssdk'));</script>
-                                <div class="fb-send" data-href="https://www.callseat.com" data-font="tahoma"></div>
+                                <div class="fb-send" data-href="https://www.callseat.com" data-font="tahoma" style="vertical-align:top;zoom:1;*display:inline"></div>
                         <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://www.callseat.com" data-text="Checkout this site" data-via="smarasoft" data-count="none" data-dnt="true">Tweet</a>
                         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
                         <!-- Place this tag where you want the share button to render. -->

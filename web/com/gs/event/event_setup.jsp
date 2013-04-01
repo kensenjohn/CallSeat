@@ -705,7 +705,7 @@
 			setTopNavSingup(varAdminID,varEventID,'event_setup.jsp');
 			
 		}
-		$("#e_summ_event_date").datepick();
+		$("#e_summ_event_date").datepick({ minDate: 1, maxDate: "+1Y" });
 		$("#event_summary_tab").click(function(){
 
 			toggleActionNavs('li_event_summary');

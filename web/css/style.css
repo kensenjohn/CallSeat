@@ -9,6 +9,16 @@ p,div,ul,li,td,input {font-family: Arial, Helvetica, sans-serif; font-size: 14px
 .navbar {  overflow: visible;  margin-bottom: 0px; }
 .logo{display:block;margin:0;float:left;width:180px;height:45px;background-image:url(/web/img/logo.png);background-repeat:no-repeat;text-indent:-9999px;}
 
+.slide-caption {
+    width: auto;
+    max-width: 80%;
+    padding: 10px 20px;
+    margin: 0 0 0px 0px;
+    display: block;
+    background: rgba(0, 0, 0, 0.7);
+    filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#b3000000', endColorstr='#b3000000',GradientType=0 ); /* IE6-8 */
+}
+
 h1 {font-size:170%; color:#324B38; margin : 0px; clear:both }
 h2 {font-size:155%; color:#758A48; margin : 0px; clear:both }
 h3 {font-size:125%; color:#758A48; margin : 0px; clear:both }
