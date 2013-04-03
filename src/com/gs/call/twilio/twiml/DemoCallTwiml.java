@@ -430,13 +430,13 @@ public class DemoCallTwiml {
 						Constants.CALL_TYPE.DEMO_GATHER_RSVP_NUM).toString());
 
 				Say sayInfo = new Say(
-						"Please try again or hang up and try later. Enter a number from from zero to "
-								+ eventGuestBean.getTotalNumberOfSeats()
-								+ " seats to RSVP for this invite. When you are done press the pound sign");
+						"You can hang up now or try again. Please select a number from zero to "
+								+ ParseUtil.sToI( eventGuestBean.getTotalNumberOfSeats() )
+								+ " followed by the pound sign.");
 				sayInfo.setVoice(VOICE_ACTOR);
 
 				Say sayThankYou = new Say(
-						"Thank You for your response. Please hold while I process the RSVP seats.");
+						"Thank You for your response.");
 				sayThankYou.setVoice(VOICE_ACTOR);
 
 				try {

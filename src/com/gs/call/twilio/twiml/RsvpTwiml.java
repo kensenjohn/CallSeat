@@ -46,7 +46,7 @@ public class RsvpTwiml
 			Say sayInfo = new Say(
 					"To change your RSVP please select a number from 0 to "
 							+ eventGuestBean.getTotalNumberOfSeats()
-							+ " followed by the pound sign.");
+							+ " seats to RSVP followed by the pound or hash key.");
 			sayInfo.setVoice(VOICE_ACTOR);
 
 			Hangup hangup = new Hangup();
@@ -94,7 +94,7 @@ public class RsvpTwiml
 			if (Constants.RSVP_STATUS.RSVP_EXCEED_TOTAL_SEATS.equals(rsvpStaus)
 					|| Constants.RSVP_STATUS.RSVP_UPDATE_FAIL.equals(rsvpStaus))
 			{
-				Say saySorry = new Say("We are sorry, " + sMessage + ".");
+				Say saySorry = new Say("I am sorry, " + sMessage + ".");
 				saySorry.setVoice(VOICE_ACTOR);
 				Gather gatherRsvp = new Gather();
 
@@ -103,12 +103,11 @@ public class RsvpTwiml
                 gatherRsvp.setAction(TwimlSupport.buildURL(twilioIncomingBean,
                         Constants.CALL_TYPE.RSVP_DIGIT_RESP).toString());
 
-				Say sayInfo = new Say(
-						"Please select a number from 0 to"
-								+ eventGuestBean.getTotalNumberOfSeats()
-								+ " followed by the pound sign");
+                Say sayInfo = new Say(
+                        "You can hang up now or try again. Please select a number from zero to "
+                                + ParseUtil.sToI( eventGuestBean.getTotalNumberOfSeats() )
+                                + " followed by the pound sign.");
 				sayInfo.setVoice(VOICE_ACTOR);
-                sayInfo.setLoop(2);
 
 				Say sayThankYou = new Say(
 						"Thank You for your response.");
