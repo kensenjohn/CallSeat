@@ -47,7 +47,7 @@ public class SeatingTwiml
 
 			TwiMLResponse response = new TwiMLResponse();
 
-			Say sayWelcome = new Say("Welcome to " + eventBean.getEventName() + "'s seating app.");
+			Say sayWelcome = new Say("Welcome");
 			sayWelcome.setVoice(VOICE_ACTOR);
 
 			ArrayList<TableGuestsBean> arrTableGuestBean = callResponse.getArrTableGuestBean();
@@ -57,41 +57,45 @@ public class SeatingTwiml
             String sCallForwaringNum = "";
             if (arrTableGuestBean != null && !arrTableGuestBean.isEmpty())
 			{
-				sSeatingMessage = " You have been assigned ";
-				for (TableGuestsBean tableGuestBean : arrTableGuestBean)
-				{
-					int numOfSeats = ParseUtil.sToI(tableGuestBean.getGuestAssignedSeats());
+                int totalNumOfSeats = 0;
+                String sTableNumberMessage = "";
+                for (TableGuestsBean tableGuestBean : arrTableGuestBean)
+                {
+                    int numOfSeats = ParseUtil.sToI(tableGuestBean.getGuestAssignedSeats());
+                    totalNumOfSeats = totalNumOfSeats + numOfSeats;
 
-					String sSeats = "";
-					if (numOfSeats > 1)
-					{
-						sSeats = "seats";
-					} else
-					{
-						sSeats = "seat";
-					}
+                    if (!isFirst) {
+                        sTableNumberMessage = sTableNumberMessage + ", ";
+                    }
 
-					if (!isFirst)
-					{
-						sSeatingMessage = sSeatingMessage + ", ";
-					}
+                    sTableNumberMessage = sTableNumberMessage + " table "
+                            + tableGuestBean.getTableNum();
+                    isFirst = false;
+                }
 
-					sSeatingMessage = sSeatingMessage + numOfSeats + " " + sSeats
-							+ " at table number " + tableGuestBean.getTableNum();
-					isFirst = false;
-				}
-
-                InformGuestBean informGuestBean = new InformGuestBean();
-                informGuestBean.setEventId( eventBean.getEventId() );
-                informGuestBean.setAdminId( eventBean.getEventAdminId() );
-                informGuestBean.setGuestId( callResponse.getEventGuestBean().getGuestId() );
-                informGuestBean.setEventTask( Constants.EVENT_TASK.SEATING );
-
-                InformGuestTask.sendSeatingConfirmation( informGuestBean );
+                if(totalNumOfSeats>0)
+                {
+                    if (totalNumOfSeats == 1)
+                    {
+                        sSeatingMessage = "You are seated at ";
+                    }
+                    else if( totalNumOfSeats == 2 )
+                    {
+                        sSeatingMessage = "You and your guest are seated at ";
+                    }
+                    else if( totalNumOfSeats > 2 )
+                    {
+                        sSeatingMessage = "You and your guests are seated at ";
+                    }
+                    sSeatingMessage = sSeatingMessage + sTableNumberMessage;
+                }
+                else
+                {
+                    sSeatingMessage = "We are sorry we were unable to retrieve your information. Please call again later.";
+                }
 			}
             else
 			{
-
                 sCallForwaringNum = EventFeatureManager.getStringValueFromEventFeature( eventBean.getEventId(), Constants.EVENT_FEATURES.SEATING_CALL_FORWARD_NUMBER );
                 if( sCallForwaringNum!=null && !"".equalsIgnoreCase(sCallForwaringNum) )
                 {
@@ -123,6 +127,15 @@ public class SeatingTwiml
 
 				callResponse.setResponse(response);
 				callResponse.setTwilResponseSuccess(true);
+
+                InformGuestBean informGuestBean = new InformGuestBean();
+                informGuestBean.setEventId( eventBean.getEventId() );
+                informGuestBean.setAdminId( eventBean.getEventAdminId() );
+                informGuestBean.setGuestId( callResponse.getEventGuestBean().getGuestId() );
+                informGuestBean.setEventTask( Constants.EVENT_TASK.SEATING );
+
+                InformGuestTask.sendSeatingConfirmation( informGuestBean );
+
 			} catch (TwiMLException e)
 			{
 				callResponse.setTwilResponseSuccess(false);

@@ -227,14 +227,14 @@ public class DemoCallTask extends Task {
 				if (eventGuestBean.getRsvpSeats().equalsIgnoreCase(
 						twilioIncomingCallBean.getDigits())) {
 					callResponse = demoTwiml.getRsvpDigitsSuccess(callResponse,
-							"You have successfully updated the number of seats for RSVP to "
-									+ eventGuestBean.getRsvpSeats(),
+							"Your RSVP of "
+									+ eventGuestBean.getRsvpSeats() + " has been accepted.",
 							twilioIncomingCallBean);
 				} else {
 					callResponse = demoTwiml
 							.getRsvpDigitsFail(
 									callResponse,
-									"Your request could not be processed as this time. Please try again later.",
+									"We were unable to process your RSVP. Please call again later.",
 									Constants.RSVP_STATUS.RSVP_UPDATE_FAIL,
 									twilioIncomingCallBean);
 
@@ -245,7 +245,7 @@ public class DemoCallTask extends Task {
 				callResponse = demoTwiml
 						.getRsvpDigitsFail(
 								callResponse,
-								"Your R S V P exceeded the total number of seats you have been allocated.",
+								"Please select a RSVP number less than or equal to " + iTotalSeats ,
 								Constants.RSVP_STATUS.RSVP_EXCEED_TOTAL_SEATS,
 								twilioIncomingCallBean);
 			}

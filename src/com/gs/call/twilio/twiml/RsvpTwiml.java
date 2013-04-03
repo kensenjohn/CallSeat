@@ -33,19 +33,20 @@ public class RsvpTwiml
 			EventGuestBean eventGuestBean = callResponse.getEventGuestBean();
 			TwiMLResponse response = new TwiMLResponse();
 
-			Say sayThankYou = new Say("Your RSVP reponse of " + eventGuestBean.getRsvpSeats()
+			Say sayThankYou = new Say("Your RSVP response of " + eventGuestBean.getRsvpSeats()
 					+ " has been accepted.");
 			sayThankYou.setVoice(VOICE_ACTOR);
 
 			Gather gatherRsvp = new Gather();
 
 			gatherRsvp.setMethod("POST");
-			gatherRsvp.setAction("/IncomingCall?incoming_call_type=rsvp_ans");
+            gatherRsvp.setAction(TwimlSupport.buildURL(new TwilioIncomingCallBean(),
+                    Constants.CALL_TYPE.RSVP_DIGIT_RESP).toString());
 
 			Say sayInfo = new Say(
-					"Enter a new RSVP number if you would like to change your previous selection. Enter a number from 0 to "
+					"To change your RSVP please select a number from 0 to "
 							+ eventGuestBean.getTotalNumberOfSeats()
-							+ " seats to RSVP followed by the pound or hash key.");
+							+ " followed by the pound sign.");
 			sayInfo.setVoice(VOICE_ACTOR);
 
 			Hangup hangup = new Hangup();
@@ -93,7 +94,7 @@ public class RsvpTwiml
 			if (Constants.RSVP_STATUS.RSVP_EXCEED_TOTAL_SEATS.equals(rsvpStaus)
 					|| Constants.RSVP_STATUS.RSVP_UPDATE_FAIL.equals(rsvpStaus))
 			{
-				Say saySorry = new Say("I am sorry, " + sMessage + ".");
+				Say saySorry = new Say("We are sorry, " + sMessage + ".");
 				saySorry.setVoice(VOICE_ACTOR);
 				Gather gatherRsvp = new Gather();
 
@@ -103,9 +104,9 @@ public class RsvpTwiml
                         Constants.CALL_TYPE.RSVP_DIGIT_RESP).toString());
 
 				Say sayInfo = new Say(
-						"Please enter a R S V P number from zero to "
+						"Please select a number from 0 to"
 								+ eventGuestBean.getTotalNumberOfSeats()
-								+ " seats followed by the pound sign");
+								+ " followed by the pound sign");
 				sayInfo.setVoice(VOICE_ACTOR);
                 sayInfo.setLoop(2);
 
@@ -150,7 +151,7 @@ public class RsvpTwiml
 
             TwiMLResponse response = new TwiMLResponse();
 
-            Say sayWelcome = new Say("Welcome to " + eventBean.getEventName() + "'s seating app.");
+            Say sayWelcome = new Say("Welcome");
             sayWelcome.setVoice(VOICE_ACTOR);
 
             boolean isCallForward = false;
@@ -158,7 +159,7 @@ public class RsvpTwiml
             String sCallForwaringNum = EventFeatureManager.getStringValueFromEventFeature(eventBean.getEventId(), Constants.EVENT_FEATURES.SEATING_CALL_FORWARD_NUMBER);
             if( sCallForwaringNum!=null && !"".equalsIgnoreCase(sCallForwaringNum) )
             {
-                sMessage = "Your call will now be forwarded to an usher. The usher will provide you with more assistance.";
+                sMessage = "An usher will assist you. Please wait for the call to be forwarded.";
                 isCallForward = true;
             }
             else
@@ -224,9 +225,9 @@ public class RsvpTwiml
             TwilioIncomingCallBean twilioIncomingBean = (TwilioIncomingCallBean)incomingCallBean;
 			EventGuestBean eventGuestBean = callResponse.getEventGuestBean();
 
-			TwiMLResponse response = new TwiMLResponse();
 
-			Say sayWelcome = new Say("Welcome to the automated RSVP for");
+
+			Say sayWelcome = new Say("Welcome");
 			sayWelcome.setVoice(VOICE_ACTOR);
 
 			Gather gatherRsvp = new Gather();
@@ -236,11 +237,20 @@ public class RsvpTwiml
             gatherRsvp.setAction(TwimlSupport.buildURL(twilioIncomingBean,
                     Constants.CALL_TYPE.RSVP_DIGIT_RESP).toString());
 
-			Say sayInfo = new Say(
-					"You have been been invited to "
-							+ eventGuestBean.getTotalNumberOfSeats()
-							+ " seats. Please R S V P by entering the number of seats.");
-			sayInfo.setVoice(VOICE_ACTOR);
+            Integer iTotalInvitedSeats = ParseUtil.sToI(eventGuestBean.getTotalNumberOfSeats());
+
+            String sInfoMessage = "You have been been invited to ";
+            if(iTotalInvitedSeats == 1)
+            {
+                sInfoMessage = sInfoMessage + iTotalInvitedSeats + " seat. ";
+            }
+            else if( iTotalInvitedSeats > 1 )
+            {
+                sInfoMessage = sInfoMessage + iTotalInvitedSeats + " seats. ";
+            }
+            Say sayInfo = new Say(
+                    sInfoMessage + " To RSVP please select a number from 0 to " + iTotalInvitedSeats + " followed by the pound sign." );
+            sayInfo.setVoice(VOICE_ACTOR);
 			// sayInfo.setLoop(3);
 
 			Say sayThankYou = new Say("Thank You for your response.");
@@ -248,6 +258,7 @@ public class RsvpTwiml
 
 			try
 			{
+                TwiMLResponse response = new TwiMLResponse();
 				response.append(sayWelcome);
 
 				gatherRsvp.append(sayInfo);

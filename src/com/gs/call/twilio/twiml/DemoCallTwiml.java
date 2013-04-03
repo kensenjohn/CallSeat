@@ -43,8 +43,7 @@ public class DemoCallTwiml {
 
 			TwiMLResponse response = new TwiMLResponse();
 
-			Say sayWelcome = new Say("Welcome to " + eventBean.getEventName()
-					+ "'s seating app.");
+			Say sayWelcome = new Say("Welcome");
 			sayWelcome.setVoice(VOICE_ACTOR);
 
 			ArrayList<TableGuestsBean> arrTableGuestBean = callResponse
@@ -54,32 +53,47 @@ public class DemoCallTwiml {
 			String sSeatingMessage = "";
 			boolean isFirst = true;
 			if (arrTableGuestBean != null && !arrTableGuestBean.isEmpty()) {
-				sSeatingMessage = " You have been assigned ";
-				for (TableGuestsBean tableGuestBean : arrTableGuestBean) {
+                int totalNumOfSeats = 0;
+                String sTableNumberMessage = "";
+                for (TableGuestsBean tableGuestBean : arrTableGuestBean) {
 					int numOfSeats = ParseUtil.sToI(tableGuestBean
 							.getGuestAssignedSeats());
-
-					String sSeats = "";
-					if (numOfSeats > 1) {
-						sSeats = "seats";
-					} else {
-						sSeats = "seat";
-					}
+                    totalNumOfSeats = totalNumOfSeats + numOfSeats;
 
 					if (!isFirst) {
-						sSeatingMessage = sSeatingMessage + ", ";
+                        sTableNumberMessage = sTableNumberMessage + ", ";
 					}
 
-					sSeatingMessage = sSeatingMessage + numOfSeats + " "
-							+ sSeats + " at table number "
-							+ tableGuestBean.getTableNum() + ".";
+                    sTableNumberMessage = sTableNumberMessage + " table "
+							+ tableGuestBean.getTableNum();
 					isFirst = false;
 				}
+                if(totalNumOfSeats>0)
+                {
+                    if (totalNumOfSeats == 1)
+                    {
+                        sSeatingMessage = "You are seated at ";
+                    }
+                    else if( totalNumOfSeats == 2 )
+                    {
+                        sSeatingMessage = "You and your guest are seated at ";
+                    }
+                    else if( totalNumOfSeats > 2 )
+                    {
+                        sSeatingMessage = "You and your guests are seated at ";
+                    }
+                    sSeatingMessage = sSeatingMessage + sTableNumberMessage;
+                }
+                else
+                {
+                    sSeatingMessage = "We are sorry we were unable to retrieve your information. Please call again later.";
+                }
+
 			} else {
                 sCallForwaringNum = EventFeatureManager.getStringValueFromEventFeature( eventBean.getEventId(), Constants.EVENT_FEATURES.SEATING_CALL_FORWARD_NUMBER );
                 if( sCallForwaringNum!=null && !"".equalsIgnoreCase(sCallForwaringNum) )
                 {
-                    sSeatingMessage = "Your call will now be forwarded to an usher. The usher will provide you with more assistance.";
+                    sSeatingMessage = "An usher will assist you. Please wait for the call to be forwarded.";
                     isCallForward = true;
                 }
 			}
@@ -133,7 +147,7 @@ public class DemoCallTwiml {
 
             TwiMLResponse response = new TwiMLResponse();
 
-            Say sayWelcome = new Say("Welcome to " + eventBean.getEventName() + "'s seating app.");
+            Say sayWelcome = new Say("Welcome");
             sayWelcome.setVoice(VOICE_ACTOR);
 
             boolean isCallForward = false;
@@ -141,7 +155,7 @@ public class DemoCallTwiml {
             String sCallForwaringNum = EventFeatureManager.getStringValueFromEventFeature(eventBean.getEventId(), Constants.EVENT_FEATURES.SEATING_CALL_FORWARD_NUMBER);
             if( sCallForwaringNum!=null && !"".equalsIgnoreCase(sCallForwaringNum) )
             {
-                sMessage = "Your call will now be forwarded to an usher. The usher will provide you with more assistance.";
+                sMessage = "An usher will assist you. Please wait for the call to be forwarded.";
                 isCallForward = true;
             }
             else
@@ -205,26 +219,37 @@ public class DemoCallTwiml {
 		if (callResponse != null && callResponse.getEventGuestBean() != null) {
 			EventGuestBean eventGuestBean = callResponse.getEventGuestBean();
 
+            Say sayWelcome = new Say("Welcome");
+            sayWelcome.setVoice(VOICE_ACTOR);
+
 			Gather gatherRsvp = new Gather();
 
 			gatherRsvp.setMethod("POST");
 			gatherRsvp.setAction(TwimlSupport.buildURL(twilioIncomingBean,
 					Constants.CALL_TYPE.DEMO_GATHER_RSVP_NUM).toString());
 
+            Integer iTotalInvitedSeats = ParseUtil.sToI(eventGuestBean.getTotalNumberOfSeats());
+
+            String sInfoMessage = "You have been been invited to ";
+            if(iTotalInvitedSeats == 1)
+            {
+                sInfoMessage = sInfoMessage + iTotalInvitedSeats + " seat. ";
+            }
+            else if( iTotalInvitedSeats > 1 )
+            {
+                sInfoMessage = sInfoMessage + iTotalInvitedSeats + " seats. ";
+            }
 			Say sayInfo = new Say(
-					"You have been been invited for "
-							+ ParseUtil.sToI(eventGuestBean
-									.getTotalNumberOfSeats())
-							+ " seats. Please enter the number of seats you would like to RSVP to after the beep. "
-							+ " Enter a the number of seats you would like to RSVP for followed by the pound sign.");
+                    sInfoMessage + " To RSVP please select a number from 0 to " + iTotalInvitedSeats + " followed by the pound sign." );
 			sayInfo.setVoice(VOICE_ACTOR);
 			// sayInfo.setLoop(3);
 
-			Say sayThankYou = new Say("Thank You.");
+			Say sayThankYou = new Say("Thank You for your response.");
 			sayThankYou.setVoice(VOICE_ACTOR);
 
 			try {
 				TwiMLResponse response = new TwiMLResponse();
+                gatherRsvp.append(sayWelcome);
 
 				gatherRsvp.append(sayInfo);
 				response.append(gatherRsvp);
@@ -343,7 +368,7 @@ public class DemoCallTwiml {
 			EventGuestBean eventGuestBean = callResponse.getEventGuestBean();
 			TwiMLResponse response = new TwiMLResponse();
 
-			Say sayThankYou = new Say("Your RSVP reponse of "
+			Say sayThankYou = new Say("Your RSVP response of "
 					+ eventGuestBean.getRsvpSeats() + " has been accepted.");
 			sayThankYou.setVoice(VOICE_ACTOR);
 
@@ -353,10 +378,10 @@ public class DemoCallTwiml {
 			gatherRsvp.setAction(TwimlSupport.buildURL(twilioIncomingBean,
 					Constants.CALL_TYPE.DEMO_GATHER_RSVP_NUM).toString());
 
-			Say sayInfo = new Say(
-					"Enter a new RSVP number if you would like to change your previous selection. Enter a number from 0 to "
-							+ eventGuestBean.getTotalNumberOfSeats()
-							+ " seats to RSVP followed by the pound or hash key.");
+            Say sayInfo = new Say(
+                    "To change your RSVP please select a number from 0 to "
+                            + eventGuestBean.getTotalNumberOfSeats()
+                            + " followed by the pound sign.");
 			sayInfo.setVoice(VOICE_ACTOR);
 
 			Hangup hangup = new Hangup();
@@ -396,7 +421,7 @@ public class DemoCallTwiml {
 
 			if (Constants.RSVP_STATUS.RSVP_EXCEED_TOTAL_SEATS.equals(rsvpStaus)
 					|| Constants.RSVP_STATUS.RSVP_UPDATE_FAIL.equals(rsvpStaus)) {
-				Say saySorry = new Say("I am sorry, " + sMessage + ".");
+				Say saySorry = new Say("We are sorry, " + sMessage + ".");
 				saySorry.setVoice(VOICE_ACTOR);
 				Gather gatherRsvp = new Gather();
 
