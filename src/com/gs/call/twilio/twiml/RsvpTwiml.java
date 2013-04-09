@@ -158,7 +158,7 @@ public class RsvpTwiml
             String sCallForwaringNum = EventFeatureManager.getStringValueFromEventFeature(eventBean.getEventId(), Constants.EVENT_FEATURES.SEATING_CALL_FORWARD_NUMBER);
             if( sCallForwaringNum!=null && !"".equalsIgnoreCase(sCallForwaringNum) )
             {
-                sMessage = "An usher will assist you. Please wait for the call to be forwarded.";
+                sMessage = "Your call will be forwarded to an usher.";
                 isCallForward = true;
             }
             else

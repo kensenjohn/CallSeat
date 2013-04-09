@@ -209,6 +209,22 @@ Setting up the Amazon EC2 instance.
 
 
     3.2) Install Mysql
+                3.2.8) Creating the XFS Filesystem
+                           grep -q xfs /proc/filesystems || sudo modprobe xfs
+                           sudo mkfs.xfs /dev/xvdf
+
+                           If you see the following error
+                                sudo: mkfs.xfs: command not found
+                                then install xfsprogs
+                                    sudo apt-get install xfsprogs
+
+                            try again
+                            sudo mkfs.xfs /dev/xvdf
+
+                            echo "/dev/svdf /vol xfs noatime 0 0" | sudo tee -a /etc/fstab
+                            sudo mkdir -m 000 /vol
+                            sudo mount /vol
+
         3.2.1) Use wget to download tar version directly from Mysql site
         3.2.2) extract the tar and rename folder to desired name
         3.2.3) create user mysql and change user/group of folder to mysql
@@ -232,6 +248,9 @@ Setting up the Amazon EC2 instance.
                 # Next command is optional
                 shell> cp support-files/mysql.server /etc/init.d/mysql.server
 
+                Make it look like Mysql which is running on new EBS is actually running on default server
+                            echo "/vol/usr/local/mysql /usr/local/mysql     none bind" | sudo tee -a /etc/fstab
+                            sudo mount /usr/local/mysql
 
                 create the mysql command
                 shell>  cd /usr/bin
@@ -255,6 +274,24 @@ Setting up the Amazon EC2 instance.
 
         3.2.6) To allow remote access to mysql instance
 
+        3.2.7) Creating EBS
+                In the navigation pane, click Volumes.
+
+                Above the upper pane, click Create Volume.
+
+                In the Create Volume dialog box, in the Volume Type drop-down list, select Standard or Provisioned IOPS. For more information, see EBS Volume Types.
+
+                In the Size box and GiB drop-down list, select the size of the volume (in GiB or TiB).
+
+                For Provisioned IOPS volumes, in the IOPS box, enter the maximum number of input/output operations per second (IOPS) that the volume can support.
+
+                In the Availability Zone drop-down list, select the availability zone in which to launch the instance. For more information, see Regions and Availability Zones
+
+                To restore an Amazon EBS volume, in the Snapshot drop-down list, select the ID of the snapshot from which you are launching the volume. Skip this step if you aren't restoring an Amazon EBS volume.
+
+                Attach the EBS to the EC2 instance.
+                note down the path
+                /dev/sdf
 
     3.3) Ec2 Firewall
             open the following
@@ -297,9 +334,42 @@ Setting up the Amazon EC2 instance.
                     Add the following to location
 
                     location / {
-                         proxy_pass      http://127.0.0.1:8080;
+                         proxy_pass http://127.0.0.1:8080;
                     }
 
+                     # redirect server error pages to the static page /50x.html
+                     #
+                     error_page 500 502 503 504 /50x.html;
+                     location = /50x.html {
+                            root /usr/share/nginx/html;
+                     }
+            3.5.6) edit the file 50x.html
+                    delete all the existing lines. Add the following lines
+                        <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+                        <html xmlns="http://www.w3.org/1999/xhtml">
+                                <head>
+                                <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+
+                                <link type="text/css" rel="stylesheet" href="/web/css/style.css" />
+
+                                        <title>Callseat</title>
+                        </head>
+                        <body>
+                            <div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" id="nav_bar" >
+                                <div class="blank_scratch_area" style="padding:5px;">
+                                    <div class="row"><div class="span2"><div class="logo">&nbsp;</div></div></div>
+                                </div>
+                            </div>
+                            <div class="blank_scratch_area">
+                                <h1>Uh Oh! We were unable to complete your request. Please try again.</h1>
+                            </div>
+                        </body>
+
+                        <div class="blank_scratch_area" style="padding:5px;text-align:right;font-size:75%; color:#37291C; margin : 0px; clear:both ">
+                                &copy2013 - Smarasoft Inc
+                        </div>
+                        </html>
 
 
     3.6) Setting up Application Environment

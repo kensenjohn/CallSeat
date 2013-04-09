@@ -93,7 +93,7 @@ public class DemoCallTwiml {
                 sCallForwaringNum = EventFeatureManager.getStringValueFromEventFeature( eventBean.getEventId(), Constants.EVENT_FEATURES.SEATING_CALL_FORWARD_NUMBER );
                 if( sCallForwaringNum!=null && !"".equalsIgnoreCase(sCallForwaringNum) )
                 {
-                    sSeatingMessage = "An usher will assist you. Please wait for the call to be forwarded.";
+                    sSeatingMessage = "Your call will be forwarded to an usher.";
                     isCallForward = true;
                 }
 			}
