@@ -39,6 +39,7 @@ public class DemoCallTask extends Task {
 		TwilioIncomingCallBean twilioIncomingCallBean = (TwilioIncomingCallBean) incomingCallBean;
 		if (incomingCallBean != null) {
 			DemoCallTwiml demoTwiml = new DemoCallTwiml();
+            boolean isErrorEncountered = false;
 			try {
 				switch (incomingCallBean.getCallType()) {
 				case DEMO_FIRST_REQUEST:
@@ -69,8 +70,10 @@ public class DemoCallTask extends Task {
 
                         if (Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(sTelNumType))
                         {
+                            appLogging.debug("RSVP Demo Task. Is event guest bean exists : " + callResponse.isEventGuestBeanExists()
+                                    + "\nevent bean exists : " + callResponse.isEventBeanExists()  );
                             if(callResponse!=null && callResponse.getEventGuestBean()!=null
-                                    && callResponse.isEventBeanExists() && callResponse.isEventGuestBeanExists())
+                                    && !callResponse.isEventBeanExists() && !callResponse.isEventGuestBeanExists())
                             {
                                 callResponse = demoTwiml.getCallForwardingResponse(callResponse,incomingCallBean);
                             }
@@ -98,36 +101,36 @@ public class DemoCallTask extends Task {
 					break;
 				}
 			} catch (TwiMLException e) {
-				appLogging.error("Twiml exception encountered : "
-						+ ExceptionHandler.getStackTrace(e));
-				callResponse = TwimlSupport.getStandardError(callResponse,
-						twilioIncomingCallBean);
+                isErrorEncountered = true;
+				appLogging.error("Twiml exception encountered : "+ ExceptionHandler.getStackTrace(e));
 			} catch (Exception e) {
-				appLogging.error("Generic exception encountered : "
-						+ ExceptionHandler.getStackTrace(e));
-				callResponse = TwimlSupport.getStandardError(callResponse,
-						twilioIncomingCallBean);
+                isErrorEncountered = true;
+				appLogging.error("Generic exception encountered : "+ ExceptionHandler.getStackTrace(e));
 			}
+            finally
+            {
+                if(isErrorEncountered)
+                {
+                    callResponse = TwimlSupport.getStandardError(callResponse,twilioIncomingCallBean);
+                }
+            }
 		}
 		return callResponse;
 	}
 
-	private ArrayList<TelNumberBean> processSecretKey(
-			IncomingCallBean incomingCallBean) {
+	private ArrayList<TelNumberBean> processSecretKey( IncomingCallBean incomingCallBean )
+    {
 		ArrayList<TelNumberBean> arrTelNumBean = new ArrayList<TelNumberBean>();
 		TwilioIncomingCallBean twilioIncomingCallBean = (TwilioIncomingCallBean) incomingCallBean;
-		if (twilioIncomingCallBean != null
-				&& twilioIncomingCallBean.getDigits() != null
-				&& !"".equalsIgnoreCase(twilioIncomingCallBean.getDigits())) {
+		if (twilioIncomingCallBean != null && twilioIncomingCallBean.getDigits() != null
+                && !"".equalsIgnoreCase(twilioIncomingCallBean.getDigits()))
+        {
 			TelNumberMetaData telNumMetaData = new TelNumberMetaData();
-			telNumMetaData.setSecretEventSecretKey(ParseUtil
-					.checkNull(twilioIncomingCallBean.getDigits()));
-			telNumMetaData.setSecretEventIdentifier(ParseUtil
-					.checkNull(twilioIncomingCallBean.getCallerInputEventId()));
+			telNumMetaData.setSecretEventSecretKey(ParseUtil.checkNull(twilioIncomingCallBean.getDigits()));
+			telNumMetaData.setSecretEventIdentifier(ParseUtil.checkNull(twilioIncomingCallBean.getCallerInputEventId()));
 
 			TelNumberManager telNumManager = new TelNumberManager();
-			arrTelNumBean = telNumManager
-					.getTelNumbersFromSecretEventNumAndKey(telNumMetaData);
+			arrTelNumBean = telNumManager.getTelNumbersFromSecretEventNumAndKey(telNumMetaData);
 		}
 		return arrTelNumBean;
 	}
@@ -278,6 +281,7 @@ public class DemoCallTask extends Task {
 
                 if(eventGuestBean!=null && eventGuestBean.getGuestId()!=null && !"".equalsIgnoreCase(eventGuestBean.getGuestId() ))
                 {
+                    appLogging.debug("Event Guest Bean was identified. Set it in response. guest Id : " + eventGuestBean.getGuestId() );
                     callResponse.setEventGuestBean(eventGuestBean);
                 }
 

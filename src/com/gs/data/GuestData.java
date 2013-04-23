@@ -442,7 +442,7 @@ public class GuestData {
 					+ " GEG.TOTAL_INVITED_SEATS FROM GTEVENTGUESTS GEG , GTUSERINFO GU, GTGUESTS GG WHERE GEG.FK_GUESTID in ("
 					+ sGuestParam
 					+ ") AND GEG.FK_EVENTID = ? AND GG.GUESTID = GEG.FK_GUESTID AND GG.FK_USERINFOID = GU.USERINFOID ";
-
+            appLogging.debug(sQuery  + "  : " + arrParams );
 			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(
 					ADMIN_DB, sQuery, arrParams, false, "GuestData.java",
 					"getGuest()");

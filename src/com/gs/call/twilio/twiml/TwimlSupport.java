@@ -2,7 +2,7 @@ package com.gs.call.twilio.twiml;
 
 import java.util.ArrayList;
 
-import com.twilio.sdk.verbs.Reject;
+import com.twilio.sdk.verbs.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -12,9 +12,6 @@ import com.gs.call.CallResponse;
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
 import com.gs.common.ExceptionHandler;
-import com.twilio.sdk.verbs.Say;
-import com.twilio.sdk.verbs.TwiMLException;
-import com.twilio.sdk.verbs.TwiMLResponse;
 
 public class TwimlSupport {
 
@@ -26,6 +23,7 @@ public class TwimlSupport {
 			.getInstance(Constants.APPLICATION_PROP);
 	private static String VOICE_ACTOR = applicationConfig
 			.get(Constants.PROP_TWILIO_VOICE);
+    private static String VOICE_RECORDING_FOLDER = applicationConfig.get(Constants.PROP_VOICE_RECORDING_FOLDER);
 
 	public static StringBuilder buildURL(
 			TwilioIncomingCallBean twilioIncomingBean,
@@ -89,13 +87,17 @@ public class TwimlSupport {
 			TwilioIncomingCallBean twilioIncomingBean) {
 
 		if (callResponse != null && twilioIncomingBean != null) {
-			Say saySorryException = new Say(
-					"I am sorry, Your request could not be processed at this time. Please try again later.");
-			saySorryException.setVoice(VOICE_ACTOR);
+			//Say saySorryException = new Say("I am sorry, Your request could not be processed at this time. Please try again later.");
+			//saySorryException.setVoice(VOICE_ACTOR);
+            Play playIAmSorry= new Play(VOICE_RECORDING_FOLDER+"/i_am_sorry_stereo.wav");
+            Play playPleaseCallAgainLater= new Play(VOICE_RECORDING_FOLDER+"/please_call_again_later_stereo.wav");
+            Play playQuarterSecondDelay = new Play(VOICE_RECORDING_FOLDER+"/quarter_second_stereo.wav");
 
 			try {
 				TwiMLResponse response = new TwiMLResponse();
-				response.append(saySorryException);
+				response.append(playIAmSorry);
+                response.append(playQuarterSecondDelay);
+                response.append(playPleaseCallAgainLater);
 				callResponse.setResponse(response);
 				callResponse.setTwilResponseSuccess(true);
 			} catch (TwiMLException e) {

@@ -69,6 +69,7 @@ public class Constants {
 
 	public static String PROP_TWILIO_VOICE = "twilio_voice";
     public static String PROP_VOICE_RECORDING_DOMAIN = "voice_recording_domain";
+    public static String PROP_VOICE_RECORDING_FOLDER = "voice_recording_folder";
 
 	public enum CALL_SERVICE {
 		TWILIO("twilio");

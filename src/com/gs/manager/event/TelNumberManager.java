@@ -332,7 +332,7 @@ public class TelNumberManager {
 				EventGuestMetaData eventGuestMetaData = new EventGuestMetaData();
 				eventGuestMetaData.setEventId(telNumberMetaData.getEventId());
 				eventGuestMetaData.setArrGuestId(arrGuestId);
-
+                appLogging.info(" Requesting event guest data : " + eventGuestMetaData );
 				EventGuestManager eventGuestManager = new EventGuestManager();
 				eventGuestBean = eventGuestManager.getGuest(eventGuestMetaData);
 
@@ -587,14 +587,11 @@ public class TelNumberManager {
 	public ArrayList<TelNumberBean> getTelNumbersFromSecretEventNumAndKey(
 			TelNumberMetaData telNumMetaData) {
 		ArrayList<TelNumberBean> arrTelNumBean = new ArrayList<TelNumberBean>();
-		if (telNumMetaData != null
-				&& !"".equalsIgnoreCase(telNumMetaData
-						.getSecretEventIdentifier())
-				&& !"".equalsIgnoreCase(telNumMetaData
-						.getSecretEventSecretKey())) {
+		if (telNumMetaData != null && !"".equalsIgnoreCase(telNumMetaData.getSecretEventIdentifier())
+				&& !"".equalsIgnoreCase(telNumMetaData.getSecretEventSecretKey()))
+        {
 			TelNumberData telNumberData = new TelNumberData();
-			arrTelNumBean = telNumberData
-					.getTelNumbersFromSecretEventNumAndKey(telNumMetaData);
+			arrTelNumBean = telNumberData.getTelNumbersFromSecretEventNumAndKey(telNumMetaData);
 		}
 		return arrTelNumBean;
 	}
