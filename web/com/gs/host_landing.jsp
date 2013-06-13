@@ -39,7 +39,7 @@ if(cookies!=null)
                     </div>
                 </div>
                 <div class="row">
-                    <div class="offset3 span9">
+                    <div class="offset2 span9">
                         <div class="slide-caption">
                             <h1 style="color:#f5f5f5">Seat your guests with a phone call or text</h1>
                             <h3 style="color:#f5f5f5">Personalized phone numbers for seating information and RSVP </h3>

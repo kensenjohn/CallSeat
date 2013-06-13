@@ -70,8 +70,6 @@
 		}
 		
 		
-		
-		
 		if(adminBean!=null)
 		{
             Long lCurrentTime = DateSupport.getEpochMillis();

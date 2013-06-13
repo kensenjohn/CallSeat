@@ -87,6 +87,8 @@ Setting up the Amazon EC2 instance.
                 fi
         2.8.3) Make sure to change EC2_HOME, JAVA_HOME, and paths of the pk.pem and cert.pem files to what you have in your system
         2.8.4) Now restart instance to make sure the change is working.
+        2.8.5) add the following to /etc/environment
+
 
     2.9) Setup Tomcat (Requires 2.5)
         2.9.1) Find link to Tomcat 7 download from http://tomcat.apache.org/download-70.cgi

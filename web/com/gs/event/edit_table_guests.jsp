@@ -340,7 +340,7 @@
 				}
 				else
 				{
-					$("#div_unassinged_guests").append( '<span class="fld_txt">All guests have been seated. Update their assignement below.</span>' );
+					$("#div_unassinged_guests").append( '<span class="fld_txt">There are no guests that require seating.</span>' );
 				}
 				
 				
