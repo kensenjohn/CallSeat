@@ -387,6 +387,8 @@ a:hover {color: #758A48}
 
 #nav_bar a:active:not(.btn),#nav_bar a:link:not(.btn),#nav_bar a:visited:not(.btn){font-weight:bold; text-decoration: none; color: #155521; outline:none!important;}
 #nav_bar a:hover:not(.btn) {color: #155521; text-decoration: underline;}
+#footer_nav a:active:not(.btn),#footer_nav a:link:not(.btn),#footer_nav a:visited:not(.btn){font-weight:bold; text-decoration: none; color: #155521; outline:none!important;}
+#footer_nav a:hover:not(.btn) {color: #155521; text-decoration: underline;}
 .nav_link{margin-top:13px;}
 .nav_button{margin-top:6px;}
 
@@ -731,13 +733,23 @@ a.btn-green[disabled],
 .step_instructions
 {
     width: 100%;
-    background: rgba(211,202,227,0.85) url(../img/nasty_fabric/nasty_fabric.png) repeat 0 0;
     border-top: 1px solid rgba(0,0,0,0.35);
     -moz-box-shadow: inset 0 1px 4px rgba(0,0,0,0.25) !important;
     -webkit-box-shadow: inset 0 1px 4px rgba(0,0,0,0.25) !important;
     box-shadow: inset 0 1px 4px rgba(0,0,0,0.25) !important;
-    -ms-box-shadow: inset 0 1px 4px rgba(0,0,0,0.25) !important;
+    -ms-box-shadow: inset 0 1px 4px rgba(0,0,0,0.215) !important;
     -o-box-shadow: inset 0 1px 4px rgba(0,0,0,0.25) !important;
     -khtml-box-shadow: inset 0 1px 4px rgba(0,0,0,0.25) !important;
+}
+
+.step_box
+{
+    border: 1px solid rgba(0,0,0,0.35);
+    -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.25) !important;
+    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.25) !important;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.25) !important;
+    -ms-box-shadow: 1px 1px 1px rgba(0,0,0,0.25) !important;
+    -o-box-shadow: 1px 1px 1px rgba(0,0,0,0.25) !important;
+    -khtml-box-shadow: 1px 1px 1px rgba(0,0,0,0.25) !important;
 }
 

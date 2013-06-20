@@ -40,29 +40,7 @@ if(reqSession!=null)
         {
 
 %>
-                        <a href="https://twitter.com/share" class="twitter-share-button" data-url="https://www.callseat.com" data-text="Checkout this site" data-via="smarasoft" data-count="none" data-dnt="true">Tweet</a>
-                        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
-                        <!-- Place this tag where you want the share button to render. -->
-                        <div class="g-plus" data-action="share" data-annotation="none" data-href="https://www.callseat.com"></div>
 
-                        <!-- Place this tag after the last share tag. -->
-                        <script type="text/javascript">
-                            (function() {
-                                var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
-                                po.src = 'https://apis.google.com/js/plusone.js';
-                                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
-                            })();
-                        </script>
-                        <script src="//platform.linkedin.com/in.js" type="text/javascript"></script>
-                        <script type="IN/Share" data-url="https://www.callseat.com"></script>
-                            <script>(function(d, s, id) {
-                                var js, fjs = d.getElementsByTagName(s)[0];
-                                if (d.getElementById(id)) return;
-                                js = d.createElement(s); js.id = id;
-                                js.src = "//connect.facebook.net/en_US/all.js#xfbml=1";
-                                fjs.parentNode.insertBefore(js, fjs);
-                            }(document, 'script', 'facebook-jssdk'));</script>
-                            <div class="fb-send" data-href="https://www.callseat.com" data-font="tahoma" style="vertical-align:top;zoom:1;*display:inline;"></div>
  <%
         }
  %>

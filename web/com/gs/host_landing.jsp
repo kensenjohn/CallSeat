@@ -100,22 +100,35 @@ if(cookies!=null)
 	    </div>
         <section class="step_instructions" style="display: block; opacity: 1; -webkit-transition: all 0s cubic-bezier(0.25, 0.1, 0.25, 1); min-height: 144px; padding-top:10px;">
             <div class="blank_scratch_area">
+
+                <div class="row" style="margin: auto;text-align:center;">
+                    <h1 style="color:#37291C">Private and exclusive phone numbers. Never shared. No hold music.</h1>
+                </div>
+                <div class="row" style="margin: auto;text-align:center;">
+                    &nbsp;
+                </div>
                 <div class="row" style="margin: auto;">
-                    <div class="offset1 span3" style="text-align: center; background-color:#EDEEF1; border-radius: 15px; min-height: 134px; ">
+                    <div class="offset1 span3 step_box" style="text-align: center;  border-radius: 15px; min-height: 134px; ">
                         <h1 style="padding-top:25px;">Step 1</h1>
                         <h4  style="padding:5px;">Create a Seating Plan</h4>
                         <span class="fld_txt_small">Add guests and tables.</span>
                     </div>
-                    <div class="span3" style="text-align: center;  background-color:#EDEEF1; border-radius: 15px; min-height: 134px; ">
+                    <div class="span3 step_box" style="text-align: center;  border-radius: 15px; min-height: 134px; ">
                         <h1 style="padding-top:25px;">Step 2</h1>
                         <h4 style="padding:5px;">Personalize telephone numbers</h4>
                         <span class="fld_txt_small">Get direct phone numbers with no extensions.</span>
                     </div>
-                    <div class="span3" style="text-align: center;  background-color:#EDEEF1; border-radius: 15px; min-height: 134px; ">
+                    <div class="span3 step_box" style="text-align: center; border-radius: 15px; min-height: 134px; ">
                         <h1 style="padding-top:25px;">Step 3</h1>
                         <h4 style="padding:5px;">RSVP and seating by phone</h4>
                         <span class="fld_txt_small">Guests call to RSVP and get seating details.</span>
                     </div>
+                </div>
+                <div class="row" style="margin: auto;text-align:center;">
+                    &nbsp;
+                </div>
+                <div class="row" style="margin: auto;text-align:center;">
+                    &nbsp;
                 </div>
             </div>
         </section>
