@@ -18,10 +18,42 @@
         <div style="padding:20px">
             <div id="div_login" name="div_login" class="row">
                 <div class="offset1 span5">
-                    <h2>Contact Us</h2>
+                    <h1>Contact Us</h1>
                     <div class="row">
                         <div class="span2" >
                             &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="offset1 span7" >
+                            <span>To learn how we can help you, please contact kensenjohn@callseat.com</span>  <br>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span2" >
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="offset1 span7" >
+                            <h4>Phone:</h4><span> (267) 250 2719</span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="span2" >
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="offset1 span7" >
+                            <h4>Address</h4>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="offset1 span7" >
+                            <span>5316 Carnaby St #155</span>  <br>
+                            <span>Irving, TX 75038</span>
                         </div>
                     </div>
                 </div>

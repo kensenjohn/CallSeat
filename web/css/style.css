@@ -385,9 +385,9 @@ table { max-width: 100%; background-color: transparent; border-collapse: collaps
 a:active, a:link, a:visited {font-weight:bold; text-decoration: underline; color: #4183C7; outline:none!important;  }
 a:hover {color: #758A48}
 
-#nav_bar a:active:not(.btn),#nav_bar a:link:not(.btn),#nav_bar a:visited:not(.btn){font-weight:bold; text-decoration: none; color: #155521; outline:none!important;}
+#nav_bar a:active:not(.btn),#nav_bar a:link:not(.btn),#nav_bar a:visited:not(.btn){font-weight:normal; text-decoration: none; color: #155521; outline:none!important;}
 #nav_bar a:hover:not(.btn) {color: #155521; text-decoration: underline;}
-#footer_nav a:active:not(.btn),#footer_nav a:link:not(.btn),#footer_nav a:visited:not(.btn){font-weight:bold; text-decoration: none; color: #155521; outline:none!important;}
+#footer_nav a:active:not(.btn),#footer_nav a:link:not(.btn),#footer_nav a:visited:not(.btn){font-weight:normal; text-decoration: none; color: #155521; outline:none!important;}
 #footer_nav a:hover:not(.btn) {color: #155521; text-decoration: underline;}
 .nav_link{margin-top:13px;}
 .nav_button{margin-top:6px;}

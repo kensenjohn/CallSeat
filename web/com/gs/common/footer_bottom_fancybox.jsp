@@ -4,7 +4,7 @@ com.gs.common.Configuration applicationConfig = com.gs.common.Configuration.getI
 String sCopyrightYear = applicationConfig.get("copyright_year");
 String sCopyrightCompany = applicationConfig.get("copyright_company");
 %>
-<div style="background-color: RGBA(0,132,0,0.40);">
+<div>
     <div class="blank_scratch_area" >
         <div class="row">
             &nbsp;

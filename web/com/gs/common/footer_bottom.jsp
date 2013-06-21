@@ -11,7 +11,7 @@ String sCopyrightCompany = applicationConfig.get("copyright_company");
         </div>
         <div class="row">
             <div class="offset1 span6">
-                <div class="footer_nav">
+                <div id="footer_nav">
                         <a id="footer_about" class="bold_text" href="/web/com/gs/common/about.jsp">About Us</a><br>
                         <a id="footer_contact" class="bold_text nav_link" href="/web/com/gs/common/contact.jsp">Contact</a>
                     </ul>
