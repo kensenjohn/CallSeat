@@ -241,7 +241,6 @@
 					
 					<div  class="row" id="div_event_summary"  style="display:none;" >
 						<div class="offset_0_5 span7">
-						
 							<div class="row">
 								<div class="span5">
 									<h4>Seating Plan </h4>
@@ -462,6 +461,16 @@
 				<!-- The phone number summary -->
 				<div  class="row" id="div_phone_numbers"  style="display:none;">
 					<div class="offset_0_5 span9">
+                        <div class="row">
+                            <div class="span8">
+                                <h2>Currently in Demo Mode</h2>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="span2">
+                                &nbsp;
+                            </div>
+                        </div>
                             <form id="frm_phone_numbers" >
 							<div class="row">
 								<div class="span2">
@@ -632,6 +641,9 @@
 								</div>
 							</div>
 							<div class="row">
+                                <div class="span3">
+                                    &nbsp;
+                                </div>
                                 <div class="span2">
                                     <button id="btn_save_phone_number" name="btn_save_phone_number" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="btn">Save Changes</button>
                                 </div>
@@ -639,6 +651,11 @@
 									 <button id="bt_get_own_phone" name="bt_get_own_phone" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="btn btn-blue">Purchase direct phone numbers</button>
 								</div>
 							</div>
+                            <div class="row">
+                                <div class="span3">
+                                    &nbsp;
+                                </div>
+                            </div>
 					</div>				
 			</div>
 		</div>										

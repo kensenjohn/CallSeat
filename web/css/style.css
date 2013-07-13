@@ -330,18 +330,18 @@ select.sel-large, textarea.ta-large, input[type="text"].inp-large, input[type="p
     input.ispn3, textarea.ispn3, .uneditable-input.ispn3 { width: 310px;}
     input.ispn2, textarea.ispn2, .uneditable-input.ispn2 { width: 190px;}
     input.ispn1, textarea.ispn1, .uneditable-input.ispn1 { width: 70px;}
-    .tab_view_span12 { width: 1142px;}
-    .tab_view_span11 { width: 1042px;}
-    .tab_view_span10 { width: 942px;}
-    .tab_view_span9 { width: 842px;}
-    .tab_view_span8 { width: 742px;}
-    .tab_view_span7 { width: 642px;}
-    .tab_view_span6 { width: 542px;}
-    .tab_view_span5 { width: 442px;}
-    .tab_view_span4 { width: 342px;}
-    .tab_view_span3 { width: 242px;}
-    .tab_view_span2 { width: 142px;}
-    .tab_view_span1 { width: 42px;}
+    .tab_view_span12 { width: 1370px;}
+    .tab_view_span11 { width: 1250px;}
+    .tab_view_span10 { width: 1130px;}
+    .tab_view_span9 { width: 1010px;}
+    .tab_view_span8 { width: 890px;}
+    .tab_view_span7 { width: 770px;}
+    .tab_view_span6 { width: 650px;}
+    .tab_view_span5 { width: 530px;}
+    .tab_view_span4 { width: 410px;}
+    .tab_view_span3 { width: 290px;}
+    .tab_view_span2 { width: 170px;}
+    .tab_view_span1 { width: 50px;}
 }
 
 
@@ -385,7 +385,7 @@ table { max-width: 100%; background-color: transparent; border-collapse: collaps
 a:active, a:link, a:visited {font-weight:bold; text-decoration: underline; color: #4183C7; outline:none!important;  }
 a:hover {color: #758A48}
 
-#nav_bar a:active:not(.btn),#nav_bar a:link:not(.btn),#nav_bar a:visited:not(.btn){font-weight:normal; text-decoration: none; color: #155521; outline:none!important;}
+#nav_bar a:active:not(.btn),#nav_bar a:link:not(.btn),#nav_bar a:visited:not(.btn){font-weight:bold; text-decoration: none; color: #155521; outline:none!important;}
 #nav_bar a:hover:not(.btn) {color: #155521; text-decoration: underline;}
 #footer_nav a:active:not(.btn),#footer_nav a:link:not(.btn),#footer_nav a:visited:not(.btn){font-weight:normal; text-decoration: none; color: #155521; outline:none!important;}
 #footer_nav a:hover:not(.btn) {color: #155521; text-decoration: underline;}

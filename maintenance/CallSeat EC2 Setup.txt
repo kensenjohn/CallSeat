@@ -68,7 +68,7 @@ Setting up the Amazon EC2 instance.
                         sudo scp -i  <pemfile_path>  cert.pem ubuntu@<ELASTIC_IP>:usr/local/ec-tools
 
     2.8) Automatic Elastic IP assignment on startup (Use a shell script in /etc/rc.local. Requires step 2.7 and 2.2.3  )
-        2.8.1) sudo nano /etc/rc.local
+        2.8.1) sudo nano /etc/rc.local   and also to /etc/environment
         2.8.2) add the following
                 export EC2_HOME=/usr/local/ec2-tools
                 export JAVA_HOME=/usr/local/java
