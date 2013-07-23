@@ -38,8 +38,9 @@ try
 		boolean isSuccess = forgotInfoManager.createUserRequest(); 
 		
 		if(isSuccess)
-		{ 
-			Text okText = new ErrorText("An email with a link to reset your password has been sent to the email address specified.","success_mssg") ;
+		{
+            appLogging.info("Successfully created User Request for Forgot Password. Email : " + sEmailId);
+            Text okText = new ErrorText("An email with a link to reset your password has been sent to the email address specified.","success_mssg") ;
 			arrOkText.add(okText);
 			
 			responseStatus = RespConstants.Status.OK;
@@ -47,6 +48,7 @@ try
 		}
 		else
 		{
+            appLogging.info("An error was encountered while User Request for Forgot Password. Email : " + sEmailId);
 			Text errorText = new ErrorText("An email with a link to reset your password has been sent to the email address specified.","success_mssg") ;
 			arrOkText.add(errorText);
 			

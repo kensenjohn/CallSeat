@@ -183,8 +183,8 @@ public class ForgotPassword implements ForgotInfoManager {
 			// The new password will be sent separately.
 			// This must be changed so that user will have to click link to
 			// generate the new password.
-			MailCreator dummeEailCreator = new SingleEmailCreator();
-			dummeEailCreator.create(emailQueueBean , new EmailScheduleBean());
+			MailCreator dummyEailCreator = new SingleEmailCreator();
+			dummyEailCreator.create(emailQueueBean , new EmailScheduleBean());
 
 			// Now here we will be putting the correct password in the email
 			// text and

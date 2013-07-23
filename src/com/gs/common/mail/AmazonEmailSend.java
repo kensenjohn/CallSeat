@@ -41,6 +41,8 @@ public class AmazonEmailSend implements MailSender {
 	public boolean send(EmailObject emailObject) {
 		boolean isSuccess = true;
 		if (emailObject != null) {
+            emailerLogging.info("Send invoked ");
+            emailerLogging.debug("The email Object to send : " + emailObject);
 			SendEmailRequest request = new SendEmailRequest()
 					.withSource(emailObject.getFromAddress());
 
@@ -89,7 +91,9 @@ public class AmazonEmailSend implements MailSender {
 						+ " " + emailObject.getEmailSubject() + "\n"
 						+ ExceptionHandler.getStackTrace(e));
 			}
-		}
+		}  else {
+            emailerLogging.error("Email Object was null ");
+        }
 		return isSuccess;
 	}
 }

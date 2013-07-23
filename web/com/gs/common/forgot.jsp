@@ -14,7 +14,7 @@
 	String sForgotUserResponseId = ParseUtil.checkNull(request.getParameter("lotophagi"));
 
 	ForgotInfoManager forgotInfoManager = new ForgotPassword();
-	SecurityForgotInfoBean securityForgInfoBean = forgotInfoManager.identifyUserResponse(sForgotUserResponseId); 
+	SecurityForgotInfoBean securityForgInfoBean = forgotInfoManager.identifyUserResponse(sForgotUserResponseId);
 %>
 <body  style="height:auto;">
 	<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
@@ -44,6 +44,9 @@
 		if(Constants.FORGOT_INFO_ACTION.PASSWORD.getAction().equalsIgnoreCase(securityForgInfoBean.getActionType().getAction()))
 		{
 			//password reset
+
+            Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+            String sHomeDomain = ParseUtil.checkNull(applicationConfig.get(Constants.PROP_APPLICATION_DOMAIN));
 			%>
 			<div class="fnbx_scratch_area">
 				<div class="row" >
@@ -89,11 +92,27 @@
 									value="<%=ParseUtil.checkNull(securityForgInfoBean.getSecurityForgotInfoId())%>">
 							<input type="hidden" id="security_token_id" name="security_token_id" 
 									value="<%=sForgotUserResponseId%>">
-									
+                            <div class="row">
+                                <div class="span2" >
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span2" >
+                                    <%if(sHomeDomain!=null && !"".equalsIgnoreCase(sHomeDomain)) {%>
+                                        <a id="link_back_to_home" name="link_back_to_home" href="<%=sHomeDomain%>">Home</a><br>
+                                    <% } else { %>
+                                        &nbsp;
+                                    <% } %>
+                                </div>
+                            </div>
 						</form>
 					</div>
 				</div>
 			</div>
+            <form id="frm_home" id="frm_home"
+                  action="http:">
+            </form>
 	<%			
 		}
 	}
@@ -119,8 +138,7 @@
 	$(document).ready(function() {
 		$("#but_reset_password").click(resetPassword);
 	});
-	function resetPassword()
-	{
+	function resetPassword() {
 		//frm_reset_password
 		var dataString = $("#frm_reset_password").serialize();
 		
@@ -130,76 +148,57 @@
 		submitRequest(actionUrl,dataString,methodType,getResetPasswordResult);
 	}
 	
-	function submitRequest(  actionUrl,dataString,methodType,callBackMethod )
-	{
+	function submitRequest(  actionUrl,dataString,methodType,callBackMethod ) {
 		$.ajax({
 			  url: actionUrl ,
 			  type: methodType ,
 			  dataType: "json",
 			  data: dataString ,
 			  success: callBackMethod,
-			  error:function(a,b,c)
-			  {
-				  alert(a.responseText + ' = ' + b + " = " + c);
-			  }
+			  error:function(a,b,c) {  alert(a.responseText + ' = ' + b + " = " + c); }
 			});
 	}
 	
-	function getResetPasswordResult(jsonResult)
-	{
-		if(jsonResult!=undefined)
-		{
+	function getResetPasswordResult(jsonResult) {
+		if(jsonResult!=undefined) {
 			var varResponseObj = jsonResult.response;
-			if(jsonResult.status == 'error'  && varResponseObj !=undefined )
-			{
+			if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
 				var varIsMessageExist = varResponseObj.is_message_exist;
-				if(varIsMessageExist == true)
-				{
+				if(varIsMessageExist == true) {
 					var jsonResponseMessage = varResponseObj.messages;
-					var varArrErrorMssg = jsonResponseMessage.error_mssg
-					//displayMessages( varArrErrorMssg );
+					var varArrErrorMssg = jsonResponseMessage.error_mssg;
 					displayMessages( varArrErrorMssg , true);
 				}
-			}
-			else if( jsonResult.status == 'ok' && varResponseObj !=undefined)
-			{
+			} else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
 				var varIsPayloadExist = varResponseObj.is_payload_exist;
 				
-				if(varIsPayloadExist == true)
-				{
+				if(varIsPayloadExist == true) {
 					var jsonResponseObj = varResponseObj.payload;
 					
 				}
 				
 				var varIsMessageExist = varResponseObj.is_message_exist;
-				if(varIsMessageExist == true)
-				{
+				if(varIsMessageExist == true) {
 					var jsonResponseMessage = varResponseObj.messages;
-					var varArrErrorMssg = jsonResponseMessage.ok_mssg
-					//displayMessages( varArrErrorMssg );
+					var varArrErrorMssg = jsonResponseMessage.ok_mssg;
 					displayMessages( varArrErrorMssg , false);
 				}
 			}
 		}
 	}
 	
-	function displayAlert(varMessage, isError)
-	{
+	function displayAlert(varMessage, isError) {
 		var varTitle = 'Status';
 		var varType = 'info';
-		if(isError)
-		{
+		if(isError) {
 			varTitle = 'Error';
 			varType = 'error';
-		}
-		else
-		{
+		} else {
 			varTitle = 'Status';	
 			varType = 'info';
 		}
 		
-		if(varMessage!='')
-		{
+		if(varMessage!='') {
 			$.msgBox({
                 title: varTitle,
                 content: varMessage,
@@ -208,30 +207,23 @@
 		}
 	}
 	
-	function displayMessages(varArrMessages, isError)
-	{
-		if(varArrMessages!=undefined)
-		{
+	function displayMessages(varArrMessages, isError) {
+		if(varArrMessages!=undefined) {
 			
 				
 			var varMssg = '';
 			var isFirst = true;
-			for(var i = 0; i<varArrMessages.length; i++)
-			{
-				if(isFirst == false)
-				{
+			for(var i = 0; i<varArrMessages.length; i++) {
+				if(isFirst == false) {
 					varMssg = varMssg + '\n';
 				}
 				varMssg = varMssg + varArrMessages[i].text;
 			}
 			
-			if(varMssg!='')
-			{
+			if(varMssg!='') {
 				displayAlert(varMssg,isError);
 			}
 		}
-		
-
 	}
 </script>
 <jsp:include page="../common/footer_bottom_fancybox.jsp"/> 

@@ -61,14 +61,14 @@ try
 			if(resetPasswordRespBean!=null && sNewPassword.equalsIgnoreCase(resetPasswordRespBean.getNewPassword()))
 			{
 				forgotInfoManager.processUserResponse(securityForgInfoBean);
-				Text okText = new OkText("The password was successfullly created. Please login using the new password.","reset_password") ;		
+				Text okText = new OkText("The password was successfully created. Please login using the new password.","reset_password") ;
 				arrOkText.add(okText);
 				
 				responseStatus = RespConstants.Status.OK;
 			}
 			else
 			{
-				Text errorText = new ErrorText("There was an error setting creating the new password. Please try again later.","reset_password") ;		
+				Text errorText = new ErrorText("There was an error creating the new password. Please try again later.","reset_password") ;
 				arrErrorText.add(errorText);
 				
 				responseStatus = RespConstants.Status.ERROR;

@@ -28,7 +28,7 @@ try
 		EventManager eventManager = new EventManager();
 		ArrayList<EventBean> arrEventBean = eventManager.getAllEvents(sAdminId);
 		JSONObject jsonObject = eventManager.getEventJson(arrEventBean);
-		
+        appLogging.info("Event JSON : " + jsonObject);
 		jsonResponseObj.put("event_list",jsonObject);
 		
 		Text okText = new OkText("All event loaded.","my_id") ;		

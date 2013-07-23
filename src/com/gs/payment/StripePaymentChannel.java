@@ -1,5 +1,6 @@
 package com.gs.payment;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,17 +19,14 @@ import com.stripe.model.Token;
 
 public class StripePaymentChannel extends PaymentChannel {
 
-	Logger appLogging = LoggerFactory.getLogger("AppLogging");
-	private static Configuration applicationConfig = Configuration
-			.getInstance(Constants.APPLICATION_PROP);
+	Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
+	private static Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+    private static BigDecimal CENTS_PER_DOLLAR = new BigDecimal("100");
 
-	private String getPublicKey() {
-		String sPublicKey = ParseUtil.checkNull(applicationConfig
-				.get(Constants.PROP_STRIPE_TEST_PUBLISHABLE_KEY));
-		if (Constants.STRIPE_ENVIRONMENT.LIVE.getStripeEnv().equalsIgnoreCase(
-				getStripeEnvironment())) {
-			sPublicKey = ParseUtil.checkNull(applicationConfig
-					.get(Constants.PROP_STRIPE_LIVE_PUBLISHABLE_KEY));
+	public String getPublicKey() {
+		String sPublicKey = ParseUtil.checkNull(applicationConfig.get(Constants.PROP_STRIPE_TEST_PUBLISHABLE_KEY));
+		if (Constants.STRIPE_ENVIRONMENT.LIVE.getStripeEnv().equalsIgnoreCase( getStripeEnvironment())) {
+			sPublicKey = ParseUtil.checkNull(applicationConfig.get(Constants.PROP_STRIPE_LIVE_PUBLISHABLE_KEY));
 		}
 		return sPublicKey;
 	}
@@ -105,9 +103,9 @@ public class StripePaymentChannel extends PaymentChannel {
 				token = Token.retrieve(billingMetaData.getStripeToken());
 			} catch (StripeException e) {
 				appLogging
-						.error("There was an error retrieving token from Stripe. "
+						.error("There was an error retrieving token from Stripe Application. "
 								+ " Token : "
-								+ billingMetaData.getStripeToken()
+								+ billingMetaData.getStripeToken() + e.getMessage()
 								+ ExceptionHandler.getStackTrace(e));
 				billingResponse.setBillingResponseCode(Constants.BILLING_RESPONSE_CODES.GENERAL_ERROR);
 				billingResponse.setMessage("Payment authentication error.");
@@ -119,10 +117,6 @@ public class StripePaymentChannel extends PaymentChannel {
                 Map<String, Object> customerParams = new HashMap<String, Object>();
                 customerParams.put("card", billingMetaData.getStripeToken());
                 customerParams.put("description","Event ID " + billingMetaData.getEventId()+ " Customer for email = " + billingMetaData.getEmail());
-
-
-
-
 
 				try {
                     Customer customer = Customer.create(customerParams);
@@ -138,26 +132,34 @@ public class StripePaymentChannel extends PaymentChannel {
                                 + billingMetaData.getEmail());
                         chargeParams.put("customer", customer.getId()); // obtained
 
-
                         Double dPrice = ParseUtil.sToD(billingMetaData.getPrice());
-                        dPrice = dPrice * 100;  //converting to cents
-                        int iTmpPrice = dPrice.intValue();
-                        Integer iPrice = new Integer(iTmpPrice);
-                        // Stripe.js
-                        chargeParams.put("amount", iPrice);
+                        if(dPrice>0.0) {
+                            BigDecimal bdPrice = new BigDecimal(ParseUtil.checkNull(billingMetaData.getPrice()));
+                            BigDecimal bdPriceInCents = bdPrice.multiply(CENTS_PER_DOLLAR);
 
-                        Charge charge = Charge.create(chargeParams);
+                            // Stripe.js
+                            chargeParams.put("amount", bdPriceInCents.intValue());
 
+                            Charge charge = Charge.create(chargeParams);
 
-                        billingResponse.setBillingResponseCode(Constants.BILLING_RESPONSE_CODES.SUCCESS);
-                        billingResponse.setMessage("Successfully charged.");
-                        billingResponse.setPaymentChannelCustomerId(customer.getId());
-                        appLogging.info("Successfully charged. " + " Token : "
-                                + billingMetaData.getStripeToken() + "_"
-                                + billingMetaData.getEventId() + "_"
-                                + billingMetaData.getZip() + "_"
-                                + billingMetaData.getEmail() + "_"
-                                + iPrice+"_cents");
+                            billingResponse.setBillingResponseCode(Constants.BILLING_RESPONSE_CODES.SUCCESS);
+                            billingResponse.setMessage("Successfully charged.");
+                            billingResponse.setPaymentChannelCustomerId(customer.getId());
+                            appLogging.info("Successfully charged. " + " Token : "
+                                    + billingMetaData.getStripeToken() + "_"
+                                    + billingMetaData.getEventId() + "_"
+                                    + billingMetaData.getZip() + "_"
+                                    + billingMetaData.getEmail() + "_"
+                                    + bdPriceInCents.intValue()+"_cents");
+                        }  else {
+                            appLogging.info("Invalid Price to charge " + " Customer : " + customer.getId() + " Token : "
+                                    + billingMetaData.getStripeToken() + " Event id : "
+                                    + billingMetaData.getEventId() + " xip :"
+                                    + billingMetaData.getZip() + " Email :"
+                                    + billingMetaData.getEmail() + " Price :"
+                                    + ParseUtil.checkNull(billingMetaData.getPrice())+"_dollars");
+                        }
+
 
 
                     }
@@ -167,7 +169,7 @@ public class StripePaymentChannel extends PaymentChannel {
 
 				} catch (StripeException e) {
 					appLogging
-							.error("There was an charging customer with a price. "
+							.error("Error charging customer with a price. "
 									+ " Token : "
 									+ billingMetaData.getStripeToken()
 									+ "_"

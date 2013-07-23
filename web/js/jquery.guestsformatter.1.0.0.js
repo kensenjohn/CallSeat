@@ -63,8 +63,7 @@
 				if(numOfRows <= 0)
 				{
 					valRows = valRows + '<tr id="table_dummy_row">' +
-					'<td >Add Guests.</td>'+
-					'<td  >&nbsp;</td>'+
+					'<td colspan="2">Create a new Guest</td>'+
 					'<td  >&nbsp;</td>'+
 					'<td  >&nbsp;</td>'+
 					'<td  >&nbsp;</td>'+

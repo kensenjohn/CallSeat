@@ -33,14 +33,11 @@
 					<jsp:param name="lobby_header" value="Seating Plans"/>
 					<jsp:param name="lobby_sec_header" value=""/>
 				</jsp:include>
-				
-									
-												
-						<jsp:include page="../common/action_nav.jsp">
-							<jsp:param name="admin_id" value="<%=sAdminId %>"/>
-							<jsp:param name="event_id" value="<%=sEventId %>"/>
-							<jsp:param name="select_action_nav" value="dashboard_tab"/> 
-						</jsp:include>
+                <jsp:include page="../common/action_nav.jsp">
+                    <jsp:param name="admin_id" value="<%=sAdminId %>"/>
+                    <jsp:param name="event_id" value="<%=sEventId %>"/>
+                    <jsp:param name="select_action_nav" value="dashboard_tab"/>
+                </jsp:include>
 				<div class="row">
 					<div  class="span10">
 						&nbsp;
@@ -72,51 +69,38 @@
 	var varIsSignedIn = <%=isSignedIn%>;
 	$(document).ready(function() {
 		setCredentialEventId(varEventID);
-		if(!varIsSignedIn)
-		{
+		if(!varIsSignedIn) {
 			setTopNavLogin(varAdminID,varEventID,'host_dashboard.jsp');
 			setTopNavSingup(varAdminID,varEventID,'host_dashboard.jsp');
-			
 		}
 		loadActions();
 		loadDashboard( varEventID , varAdminID );
-		
 	});
-	function loadActions()
-	{
+	function loadActions() {
 		setNewEventClick();
 		setAllGuestButtonClick();
 		setLobbyButtonClick();
 	}
 	
-	function loadDashboard(varTmpEventId,varTmpAdminId)
-	{
+	function loadDashboard(varTmpEventId,varTmpAdminId) {
 		var dataString = '&event_id='+ varTmpEventId + '&admin_id='+ varTmpAdminId;
 		var actionUrl = "proc_load_dashboard.jsp";
 		var methodType = "POST";
-		
 		getDataAjax(actionUrl,dataString,methodType, getDashboardResult);
 	}
-	function getDashboardResult(jsonResult)
-	{
-		if(jsonResult!=undefined)
-		{
+	function getDashboardResult(jsonResult) {
+		if(jsonResult!=undefined) {
 			var varResponseObj = jsonResult.response;
-			if(jsonResult.status == 'error'  && varResponseObj !=undefined )
-			{
+			if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
 				var varIsMessageExist = varResponseObj.is_message_exist;
-				if(varIsMessageExist == true)
-				{
+				if(varIsMessageExist == true) {
 					var jsonResponseMessage = varResponseObj.messages;
 					var varArrErrorMssg = jsonResponseMessage.error_mssg
 					displayMessages( varArrErrorMssg );
 				}
-			}
-			else  if( jsonResult.status == 'ok' && varResponseObj !=undefined)
-			{
+			} else  if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
 				var varIsPayloadExist = varResponseObj.is_payload_exist;
-				if(varIsPayloadExist == true)
-				{
+				if(varIsPayloadExist == true) {
 					var jsonResponseObj = varResponseObj.payload;
 					
 					var eventList = jsonResponseObj.event_list;
@@ -124,23 +108,18 @@
 					$("#div_dashboard_details").dashboard({
 						varEventList : eventList
 					});
-					
 				}					
 			}
 		}
 	}
-	function getDataAjax(actionUrl,dataString,methodType, callBackMethod)
-	{
+	function getDataAjax(actionUrl,dataString,methodType, callBackMethod) {
 		$.ajax({
 			  url: actionUrl ,
 			  type: methodType ,
 			  dataType: "json",
 			  data: dataString ,
 			  success: callBackMethod,
-			  error:function(a,b,c)
-			  {
-				  alert(a.responseText + ' = ' + b + " = " + c);
-			  }
+			  error:function(a,b,c) {  alert(a.responseText + ' = ' + b + " = " + c);  }
 			});
 	}
 

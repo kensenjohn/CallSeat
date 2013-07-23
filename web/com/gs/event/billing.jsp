@@ -2,6 +2,7 @@
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="com.gs.manager.event.PurchaseTransactionManager" %>
+<%@ page import="com.gs.payment.PaymentChannel" %>
 
 <jsp:include page="../common/header_top.jsp"/>
 <%@include file="../common/security.jsp"%>
@@ -10,14 +11,14 @@
 <link type="text/css" rel="stylesheet" href="/web/css/jquery.select-to-autocomplete.css" /> 
 
 <%
-		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
-		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
-		String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
-		String sPricingPlanId = ParseUtil.checkNull(request.getParameter("pricing_plan"));
-		
+    Logger jspLogging = LoggerFactory.getLogger(Constants.JSP_LOGS);
+    String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
+    String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
+    String sPricingPlanId = ParseUtil.checkNull(request.getParameter("pricing_plan"));
 
-		String sPassthruRsvpNumber = ParseUtil.checkNull(request.getParameter("pass_thru_rsvp_num"));
-		String sPassthruSeatingNumber = ParseUtil.checkNull(request.getParameter("pass_thru_seating_num"));
+
+    String sPassthruRsvpNumber = ParseUtil.checkNull(request.getParameter("pass_thru_rsvp_num"));
+    String sPassthruSeatingNumber = ParseUtil.checkNull(request.getParameter("pass_thru_seating_num"));
 
     PurchaseTransactionBean purchaseTransactionBean = new PurchaseTransactionBean();
     purchaseTransactionBean.setAdminId(sAdminId);
@@ -63,6 +64,8 @@
     }
 
 	String sGateAdminId = sAdminId;
+    PaymentChannel paymentChannel = PaymentChannel.getPaymentChannel();
+    String sPublishableKey = paymentChannel.getPublicKey();
 %>
 <%@include file="../common/gatekeeper.jsp"%>
 <link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
@@ -92,9 +95,9 @@
 			</div>
 			<div class="row">
 				<form id="frm_billing_info" name="frm_billing_info">
-				<div class="offset1 span7">
+				<div class="offset1 span5">
 						<div class="row">
-							<div class="span7">
+							<div class="span5">
 								Credit/Debit Card Number:<br><span class="fld_txt_small" style="font-size:11px;">The digits in front of your card</span>
 							</div>
 						</div>
@@ -172,7 +175,7 @@
                             </div>
                         </div>
 					</div>
-				<div class="span6">
+				<div class="span5">
 					<div class="row">
 						<div class="span5">
 							First Name :
@@ -309,7 +312,7 @@ $(document).ready(function()
 	$("#loading_wheel").hide();
 	$('#bill_state').selectToAutocomplete();
 	$("#bt_checkout_tel_numbers").click(checkoutNumbers);
-	 Stripe.setPublishableKey('pk_wATk5Gx38D4jnRXebNX5ilayLKdGY');
+	 Stripe.setPublishableKey('<%=sPublishableKey%>');
 });
 $.ajaxSetup({
     beforeSend: function(data) {

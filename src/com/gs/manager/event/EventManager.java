@@ -35,8 +35,7 @@ import com.gs.data.event.EventData;
 import com.gs.manager.AdminManager;
 
 public class EventManager {
-	private static final Logger appLogging = LoggerFactory
-			.getLogger("AppLogging");
+	private static final Logger appLogging = LoggerFactory.getLogger("AppLogging");
 
 	public EventBean createEvent(EventBean eventBean) {
 		if (eventBean == null || eventBean.getEventAdminId() == null
@@ -181,6 +180,7 @@ public class EventManager {
 		JSONObject jsonObject = new JSONObject();
 		JSONArray jsonEventArray = new JSONArray();
 		try {
+            appLogging.info("EventBean to JSON invoked " );
 			if (arrEventBean != null && !arrEventBean.isEmpty()) {
 				Integer numOfEvent = 0;
 				for (EventBean eventBean : arrEventBean) {
@@ -191,7 +191,9 @@ public class EventManager {
 				jsonObject.put("num_of_rows",
 						ParseUtil.iToI(arrEventBean.size()));
 				jsonObject.put("events", jsonEventArray);
-			}
+			} else {
+                jsonObject.put("num_of_rows", "0" );
+            }
 		} catch (JSONException e) {
 			appLogging.error("Error converting EventBean to JSON "
 					+ ExceptionHandler.getStackTrace(e));

@@ -12,6 +12,8 @@ public abstract class PaymentChannel {
 
 	public abstract BillingResponse chargeUser(BillingMetaData billingMetaData);
 
+    public abstract String getPublicKey();
+
 	public static PaymentChannel getPaymentChannel() {
 		PaymentChannel paymentChannel = null;
 		String sPaymentChannel = applicationConfig.get(Constants.PROP_PAYMENT_CHANNEL);
