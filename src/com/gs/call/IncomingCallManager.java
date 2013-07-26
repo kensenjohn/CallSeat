@@ -57,16 +57,9 @@ public class IncomingCallManager {
 					} else if ("accountSid".equalsIgnoreCase(paramKey)) {
 						twilioIncomingCallBean.setAccountid(value);
 					} else if ("from".equalsIgnoreCase(paramKey)) {
-						if (value != null && value.startsWith("+")) {
-							value = value.substring(1);
-						}
 						twilioIncomingCallBean.setFrom(value);
 					} else if ("to".equalsIgnoreCase(paramKey)) {
-						if (value != null && value.startsWith("+")) {
-							value = value.substring(1);
-						}
 						twilioIncomingCallBean.setTo(value);
-
 					} else if ("callStatus".equalsIgnoreCase(paramKey)) {
 						twilioIncomingCallBean.setCallStatus(value);
 					} else if ("apiVersion".equalsIgnoreCase(paramKey)) {

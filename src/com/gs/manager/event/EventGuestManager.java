@@ -95,15 +95,10 @@ public class EventGuestManager {
 
 	public EventGuestBean getGuest(EventGuestMetaData eventGuestMetaData) {
 		EventGuestBean eventGuestBean = new EventGuestBean();
-		if (eventGuestMetaData != null
-				&& eventGuestMetaData.getEventId() != null
-				&& !"".equalsIgnoreCase(eventGuestMetaData.getEventId())
-				&& eventGuestMetaData.getArrGuestId() != null
-				&& !eventGuestMetaData.getArrGuestId().isEmpty()) {
+		if (eventGuestMetaData != null && eventGuestMetaData.getEventId() != null && !"".equalsIgnoreCase(eventGuestMetaData.getEventId())
+				&& eventGuestMetaData.getArrGuestId() != null && !eventGuestMetaData.getArrGuestId().isEmpty()) {
 			GuestData guestData = new GuestData();
-			eventGuestBean = guestData.getGuest(
-					eventGuestMetaData.getEventId(),
-					eventGuestMetaData.getArrGuestId());
+			eventGuestBean = guestData.getGuest( eventGuestMetaData.getEventId(), eventGuestMetaData.getArrGuestId());
 		}
 
 		return eventGuestBean;

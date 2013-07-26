@@ -14,19 +14,13 @@ import org.slf4j.LoggerFactory;
 
 import com.gs.call.CallResponse;
 
-public class SeatingTwiml
-{
+public class SeatingTwiml {
 	Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
-
-	//private String VOICE_ACTOR = applicationConfig.get(Constants.PROP_TWILIO_VOICE);
-
     private String VOICE_RECORDING_FOLDER = applicationConfig.get(Constants.PROP_VOICE_RECORDING_FOLDER);
 
 	Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 
-	public CallResponse getFirstResponse(CallResponse callResponse)
-	{
-        //Verb pauseVerb = new Verb(Verb.V_PAUSE,null);
+	public CallResponse getFirstResponse(CallResponse callResponse) {
         Pause pause = new Pause();
 		pause.setLength(1);
 
@@ -38,8 +32,6 @@ public class SeatingTwiml
 
 			TwiMLResponse response = new TwiMLResponse();
 
-			//Say sayWelcome = new Say("Welcome");
-			//sayWelcome.setVoice(VOICE_ACTOR);
             Play playWelcome = new Play(VOICE_RECORDING_FOLDER+"/welcome_stereo.wav");
 
 			ArrayList<TableGuestsBean> arrTableGuestBean = callResponse.getArrTableGuestBean();
@@ -64,24 +56,19 @@ public class SeatingTwiml
                 {
                     if (totalNumOfSeats == 1)
                     {
-                        sSeatingMessage = "You are seated at ";
                         playSeatingMessage = new Play( VOICE_RECORDING_FOLDER+"/you_are_seated_at_table_stereo.wav" );
                     }
                     else if( totalNumOfSeats == 2 )
                     {
-                        sSeatingMessage = "You and your guest are seated at ";
                         playSeatingMessage = new Play( VOICE_RECORDING_FOLDER+"/you_and_your_guest_are_seated_at_table_stereo.wav" );
                     }
                     else if( totalNumOfSeats > 2 )
                     {
-                        sSeatingMessage = "You and your guests are seated at ";
                         playSeatingMessage = new Play( VOICE_RECORDING_FOLDER+"/you_and_guests_are_seated_at_table_stereo.wav" );
                     }
-                    sSeatingMessage = sSeatingMessage + sTableNumberMessage;
                 }
                 else
                 {
-                    sSeatingMessage = "We are sorry we were unable to retrieve your information. Please call again later.";
                     playSeatingMessage = new Play( VOICE_RECORDING_FOLDER+"/we_were_unable_to_retrieve_your_info_stereo.wav" );
                 }
 
@@ -106,7 +93,6 @@ public class SeatingTwiml
                         {
                             hmPlaySequence.put(iPlaySequece, playTensPlaceTableNum );
                             iPlaySequece++;
-                            //playSeatingMessage.append( playTensPlaceTableNum );
                         }
                         else
                         {
@@ -114,8 +100,6 @@ public class SeatingTwiml
                             iPlaySequece++;
                             hmPlaySequence.put(iPlaySequece, playOnesPlaceTableNum );
                             iPlaySequece++;
-                            // playSeatingMessage.append( playTensPlaceTableNum );
-                            // playSeatingMessage.append( playOnesPlaceTableNum );
                         }
 
                     }
@@ -123,7 +107,6 @@ public class SeatingTwiml
                     {
                         hmPlaySequence.put(iPlaySequece, playOnesPlaceTableNum );
                         iPlaySequece++;
-                        //playSeatingMessage.append( playOnesPlaceTableNum );
                     }
                     hmPlaySequence.put(iPlaySequece, playTenthOfSecondDelay );
                     iPlaySequece++;
@@ -136,17 +119,10 @@ public class SeatingTwiml
                 sCallForwaringNum = EventFeatureManager.getStringValueFromEventFeature( eventBean.getEventId(), Constants.EVENT_FEATURES.SEATING_CALL_FORWARD_NUMBER );
                 if( sCallForwaringNum!=null && !"".equalsIgnoreCase(sCallForwaringNum) )
                 {
-                    sSeatingMessage = "Your call will now be forwarded to an usher. The usher will provide you with more assistance.";
                     playSeatingMessage = new Play( VOICE_RECORDING_FOLDER+"/your_call_will_be_forwarded_stereo.wav" );
                     isCallForward = true;
                 }
 			}
-
-			//Say sayMessage = new Say(sSeatingMessage);
-			//sayMessage.setVoice(VOICE_ACTOR);
-
-			//Say sayThankYou = new Say("Thank You, and enjoy your day.");
-			//sayThankYou.setVoice(VOICE_ACTOR);
             Play playThankYouEnjoyDay = new Play(VOICE_RECORDING_FOLDER+"/thank_you_enjoy_your_day_stereo.wav");
             Play playQuarterSecondDelay = new Play(VOICE_RECORDING_FOLDER+"/quarter_second_stereo.wav");
 
@@ -183,8 +159,7 @@ public class SeatingTwiml
 
                 InformGuestTask.sendSeatingConfirmation( informGuestBean );
 
-			} catch (TwiMLException e)
-			{
+			} catch (TwiMLException e) {
 				callResponse.setTwilResponseSuccess(false);
 				appLogging.info(ExceptionHandler.getStackTrace(e));
 			}
@@ -196,8 +171,6 @@ public class SeatingTwiml
 	{
 		Dial dialUsher = new Dial(sForwardingNumber);
 		dialUsher.setTimeout(60);
-		// dialUsher.append(verb)
-
 		return dialUsher;
 	}
 }

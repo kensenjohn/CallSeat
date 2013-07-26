@@ -24,7 +24,6 @@ import com.gs.manager.event.TelNumberManager;
 import com.gs.manager.event.TelNumberMetaData;
 
 public class RsvpTask extends Task {
-	Logger appLogging = LoggerFactory.getLogger("AppLogging");
 
 	public RsvpTask(String eventId, String adminId) {
 		super(eventId, adminId);
@@ -36,30 +35,21 @@ public class RsvpTask extends Task {
 		if (incomingCallBean != null) {
 
 			RsvpTwiml rsvpTwiml = new RsvpTwiml();
-
+            appLogging.info("ProcessTask call type bean : " + incomingCallBean.getCallType() );
 			if (Constants.CALL_TYPE.FIRST_REQUEST.equals(incomingCallBean.getCallType())) {
 				callResponse = processFirstResponseTask(incomingCallBean);
 
-                if( !isCallUsageLimitReached( callResponse ) )
-                {
-                    if(callResponse!=null && callResponse.getEventGuestBean()!=null
-                            && callResponse.isEventBeanExists() && callResponse.isEventGuestBeanExists())
-                    {
+                if( canCallUsageFeatureContinue( callResponse ) ) {
+                    if(callResponse!=null && callResponse.getEventGuestBean()!=null  && callResponse.isEventBeanExists() && callResponse.isEventGuestBeanExists()) {
+                        callResponse = rsvpTwiml.getFirstResponse(callResponse,incomingCallBean);
+                    }  else  {
                         callResponse = rsvpTwiml.getCallForwardingResponse(callResponse,incomingCallBean);
                     }
-                    else
-                    {
-                        callResponse = rsvpTwiml.getFirstResponse(callResponse,incomingCallBean);
-                    }
-                }
-                else
-                {
+                }  else  {
+                    appLogging.info("Reject Call Invoked " + callResponse.getEventGuestBean() );
                     callResponse = TwimlSupport.rejectCall( callResponse );
                 }
-
-
-			} else if (Constants.CALL_TYPE.RSVP_DIGIT_RESP
-					.equals(incomingCallBean.getCallType())) {
+			} else if (Constants.CALL_TYPE.RSVP_DIGIT_RESP.equals(incomingCallBean.getCallType())) {
 				callResponse = processRsvpDigits(incomingCallBean);
 			}
 		}
@@ -145,8 +135,7 @@ public class RsvpTask extends Task {
 		return callResponse;
 	}
 
-	private CallResponse processFirstResponseTask(
-			IncomingCallBean incomingCallBean) {
+	private CallResponse processFirstResponseTask(IncomingCallBean incomingCallBean) {
 		CallResponse callResponse = new CallResponse();
 
 		String sGuestTelNumber = incomingCallBean.getFrom();
@@ -164,20 +153,18 @@ public class RsvpTask extends Task {
 		TelNumberManager telNumManager = new TelNumberManager();
 		EventGuestBean eventGuestBean = telNumManager.getTelNumGuestDetails(telNumMetaData);
 
-        if(eventGuestBean!=null && eventGuestBean.getGuestId()!=null && !"".equalsIgnoreCase(eventGuestBean.getGuestId() ))
-        {
+        if(eventGuestBean!=null && eventGuestBean.getGuestId()!=null && !"".equalsIgnoreCase(eventGuestBean.getGuestId() )) {
             callResponse.setEventGuestBean(eventGuestBean);
         }
         CallTransactionBean callTransactionBean = new CallTransactionBean();
         callTransactionBean.setAdminId(super.adminId);
         callTransactionBean.setEventId(super.eventId);
-        if(eventGuestBean!=null && !"".equalsIgnoreCase(eventGuestBean.getGuestId()))
-        {
+        if(eventGuestBean!=null && !"".equalsIgnoreCase(eventGuestBean.getGuestId())) {
             callTransactionBean.setGuestId(eventGuestBean.getGuestId());
         }
         CallTransaction.getInstance().updateTransaction(incomingCallBean,callTransactionBean );
 
-
+        appLogging.info("processFirstResponseTask Call Response : " + callResponse);
 		return callResponse;
 	}
 

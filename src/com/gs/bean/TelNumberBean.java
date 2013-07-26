@@ -175,6 +175,7 @@ public class TelNumberBean {
 				.append(", isNew=").append(isNew)
 				.append(", secretEventIdentity=").append(secretEventIdentity)
 				.append(", secretEventKey=").append(secretEventKey)
+                .append(", isTelBeanSet=").append(isTelNumBeanSet())
 				.append(", humanTelNumber=").append(humanTelNumber).append("]");
 		return builder.toString();
 	}

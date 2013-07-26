@@ -16,4 +16,10 @@ public class TelNumberResponse
 		this.telNumberBean = telNumberBean;
 	}
 
+    @Override
+    public String toString() {
+        return "TelNumberResponse{" +
+                "telNumberBean=" + telNumberBean +
+                '}';
+    }
 }

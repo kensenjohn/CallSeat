@@ -61,11 +61,6 @@ try
         if(sCellNumberHumanFormat!=null&& !"".equalsIgnoreCase(sCellNumberHumanFormat))
         {
             sCellNumber = Utility.convertHumanToInternationalTelNum(sCellNumberHumanFormat);
-
-            if(sCellNumber!=null && !"".equalsIgnoreCase(sCellNumber) && sCellNumber.length()>0)
-            {
-                sCellNumber = sCellNumber.substring(1);
-            }
         }
 
         if(sCellNumber==null || "".equalsIgnoreCase(sCellNumber))
@@ -80,7 +75,7 @@ try
         {
             com.google.i18n.phonenumbers.Phonenumber.PhoneNumber cellPhoneNumber = new Phonenumber.PhoneNumber();
             cellPhoneNumber.setCountryCode(iCountryCode);
-            cellPhoneNumber.setNationalNumber(ParseUtil.sToL(sCellNumber.substring(1)));
+            cellPhoneNumber.setNationalNumber(ParseUtil.sToL(sCellNumber.substring(2)));
             PhoneNumberUtil cellPhoneNumberUtil = PhoneNumberUtil.getInstance();
             if(!cellPhoneNumberUtil.isValidNumber(cellPhoneNumber))
             {
@@ -100,22 +95,17 @@ try
         if(sHomeNumberHumanFormat!=null&& !"".equalsIgnoreCase(sHomeNumberHumanFormat))
         {
             sHomeNumber = Utility.convertHumanToInternationalTelNum(sHomeNumberHumanFormat);
-
-            if(sHomeNumber!=null && !"".equalsIgnoreCase(sHomeNumber) && sHomeNumber.length()>0)
-            {
-                sHomeNumber = sHomeNumber.substring(1);
-            }
         }
 
         if(sHomeNumber!=null && !"".equalsIgnoreCase(sHomeNumber))
         {
             com.google.i18n.phonenumbers.Phonenumber.PhoneNumber homePhoneNumber = new Phonenumber.PhoneNumber();
             homePhoneNumber.setCountryCode(iCountryCode);
-            homePhoneNumber.setNationalNumber(ParseUtil.sToL(sHomeNumber.substring(1)));
+            homePhoneNumber.setNationalNumber(ParseUtil.sToL(sHomeNumber.substring(2)));
             PhoneNumberUtil homePhoneNumberUtil = PhoneNumberUtil.getInstance();
             if(!homePhoneNumberUtil.isValidNumber(homePhoneNumber))
             {
-                Text errorText = new ErrorText("We were unable to recognize the phone number. Please enter a valid phone number.<br>","home_num") ;
+                Text errorText = new ErrorText("We were unable to recognize the home phone number. Please enter a valid home phone number.<br>","home_num") ;
                 arrErrorText.add(errorText);
 
                 responseStatus = RespConstants.Status.ERROR;
@@ -125,6 +115,12 @@ try
             {
                 //sCellNumber = ParseUtil.iToS(iCountryCode)+sCellNumber.substring(1);
             }
+        } else {
+            Text errorText = new ErrorText("We were unable to recognize the home phone number. Please enter a valid home phone number.<br>","cell_num") ;
+            arrErrorText.add(errorText);
+
+            responseStatus = RespConstants.Status.ERROR;
+            isError = true;
         }
 		
 		if(!isAllGuestEdit && isSingleGuestEventEdit)

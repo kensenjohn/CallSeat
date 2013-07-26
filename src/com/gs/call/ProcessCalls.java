@@ -21,7 +21,7 @@ import com.gs.task.Task;
 
 public abstract class ProcessCalls {
 	protected IncomingCallBean incomingCallBean = null;
-	Logger appLogging = LoggerFactory.getLogger("AppLogging");
+	Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 
 	public ProcessCalls(IncomingCallBean incomingCallBean) {
 		this.incomingCallBean = incomingCallBean;
@@ -31,7 +31,7 @@ public abstract class ProcessCalls {
 		Task task = null;
         if(this.incomingCallBean != null )
         {
-            appLogging.info("Incoming Call Type : " +  this.incomingCallBean.getCallType()  );
+            appLogging.info("Identify Task Incoming Call Type : " +  this.incomingCallBean.getCallType()  );
 
             CallTransaction callTransaction = CallTransaction.getInstance();
             if ((Constants.CALL_TYPE.DEMO_FIRST_REQUEST.equals(this.incomingCallBean.getCallType()))
@@ -88,23 +88,18 @@ public abstract class ProcessCalls {
                 telNumMetaData.setEventTaskTelNumber(sEventTelNumber);
 
                 TelNumberManager telNumManager = new TelNumberManager();
-                TelNumberResponse telNumberResponse = telNumManager
-                        .getTelNumberDetails(telNumMetaData);
-
-                if (telNumberResponse != null
-                        && telNumberResponse.getTelNumberBean() != null) {
-                    TelNumberBean telNumberBean = telNumberResponse
-                            .getTelNumberBean();
-
+                TelNumberResponse telNumberResponse = telNumManager.getTelNumberDetails(telNumMetaData);
+                appLogging.info("From Num (guest) : "+ sGuestTelNumber + " To Num (Event Num) : " + sEventTelNumber +" telNumberResponse : " +  telNumberResponse  );
+                if (telNumberResponse != null  && telNumberResponse.getTelNumberBean() != null) {
+                    TelNumberBean telNumberBean = telNumberResponse.getTelNumberBean();
+                    appLogging.info("telNumberBean : " +  telNumberBean  );
                     if (telNumberBean != null && telNumberBean.isTelNumBeanSet()) {
                         String sEventId = telNumberBean.getEventId();
                         String sAdminId = telNumberBean.getAdminId();
                         // String sGuestTelNumber = telNumberBean.
-                        if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(
-                                telNumberBean.getTelNumberType())) {
+                        if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType())) {
                             task = new RsvpTask(sEventId, sAdminId);
-                        } else if (Constants.EVENT_TASK.SEATING.getTask()
-                                .equalsIgnoreCase(telNumberBean.getTelNumberType())) {
+                        } else if (Constants.EVENT_TASK.SEATING.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType())) {
                             task = new SeatingTask(sEventId, sAdminId);
                         }
                     }

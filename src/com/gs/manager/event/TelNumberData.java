@@ -16,9 +16,8 @@ import com.gs.common.Utility;
 import com.gs.common.db.DBDAO;
 
 public class TelNumberData {
-	Logger appLogging = LoggerFactory.getLogger("AppLogging");
-	Configuration applicationConfig = Configuration
-			.getInstance(Constants.APPLICATION_PROP);
+	Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
+	Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
 	private String ADMIN_DB = applicationConfig.get(Constants.ADMIN_DB);
 
@@ -29,12 +28,9 @@ public class TelNumberData {
 					+ " TELNUMBERTYPEID,DESCRIPTION,TELNUMTYPE from GTTELNUMBERS GTT, GTTELNUMBERTYPE GTN WHERE "
 					+ " GTT.FK_TELNUMBERTYPEID = GTN.TELNUMBERTYPEID AND GTT.TELNUMBER = ? ";
 
-			ArrayList<Object> aParams = DBDAO
-					.createConstraint(telNumberMetaData.getEventTaskTelNumber());
-
-			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(
-					ADMIN_DB, sQuery, aParams, false, "TelNumberData.java",
-					"getTelNumber()");
+			ArrayList<Object> aParams = DBDAO.createConstraint(telNumberMetaData.getEventTaskTelNumber());
+            appLogging.debug("sQuery : " + sQuery + " Params : " + aParams);
+			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData( ADMIN_DB, sQuery, aParams, false, "TelNumberData.java", "getTelNumber()");
 
 			if (arrResult != null && !arrResult.isEmpty()) {
 				for (HashMap<String, String> hmResult : arrResult) {
@@ -262,19 +258,9 @@ public class TelNumberData {
 						telNumMetaData.isDelRow() ? "1" : "0",
 						telNumMetaData.isActive() ? "1" : "0",
 						telNumMetaData.isPurchased() ? "1" : "0",
-						(telNumMetaData.getSecretEventIdentifier() != null && !""
-								.equalsIgnoreCase(telNumMetaData
-										.getSecretEventIdentifier())) ? telNumMetaData
-								.getSecretEventIdentifier() : "-",
-						(telNumMetaData.getSecretEventSecretKey() != null && !""
-								.equalsIgnoreCase(telNumMetaData
-										.getSecretEventSecretKey())) ? telNumMetaData
-								.getSecretEventSecretKey() : "-",
-						(telNumMetaData.getHumanTelNumber() != null && !""
-								.equalsIgnoreCase(telNumMetaData
-										.getHumanTelNumber())) ? telNumMetaData
-								.getHumanTelNumber() : telNumMetaData
-								.getDigits());
+						(telNumMetaData.getSecretEventIdentifier() != null && !"".equalsIgnoreCase(telNumMetaData.getSecretEventIdentifier())) ? telNumMetaData.getSecretEventIdentifier() : "-",
+						(telNumMetaData.getSecretEventSecretKey() != null && !"".equalsIgnoreCase(telNumMetaData.getSecretEventSecretKey())) ? telNumMetaData.getSecretEventSecretKey() : "-",
+						(telNumMetaData.getHumanTelNumber() != null && !"".equalsIgnoreCase(telNumMetaData.getHumanTelNumber())) ? telNumMetaData.getHumanTelNumber() : telNumMetaData.getDigits());
 
 		int iNumOfRows = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
 				"TelNumberData.java", "createTelNumber()");

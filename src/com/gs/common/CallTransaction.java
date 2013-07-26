@@ -4,6 +4,8 @@ import com.gs.bean.CallTransactionBean;
 import com.gs.bean.twilio.IncomingCallBean;
 import com.gs.bean.twilio.TwilioIncomingCallBean;
 import com.gs.common.db.DBDAO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 
@@ -19,6 +21,7 @@ public class CallTransaction {
     private String SELECTED_CALL_SERVICE = applicationConfig.get(Constants.PROP_CALL_SERVICE);
     private String ADMIN_DB = applicationConfig.get(Constants.ADMIN_DB);
     private String sourceFile = "CallTransaction.java";
+    Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 
     private static String QUERY_INSERT_TRANSACTION_CALLS = "INSERT INTO GTCALLTRANSACTION ( CALLTRANSACTIONID ,TELCOM_SERVICE_ACC_SID  ," +
             " TELCOM_SERVICE_CALL_SID  ,TELCOM_SERVICE_BILL_DURATION  , TELCOM_SERVICE_ACTUAL_DURATION  , GUEST_TELNUMBER  , " +
@@ -146,7 +149,7 @@ public class CallTransaction {
                     sQueryParameters = sQueryParameters +" WHERE TELCOM_SERVICE_ACC_SID = ? and TELCOM_SERVICE_CALL_SID = ? ";
             aParams.add(twilioIncominCallBean.getAccountid() );
             aParams.add(twilioIncominCallBean.getCallid() );
-
+            appLogging.info("Update TWilio Transaction Query  : " + sQueryParameters + " aParams : " + aParams );
             iNumberOfRows = DBDAO.putRowsQuery(sQueryParameters,aParams,ADMIN_DB,sourceFile,"updateTwilioTransaction()" );
         }
         return iNumberOfRows;

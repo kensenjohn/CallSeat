@@ -109,9 +109,7 @@ public class Utility {
                 PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
                 com.google.i18n.phonenumbers.Phonenumber.PhoneNumber apiPhoneNumber = phoneUtil.parse(sHuman, "US");
                 sInternationalTelNum = phoneUtil.format(apiPhoneNumber, PhoneNumberUtil.PhoneNumberFormat.E164);
-            }
-            catch(Exception e)
-            {
+            }  catch(Exception e) {
                 sInternationalTelNum = "";
             }
 

@@ -45,13 +45,11 @@ public class TelNumberManager {
 	private static Configuration applicationConfig = Configuration
 			.getInstance(Constants.APPLICATION_PROP);
 
-	public TelNumberResponse getTelNumberDetails(
-			TelNumberMetaData telNumberMetaData) {
+	public TelNumberResponse getTelNumberDetails( TelNumberMetaData telNumberMetaData) {
 		TelNumberResponse telNumberResponse = new TelNumberResponse();
 		if (telNumberMetaData != null) {
 			TelNumberData telNumData = new TelNumberData();
-			TelNumberBean telNumberBean = telNumData
-					.getTelNumber(telNumberMetaData);
+			TelNumberBean telNumberBean = telNumData.getTelNumber(telNumberMetaData);
 
 			telNumberResponse.setTelNumberBean(telNumberBean);
 		}
@@ -288,7 +286,7 @@ public class TelNumberManager {
 					params.put("PhoneNumber", sTelephoneNum);
                     params.put("VoiceUrl", sApplicationDomain+"/IncomingCall");
                     params.put("VoiceMethod", "POST");
-                    params.put("VoiceFallbackUrl",  sApplicationDomain+"/IncomingCall");
+                    params.put("VoiceFallbackUrl",  sApplicationDomain+"/IncomingCall?incoming_call_type=call_fail");
                     params.put("VoiceFallbackMethod", "POST");
                     params.put("StatusCallback",  sApplicationDomain+"/IncomingCall?incoming_call_type=end_call");
                     params.put("StatusCallbackMethod", "POST");
@@ -315,8 +313,7 @@ public class TelNumberManager {
 		return telNumberBean;
 	}
 
-	public EventGuestBean getTelNumGuestDetails(
-			TelNumberMetaData telNumberMetaData) {
+	public EventGuestBean getTelNumGuestDetails( TelNumberMetaData telNumberMetaData) {
 		EventGuestBean eventGuestBean = new EventGuestBean();
 		if (telNumberMetaData != null) {
 			GuestData guestData = new GuestData();
@@ -335,6 +332,7 @@ public class TelNumberManager {
                 appLogging.info(" Requesting event guest data : " + eventGuestMetaData );
 				EventGuestManager eventGuestManager = new EventGuestManager();
 				eventGuestBean = eventGuestManager.getGuest(eventGuestMetaData);
+                appLogging.info(" Event Guest Bean : " + eventGuestBean );
 
 			}
 		}
@@ -379,25 +377,18 @@ public class TelNumberManager {
 				TelNumberTypeBean demoTelNumTypeBean = new TelNumberTypeBean();
 				if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(
 						telNumType.getTelNumType())) {
-					telNumMetaData.setDigits(Utility
-							.convertHumanToInternationalTelNum(telNumMetaData
-									.getRsvpTelNumDigit()));
+					telNumMetaData.setDigits(Utility.convertHumanToInternationalTelNum(telNumMetaData.getRsvpTelNumDigit()));
 					demoTelNumTypeBean = getDemoTelNumTypes(Constants.EVENT_TASK.DEMO_RSVP);
 				} else if (Constants.EVENT_TASK.SEATING.getTask()
 						.equalsIgnoreCase(telNumType.getTelNumType())) {
-					telNumMetaData.setDigits(Utility
-							.convertHumanToInternationalTelNum(telNumMetaData
-									.getSeatingTelNumDigit()));
+					telNumMetaData.setDigits(Utility.convertHumanToInternationalTelNum(telNumMetaData.getSeatingTelNumDigit()));
 
 					demoTelNumTypeBean = getDemoTelNumTypes(Constants.EVENT_TASK.DEMO_SEATING);
 				} else {
 					continue;
 				}
-				telNumMetaData.setHumanTelNumber(Utility
-						.convertInternationalToHumanTelNum(telNumMetaData
-								.getDigits()));
-				telNumMetaData.setTelNumberTypeId(telNumType
-						.getTelNumberTypeId());
+				telNumMetaData.setHumanTelNumber(Utility.convertInternationalToHumanTelNum(telNumMetaData.getDigits()));
+				telNumMetaData.setTelNumberTypeId(telNumType.getTelNumberTypeId());
 
 				telNumData.updateTelNumber(telNumMetaData, demoTelNumTypeBean);
 			}
@@ -526,17 +517,15 @@ public class TelNumberManager {
 			telNumberMetaData.setTelNumberTypeId(seatingDemoNumber
 					.getDemoTelNumberTypeId());
 			telNumberMetaData.setSecretEventSecretKey(sSeatingEventSecretKey);
-			telNumberMetaData.setDigits(seatingDemoNumber.getDemoTelNumber());
-			telNumberMetaData.setHumanTelNumber(seatingDemoNumber
-					.getDemoHumanTelNumber());
+            telNumberMetaData.setDigits(Utility.convertHumanToInternationalTelNum(seatingDemoNumber.getDemoTelNumber()));
+			telNumberMetaData.setHumanTelNumber(seatingDemoNumber.getDemoHumanTelNumber());
 			telNumData.createTelNumber(telNumberMetaData);
 
 			telNumberMetaData.setTelNumberTypeId(rsvpDemoNumber
 					.getDemoTelNumberTypeId());
 			telNumberMetaData.setSecretEventSecretKey(sRsvpEventSecretKey);
-			telNumberMetaData.setDigits(rsvpDemoNumber.getDemoTelNumber());
-			telNumberMetaData.setHumanTelNumber(rsvpDemoNumber
-					.getDemoHumanTelNumber());
+            telNumberMetaData.setDigits(Utility.convertHumanToInternationalTelNum(rsvpDemoNumber.getDemoTelNumber()));
+			telNumberMetaData.setHumanTelNumber(rsvpDemoNumber.getDemoHumanTelNumber());
 			telNumData.createTelNumber(telNumberMetaData);
 
 		}

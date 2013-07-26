@@ -3,14 +3,19 @@ package com.gs.task;
 import com.gs.bean.twilio.IncomingCallBean;
 import com.gs.bean.usage.PhoneCallUsageBean;
 import com.gs.call.CallResponse;
+import com.gs.common.Constants;
 import com.gs.common.usage.PhoneCallUsage;
 import com.gs.common.usage.Usage;
 import com.gs.common.usage.UsageMetaData;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public abstract class Task
 {
 	protected String eventId = "";
 	protected String adminId = "";
+
+    protected Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 
 	public Task(String eventId, String adminId)
 	{
@@ -20,11 +25,9 @@ public abstract class Task
 
 	public abstract CallResponse processTask(IncomingCallBean incomingCallBean);
 
-    public boolean isCallUsageLimitReached( CallResponse callResponse )
-    {
-        boolean isUsageLimitReached = true;
-        if(callResponse!=null)
-        {
+    public boolean canCallUsageFeatureContinue( CallResponse callResponse )  {
+        boolean canCallFeatureUsageContinue = true;
+        if(callResponse!=null)  {
             UsageMetaData usageMetaData = new UsageMetaData();
             usageMetaData.setEventId(this.eventId);
             usageMetaData.setAdminId(this.adminId);
@@ -32,16 +35,18 @@ public abstract class Task
             // Phone Call Usage Summary
             Usage phoneCallUsage = new PhoneCallUsage();
             PhoneCallUsageBean phoneCallUsageBean = (PhoneCallUsageBean)phoneCallUsage.getUsage(usageMetaData);
-
+            appLogging.info("phoneCallUsageBean : " + phoneCallUsageBean );
 
             int iNumOfPremiumMinsRemaining = phoneCallUsageBean.getNumOfPremiumMinutesRemaining();
             int iNumOfDemoMinsRemaining = phoneCallUsageBean.getNumOfDemoMinutesRemaining();
 
-            if( (iNumOfPremiumMinsRemaining+iNumOfDemoMinsRemaining) <= 0 )
-            {
-                isUsageLimitReached = false;
+            appLogging.info("iNumOfPremiumMinsRemaining : " + iNumOfPremiumMinsRemaining + "  iNumOfDemoMinsRemaining : " + iNumOfDemoMinsRemaining + " = " + (iNumOfPremiumMinsRemaining+iNumOfDemoMinsRemaining) );
+            if( (iNumOfPremiumMinsRemaining+iNumOfDemoMinsRemaining) <= 0 ) {
+
+                canCallFeatureUsageContinue = false;
             }
+            appLogging.info(" canCallFeatureUsageContinue = " + canCallFeatureUsageContinue );
         }
-        return isUsageLimitReached;
+        return canCallFeatureUsageContinue;
     }
 }

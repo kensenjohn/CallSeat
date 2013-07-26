@@ -69,7 +69,7 @@ public class GuestData {
 
 			ArrayList<HashMap<String, String>> arrHmGuests = DBDAO.getDBData(
 					ADMIN_DB, sQuery, aParams, false, "GuestData.java",
-					"getGuestByAdmin()");
+					"getGuest()");
 
 			if (arrHmGuests != null && !arrHmGuests.isEmpty()) {
 				for (HashMap<String, String> hmGuests : arrHmGuests) {
@@ -443,9 +443,7 @@ public class GuestData {
 					+ sGuestParam
 					+ ") AND GEG.FK_EVENTID = ? AND GG.GUESTID = GEG.FK_GUESTID AND GG.FK_USERINFOID = GU.USERINFOID ";
             appLogging.debug(sQuery  + "  : " + arrParams );
-			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(
-					ADMIN_DB, sQuery, arrParams, false, "GuestData.java",
-					"getGuest()");
+			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData( ADMIN_DB, sQuery, arrParams, false, "GuestData.java", "getGuest()");
 
 			if (arrResult != null && !arrResult.isEmpty()) {
 				for (HashMap<String, String> hmResult : arrResult) {

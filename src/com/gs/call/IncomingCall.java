@@ -58,6 +58,7 @@ public class IncomingCall extends HttpServlet
         {
 
             String sCallType = request.getParameter("incoming_call_type");
+            appLogging.info("Incoming Call Type " + sCallType);
 
             IncomingCallManager incominManager = new IncomingCallManager();
 
@@ -84,20 +85,16 @@ public class IncomingCall extends HttpServlet
             else if ("end_call".equalsIgnoreCase(sCallType)) {
                 CallTransactionBean callTransactionBean = new CallTransactionBean();
                 callTransaction.updateTransaction(incomingCallBean,callTransactionBean );
-            }
-            else
-            {
-                if (incomingCallBean != null && incomingCallBean.getTo() != null
-                        && !"".equalsIgnoreCase(incomingCallBean.getTo()))
-                {
+            } else if ("call_fail".equalsIgnoreCase(sCallType)) {
+                appLogging.info("Call Failed : " + incomingCallBean);
+            }  else {
+                if (incomingCallBean != null && incomingCallBean.getTo() != null && !"".equalsIgnoreCase(incomingCallBean.getTo()))  {
                     incomingCallBean.setCallType(Constants.CALL_TYPE.FIRST_REQUEST);
                     callTransaction.createTransaction(incomingCallBean);
                     callResponse = incominManager.processCall(incomingCallBean);
                 }
             }
-        }
-        catch(Exception e)
-        {
+        }  catch(Exception e)  {
             appLogging.error("Exception while Incoming Call Request\n" + e.getMessage() + "\n" + ExceptionHandler.getStackTrace(e));
         }
 		return callResponse;

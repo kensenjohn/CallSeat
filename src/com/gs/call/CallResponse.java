@@ -40,8 +40,7 @@ public class CallResponse
 	{
 		this.eventGuestBean = eventGuestBean;
 
-        if(this.eventGuestBean!=null)
-        {
+        if(this.eventGuestBean!=null) {
             this.isEventGuestBeanExists = true;
         }
 	}
@@ -75,8 +74,7 @@ public class CallResponse
 	{
 		this.eventBean = eventBean;
 
-        if(this.eventBean!=null)
-        {
+        if(this.eventBean!=null)  {
             this.isEventBeanExists = true;
         }
 	}

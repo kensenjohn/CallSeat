@@ -35,12 +35,9 @@ public class SeatingTask extends Task
 			if (Constants.CALL_TYPE.FIRST_REQUEST.equals(incomingCallBean.getCallType()))
 			{
 				callResponse = processFirstResponseTask(incomingCallBean);
-                if( !isCallUsageLimitReached( callResponse ) )
-                {
+                if( canCallUsageFeatureContinue( callResponse ) ) {
                     callResponse = seatingTwiml.getFirstResponse(callResponse);
-                }
-                else
-                {
+                } else {
                     callResponse = TwimlSupport.rejectCall( callResponse );
                 }
 			}

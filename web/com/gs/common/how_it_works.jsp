@@ -26,7 +26,7 @@
     </div>
     <div class="fnbx_scratch_area">
         <div class="row">
-            <div class="offset1 span5">
+            <div class="offset1 span12">
                 <div class="row">
                     <div class="span5">
                         &nbsp;
@@ -39,9 +39,10 @@
                 </div>
                 <div class="row">
                     <div class="offset1 span6">
-                        <h3>Step 1: Setup the seating plan</h3>
-                        Create a seating plan. Determine the number of seats that you require for the event and create them.
-                        Invite guests to the wedding.
+                        <h3>Step 1: Create a seating plan</h3>
+                    </div>
+                    <div class="offset2 span9">
+                        Select a name and date for the seating plan. Create new guests with their phone numbers and email.
                     </div>
                 </div>
                 <div class="row">
@@ -51,9 +52,11 @@
                 </div>
                 <div class="row">
                     <div class="offset1 span6">
-                        <h3>Step 2: Personalize phone numbers.</h3>
-                        Purchase personalized phone numbers. One number will be used for RSVP. The second number will be used to get seating information on day of the wedding.
-                        Send the numbers to your guests.
+                        <h3>Step 2: Personalize phone numbers</h3>
+                    </div>
+                    <div class="offset2 span9">
+                        Purchase personalized phone number package for guests to RSVP and get seating information.
+                        Send these numbers along with the guest's invitation.
                     </div>
                 </div>
                 <div class="row">
@@ -62,9 +65,13 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="offset1 span6">
+                    <div class="offset1 span9">
                         <h3>Step 3: RSVP and seating information by phone.</h3>
-                        Guests will RSVP by calling personalized number. Assign seats for your guests at their tables. On the day of the event, the guest can call the second number to get their seating information.
+                    </div>
+                    <div class="offset2 span9">
+                        Guests can RSVP or change their previous RSVP by calling the personalized number. <br>
+                        Assign seating for the guests after they RSVP.<br>
+                        Guests can also call to get their seating assignment information.
                     </div>
                 </div>
                 <div class="row">
