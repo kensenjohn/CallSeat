@@ -212,7 +212,7 @@
 			</div>
 		</div>
 		<div class = "row" style="margin-left:-18px;">
-			<div class = "tab_view_span12 white_bkg light_border"  >
+			<div class = "span12 white_bkg light_border"  >
 					<div class="row">
 						<div class = "offset1 span11">
 							<jsp:include page="../common/action_nav.jsp">

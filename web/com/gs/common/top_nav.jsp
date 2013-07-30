@@ -32,19 +32,8 @@ if(reqSession!=null)
 	    	<!-- <div class="logo span2"><a href="/">Guests</a></div> -->
 	    	<div class="span2"><div class="logo">&nbsp;</div></div>
 	    	<div class="span2 nav_link"><a id="how_it_works" class="bold_text"  href="/web/com/gs/common/how_it_works.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>&referrer_source=<%=sRefererSource%>">How It Works</a></div>
-	    	<div class="offset1 span7">
-	    		<div class="row">
-	    			<div class="offset1 span3 nav_link" style="text-align:right;">
-<%
-        if("host_landing.jsp".equalsIgnoreCase(sRefererSource))
-        {
-
-%>
-
- <%
-        }
- %>
-                    </div>
+	    	<div class="offset1 span5" style="float:right;">
+	    		<div class="row" style="float:right;">
                     <div class="span1 nav_link" style="text-align:right;" >
  <%
 		if(isTmpSignedIn)

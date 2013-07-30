@@ -27,7 +27,7 @@ if(cookies!=null)
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 
 <jsp:include page="common/header_bottom.jsp"/>
 <link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
-<body >
+<body style="min-width: 960px; margin: 0 auto;" >
 		<jsp:include page="common/top_nav.jsp">
 			<jsp:param name="referrer_source" value="host_landing.jsp"/>	
 		</jsp:include>
@@ -39,7 +39,7 @@ if(cookies!=null)
                     </div>
                 </div>
                 <div class="row">
-                    <div class="offset2 span9">
+                    <div class="offset1 span11">
                         <div class="slide-caption">
                             <h1 style="color:#f5f5f5">Seat your guests with a phone call or text</h1>
                             <h3 style="color:#f5f5f5">Personalized phone numbers for seating information and RSVP </h3>

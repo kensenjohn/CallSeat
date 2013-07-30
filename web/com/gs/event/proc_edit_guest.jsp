@@ -39,18 +39,15 @@ try
 	boolean isSingleGuestEventEdit =  ParseUtil.sTob(request.getParameter("is_single_guest_event_edit"));
     Integer iCountryCode = 1; // 1 -> USA & Canada
 	boolean isError = false;
-	if(sGuestId!=null && !"".equalsIgnoreCase(sGuestId) && sGuestUserInfoId!=null && !"".equalsIgnoreCase(sGuestUserInfoId) )
-	{
-		if(sFirstName==null || "".equalsIgnoreCase(sFirstName))
-		{
+	if(sGuestId!=null && !"".equalsIgnoreCase(sGuestId) && sGuestUserInfoId!=null && !"".equalsIgnoreCase(sGuestUserInfoId) ) {
+		if(sFirstName==null || "".equalsIgnoreCase(sFirstName)) {
 			Text errorText = new ErrorText("First Name is required","first_name") ;		
 			arrErrorText.add(errorText);
 			
 			responseStatus = RespConstants.Status.ERROR;
 			isError = true;
 		}
-		if(sLastName==null || "".equalsIgnoreCase(sLastName))
-		{
+		if(sLastName==null || "".equalsIgnoreCase(sLastName)) {
 			Text errorText = new ErrorText("Last Name is required","last_name") ;		
 			arrErrorText.add(errorText);
 			
@@ -58,76 +55,58 @@ try
 			isError = true;
 		}
         String sCellNumber = "";
-        if(sCellNumberHumanFormat!=null&& !"".equalsIgnoreCase(sCellNumberHumanFormat))
-        {
+        if(sCellNumberHumanFormat!=null&& !"".equalsIgnoreCase(sCellNumberHumanFormat)) {
             sCellNumber = Utility.convertHumanToInternationalTelNum(sCellNumberHumanFormat);
         }
 
-        if(sCellNumber==null || "".equalsIgnoreCase(sCellNumber))
-        {
-            Text errorText = new ErrorText("We were unable to recognize the cellphone number. Please enter a valid cellphone number.<br>","cell_num") ;
+        if(sCellNumber==null || "".equalsIgnoreCase(sCellNumber))  {
+            Text errorText = new ErrorText("Please enter a valid cellphone number.<br>","cell_num") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;
             isError = true;
-        }
-        else
-        {
+        }   else  {
             com.google.i18n.phonenumbers.Phonenumber.PhoneNumber cellPhoneNumber = new Phonenumber.PhoneNumber();
             cellPhoneNumber.setCountryCode(iCountryCode);
             cellPhoneNumber.setNationalNumber(ParseUtil.sToL(sCellNumber.substring(2)));
             PhoneNumberUtil cellPhoneNumberUtil = PhoneNumberUtil.getInstance();
-            if(!cellPhoneNumberUtil.isValidNumber(cellPhoneNumber))
-            {
-                Text errorText = new ErrorText("We were unable to recognize the cellphone number. Please enter a valid cellphone number.<br>","cell_num") ;
+            if(!cellPhoneNumberUtil.isValidNumber(cellPhoneNumber))  {
+                Text errorText = new ErrorText("Please enter a valid cellphone number.<br>","cell_num") ;
                 arrErrorText.add(errorText);
 
                 responseStatus = RespConstants.Status.ERROR;
                 isError = true;
-            }
-            else
-            {
-                //sCellNumber = ParseUtil.iToS(iCountryCode)+sCellNumber.substring(1);
             }
         }
 
         String sHomeNumber = "";
-        if(sHomeNumberHumanFormat!=null&& !"".equalsIgnoreCase(sHomeNumberHumanFormat))
-        {
+        if(sHomeNumberHumanFormat!=null&& !"".equalsIgnoreCase(sHomeNumberHumanFormat)) {
             sHomeNumber = Utility.convertHumanToInternationalTelNum(sHomeNumberHumanFormat);
         }
 
-        if(sHomeNumber!=null && !"".equalsIgnoreCase(sHomeNumber))
-        {
+        if(sHomeNumber!=null && !"".equalsIgnoreCase(sHomeNumber)) {
             com.google.i18n.phonenumbers.Phonenumber.PhoneNumber homePhoneNumber = new Phonenumber.PhoneNumber();
             homePhoneNumber.setCountryCode(iCountryCode);
             homePhoneNumber.setNationalNumber(ParseUtil.sToL(sHomeNumber.substring(2)));
             PhoneNumberUtil homePhoneNumberUtil = PhoneNumberUtil.getInstance();
-            if(!homePhoneNumberUtil.isValidNumber(homePhoneNumber))
-            {
-                Text errorText = new ErrorText("We were unable to recognize the home phone number. Please enter a valid home phone number.<br>","home_num") ;
+            if(!homePhoneNumberUtil.isValidNumber(homePhoneNumber))  {
+                Text errorText = new ErrorText("Please enter a valid home phone number.<br>","home_num") ;
                 arrErrorText.add(errorText);
 
                 responseStatus = RespConstants.Status.ERROR;
                 isError = true;
             }
-            else
-            {
-                //sCellNumber = ParseUtil.iToS(iCountryCode)+sCellNumber.substring(1);
-            }
         } else {
-            Text errorText = new ErrorText("We were unable to recognize the home phone number. Please enter a valid home phone number.<br>","cell_num") ;
+            Text errorText = new ErrorText("Please enter a valid home phone number.<br>","cell_num") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;
             isError = true;
         }
 		
-		if(!isAllGuestEdit && isSingleGuestEventEdit)
-		{
+		if(!isAllGuestEdit && isSingleGuestEventEdit) {
 			int iNumInvited =  ParseUtil.sToI(sInvitedNumOfSeats);
-			if(sInvitedNumOfSeats==null || "".equalsIgnoreCase(sInvitedNumOfSeats) || iNumInvited<=0)
-			{
+			if(sInvitedNumOfSeats==null || "".equalsIgnoreCase(sInvitedNumOfSeats) || iNumInvited<=0) {
 				appLogging.warn("Invited number of guests was invalid : " + sInvitedNumOfSeats );
 				
 				Text errorText = new ErrorText("Number of invited seats must be greater than 0.","invited_num_of_seats") ;		
@@ -137,11 +116,8 @@ try
 				isError = true;
 			}
 			
-			
-			
 			int iNumRsvp =  ParseUtil.sToI(sRsvpNumOfSeats);
-			if(sRsvpNumOfSeats==null || "".equalsIgnoreCase(sRsvpNumOfSeats) || iNumRsvp<0)
-			{
+			if(sRsvpNumOfSeats==null || "".equalsIgnoreCase(sRsvpNumOfSeats) || iNumRsvp<0) {
 				appLogging.warn("RSVP number of guests was invalid : " + sRsvpNumOfSeats );
 				
 				Text errorText = new ErrorText("Please use a valid RSVP number. Enter 0 if guest did not RSVP.","rsvp_num_of_seats") ;		
@@ -151,8 +127,7 @@ try
 				isError = true;
 			}
 			
-			if(!isError && iNumRsvp > iNumInvited)
-			{
+			if(!isError && iNumRsvp > iNumInvited) {
 				appLogging.warn("RSVP number larger than the invited number : rsvp :" + sRsvpNumOfSeats + " invited : " + iNumInvited );
 				
 				Text errorText = new ErrorText("Guest's RSVP number should be less than invited seats","rsvp_num_of_seats") ;		
@@ -165,8 +140,7 @@ try
 		
 
 		
-		if(!isError)
-		{
+		if(!isError) {
 			UserInfoBean userInfoBean = new UserInfoBean();
 			userInfoBean.setUserInfoId(sGuestUserInfoId);
 			userInfoBean.setFirstName(sFirstName);
@@ -179,8 +153,7 @@ try
 			
 			Integer iNumOfRecs = userInforManager.updateGuestUserInfo(userInfoBean);
 			
-			if(!isAllGuestEdit && isSingleGuestEventEdit)
-			{
+			if(!isAllGuestEdit && isSingleGuestEventEdit) {
 				EventGuestBean eventGuestBean = new EventGuestBean();
 				eventGuestBean.setEventId(sEventId);
 				
@@ -203,10 +176,6 @@ try
 			responseStatus = RespConstants.Status.OK;
 		}
 	}
-	else
-	{
-		
-	}
 	responseObject.setErrorMessages(arrErrorText);
 	responseObject.setOkMessages(arrOkText);
 	responseObject.setResponseStatus(responseStatus);
@@ -214,9 +183,7 @@ try
 	
 	out.println(responseObject.getJson());
 	
-}
-catch(Exception e)
-{
+} catch(Exception e) {
 	Text errorText = new ErrorText("Your request to edit the guest's information was not processed. Please try again later.","err_mssg") ;		
 	arrErrorText.add(errorText);
 	

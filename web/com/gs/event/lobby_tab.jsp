@@ -22,19 +22,19 @@
 		</div>
 		
 		<div class="row" >
-			<span class="tab_view_span6" >
+			<span class="span4" >
 				<span id="primary_header" style="margin-left:18px;font-size:210%; color:#324B38;font-weight: bold;"><%=sHeaderTxt%></span> &nbsp;&nbsp;&nbsp;&nbsp;
 				<span id="secondary_header" style="font-size:110%; color:#324B38;"><%=sSecHeaderTxt%></span>
 			</span>
-			<span class="span2" style="margin-left:45px;" >
-				<input type="button" class="btn ispn2 btn-green btn-large" style="margin-top: 0px;margin-bottom: 0px;" id="lnk_new_event_id" name="lnk_new_event_id" value="New Seating Plan"/>
+			<span class="span3" style="margin-left:45px;" >
+				<input type="button" class="btn ispn3 btn-green btn-large" style="margin-top: 0px;margin-bottom: 0px;" id="lnk_new_event_id" name="lnk_new_event_id" value="New Seating Plan"/>
 			</span>
 			<div class="span4" style="background-image: none; background-color: RGBA(39,61,10,1.0); padding-bottom:6px; height: 30px;" id="mini_nav_bar">
 				<div class="row" >
-					<span class="tab_view_span2" style="text-align:right" >
+					<span class="span2" style="text-align:center;" >
 						<input type="button" class="tran_btn ispn2" style="margin-top: 2px;" id="lnk_guest_id" name="lnk_guest_id" value="All Guests"/>
 					</span>
-					<span class="span2"  style="text-align:right" >
+					<span class="span1"  style="text-align:center;" >
 						<input type="button" class="tran_btn ispn2"  style="margin-top: 2px;" id="lnk_dashboard_id" name="lnk_dashboard_id" value="Seating Plans"/>
 					</span>
 				</div>

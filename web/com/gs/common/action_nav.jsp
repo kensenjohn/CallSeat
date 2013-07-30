@@ -17,10 +17,10 @@ String sRefererSource = ParseUtil.checkNull(request.getParameter("referrer_sourc
 		<div class="row" id="table_action_nav"  style="display:none;">
 			<div class="span10">
 				<div class="row">
-					<div class="span6">
+					<div class="span7">
 						&nbsp;
 					</div>
-					<div class="span3">
+					<div class="span2">
 						<input type="button" id="add_table" name="add_table" href="../event/add_table.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="btn" value="Add Table">
 					</div>
 				</div>
@@ -30,14 +30,14 @@ String sRefererSource = ParseUtil.checkNull(request.getParameter("referrer_sourc
 		<div class="row" id="invite_guest_action_nav" style="display:none;">
 			<div class="span11">
 				<div class="row">
-					<div class="span6">
+					<div class="span5">
 						&nbsp;
 					</div>
 					<div class="span2" style="text-align:right;">
 						<input type="button" id="add_guest" name="add_guest" href="../event/add_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="btn ispn2" value="Create New Guest">
 					</div>
 					<div class="span2" style="text-align:right;">
-						<input type="button" id="invite_guest" name="invite_guest" href="../event/invite_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="btn ispn2" value="Invite Guest from List">
+						<input type="button" id="invite_guest" name="invite_guest" href="../event/invite_guest.jsp?admin_id=<%=sAdminId %>&event_id=<%=sEventId%>" class="btn ispn3" value="Invite Guest from List">
 					</div>
 				</div>
 			</div>
