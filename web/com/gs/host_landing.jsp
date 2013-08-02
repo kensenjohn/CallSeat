@@ -40,33 +40,33 @@ if(cookies!=null)
                 </div>
                 <div class="row">
                     <div class="offset1 span11">
-                        <div class="slide-caption">
+                        <div class="slide-caption" style="text-align:center;">
                             <h1 style="color:#f5f5f5">Seat your guests with a phone call or text</h1>
-                            <h3 style="color:#f5f5f5">Personalized phone numbers for seating information and RSVP </h3>
                             <form id="frm_event_dt" name="frm_event_dt">
-                                <input type="text" id="tmp_email" class="ispn3 inp-large" placeholder="Email" name="tmp_email">
-                                <input type="text" id="event_date" class="ispn3 inp-large" placeholder="Select date of wedding" name="event_date" readonly>
+                                <input type="text" id="tmp_email" class="ispn3 inp-large" style="vertical-align: bottom;" placeholder="Email" name="tmp_email">
+                                <input type="text" id="event_date" class="ispn3 inp-large" style="vertical-align: bottom;"  placeholder="Select date of wedding" name="event_date" readonly>
+
+                                <input type="button" class="btn btn-large btn-blue" style="margin-bottom: 7px;" id="event_dt_sbt" value="Create Free Seating Plan"/>
                             </form>
                             <div class="row">
-                                <div class="span3">
-                                    <input type="button" class="btn btn-large btn-blue" id="event_dt_sbt" value="Create New Seating Plan"/>
+                                <div class="span9"> &nbsp;</div>
+                            </div>
+                            <div class="row">
+                                <div class="span9">
+                                    <h3 style="color:#f5f5f5">Personalized phone numbers for guests to RSVP and get seated.&nbsp;<a href="/web/com/gs/common/how_it_works.jsp?admin_id=<%=sTmpUserId %>&referrer_source=host_landing_slide" id="lnk_how_it_works" class="btn" >How it works</a></h3>
                                 </div>
-                                <div class="span3">
-                                    <input type="button" class="btn btn-large btn-blue" id="show_me_lobby" style="<%=!isSignedIn?"display:none;":""%>" value="Show me my Seating Plans"/>
+                            </div>
+                            <div class="row">
+                                <div class="span9"> &nbsp;</div>
+                            </div>
+                            <div class="row">
+                                <div class="span9">
+                                    <input type="button" class="btn btn-large" id="show_me_lobby" style="<%=!isSignedIn?"display:none;":""%>" value="Show me my seating plans"/>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-               <!-- <div class="row">
-
-                    <div class="offset3 span9">
-                        <form id="frm_event_dt" name="frm_event_dt">
-                            <input type="text" id="tmp_email" class="ispn3 inp-large" placeholder="Email" name="tmp_email">
-                            <input type="text" id="event_date" class="ispn3 inp-large" placeholder="Select date of wedding" name="event_date" readonly>
-                        </form>
-                    </div>
-                </div> -->
                 <div class="row">
                     <div class="offset3 span9">
                         <!-- <input type="button" class="btn btn-large btn-blue" id="event_dt_sbt" value="Create New Seating Plan"/>  -->
@@ -89,37 +89,30 @@ if(cookies!=null)
                         &nbsp;
                     </div>
                 </div>
-                <div class="row">
-                    <div class="offset3 span3">
-                        <div id="div_goto_lobby" style="<%=!isSignedIn?"display:none;":""%>">
-                            <!--<input type="button" class="btn btn-large btn-blue" id="show_me_lobby" value="Show me my Seating Plans"/>-->
-                        </div>
-                    </div>
-                </div>
 		    </div>
 	    </div>
         <section class="step_instructions" style="display: block; opacity: 1; -webkit-transition: all 0s cubic-bezier(0.25, 0.1, 0.25, 1); min-height: 144px; padding-top:10px;">
             <div class="blank_scratch_area">
 
                 <div class="row" style="margin: auto;text-align:center;">
-                    <h1 style="color:#37291C">Private and exclusive phone numbers. Never shared. No hold music.</h1>
+                    <h1 style="color:#37291C">Personalized, private phone numbers. No hold music.  &nbsp;&nbsp;<a href="/web/com/gs/common/how_it_works.jsp?admin_id=<%=sTmpUserId %>&referrer_source=host_landing_steps" id="btn_how_it_works" class="btn btn-blue btn-large" >How it works</a></h1>
                 </div>
                 <div class="row" style="margin: auto;text-align:center;">
                     &nbsp;
                 </div>
                 <div class="row" style="margin: auto;">
                     <div class="offset1 span3 step_box" style="text-align: center;  border-radius: 15px; min-height: 134px; ">
-                        <h1 style="padding-top:25px;">Step 1</h1>
+                        <h1 style="padding-top:15px;">Step 1</h1>
                         <h4  style="padding:5px;">Create a Seating Plan</h4>
                         <span class="fld_txt_small">Add guests and tables.</span>
                     </div>
                     <div class="span3 step_box" style="text-align: center;  border-radius: 15px; min-height: 134px; ">
-                        <h1 style="padding-top:25px;">Step 2</h1>
-                        <h4 style="padding:5px;">Personalize telephone numbers</h4>
-                        <span class="fld_txt_small">Get direct phone numbers with no extensions.</span>
+                        <h1 style="padding-top:15px;">Step 2</h1>
+                        <h4 style="padding:5px;">Purchase telephone numbers</h4>
+                        <span class="fld_txt_small">Click to purchase personalized phone numbers.</span>
                     </div>
                     <div class="span3 step_box" style="text-align: center; border-radius: 15px; min-height: 134px; ">
-                        <h1 style="padding-top:25px;">Step 3</h1>
+                        <h1 style="padding-top:15px;">Step 3</h1>
                         <h4 style="padding:5px;">RSVP and seating by phone</h4>
                         <span class="fld_txt_small">Guests call to RSVP and get seating details.</span>
                     </div>
@@ -163,6 +156,30 @@ if(cookies!=null)
             if ( event.which == 13 ) {
                 callSubmitEvent();
             }
+        });
+
+
+        $("#lnk_how_it_works").fancybox({
+            'width'				: '75%',
+            'height'			: '90%',
+            'autoScale'			: false,
+            'transitionIn'		: 'none',
+            'transitionOut'		: 'none',
+            'type'				: 'iframe',
+            'padding'			: 0,
+            'margin'			: 0
+        });
+
+
+        $("#btn_how_it_works").fancybox({
+            'width'				: '75%',
+            'height'			: '90%',
+            'autoScale'			: false,
+            'transitionIn'		: 'none',
+            'transitionOut'		: 'none',
+            'type'				: 'iframe',
+            'padding'			: 0,
+            'margin'			: 0
         });
 
 	});

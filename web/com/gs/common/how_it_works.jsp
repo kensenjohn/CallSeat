@@ -26,7 +26,7 @@
     </div>
     <div class="fnbx_scratch_area">
         <div class="row">
-            <div class="offset1 span12">
+            <div class="offset1 span9">
                 <div class="row">
                     <div class="span5">
                         &nbsp;
@@ -41,42 +41,32 @@
                     <div class="offset1 span6">
                         <h3>Step 1: Create a seating plan</h3>
                     </div>
-                    <div class="offset2 span9">
-                        Select a name and date for the seating plan. Create new guests with their phone numbers and email.
+                    <div class="offset2 span7">
+                        <p>Select a name and date for the seating plan. Create new guests  with the number of seats they are invited to.</p>
+                        <p>Free phone numbers with extensions are provided for a short run through.</p>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="span5">
-                        &nbsp;
+                    <div class="offset1 span7">
+                        <h3>Step 2: Purchase telephone numbers with no extensions</h3>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="offset1 span6">
-                        <h3>Step 2: Personalize phone numbers</h3>
-                    </div>
-                    <div class="offset2 span9">
-                        Purchase personalized phone number package for guests to RSVP and get seating information.
-                        Send these numbers along with the guest's invitation.
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="span5">
-                        &nbsp;
+                    <div class="offset2 span7">
+                        <p>Purchase personalized phone numbers along with an usage plan.
+                        The usage plan will specify a cap for the telephone call minutes and text message usage.</p>
+                        <p>If a cap is reached, then either the plan can be setup to switch to next usage slab or
+                        to stop responding to any more calls.  </p>
+
                     </div>
                 </div>
                 <div class="row">
                     <div class="offset1 span9">
                         <h3>Step 3: RSVP and seating information by phone.</h3>
                     </div>
-                    <div class="offset2 span9">
-                        Guests can RSVP or change their previous RSVP by calling the personalized number. <br>
-                        Assign seating for the guests after they RSVP.<br>
-                        Guests can also call to get their seating assignment information.
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="span5">
-                        &nbsp;
+                    <div class="offset2 span7">
+                        <p> Guests will RSVP or change their previous RSVP by calling the personalized number.
+                        Assign seating for the guests after they RSVP.</p>
+                        <p> If a guest calls after their seating has been assigned,
+                        then they will get the table numbers they have been seated at. </p>
                     </div>
                 </div>
                 <div class="row">
