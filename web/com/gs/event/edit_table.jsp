@@ -116,9 +116,6 @@
 					
 					if(varIsPayloadExist == true)
 					{
-						//var jsonResponseObj = varResponseObj.payload;
-						//processTableGuest( jsonResponseObj );
-						
 						parent.loadTables();
 						parent.$.fancybox.close();
 					}

@@ -17,8 +17,14 @@
 	String sAdminId = ParseUtil.checkNull(request.getParameter("host_lobby_admin_id"));
 	
 	String sGateAdminId = sAdminId;
+
 %>
 <%@include file="../common/gatekeeper.jsp"%>
+<%
+    if(sAdminId==null || "".equalsIgnoreCase(sAdminId)){
+        response.sendRedirect("/web/com/gs/host_landing.jsp");
+    }
+%>
 
 <link rel="stylesheet" type="text/css" href="/web/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 
@@ -49,7 +55,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div  class="offset2 span10" id="div_dashboard_details">
+					<div  class="span12" id="div_dashboard_details">
 						
 					</div>
 				</div>

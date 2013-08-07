@@ -26,7 +26,7 @@ if(reqSession!=null)
 
 
 %>
-<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" id="nav_bar" >
+<div class="navbar navbar_format site_theme_color" id="nav_bar" >
 	<div class="blank_scratch_area" style="padding:5px;">
 	    <div class="row">
 	    	<!-- <div class="logo span2"><a href="/">Guests</a></div> -->

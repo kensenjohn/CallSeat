@@ -10,6 +10,9 @@
 
 	String sSelectedTab = ParseUtil.checkNull(request.getParameter("select_tab"));
 	String sHeaderTxt = ParseUtil.checkNull(request.getParameter("lobby_header"));
+    if(sHeaderTxt!=null && sHeaderTxt.length()>13) {
+        sHeaderTxt = sHeaderTxt.substring(0,13);
+    }
 	String sSecHeaderTxt = ParseUtil.checkNull(request.getParameter("lobby_sec_header"));
 	
 	int iSpanNum = 5;
@@ -21,24 +24,21 @@
 			</div>
 		</div>
 		
-		<div class="row" >
+		<div class="row" id="lobby_link" >
 			<span class="span4" >
-				<span id="primary_header" style="margin-left:18px;font-size:210%; color:#324B38;font-weight: bold;"><%=sHeaderTxt%></span> &nbsp;&nbsp;&nbsp;&nbsp;
-				<span id="secondary_header" style="font-size:110%; color:#324B38;"><%=sSecHeaderTxt%></span>
+				<span id="primary_header" class="h_big" style="margin-left:18px;"><%=sHeaderTxt%></span>
+                &nbsp;&nbsp;<span id="secondary_header" style="font-size:110%; color:#324B38;"><%=sSecHeaderTxt%></span>
+
 			</span>
 			<span class="span3" style="margin-left:45px;" >
 				<input type="button" class="btn ispn3 btn-green btn-large" style="margin-top: 0px;margin-bottom: 0px;" id="lnk_new_event_id" name="lnk_new_event_id" value="New Seating Plan"/>
 			</span>
-			<div class="span4" style="background-image: none; background-color: RGBA(39,61,10,1.0); padding-bottom:6px; height: 30px;" id="mini_nav_bar">
-				<div class="row" >
-					<span class="span2" style="text-align:center;" >
-						<input type="button" class="tran_btn ispn2" style="margin-top: 2px;" id="lnk_guest_id" name="lnk_guest_id" value="All Guests"/>
-					</span>
-					<span class="span1"  style="text-align:center;" >
-						<input type="button" class="tran_btn ispn2"  style="margin-top: 2px;" id="lnk_dashboard_id" name="lnk_dashboard_id" value="Seating Plans"/>
-					</span>
-				</div>
-			</div>
+            <span class="span2" style="text-align:center;margin-top:10px" >
+                <a id="lnk_guest_id" name="lnk_guest_id" style="font-size:130%;text-decoration: none;" class="bold_text" href="#" >My Guests</a>
+			</span>
+			<span class="span2"  style="text-align:center;margin-top:10px" >
+                <a id="lnk_dashboard_id" name="lnk_dashboard_id"  style="font-size:130%;text-decoration: none;"  class="bold_text" href="#" >My Seating Plans</a>
+			</span>
 		</div>
 <form id="frm_lobby_tab" method="POST" action="">
 	<input type="hidden" id="lobby_event_id"  name="lobby_event_id" value=""/>

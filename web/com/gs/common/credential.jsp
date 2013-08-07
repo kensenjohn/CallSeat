@@ -19,11 +19,7 @@
 		
 		jspLogging.info("Add Table for event : " + sEventId + " by : " + sAdminId);
 %>
-		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
-			<div style="padding:5px;">
-				<div class="logo span4"><a href="#">Guests</a></div>
-			</div>
-		</div>
+        <jsp:include page="/web/com/gs/common/top_nav_fancybox.jsp"/>
 		<div class="fnbx_scratch_area">
 			<div style="padding:20px">
 				<div id="div_login" name="div_login" class="row" style="display:<%="login".equalsIgnoreCase(sAction)?"block":"none"%>;">

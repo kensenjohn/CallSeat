@@ -21,7 +21,7 @@
 		},
 		table_create : {
 			create_table : function() {
-				return '<table cellspacing="1"  class="table table-striped span9" id="dashboard_event_details"> '+this.create_header()+''+this.create_rows()+'</table>';
+				return '<table cellspacing="1"  class="table table-striped" id="dashboard_event_details"> '+this.create_header()+''+this.create_rows()+'</table>';
 			},
 			create_header : function () {
 				var valHeader = '<thead><tr> ' + 

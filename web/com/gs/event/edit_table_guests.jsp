@@ -17,12 +17,8 @@
 		String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 		String sTableId = ParseUtil.checkNull(request.getParameter("table_id"));
 %>
-		
-		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
-			<div  style="padding-top:5px;">
-				<div class="logo span4"><a href="#">CallSeat</a></div>
-			</div>
-		</div>
+
+        <jsp:include page="/web/com/gs/common/top_nav_fancybox.jsp"/>
 		<div  class="fnbx_scratch_area">
 			<div class="row" >
 				<div class="offset1 span6">
@@ -76,7 +72,7 @@
 								<div class="span2"  style="padding-top:8px">
 									<span class="fld_name">RSVP : </span><span class="fld_txt" id="ind_rsvp"></span>
 								</div>
-								<div class="span3"  style="padding-top:8px">
+								<div class="span2"  style="padding-top:8px">
 									<span class="fld_name">Unassigned : </span> <span class="fld_txt" id="ind_unassigned"></span>
 								</div>
 								<div class="span3">

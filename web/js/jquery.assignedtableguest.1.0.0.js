@@ -110,7 +110,7 @@
 								'<td style="padding-top:15px">'+varUnassignedSeats+'</td>' + 
 								'<td style="padding-top:15px">'+varAssignedAtOtherTable+'</td>' +
 								'<td><button class="btn btn-small" id="table_guest_'+tmpTableGuest.guest_id+'">Update</button>&nbsp;&nbsp;&nbsp;&nbsp;'+
-								'<button class="btn btn-small" id="delete_table_guest_'+tmpTableGuest.guest_id+'">Delete Assignment</button></td>' +'</tr>';
+								'<button class="btn btn-small" id="delete_table_guest_'+tmpTableGuest.guest_id+'">Unassign</button></td>' +'</tr>';
 								
 								varTotalAssignedPerTable = eval(varTotalAssignedPerTable) + eval(tmpTableGuest.guest_assigned_seats);
 							}

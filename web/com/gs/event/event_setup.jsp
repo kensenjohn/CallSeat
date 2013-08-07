@@ -240,7 +240,17 @@
 					</div>
 					
 					<div  class="row" id="div_event_summary"  style="display:none;" >
-						<div class="offset_0_5 span7">
+						<div class="offset_0_5 span11">
+                            <div class="row" id="tab_event_summary_demo_warning"  style="background-color:#BE5F6C;display:none;">
+                                <div class="span11">
+                                    <h2 style="color:white;">Demo Phone Number Mode</h2>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span2">
+                                    &nbsp;
+                                </div>
+                            </div>
 							<div class="row">
 								<div class="span5">
 									<h4>Seating Plan </h4>
@@ -286,7 +296,7 @@
 												if(isNewEventClicked)
 												{
 		%>
-													<input type="button" class="btn ispn2" id="create_event" name="create_event" value="Create Seating Plan"/>
+													<input type="button" class="btn ispn3" id="create_event" name="create_event" value="Create Seating Plan"/>
 		<%											
 												}
 												else
@@ -460,10 +470,10 @@
 				
 				<!-- The phone number summary -->
 				<div  class="row" id="div_phone_numbers"  style="display:none;">
-					<div class="offset_0_5 span9">
-                        <div class="row">
-                            <div class="span8">
-                                <h2>Currently in Demo Mode</h2>
+					<div class="offset_0_5 span11">
+                        <div class="row" id="tab_phone_demo_warning"  style="background-color:#BE5F6C;display:none;">
+                            <div class="span11">
+                                <h2 style="color:white;">Demo Phone Number Mode</h2>
                             </div>
                         </div>
                         <div class="row">
@@ -648,7 +658,7 @@
                                     <button id="btn_save_phone_number" name="btn_save_phone_number" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="btn">Save Changes</button>
                                 </div>
 								<div class="span3"  id="div_get_own_phone">
-									 <button id="bt_get_own_phone" name="bt_get_own_phone" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="btn btn-blue">Purchase direct phone numbers</button>
+									 <input id="bt_get_own_phone" name="bt_get_own_phone" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="btn btn-blue btn-large ispn4" value="Buy personalized phone numbers"/>
 								</div>
 							</div>
                             <div class="row">
@@ -671,13 +681,12 @@
 				</div>
 				<div  class="clear_both" style="width: 100%;  text-align: center;">
 				<div  class="clear_both" id="tab_view_area">
-					
+
 				</div>
 				<div  class="clear_both" id="div_table_details">
 					
 				</div>
 				<div  class="clear_both" id="div_guests_details">
-					
 				</div>
 
 			</div>
@@ -1213,7 +1222,7 @@
 			}
 			else  if( jsonResult.status == 'ok' && varResponseObj !=undefined)
 			{
-				$("#primary_header").text( $("#e_summ_event_name").val() );
+				$("#primary_header").text( $("#e_summ_event_name").val()  );
 				$("#secondary_header").text( '('+$("#e_summ_event_date").val()+')' );
 				
 				var varIsPayloadExist = varResponseObj.is_payload_exist;
@@ -1440,6 +1449,9 @@
                 $("#e_summ_rsvp_event_num").text(eventSummary.telephony_event_number);
                 $("#div_rsvp_extension").show();
                 $("#e_summ_rsvp_extension").text(eventSummary.telephony_rsvp_secret_key);
+
+                $("#tab_event_summary_demo_warning").show();
+
             }
             else
             {
@@ -1452,6 +1464,8 @@
                 $("#div_rsvp_extension").hide();
                 $("#e_summ_rsvp_event_num").text('');
                 $("#e_summ_rsvp_extension").text('');
+
+                $("#tab_event_summary_demo_warning").hide();
             }
 		}
 		//div_event_summary
@@ -1789,6 +1803,8 @@
 						
 						$("#seating_div_secret_key").show();
 						$("#seating_secret_key").text(telNumBean.secret_event_key);
+
+                        $("#tab_phone_demo_warning").show();
 					}
 					if(telNumBean.telnum_type ==  varSeatingNumType)
 					{
@@ -1797,6 +1813,8 @@
 						$("#seating_event_id").text('');
 						$("#seating_div_secret_key").hide();
 						$("#seating_secret_key").text('');
+
+                        $("#tab_phone_demo_warning").hide();
 					}
 					
 					if(telNumBean.telnum_type ==  varDemoRsvpNumType)
@@ -1806,6 +1824,8 @@
 						
 						$("#rsvp_div_secret_key").show();
 						$("#rsvp_secret_key").text(telNumBean.secret_event_key);
+
+                        $("#tab_phone_demo_warning").show();
 					}
 					if(telNumBean.telnum_type ==  varRsvpNumType)
 					{
@@ -1815,6 +1835,8 @@
 						
 						$("#rsvp_div_secret_key").hide();
 						$("#rsvp_secret_key").text('');
+
+                        $("#tab_phone_demo_warning").hide();
 					}
 					
 						

@@ -19,16 +19,11 @@
 		
 		jspLogging.info("Assign to event  for : " + sAdminId);
 %>
-
-		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
-			<div  style="padding-top:5px;">
-				<div class="logo span4"><a href="#">CallSeat</a></div>
-			</div>
-		</div>
+        <jsp:include page="/web/com/gs/common/top_nav_fancybox.jsp"/>
 		<div  class="fnbx_scratch_area">
 				<div class="row" >
 					<div class="offset1 span10">
-						<h2 class="txt txt_center">Invite guest  to Seating Plans. Guest Name: <%=sGuestFirstName%> </h2>
+						<h2 class="txt txt_center">Invite <%=sGuestFirstName%></h2>
 					</div>
 				</div>
 				<div class="row">
@@ -297,10 +292,10 @@
 		function create_header()
 		{
 			var valHeader = '<thead><tr> ' + 
-			'<th style="width:7%" class="tbl_th">Is Invited</th>'+
+			'<th style="width:12%" class="tbl_th">Is Invited</th>'+
 			'<th style="width:27%" class="tbl_th">Seating Plan Name</th>'+
 			'<th style="width:18%" class="tbl_th">Invited for seats</th>'+
-			'<th style="width:18%" class="tbl_th">RSVP to seats</th><th style="width:30%" class="tbl_th"></th>'+
+			'<th style="width:18%" class="tbl_th">RSVP to seats</th><th style="width:25%" class="tbl_th"></th>'+
 			'</tr></thead>';
 			return valHeader; 
 		}
@@ -378,20 +373,6 @@
 			
 
 		}
-		/*function displayMessages(varArrMessages)
-		{
-			if(varArrMessages!=undefined)
-			{
-				for(var i = 0; i<varArrMessages.length; i++)
-				{
-					var txtMessage =  varArrMessages[i].text;
-					var txtMssgLocation = varArrMessages[i].txt_loc_id;
-					//alert( varArrMessages[i].text );
-					
-					$("#"+txtMssgLocation).text(txtMessage);
-				}
-			}
-		}*/
 	</script>
 	<jsp:include page="../common/footer_bottom_fancybox.jsp"/> 
 </html>

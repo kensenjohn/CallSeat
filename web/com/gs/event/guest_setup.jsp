@@ -18,6 +18,11 @@
 	String sGateAdminId = sAdminId;
 %>
 	<%@include file="../common/gatekeeper.jsp"%>
+<%
+    if(sAdminId==null || "".equalsIgnoreCase(sAdminId)){
+        response.sendRedirect("/web/com/gs/host_landing.jsp?source=guest_setup.jsp");
+    }
+%>
 
 <link rel="stylesheet" type="text/css" href="/web/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
 
@@ -37,7 +42,7 @@
 			<jsp:param name="select_action_nav" value="all_guest_tab"/> 
 		</jsp:include>
 		<div class="row">
-			<div  class="offset1 span10" id="div_guests_details">
+			<div  class="span12" id="div_guests_details">
 				
 			</div>
 		</div>

@@ -16,11 +16,7 @@
 	String sParentPassthruSeatingNum = ParseUtil.checkNull(request.getParameter("parent_pass_thru_seating_num"));
 %>
 <body  style="height:auto;">
-		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
-			<div style="padding:5px;">
-				<div class="logo span4"><a href="#">Guests</a></div>
-			</div>
-		</div>
+        <jsp:include page="/web/com/gs/common/top_nav_fancybox.jsp"/>
 		<div class="fnbx_scratch_area">
 			<div class="row" >
 				<div class="offset1 span6">
@@ -62,7 +58,7 @@
 							</div>
 						</div>
 					</form>
-					<form id="frm_login" id="frm_login" 
+					<form  id="frm_login"
 						action="credential.jsp?action=login&referrer_source=<%=sParentReferrerSource%>&admin_id=<%=sParentAdminId %>&event_id=<%=sParentEventId %>&pass_thru_action=<%=sParentPassthruAction%>&pass_thru_rsvp_num=<%=sParentPassthruRsvpNum%>&pass_thru_seating_num=<%=sParentPassthruSeatingNum%>">
 					</form>
 				</div>
@@ -202,20 +198,5 @@
 			
 
 		}
-		
-		/*function displayMessages(varArrMessages)
-		{
-			if(varArrMessages!=undefined)
-			{
-				for(var i = 0; i<varArrMessages.length; i++)
-				{
-					var txtMessage =  varArrMessages[i].text;
-					var txtMssgLocation = varArrMessages[i].txt_loc_id;
-					//alert( varArrMessages[i].text );
-					
-					$("#"+txtMssgLocation).text(txtMessage);
-				}
-			}
-		}*/
 	</script>
 <jsp:include page="../common/footer_bottom_fancybox.jsp"/> 

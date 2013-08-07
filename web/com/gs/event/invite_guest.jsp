@@ -24,11 +24,7 @@
 		
 		String sTitle = eventBean!=null ? ParseUtil.checkNull(eventBean.getEventName()) : "";
 %>
-		<div class="navbar" style="background-image: none; background-color: RGBA(0,132,0,0.40); padding-bottom:6px; height: 49px;" >
-			<div  style="padding-top:5px;">
-				<div class="logo span4"><a href="#">CallSeat</a></div>
-			</div>
-		</div>
+        <jsp:include page="/web/com/gs/common/top_nav_fancybox.jsp"/>
 		<div  class="fnbx_scratch_area">
 				<div class="row" >
 					<div class="offset1 span10">
@@ -320,7 +316,7 @@
 					'<td  >'+
 					'<button id="event_assign_'+varTmpGuest.guest_id+'" name="event_assign_'+varTmpGuest.guest_id+'" type="button" class="btn btn-small" >Invite Guest</button>'+
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
-					'<button id="event_remove_'+varTmpGuest.guest_id+'" name="event_remove_'+varTmpGuest.guest_id+'" type="button" class="btn" style="display:none;">Uninvite Guest</button>'+
+					'<button id="event_remove_'+varTmpGuest.guest_id+'" name="event_remove_'+varTmpGuest.guest_id+'" type="button" class="btn btn-small" style="display:none;">Uninvite Guest</button>'+
 					'</td><input type="hidden" value="" id="event_guest_id_'+varTmpGuest.guest_id+'" name="event_guest_id_'+varTmpGuest.guest_id+'"></tr>'
 					;
 			}
@@ -377,33 +373,6 @@
 			
 
 		}
-		
-		/*function displayErrorMessages(varArrMessages)
-		{
-			if(varArrMessages!=undefined)
-			{
-				for(var i = 0; i<varArrMessages.length; i++)
-				{
-					var txtMessage =  varArrMessages[i].text;
-					var txtMssgLocation = varArrMessages[i].txt_loc_id;					
-					$("#err_mssg").text(txtMessage);
-					$("#err_mssg").addClass("error_mssg");
-				}
-			}
-		}
-		function displayOkMessages(varArrMessages)
-		{
-			if(varArrMessages!=undefined)
-			{
-				for(var i = 0; i<varArrMessages.length; i++)
-				{
-					var txtMessage =  varArrMessages[i].text;
-					var txtMssgLocation = varArrMessages[i].txt_loc_id;					
-					$("#err_mssg").text(txtMessage);
-					$("#err_mssg").addClass("success_mssg");
-				}
-			}
-		}*/
 	</script>
 	<jsp:include page="../common/footer_bottom_fancybox.jsp"/> 
 </html>

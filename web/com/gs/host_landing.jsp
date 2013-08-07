@@ -24,6 +24,22 @@ if(cookies!=null)
 	<jsp:param name="page_title" value="Host Landing"/>	
 </jsp:include>
 <%@include file="common/security.jsp"%>
+<%
+    HttpSession  tmpSession = request.getSession(false);
+    if(tmpSession!=null)
+    {
+        AdminBean adminBean = (AdminBean) tmpSession.getAttribute(Constants.USER_SESSION);
+        if(adminBean!=null && adminBean.isAdminExists()){
+            String sSource = "host_dashboard.jsp?host_lobby_admin_id="+adminBean.getAdminId();
+            String sReqSource = ParseUtil.checkNull(request.getParameter("source"));
+            if(sReqSource!=null && !"".equalsIgnoreCase(sReqSource))   {
+                sSource = sReqSource+"?lobby_admin_id="+adminBean.getAdminId();
+            }
+            response.sendRedirect("/web/com/gs/event/"+sSource);
+        }
+    }
+
+%>
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 
 <jsp:include page="common/header_bottom.jsp"/>
 <link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
@@ -44,24 +60,13 @@ if(cookies!=null)
                             <h1 style="color:#f5f5f5">Seat your guests with a phone call or text</h1>
                             <form id="frm_event_dt" name="frm_event_dt">
                                 <input type="text" id="tmp_email" class="ispn3 inp-large" style="vertical-align: bottom;" placeholder="Email" name="tmp_email">
-                                <input type="text" id="event_date" class="ispn3 inp-large" style="vertical-align: bottom;"  placeholder="Select date of wedding" name="event_date" readonly>
+                                <input type="text" id="event_date" class="ispn3 inp-large" style="vertical-align: bottom;"  placeholder="Wedding Date" name="event_date" readonly>
 
-                                <input type="button" class="btn btn-large btn-blue" style="margin-bottom: 7px;" id="event_dt_sbt" value="Create Free Seating Plan"/>
+                                <input type="button" class="btn btn-large btn-green" style="margin-bottom: 7px;" id="event_dt_sbt" value="Create Free Seating Plan"/>
                             </form>
                             <div class="row">
-                                <div class="span9"> &nbsp;</div>
-                            </div>
-                            <div class="row">
                                 <div class="span9">
-                                    <h3 style="color:#f5f5f5">Personalized phone numbers for guests to RSVP and get seated.&nbsp;<a href="/web/com/gs/common/how_it_works.jsp?admin_id=<%=sTmpUserId %>&referrer_source=host_landing_slide" id="lnk_how_it_works" class="btn" >How it works</a></h3>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="span9"> &nbsp;</div>
-                            </div>
-                            <div class="row">
-                                <div class="span9">
-                                    <input type="button" class="btn btn-large" id="show_me_lobby" style="<%=!isSignedIn?"display:none;":""%>" value="Show me my seating plans"/>
+                                    <h4 style="color:#f5f5f5">Personalized phone numbers for guests to RSVP and get seated.</h4>
                                 </div>
                             </div>
                         </div>
@@ -91,11 +96,11 @@ if(cookies!=null)
                 </div>
 		    </div>
 	    </div>
-        <section class="step_instructions" style="display: block; opacity: 1; -webkit-transition: all 0s cubic-bezier(0.25, 0.1, 0.25, 1); min-height: 144px; padding-top:10px;">
+        <section class="step_instructions" style="display: block; opacity: 1;  min-height: 144px; padding-top:10px;">
             <div class="blank_scratch_area">
 
                 <div class="row" style="margin: auto;text-align:center;">
-                    <h1 style="color:#37291C">Personalized, private phone numbers. No hold music.  &nbsp;&nbsp;<a href="/web/com/gs/common/how_it_works.jsp?admin_id=<%=sTmpUserId %>&referrer_source=host_landing_steps" id="btn_how_it_works" class="btn btn-blue btn-large" >How it works</a></h1>
+                    <h1>Personalized, private phone numbers. No hold music.  &nbsp;&nbsp;<a href="/web/com/gs/common/how_it_works.jsp?admin_id=<%=sTmpUserId %>&referrer_source=host_landing_steps" id="btn_how_it_works" class="btn btn-blue btn-large" >How it works</a></h1>
                 </div>
                 <div class="row" style="margin: auto;text-align:center;">
                     &nbsp;
@@ -109,7 +114,7 @@ if(cookies!=null)
                     <div class="span3 step_box" style="text-align: center;  border-radius: 15px; min-height: 134px; ">
                         <h1 style="padding-top:15px;">Step 2</h1>
                         <h4 style="padding:5px;">Purchase telephone numbers</h4>
-                        <span class="fld_txt_small">Click to purchase personalized phone numbers.</span>
+                        <span class="fld_txt_small" style="padding:3px;">Personalize phone numbers and buy it from us.</span>
                     </div>
                     <div class="span3 step_box" style="text-align: center; border-radius: 15px; min-height: 134px; ">
                         <h1 style="padding-top:15px;">Step 3</h1>

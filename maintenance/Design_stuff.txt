@@ -43,3 +43,4 @@
 				"is_message_exist" : true|false
 		}
 }
+   logo font       URW Gothic L Semi-Bold

@@ -54,8 +54,8 @@
   				if(sUserId!=null && !"".equalsIgnoreCase(sUserId))
   				{
   					session.removeAttribute("u_id"); //reset the session.
-  					 AdminManager adminManager = new AdminManager();
-  					 adminBean = adminManager.getAdmin(sUserId);
+  					AdminManager adminManager = new AdminManager();
+  					adminBean = adminManager.getAdmin(sUserId);
   				}
   			}
   			//securityLogging.error("11 is signe in - " + isSignedIn);

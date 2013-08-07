@@ -20,6 +20,7 @@ copyright_year=2013
 copyright_company=Smarasoft Inc
 product_name=Callseat
 domain=guestslocal:8080
+site_protocol=https
 voice_recording_domain=https://s3.amazonaws.com/dev.calls.com/voice
 voice_recording_folder=/web/voice
 application_domain=http://ec2-23-23-19-25.compute-1.amazonaws.com:8080
