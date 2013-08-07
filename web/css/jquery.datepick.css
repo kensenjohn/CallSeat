@@ -55,7 +55,7 @@ img.datepick-trigger {
 	font-family:Arial, Helvetica, sans-serif;
 }
 .datepick-control {
-	background: #055a8d url('../images/datepicker_btn-transparent.png') repeat-x;;
+	background: RGB(99,9,71) url('../images/datepicker_btn-transparent.png') repeat-x;;
 	padding: 2px 0px;
 }
 .datepick-links {
@@ -99,8 +99,8 @@ img.datepick-trigger {
 	min-height: 1.5em;
 }
 .datepick-header select {
-	background: #333;
-	color: #fff;
+	background: #fff;
+	color: #000;
 	border: 0px;
 	font-weight: bold;
 	font-family:Arial, Helvetica, sans-serif;
