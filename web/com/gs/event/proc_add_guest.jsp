@@ -71,7 +71,7 @@ try
     appLogging.info("Human format number "+ sCellNumberHumanFormat + " cellnumber :"+sCellNumber);
 	if(sCellNumber==null || "".equalsIgnoreCase(sCellNumber))
 	{
-		Text errorText = new ErrorText("We were unable to recognize the cellphone number. Please enter a valid cellphone number.<br>","cell_num") ;
+		Text errorText = new ErrorText("Please enter a valid cellphone number.<br>","cell_num") ;
 		arrErrorText.add(errorText);
 		
 		responseStatus = RespConstants.Status.ERROR;
@@ -85,7 +85,7 @@ try
         PhoneNumberUtil cellPhoneNumberUtil = PhoneNumberUtil.getInstance();
         if(!cellPhoneNumberUtil.isValidNumber(cellPhoneNumber))
         {
-            Text errorText = new ErrorText("We were unable to recognize the cellphone number. Please enter a valid cellphone number.<br>","cell_num") ;
+            Text errorText = new ErrorText("Please enter a valid cellphone number.<br>","cell_num") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;
@@ -116,7 +116,7 @@ try
         PhoneNumberUtil homePhoneNumberUtil = PhoneNumberUtil.getInstance();
         if(!homePhoneNumberUtil.isValidNumber(homePhoneNumber))
         {
-            Text errorText = new ErrorText("We were unable to recognize the phone number. Please enter a valid phone number.<br>","home_num") ;
+            Text errorText = new ErrorText("Please enter a valid home phone number.<br>","home_num") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;
@@ -127,32 +127,6 @@ try
             //sCellNumber = ParseUtil.iToS(iCountryCode)+sCellNumber.substring(1);
         }
     }
-    /*
-
-    if(sHomeNumberHumanFormat!=null&& !"".equalsIgnoreCase(sHomeNumberHumanFormat))
-    {
-        sHomeNumber = Utility.convertHumanToInternationalTelNum(sHomeNumberHumanFormat);
-
-        com.google.i18n.phonenumbers.Phonenumber.PhoneNumber homePhoneNumber = new Phonenumber.PhoneNumber();
-        homePhoneNumber.setCountryCode(iCountryCode);
-        homePhoneNumber.setNationalNumber(ParseUtil.sToL(sHomeNumber.substring(1)));
-        PhoneNumberUtil homePhoneNumberUtil = PhoneNumberUtil.getInstance();
-        if(!homePhoneNumberUtil.isValidNumber(homePhoneNumber ))
-        {
-            PhoneNumberUtil.ValidationResult validationResult = homePhoneNumberUtil.isPossibleNumberWithReason(homePhoneNumber);
-            Text errorText = new ErrorText("We were unable to recognize the home phone number. Please enter a valid home phone number.<br>","home_num") ;
-            arrErrorText.add(errorText);
-
-            responseStatus = RespConstants.Status.ERROR;
-            isError = true;
-        }
-        else
-        {
-            sHomeNumber = ParseUtil.iToS(iCountryCode)+sHomeNumber.substring(1);
-        }
-    }
-     */
-	
 	if(isGuestAddToEvent)
 	{
 		int iNumInvited =  ParseUtil.sToI(sInvitedNumOfSeats);
@@ -160,7 +134,7 @@ try
 		{
 			appLogging.warn("Invited number of guests was invalid : " + sInvitedNumOfSeats );
 			
-			Text errorText = new ErrorText("We were unable to recognize the number of seats this guest was invited to. Please enter a valid invited seats number greater than 0.","invited_num_of_seats") ;
+			Text errorText = new ErrorText("Please enter valid number of invited seats greater than 0.","invited_num_of_seats") ;
 			arrErrorText.add(errorText);
 			
 			responseStatus = RespConstants.Status.ERROR;
@@ -174,7 +148,7 @@ try
 		{
 			appLogging.warn("RSVP number of guests was invalid : " + sRsvpNumOfSeats );
 			
-			Text errorText = new ErrorText("We were unable to recognize the number of seats this guest sent an RSVP.","rsvp_num_of_seats") ;
+			Text errorText = new ErrorText("We enter valid number of RSVP of seats by the guests.","rsvp_num_of_seats") ;
 			arrErrorText.add(errorText);
 			
 			responseStatus = RespConstants.Status.ERROR;
@@ -264,7 +238,7 @@ try
                             }
                             else
                             {
-                                Text okText = new OkText("The guest was assigned successfully to the event successfully.","err_mssg") ;
+                                Text okText = new OkText("The guest was successfully assigned  to the event.","err_mssg") ;
                                 arrErrorText.add(okText);
 
                                 responseStatus = RespConstants.Status.OK;
