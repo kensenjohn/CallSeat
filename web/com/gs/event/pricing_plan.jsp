@@ -35,7 +35,7 @@
 				  <div class="offset1 span11">
 						<div class="row">							
 							<div class="span8">
-								<h2 style="font-size:155%; color:#758A48; margin : 0px; clear:both">Select a Pricing Plan</h2>
+								<h2 style="font-size:155%; color:#793866; margin : 0px; clear:both">Select a Pricing Plan</h2>
 							</div>
 						</div>
 						<div class="row">							
@@ -169,7 +169,7 @@ function processPricingPlan(varResponse)
         var varPricingGrid = '';
         if(varArrPricingPlan[vari].is_default == true)
         {
-            varPricingGrid = varPricingGrid + '<div class="span2 pricing4 no-zoom shadow" id="div_pricing_'+varArrPricingPlan[vari].pricing_group_id+'"><ul class="popullar"><li class="head" ><h1>Popular</h1>';
+            varPricingGrid = varPricingGrid + '<div class="span3 pricing4 no-zoom shadow" id="div_pricing_'+varArrPricingPlan[vari].pricing_group_id+'"><ul class="popullar"><li class="head" ><h1>Popular</h1>';
         }
         else
         {

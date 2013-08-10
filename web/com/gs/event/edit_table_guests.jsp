@@ -21,7 +21,7 @@
         <jsp:include page="/web/com/gs/common/top_nav_fancybox.jsp"/>
 		<div  class="fnbx_scratch_area">
 			<div class="row" >
-				<div class="offset1 span6">
+				<div class="offset_0_5 span6">
 					<div class="row" >
 						<div class="span6">
 							<h2 class="txt txt_center">Assign seats at table <span id='table_name'></span></h2>
@@ -35,7 +35,7 @@
 				</div>
 			</div>
 			<div class="row" >
-				<div class="offset1 span12">
+				<div class="offset_0_5 span12">
 					<div class="row" >
 						<div class="span3">
 							<span class="fld_name">Seats at this table : </span><span class="fld_txt" id="seat_per_table"></span>
@@ -57,7 +57,7 @@
 				</div>
 			</div>
 			<div class="row" >
-				<div class="offset1 span12">
+				<div class="offset_0_5 span12">
 					<div class="row" >
 						<div class="span12"  style="padding-top:5px">
 							<span class="fld_name">Seat Assignment : </span><span id="div_unassinged_guests"></span>
@@ -93,7 +93,7 @@
 				</div>
 			</div>
 			<div class="row" >
-				<div class="offset1 span12">
+				<div class="offset_0_5 span11">
 					<div id="div_assigned_guests_table">
 					</div>
 				</div>

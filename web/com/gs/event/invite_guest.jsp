@@ -27,12 +27,12 @@
         <jsp:include page="/web/com/gs/common/top_nav_fancybox.jsp"/>
 		<div  class="fnbx_scratch_area">
 				<div class="row" >
-					<div class="offset1 span10">
+					<div class="offset_0_5 span10">
 						<h2 class="txt txt_center">Invite guests to Event <span id="span_event_name"><%=sTitle %></span></h2>
 					</div>
 				</div>
 				<div class="row">
-					<div class="offset1 span6">
+					<div class="offset_0_5 span6">
 						<span id="err_mssg"></span>
 					</div>
 				</div>
@@ -43,7 +43,7 @@
 				</div>
 			<form id='frm_event_guests'>
 				<div class="row" >
-					<div class="offset1 span12" id='guest_list'>
+					<div class="offset_0_5 span11" id='guest_list'>
 					</div>
 				</div>
 			</form>
