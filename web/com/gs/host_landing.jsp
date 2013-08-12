@@ -99,19 +99,19 @@ if(cookies!=null)
         <section class="step_instructions" style="display: block; opacity: 1;  min-height: 144px; padding-top:10px;">
             <div class="blank_scratch_area">
 
-                <div class="row" style="margin: auto;text-align:center;">
-                    <h1>Personalized, private phone numbers. No hold music.  &nbsp;&nbsp;<a href="/web/com/gs/common/how_it_works.jsp?admin_id=<%=sTmpUserId %>&referrer_source=host_landing_steps" id="btn_how_it_works" class="btn btn-blue btn-large" >How it works</a></h1>
+                <div class="row" style="text-align:center;">
+                    <h1>Personalized, private phone numbers with no hold music.&nbsp;&nbsp;<a href="/web/com/gs/common/how_it_works.jsp?admin_id=<%=sTmpUserId %>&referrer_source=host_landing_steps" id="btn_how_it_works" class="btn btn-blue btn-large" >See how it works</a></h1>
                 </div>
-                <div class="row" style="margin: auto;text-align:center;">
+                <div class="row" style="text-align:center;">
                     &nbsp;
                 </div>
-                <div class="row" style="margin: auto;">
+                <div class="row">
                     <div class="offset1 span3 step_box" style="text-align: center;  border-radius: 15px; min-height: 134px; ">
                         <h1 style="padding-top:15px;">Step 1</h1>
                         <h4  style="padding:5px;">Create a Seating Plan</h4>
                         <span class="fld_txt_small">Add guests and tables.</span>
                     </div>
-                    <div class="span3 step_box" style="text-align: center;  border-radius: 15px; min-height: 134px; ">
+                    <div class="span3 step_box" style="text-align: center;  border-radius: 15px; min-height: 134px;  ">
                         <h1 style="padding-top:15px;">Step 2</h1>
                         <h4 style="padding:5px;">Purchase telephone numbers</h4>
                         <span class="fld_txt_small" style="padding:3px;">Personalize phone numbers and buy it from us.</span>

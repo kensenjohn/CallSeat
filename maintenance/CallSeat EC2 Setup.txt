@@ -166,7 +166,20 @@ Setting up the Amazon EC2 instance.
                     sudo /etc/init.d/tomcat restart
 
         2.9.9) Access the webpage using port 8080 in the browser. You should see Tomcat welcome screen
-
+        2.9.10) Add ESAPI resource folder setting to to /usr/local/tomcat/bin/catalina.sh
+                    in Catalina.sh goto section - > elif [ "$1" = "start" ] ; then
+                     Add -Dorg.owasp.esapi.resources="/etc/guests/props" \
+                     to the start up section of script (there will be two places to add this change)
+                     e.g,  eval \"$_RUNJAVA\" \"$LOGGING_CONFIG\" $JAVA_OPTS $CATALINA_OPTS \
+                                -Djava.endorsed.dirs=\"$JAVA_ENDORSED_DIRS\" -classpath \"$CLASSPATH\" \
+                                -Djava.security.manager \
+                                -Djava.security.policy==\"$CATALINA_BASE/conf/catalina.policy\" \
+                                -Dcatalina.base=\"$CATALINA_BASE\" \
+                                -Dcatalina.home=\"$CATALINA_HOME\" \
+                                -Djava.io.tmpdir=\"$CATALINA_TMPDIR\" \
+                                -Dorg.owasp.esapi.resources="/etc/guests/props" \
+                                org.apache.catalina.startup.Bootstrap "$@" start \
+                                >> "$CATALINA_OUT" 2>&1 "&"
 
     3.0) Deprecated(see 3.4 for nginx) : Install Apache (this should include mod_jk and SSL support)  - Use
         3.0.1) sudo apt-get install libapache2-mod-jk

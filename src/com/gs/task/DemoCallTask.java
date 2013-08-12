@@ -12,7 +12,7 @@ import com.gs.call.CallResponse;
 import com.gs.call.twilio.twiml.DemoCallTwiml;
 import com.gs.call.twilio.twiml.TwimlSupport;
 import com.gs.common.Constants;
-import com.gs.common.ExceptionHandler;
+import com.gs.common.exception.ExceptionHandler;
 import com.gs.common.ParseUtil;
 import com.gs.data.event.EventData;
 import com.gs.manager.event.EventGuestManager;

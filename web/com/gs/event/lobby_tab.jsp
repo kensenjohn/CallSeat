@@ -5,18 +5,15 @@
 <%@ page import="java.util.*"%>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
-
+<%@include file="/web/com/gs/common/security.jsp"%>
 <%
 
 	String sSelectedTab = ParseUtil.checkNull(request.getParameter("select_tab"));
 	String sHeaderTxt = ParseUtil.checkNull(request.getParameter("lobby_header"));
-    if(sHeaderTxt!=null && sHeaderTxt.length()>13) {
-        sHeaderTxt = sHeaderTxt.substring(0,13);
+    if(sHeaderTxt!=null && sHeaderTxt.length()>20) {
+        sHeaderTxt = sHeaderTxt.substring(0,17) + "...";
     }
 	String sSecHeaderTxt = ParseUtil.checkNull(request.getParameter("lobby_sec_header"));
-	
-	int iSpanNum = 5;
-
 %>
 		<div class="row">
 			<div class="span1">

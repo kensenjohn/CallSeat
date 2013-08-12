@@ -10,7 +10,7 @@
 <%@page import="com.validate.*"%>
 
 
-
+<%@include file="/web/com/gs/common/security_proc_page.jsp"%>
 <%
         JSONObject jsonResponseObj = new JSONObject();
 

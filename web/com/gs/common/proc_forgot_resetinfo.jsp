@@ -8,6 +8,7 @@
 <%@ page import="java.util.*"%>
 <%@page import="com.gs.json.*"%>
 <%@page import="com.gs.manager.forgot.*" %>
+<%@ page import="com.gs.common.exception.ExceptionHandler" %>
 <%
 JSONObject jsonResponseObj = new JSONObject();
 

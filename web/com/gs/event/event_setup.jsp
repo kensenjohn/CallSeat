@@ -1222,7 +1222,11 @@
 			}
 			else  if( jsonResult.status == 'ok' && varResponseObj !=undefined)
 			{
-				$("#primary_header").text( $("#e_summ_event_name").val()  );
+                var varEventName =  $("#e_summ_event_name").val();
+                 if(varEventName.length > 20) {
+                     varEventName = varEventName.substr(0,17) + '...';
+                 }
+				$("#primary_header").text( varEventName  );
 				$("#secondary_header").text( '('+$("#e_summ_event_date").val()+')' );
 				
 				var varIsPayloadExist = varResponseObj.is_payload_exist;

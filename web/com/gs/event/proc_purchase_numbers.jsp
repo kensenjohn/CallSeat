@@ -14,7 +14,9 @@
 <%@ page import="com.gs.bean.usage.UsageBean" %>
 <%@ page import="com.gs.common.usage.TextMessageUsage" %>
 <%@ page import="com.gs.bean.usage.TextMessageUsageBean" %>
+<%@ page import="com.gs.common.exception.ExceptionHandler" %>
 
+<%@include file="/web/com/gs/common/security_proc_page.jsp"%>
 <%@include file="../common/security.jsp" %>
 <%
     JSONObject jsonResponseObj = new JSONObject();

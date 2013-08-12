@@ -13,7 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gs.common.Constants;
-import com.gs.common.ExceptionHandler;
+import com.gs.common.exception.ExceptionHandler;
 
 public class DBDAO {
 	private static final Logger dbLogging = LoggerFactory

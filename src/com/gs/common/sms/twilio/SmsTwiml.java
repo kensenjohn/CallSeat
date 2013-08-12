@@ -6,7 +6,7 @@ import com.gs.bean.sms.SmsQueueBean;
 import com.gs.bean.sms.SmsTransactionBean;
 import com.gs.common.Constants;
 import com.gs.common.DateSupport;
-import com.gs.common.ExceptionHandler;
+import com.gs.common.exception.ExceptionHandler;
 import com.gs.common.Utility;
 import com.gs.common.sms.SmsSender;
 import com.gs.common.sms.SmsServiceData;

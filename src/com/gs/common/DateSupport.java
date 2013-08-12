@@ -1,9 +1,10 @@
 package com.gs.common;
 
-import org.joda.time.DateTime;
-import org.joda.time.DateTimeZone;
+import org.joda.time.*;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -119,5 +120,17 @@ public class DateSupport {
         DateTime srcTime = new DateTime(epochDate);
         Integer iYear = srcTime.getYear();
         return iYear;
+    }
+
+    public static Long convertToMillis (  Constants.TIME_UNIT timeUnit , Long sourceTime ) {
+        Long milliseconds = 0L;
+        switch(timeUnit ) {
+            case SECONDS:
+                milliseconds = sourceTime * 1000;
+                break;
+            case MINUTES:milliseconds = sourceTime * 60 * 1000;
+                break;
+        }
+       return milliseconds ;
     }
 }

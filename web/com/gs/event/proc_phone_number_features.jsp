@@ -2,7 +2,6 @@
 <%@page import="com.gs.bean.*" %>
 <%@page import="com.gs.common.*" %>
 <%@page import="com.gs.manager.*" %>
-<%@page import="com.gs.manager.event.*" %>
 <%@page import="org.json.*" %>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
@@ -10,6 +9,8 @@
 <%@page import="com.gs.json.*"%>
 <%@ page import="com.google.i18n.phonenumbers.PhoneNumberUtil" %>
 <%@ page import="com.google.i18n.phonenumbers.Phonenumber" %>
+<%@ page import="com.gs.common.exception.ExceptionHandler" %>
+<%@include file="/web/com/gs/common/security_proc_page.jsp"%>
 <%
     JSONObject jsonResponseObj = new JSONObject();
 

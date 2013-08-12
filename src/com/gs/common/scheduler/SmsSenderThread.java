@@ -2,7 +2,7 @@ package com.gs.common.scheduler;
 
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
-import com.gs.common.ExceptionHandler;
+import com.gs.common.exception.ExceptionHandler;
 import com.gs.common.ParseUtil;
 import com.gs.common.sms.SmsSender;
 import com.gs.common.sms.SmsSenderService;

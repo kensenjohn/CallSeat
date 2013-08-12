@@ -28,7 +28,7 @@ import com.gs.bean.TelNumberBean;
 import com.gs.bean.UserInfoBean;
 import com.gs.common.Constants;
 import com.gs.common.DateSupport;
-import com.gs.common.ExceptionHandler;
+import com.gs.common.exception.ExceptionHandler;
 import com.gs.common.ParseUtil;
 import com.gs.common.Utility;
 import com.gs.data.event.EventData;

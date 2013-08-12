@@ -18,7 +18,7 @@ import com.amazonaws.services.simpleemail.model.SendEmailResult;
 import com.gs.bean.email.EmailObject;
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
-import com.gs.common.ExceptionHandler;
+import com.gs.common.exception.ExceptionHandler;
 
 public class AmazonEmailSend implements MailSender {
 

@@ -8,6 +8,7 @@
 <%@ page import="java.util.*"%>
 <%@page import="com.gs.json.*"%>
 <%@page import="com.gs.utilities.*"%>
+<%@include file="/web/com/gs/common/security_proc_page.jsp"%>
 <%
 JSONObject jsonResponseObj = new JSONObject();
 

@@ -11,7 +11,7 @@ import com.gs.bean.twilio.TwilioIncomingCallBean;
 import com.gs.call.CallResponse;
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
-import com.gs.common.ExceptionHandler;
+import com.gs.common.exception.ExceptionHandler;
 
 public class TwimlSupport {
 

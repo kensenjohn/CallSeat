@@ -10,11 +10,11 @@
 
 <%@include file="../common/security.jsp"%>
 <jsp:include page="../common/header_bottom.jsp"/>
-
+<%
+    String sGateAdminId = Constants.EMPTY;
+%>
 <%@include file="/web/com/gs/common/gatekeeper.jsp"%>
 
-<%
-%>
 <body>
 		<div class="container rounded-corners">
 			<div style="padding:20px">

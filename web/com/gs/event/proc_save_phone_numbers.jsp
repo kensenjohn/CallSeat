@@ -7,8 +7,9 @@
 <%@page import="com.gs.manager.event.*"%>
 <%@page import="com.gs.common.*" %>
 <%@page import="com.gs.phone.account.*" %>
-
-<%@include file="../common/security.jsp" %>
+<%@ page import="com.gs.common.exception.ExceptionHandler" %>
+<%@include file="/web/com/gs/common/security_proc_page.jsp"%>
+<%@include file="/web/com/gs/common/security.jsp" %>
 <%
 JSONObject jsonResponseObj = new JSONObject();
 

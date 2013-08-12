@@ -2,13 +2,11 @@ package com.gs.common.scheduler;
 
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
-import com.gs.common.ExceptionHandler;
+import com.gs.common.exception.ExceptionHandler;
 import com.gs.common.ParseUtil;
 import com.gs.common.mail.EmailCreator;
 import com.gs.common.mail.EmailCreatorService;
 import com.gs.common.mail.MailCreator;
-import com.gs.common.sms.SmsCreator;
-import com.gs.common.sms.SmsCreatorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

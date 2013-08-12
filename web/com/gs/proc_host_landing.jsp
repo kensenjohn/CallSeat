@@ -1,5 +1,5 @@
 <%@ page import="org.json.JSONObject"%>
-
+<%@include file="/web/com/gs/common/security_proc_page.jsp"%>
 <%
 
 	JSONObject jsonParentObj = new JSONObject();

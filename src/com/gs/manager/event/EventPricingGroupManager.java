@@ -9,7 +9,7 @@ import java.util.Locale;
 import com.gs.bean.CheckoutBean;
 import com.gs.bean.PurchaseTransactionBean;
 import com.gs.bean.TaxBean;
-import com.gs.common.ExceptionHandler;
+import com.gs.common.exception.ExceptionHandler;
 import com.gs.common.ParseUtil;
 import com.gs.manager.TaxManager;
 import org.json.JSONArray;

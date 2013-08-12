@@ -86,4 +86,12 @@ public class ParseUtil {
     public static String dToS(Double dInput) {
         return Double.toString(dInput);
     }
+
+    public static String LToS(Long lInput) {
+        return Long.toString(lInput);
+    }
+
+    public static Integer LToI(Long lInput) {
+        return lInput.intValue();
+    }
 }

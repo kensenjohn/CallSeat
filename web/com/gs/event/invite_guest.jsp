@@ -3,6 +3,7 @@
 <%@ page import="com.gs.bean.*"%>
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
+<%@ page import="com.gs.common.exception.ExceptionHandler" %>
 
 <jsp:include page="../common/header_top.jsp"/>
 <jsp:include page="../common/security.jsp"/>

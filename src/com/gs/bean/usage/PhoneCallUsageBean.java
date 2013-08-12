@@ -1,7 +1,7 @@
 package com.gs.bean.usage;
 
 import com.gs.common.Constants;
-import com.gs.common.ExceptionHandler;
+import com.gs.common.exception.ExceptionHandler;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.slf4j.Logger;

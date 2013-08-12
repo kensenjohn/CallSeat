@@ -103,29 +103,31 @@ public class Configuration
 	 * 
 	 * Get a value from the configuration file.
 	 */
-	public String get(String key)
-	{
-		String rv = Constants.EMPTY;
-
-		// if the file has been modified since the last get access, reload
-		// its contents before proceeding.
-		long modifiedNow = fh.lastModified();
-		if (modifiedNow > lastModified)
-		{
-			getConfig();
-			lastModified = modifiedNow;
-		}
-
-		rv = config.get(key);
-
-		if (rv == null)
-		{
-			return "";
-		} else
-		{
-			return rv;
-		}
+	public String get(String key) {
+        return get(key, Constants.EMPTY);
 	}
+
+    public String get(String key, String sDefault ) {
+        String rv = Constants.EMPTY;
+        // if the file has been modified since the last get access, reload
+        // its contents before proceeding.
+        long modifiedNow = fh.lastModified();
+        if (modifiedNow > lastModified) {
+            getConfig();
+            lastModified = modifiedNow;
+        }
+        if(!"".equalsIgnoreCase(ParseUtil.checkNull(key) )) {
+            rv = ParseUtil.checkNull(config.get(key));
+            if( rv == null || "".equalsIgnoreCase(rv) ) { // if result is empty, send back default
+                rv = ParseUtil.checkNull(sDefault);
+            }
+        }
+        return rv;
+    }
+
+    public boolean wasModified () {
+        return (fh.lastModified()  > lastModified ) ;
+    }
 
 	/*
 	 * reload()

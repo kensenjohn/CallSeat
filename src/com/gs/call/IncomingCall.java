@@ -12,7 +12,7 @@ import com.gs.bean.CallTransactionBean;
 import com.gs.bean.twilio.IncomingCallBean;
 import com.gs.common.CallTransaction;
 import com.gs.common.Constants;
-import com.gs.common.ExceptionHandler;
+import com.gs.common.exception.ExceptionHandler;
 import com.twilio.sdk.verbs.TwiMLResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

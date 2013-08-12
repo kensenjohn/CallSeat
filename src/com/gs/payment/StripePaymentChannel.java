@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
-import com.gs.common.ExceptionHandler;
+import com.gs.common.exception.ExceptionHandler;
 import com.gs.common.ParseUtil;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;

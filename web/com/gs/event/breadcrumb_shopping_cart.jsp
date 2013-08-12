@@ -1,5 +1,5 @@
 <%@ page import="com.gs.common.ParseUtil" %>
-
+<%@include file="/web/com/gs/common/security.jsp"%>
 <%
     String sCurrentlyActive = ParseUtil.checkNull(request.getParameter("active_now"));
     String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));

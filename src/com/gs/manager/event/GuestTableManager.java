@@ -3,7 +3,6 @@ package com.gs.manager.event;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 
 import org.json.JSONArray;
@@ -18,7 +17,7 @@ import com.gs.bean.GuestBean;
 import com.gs.bean.TableBean;
 import com.gs.bean.TableGuestsBean;
 import com.gs.bean.UserInfoBean;
-import com.gs.common.ExceptionHandler;
+import com.gs.common.exception.ExceptionHandler;
 import com.gs.common.ParseUtil;
 import com.gs.common.Utility;
 import com.gs.data.GuestData;

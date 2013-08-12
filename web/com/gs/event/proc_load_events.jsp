@@ -6,7 +6,8 @@
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@page import="com.gs.json.*"%>
-
+<%@ page import="com.gs.common.exception.ExceptionHandler" %>
+<%@include file="/web/com/gs/common/security_proc_page.jsp"%>
 <%
 JSONObject jsonResponseObj = new JSONObject();
 String sAdminID = ParseUtil.checkNull(request.getParameter("admin_id"));

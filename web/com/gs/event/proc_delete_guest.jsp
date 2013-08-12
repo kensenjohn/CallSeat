@@ -7,7 +7,7 @@
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@page import="com.gs.json.*"%>
-
+<%@include file="/web/com/gs/common/security_proc_page.jsp"%>
 <%
 JSONObject jsonResponseObj = new JSONObject();
 

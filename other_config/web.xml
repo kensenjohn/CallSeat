@@ -43,7 +43,7 @@
     <filter>
         <filter-name>Data Secure Filter</filter-name>
 
-        <filter-class>com.gs.common.DataSecureFilter</filter-class>
+        <filter-class>com.gs.common.datasecurity.DataSecureFilter</filter-class>
         <init-param>
         <param-name>owsapi_policy</param-name>
         <param-value>antisamy-slashdot-1.4.4.xml</param-value>

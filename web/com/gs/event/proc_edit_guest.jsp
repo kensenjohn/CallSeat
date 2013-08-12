@@ -9,6 +9,8 @@
 <%@page import="com.gs.json.*"%>
 <%@ page import="com.google.i18n.phonenumbers.Phonenumber" %>
 <%@ page import="com.google.i18n.phonenumbers.PhoneNumberUtil" %>
+<%@ page import="com.gs.common.exception.ExceptionHandler" %>
+<%@include file="/web/com/gs/common/security_proc_page.jsp"%>
 <%
 JSONObject jsonResponseObj = new JSONObject();
 

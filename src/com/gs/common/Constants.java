@@ -9,6 +9,7 @@ public class Constants {
 
 	public static String DBCONN_PROP = PROP_FILE_PATH + "dbconnections.prop";
 	public static String APPLICATION_PROP = PROP_FILE_PATH + "application.prop";
+    public static String UNSAFE_WORD_FILTER_PROP = PROP_FILE_PATH + "unsafe_word_filter.prop";
 	public static String PROCESS_SCHEDULER_PROP = PROP_FILE_PATH
 			+ "process_scheduler.prop";
 	public static String EMAILER_PROP = PROP_FILE_PATH + "emailer.prop";
@@ -281,6 +282,28 @@ public class Constants {
 	public final static String PROP_STRIPE_LIVE_PUBLISHABLE_KEY = "stripe_live_publishable_key";
 	public final static String PROP_STRIPE_TEST_SECRET_KEY = "stripe_test_secret_key";
 	public final static String PROP_STRIPE_LIVE_SECRET_KEY = "stripe_live_secret_key";
+
+    public enum PROP_UNSAFE_WORD_FILTER {
+        POTENTIAL_UNSAFE_WORD("potential_unsafe_words"), DEFINITE_UNSAFE_WORD("definite_unsafe_words"), DELIMITER("delimiter"),
+        IS_FILTER_ENABLED("is_filter_enabled","true"),RELOAD_FILTER_PARAM_INTERVAL_IN_MINS("reload_filter_param_interval_in_minutes","15");
+        private String unsafeWordFilter = "";
+        private String defaultValue = "";
+
+        PROP_UNSAFE_WORD_FILTER(String sUnsafeWordFilter) {
+            this.unsafeWordFilter =sUnsafeWordFilter;
+        }
+        PROP_UNSAFE_WORD_FILTER(String sUnsafeWordFilter, String sDefaultValue) {
+            this.unsafeWordFilter = sUnsafeWordFilter;
+            this.defaultValue = sDefaultValue;
+        }
+        public String getUnsafeWordFilterPropKey() {
+            return unsafeWordFilter;
+        }
+
+        public String getDefaultValue() {
+            return defaultValue;
+        }
+    }
 	
 	public enum ANALYTICS_KEYS {
 		GOOGLE_TRACKING_ID("google_tracking_id");
