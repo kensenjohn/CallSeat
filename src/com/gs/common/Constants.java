@@ -558,4 +558,20 @@ public class Constants {
 
     public static Integer MAX_SMS_LENGTH = 160;
 
+    public enum RSVP_WEB_PARAM {
+        LINK_ID("l"), RESPONSE("response"), RSVP_NUM("rsvp_num"), COMMENTS("comments");
+
+        private String param = Constants.EMPTY;
+        RSVP_WEB_PARAM(String param) {
+            this.param = param;
+        }
+        public String getParam() {
+            return this.param;
+        }
+    }
+
+    public enum GUEST_WEB_RESPONSE_TYPE {
+        NONE,RSVP;
+    }
+
 }

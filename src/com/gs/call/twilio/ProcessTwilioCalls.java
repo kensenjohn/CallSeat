@@ -3,7 +3,7 @@ package com.gs.call.twilio;
 import com.gs.bean.twilio.TwilioIncomingCallBean;
 import com.gs.call.CallResponse;
 import com.gs.call.ProcessCalls;
-import com.gs.task.Task;
+import com.gs.call.task.Task;
 
 public class ProcessTwilioCalls extends ProcessCalls
 {

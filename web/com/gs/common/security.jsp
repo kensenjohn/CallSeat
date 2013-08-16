@@ -20,7 +20,7 @@
 		//This section will identify whether there was insecure params used in a request
   		String sErrorParam = com.gs.common.ParseUtil.checkNull( (String)request.getAttribute("INSECURE_PARAMS_ERROR") );
   		boolean isSecurityError = com.gs.common.ParseUtil.sTob(sErrorParam) ;
-        securityLogging.error("isSecurityError -" + isSecurityError);
+        //securityLogging.error("isSecurityError -" + isSecurityError);
   		if(isSecurityError)
   		{
   			response.sendRedirect("/web/com/gs/common/error/error.jsp");
@@ -32,14 +32,14 @@
   		{
   			session.removeAttribute("from_cookie");  //reset the session.
   		}
-  		securityLogging.error("Session from cookie -" + isFromCookie);
+  		//securityLogging.error("Session from cookie -" + isFromCookie);
   		boolean isSignedIn = false;
   		HttpSession  reqSession = request.getSession(false);
   		if(reqSession!=null)
   		{
   			AdminBean adminBean = (AdminBean) reqSession.getAttribute(Constants.USER_SESSION);
   			
-  			securityLogging.error("Admin Bean - " + adminBean);
+  			//securityLogging.error("Admin Bean - " + adminBean);
   			String sFirstName = "";
   			if( adminBean!=null && adminBean.isAdminExists() )
   			{
@@ -58,7 +58,7 @@
   					adminBean = adminManager.getAdmin(sUserId);
   				}
   			}
-  			securityLogging.error("11 is signe in - " + isSignedIn);
+  			//securityLogging.error("11 is signe in - " + isSignedIn);
   			if( adminBean!=null && adminBean.isAdminExists() )
   			{
   				isSignedIn = true;
@@ -66,7 +66,7 @@
   				sAdminIdSecure = adminBean.getAdminId();
   				reqSession.setAttribute(Constants.USER_SESSION,adminBean);
   			}
-  			securityLogging.error("22 is signe in - " + isSignedIn);
+  			//securityLogging.error("22 is signe in - " + isSignedIn);
   		}
   		
   		

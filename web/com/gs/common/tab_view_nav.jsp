@@ -16,8 +16,11 @@
 				<a  id="guest_view_tab">Invited Guests</a>
 			</li>
 			<li  id="li_phone_num">
-				<a  id="phone_num_tab">Phone Number</a>
+				<a  id="phone_num_tab">Phone Numbers</a>
 			</li>
+            <li  id="li_email">
+                <a  id="email_tab">Emails</a>
+            </li>
 		</ul>
 	</div>
 </div>

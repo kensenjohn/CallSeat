@@ -668,6 +668,21 @@
                             </div>
 					</div>				
 			</div>
+                    <!-- The emails setup summary -->
+                    <div  class="row" id="div_emails"  style="display:none;">
+                        <div class="offset_0_5 span11">
+                            <div class="row" id="tab_emails_warning"  style="background-color:#BE5F6C;display:none;">
+                                <div class="span11">
+                                    <h2 style="color:white;">Demo Phone Number Mode</h2>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span2">
+                                    &nbsp;
+                                </div>
+                            </div>
+                        </div>
+                    </div>
 		</div>										
 		
 	</div>
@@ -784,6 +799,15 @@
 			}
 
 		});
+        $("#email_tab").click(function(){
+            if(varEventID == '') {
+                displayMssgBoxAlert('Please create the seating plan before creating phone numbers', true);
+            } else {
+                toggleActionNavs('li_email');
+                displayEmailView('li_email');
+                loadEventFeatures();
+            }
+        });
 		
 		if(varIsNewEventCreateClicked)
 		{
@@ -1090,6 +1114,7 @@
 		$("#div_guests_details").empty();
 		$('#div_event_summary').hide();
 		$('#div_phone_numbers').hide();
+        $('#div_emails').hide();
 		
 	}
 	
@@ -1126,8 +1151,13 @@
 		switchTab('li_phone_num');
 		$('#div_phone_numbers').show();
 		loadPhoneNumber();
-		//loadPhoneNumberFrame();
 	}
+    function displayEmailView(tab_id)
+    {
+        switchTab('li_email');
+        $('#div_emails').show();
+        loadEmails();
+    }
 	
 	function loadPhoneNumber()
 	{
@@ -1139,6 +1169,17 @@
 		
 		getDataAjax(actionUrl,dataString,methodType,displayPhoneNumbers);
 	}
+
+    function loadEmails()
+    {
+        //alert("proc_load_phone_numbers.jsp");
+        var actionUrl = "proc_load_emails.jsp";
+        var methodType = "POST";
+        var dataString = "admin_id="+varAdminID+"&event_id="+varEventID;
+
+
+        getDataAjax(actionUrl,dataString,methodType,displayEmails);
+    }
 	
 	function loadActions()
 	{
@@ -1733,7 +1774,31 @@
 		toggleActionNavs('li_phone_num');
 		displayPhoneNumberView('li_phone_num');
 	}
-	
+
+    function displayEmails( jsonResult ) {
+        if(jsonResult!=undefined){
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                var varIsMessageExist = varResponseObj.is_message_exist;
+                if(varIsMessageExist == true) {
+                    var jsonResponseMessage = varResponseObj.messages;
+                    var varArrErrorMssg = jsonResponseMessage.error_mssg
+                    displayMessages( varArrErrorMssg );
+                }
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined ) {
+                var varIsPayloadExist = varResponseObj.is_payload_exist;
+                if(varIsPayloadExist == true)  {
+                    var jsonResponseObj = varResponseObj.payload;
+
+                    processEmails( jsonResponseObj );
+                }
+            } else {
+                displayMssgBoxAlert("There was an error processing your request. Please try again later.");
+            }
+        }  else  {
+            displayMssgBoxAlert("There was an error processing your request. Please try again later.");
+        }
+    }
 	function displayPhoneNumbers(jsonResult)
 	{
 		//alert('status = '+jsonResult.status);
@@ -1773,7 +1838,10 @@
             displayMssgBoxAlert("There was an error processing your request. Please try again later.");
 		}
 	}
-	
+
+    function processEmails( jsonResponseObj ) {
+        displayMssgBoxAlert("Invoked processEmails ", false);
+    }
 	function processTelNumbers( jsonResponseObj )
 	{
 		var varTelNumbers= jsonResponseObj.telnumbers;

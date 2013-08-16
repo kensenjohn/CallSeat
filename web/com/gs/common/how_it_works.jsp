@@ -2,10 +2,10 @@
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
 
-<jsp:include page="../common/header_top.jsp"/>
+<jsp:include page="/web/com/gs/common/header_top.jsp"/>
 
-<%@include file="../common/security.jsp"%>
-<jsp:include page="../common/header_bottom.jsp"/>
+<%@include file="/web/com/gs/common/security.jsp"%>
+<jsp:include page="/web/com/gs/common/header_bottom.jsp"/>
 
 <%
     Logger jspLogging = LoggerFactory.getLogger("JspLogging");

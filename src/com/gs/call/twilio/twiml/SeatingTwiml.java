@@ -7,7 +7,7 @@ import com.gs.bean.*;
 import com.gs.common.*;
 import com.gs.common.exception.ExceptionHandler;
 import com.gs.manager.event.EventFeatureManager;
-import com.gs.task.InformGuestTask;
+import com.gs.call.task.InformGuestTask;
 import com.twilio.sdk.verbs.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

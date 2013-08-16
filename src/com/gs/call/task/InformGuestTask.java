@@ -1,4 +1,4 @@
-package com.gs.task;
+package com.gs.call.task;
 
 import com.gs.bean.EventFeatureBean;
 import com.gs.bean.InformGuestBean;
@@ -6,7 +6,6 @@ import com.gs.bean.email.EmailScheduleBean;
 import com.gs.bean.email.EmailTemplateBean;
 import com.gs.bean.sms.SmsScheduleBean;
 import com.gs.bean.sms.SmsTemplateBean;
-import com.gs.bean.twilio.IncomingCallBean;
 import com.gs.common.*;
 import com.gs.common.mail.EmailSchedulerData;
 import com.gs.common.mail.MailingServiceData;

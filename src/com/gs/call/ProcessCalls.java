@@ -14,10 +14,10 @@ import com.gs.common.Constants;
 import com.gs.manager.event.TelNumberManager;
 import com.gs.manager.event.TelNumberMetaData;
 import com.gs.manager.event.TelNumberResponse;
-import com.gs.task.DemoCallTask;
-import com.gs.task.RsvpTask;
-import com.gs.task.SeatingTask;
-import com.gs.task.Task;
+import com.gs.call.task.DemoCallTask;
+import com.gs.call.task.RsvpTask;
+import com.gs.call.task.SeatingTask;
+import com.gs.call.task.Task;
 
 public abstract class ProcessCalls {
 	protected IncomingCallBean incomingCallBean = null;

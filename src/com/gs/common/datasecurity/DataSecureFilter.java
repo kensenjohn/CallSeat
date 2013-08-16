@@ -1,37 +1,20 @@
 package com.gs.common.datasecurity;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.Set;
-
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-
 import com.gs.bean.DataSecurityRequestBean;
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
-import com.gs.common.DateSupport;
 import com.gs.common.ParseUtil;
 import com.gs.common.exception.ExceptionHandler;
 import com.gs.common.exception.PropertyFileException;
-import org.jsoup.Jsoup;
-import org.jsoup.safety.Whitelist;
-import org.owasp.validator.html.AntiSamy;
-import org.owasp.validator.html.CleanResults;
 import org.owasp.validator.html.Policy;
-import org.owasp.validator.html.PolicyException;
-import org.owasp.validator.html.ScanException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import org.owasp.esapi.ESAPI;
+import javax.servlet.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.util.Map;
 
 public class DataSecureFilter implements Filter {
 

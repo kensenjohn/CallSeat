@@ -1,13 +1,10 @@
-package com.gs.task;
+package com.gs.call.task;
 
 import java.util.ArrayList;
 
 import com.gs.bean.CallTransactionBean;
-import com.gs.bean.InformGuestBean;
 import com.gs.call.twilio.twiml.TwimlSupport;
 import com.gs.common.CallTransaction;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.gs.bean.EventBean;
 import com.gs.bean.EventGuestBean;
