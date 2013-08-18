@@ -73,14 +73,19 @@
 						
 						if(tmpGuest!=undefined && tmpGuest.guest_id != '')
 						{
-							
+							var varRsvpSeat = tmpGuest.rsvp_seats;
+                            if(varRsvpSeat==-1){
+                                varRsvpSeat = '-';
+                            } else if ( varRsvpSeat==0 ) {
+                                varRsvpSeat = 'Not attending';
+                            }
 							valRows = valRows + '<tr id="guest_'+tmpGuest.guest_id+'" '+varOddClass+'>' + 
 									'<td  >' + tmpGuest.guest_bean.user_info.first_name + ' ' + tmpGuest.guest_bean.user_info.last_name + '</td>' + 
 									'<td >'
                                         + tmpGuest.guest_bean.user_info.human_formatted_cell_phone +
                                     '</td>' +
 									'<td >' + tmpGuest.total_seats + '</td>' +
-									'<td >' + tmpGuest.rsvp_seats + '</td>' +
+									'<td >' + varRsvpSeat + '</td>' +
 									'<td  >' + this.create_action_urls( tmpGuest ) + ' </td>';
 						}
 						

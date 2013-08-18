@@ -38,7 +38,6 @@ public class WebResponseData {
                     guestWebResponseBean = new GuestWebResponseBean(hmWebResponse);
                 }
             }
-            appLogging.info("Aparmas: " + aParams + " Query : " + sQuery + "\nguestWebResponseBean : " + guestWebResponseBean);
         }
         return guestWebResponseBean;
     }

@@ -30,7 +30,7 @@
         webRsvpRequestBean.setGuestId( ParseUtil.checkNull(guestWebResponseBean.getGuestId()) );
         webRsvpRequestBean.setEventId( ParseUtil.checkNull(guestWebResponseBean.getEventId()) );
     }
-    jspLogging.info(" GuestResponseBean : " + guestWebResponseBean + "\nwebRsvpRequestBean : " + webRsvpRequestBean);
+    //jspLogging.info(" GuestResponseBean : " + guestWebResponseBean + "\nwebRsvpRequestBean : " + webRsvpRequestBean);
     GuestBean guestBean = readWebRsvpResponse.getGuestFromLink(webRsvpRequestBean);
     EventBean eventBean = readWebRsvpResponse.getEventFromLink(webRsvpRequestBean);
     EventGuestBean eventGuestBean = readWebRsvpResponse.getEventGuestSeating(webRsvpRequestBean);
@@ -46,10 +46,10 @@
             <div class="span2"><div class="logo">&nbsp;</div></div>
          </div>
     </div>
-    <div class="scratch_area">
-        <div class="row">
-            <div class="span3">
-                &nbsp;
+    <div class="scratch_area" >
+        <div class="row"  style="background-image: url('/web/img/header_bkg.png');margin-left: 0px; height:103px  ">
+            <div class="span3" style>
+                &nbsp;<br>
             </div>
         </div>
         <%if(guestBean!=null && !"".equalsIgnoreCase(guestBean.getGuestId()) && eventBean!=null && !"".equalsIgnoreCase(eventBean.getEventId())
@@ -67,12 +67,60 @@
             Integer iTotalInvitedSeats = ParseUtil.sToI( eventGuestBean.getTotalNumberOfSeats() );
             Integer iRsvpSeats = ParseUtil.sToI( eventGuestBean.getRsvpSeats() );
 
+            StringBuilder strInvitationMessage = new StringBuilder("You are invited to attend ");
+            strInvitationMessage.append( ParseUtil.checkNull(eventBean.getEventName())).append(" on ").append(ParseUtil.checkNull(eventBean.getHumanEventDate())).append(".<br>");
+            if(iTotalInvitedSeats>1) {
+                strInvitationMessage.append("You may bring ").append( (iTotalInvitedSeats-1));
+                if((iTotalInvitedSeats-1) == 1 ) {
+                    strInvitationMessage.append(" guest ");
+                } else {
+                    strInvitationMessage.append(" guests ");
+                }
+                strInvitationMessage.append(" with you.") ;
+            }
+
+            boolean isYesSelected = false;
+            boolean isNoSelected = false;
+
+            StringBuilder strRSVPMessage = new StringBuilder();
+            if(iRsvpSeats>=0){
+                strRSVPMessage.append("Your response:<br>");
+            }
+            if(iRsvpSeats==1){
+                isYesSelected = true;
+                strRSVPMessage.append("<span style='font-weight:bold;font-size: 115%; color: #614b5b; margin: 0px'>Yes</span> I will attend.");
+            } if(iRsvpSeats>1){
+                isYesSelected = true;
+                strRSVPMessage.append("<span style='font-weight:bold;font-size: 115%; color: #614b5b; margin: 0px'>Yes</span> I will attend. I will bring <span style='font-weight:bold;font-size: 115%; color: #614b5b; margin: 0px'>").append(iRsvpSeats-1);
+                if((iRsvpSeats-1) == 1 ) {
+                    strRSVPMessage.append(" guest</span> with me. (Total ").append(iRsvpSeats).append(")");
+                } else if(iRsvpSeats > 1 ) {
+                    strRSVPMessage.append(" guests</span> with me. (Total ").append(iRsvpSeats).append(")");
+                }
+            } else if(iRsvpSeats==0){
+                isNoSelected = true;
+                strRSVPMessage.append("<span style='font-weight:bold;font-size: 115%; color: #614b5b; margin: 0px'>No</span> I will not attend.");
+            } else if(iRsvpSeats<0){
+                strRSVPMessage.append("Please respond below.");
+            }
+
+            if(iRsvpSeats>=0){
+                strRSVPMessage.append("<br><br>You can update your response below.");
+            }
+
+
+
         %>
         <div class="row">
             <div class="offset_0_5 span12">
+                <div class="row"  style="height:30px  ">
+                    <div class="span3" style>
+                        &nbsp;<br>
+                    </div>
+                </div>
                 <div class="row">
-                    <div class="span8" style="text-align: center;">
-                        <h1>Invitation for <%=eventBean.getEventName()%> on <%=eventBean.getHumanEventDate()%></h1>
+                    <div class="span10" style="text-align: center;">
+                        <h1>Invitation for <%=eventBean.getEventName()%></h1>
                     </div>
                 </div>
                 <div class="row">
@@ -88,21 +136,28 @@
 
                 <div class="row">
                     <div class="span12">
-                        <h4>Dear <%=sGuestGivenName%>,</h4>
+                        Dear <%=sGuestGivenName%>,
                     </div>
                 </div>
+                <div class="row">
+                    <div class="span12">
+                        <p><%=strInvitationMessage.toString()%></p>
+                        <p><%=strRSVPMessage.toString()%></p>
+                    </div>
+                </div>
+                <form id="frm_rsvp_response">
                 <div class="row">
                     <div class="span3" style="text-align: center;">
                         <h4>Will you attend? </h4>
                     </div>
                     <div class="span1" style="text-align: left;">
-                       <input type="radio" name="will_you_attend" id="attend_yes" value="yes"  style="width: 10px;">&nbsp;Yes
+                       <input type="radio" name="will_you_attend" id="attend_yes" value="yes"  style="width: 10px;" <%=isYesSelected?"checked":""%>>&nbsp;Yes
                     </div>
                     <div class="span1" style="text-align: left;">
-                        <input type="radio" name="will_you_attend" id="attend_no" value="no"  style="width:10px;">&nbsp;No
+                        <input type="radio" name="will_you_attend" id="attend_no" value="no"  style="width:10px;"  <%=isNoSelected?"checked":""%>>&nbsp;No
                     </div>
                 </div>
-                <div class="row" id="row_rsvp_seat_selection" style="display:none;">
+                <div class="row" id="row_rsvp_seat_selection" style="<%=isYesSelected?"":"display:none;"%>">
                     <div class="span3">
                        &nbsp;
                     </div>
@@ -111,7 +166,7 @@
                             if( iTotalInvitedSeats>1 ) {
                                 int optionSelected = (iRsvpSeats-1);
                                 if(optionSelected<0 && iRsvpSeats==-1) {
-                                    optionSelected =  (iTotalInvitedSeats-1);
+                                    optionSelected =  (iTotalInvitedSeats-1);  // user has not RSVPed before,
                                 }
                         %>
                                 I will attend along with <select name="num_of_guests" id="num_of_guests">
@@ -126,18 +181,15 @@
                         <%
                             } else {
                         %>
-                                I am the only one who will attend.
+                                I will attend.
                         <%
                             }
                         %>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="span3">
-                        &nbsp;
-                    </div>
-                </div>
-                <div class="row">
+                <input type="hidden" id="link_id" name="link_id" value="<%=sLinkId%>">
+                </form>
+                <div class="row" style="height:30px  ">
                     <div class="span3">
                         &nbsp;
                     </div>
@@ -150,12 +202,7 @@
                         <input type="button" class="btn btn-green btn-large" value="Update" id="update_rsvp"/>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="span3">
-                        &nbsp;
-                    </div>
-                </div>
-                <div class="row">
+                <div class="row" style="height:100px  ">
                     <div class="span3">
                         &nbsp;
                     </div>
@@ -198,53 +245,87 @@
             }
         }
         function updateGuestRSVP() {
-            displayMssgBoxAlert('Update clicked', false);
+            var url = 'proc_rsvp.jsp';
+            var formData = $("#frm_rsvp_response").serialize();
+            var method = "POST";
+            makeAjaxCall(url,formData,method, getResult)
+        }
+        function makeAjaxCall(actionUrl,dataString,methodType,callBackMethod) {
+            $.ajax({
+                url: actionUrl ,
+                type: methodType ,
+                dataType: "json",
+                data: dataString ,
+                success: callBackMethod,
+                error:function(a,b,c){
+                    alert(a.responseText + ' = ' + b + " = " + c);
+                }
+            });
+        }
+        function getResult(jsonResult) {
+            if(jsonResult!=undefined)  {
+                var varResponseObj = jsonResult.response;
+                if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                    var varIsMessageExist = varResponseObj.is_message_exist;
+                    if(varIsMessageExist == true) {
+                        var jsonResponseMessage = varResponseObj.messages;
+                        var varArrErrorMssg = jsonResponseMessage.error_mssg
+                        displayMssgBoxMessages( varArrErrorMssg , true );
+                    }
+                }  else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
+                    var varIsMessageExist = varResponseObj.is_message_exist;
+                    if(varIsMessageExist == true) {
+                        var jsonResponseMessage = varResponseObj.messages;
+                        var varArrErrorMssg = jsonResponseMessage.ok_mssg;
+                        displayMssgBoxMessages( varArrErrorMssg , false );
+                    }
+                    var varIsPayloadExist = varResponseObj.is_payload_exist;
+
+                    if(varIsPayloadExist == true) {
+                        var varPayload = varResponseObj.payload;
+                    }
+                }
+            }
         }
 
-        function displayMssgBoxAlert(varMessage, isError)
-        {
+        function displayMssgBoxAlert(varMessage, isError) {
             var varTitle = 'Status';
             var varType = 'info';
-            if(isError)
-            {
+            if(isError) {
                 varTitle = 'Error';
                 varType = 'error';
-            }
-            else
-            {
+            }  else  {
                 varTitle = 'Status';
                 varType = 'info';
             }
 
-            if(varMessage!='')
-            {
+            if(varMessage!='')  {
                 $.msgBox({
                     title: varTitle,
                     content: varMessage,
-                    type: varType
+                    type: varType,
+                    buttons: [{ value: "Ok" }],
+                    success: function (result) {
+                        if (result == "Ok") {
+                            location.reload();
+                        }
+                    }
                 });
             }
         }
 
-        function displayMssgBoxMessages(varArrMessages, isError)
-        {
-            if(varArrMessages!=undefined)
-            {
-
-
+        function displayMssgBoxMessages(varArrMessages, isError) {
+            if(varArrMessages!=undefined) {
                 var varMssg = '';
                 var isFirst = true;
-                for(var i = 0; i<varArrMessages.length; i++)
-                {
-                    if(isFirst == false)
-                    {
+                for(var i = 0; i<varArrMessages.length; i++)  {
+                    if(isFirst == false) {
                         varMssg = varMssg + '\n';
                     }
                     varMssg = varMssg + varArrMessages[i].text;
                 }
 
-                if(varMssg!='')
-                {
+                if(varMssg!='')  {
                     displayMssgBoxAlert(varMssg,isError);
                 }
             }

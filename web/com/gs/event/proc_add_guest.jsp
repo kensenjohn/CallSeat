@@ -315,7 +315,7 @@ try
 }
 catch(Exception e)
 {
-	Text errorText = new ErrorText("We were unable to complete your reques. Please try again later.","err_mssg") ;
+	Text errorText = new ErrorText("We were unable to complete your request. Please try again later.","err_mssg") ;
 	arrErrorText.add(errorText);
 	
 	responseStatus = RespConstants.Status.ERROR;

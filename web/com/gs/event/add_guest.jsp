@@ -42,7 +42,7 @@
 					else if(isSingleEventGuestEdit)
 					{
 %>
-						<h2>Edit Guest in event <span id="div_event_list"></span></h2>
+						<h2>Edit Guest in seating plan <span id="div_event_list"></span></h2>
 <%						
 					}
 					else
@@ -130,8 +130,8 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="span2" >
-								<input type="text" id="rsvp_num_of_seats" name="rsvp_num_of_seats"/>
+							<div class="span5" >
+								<input type="text" id="rsvp_num_of_seats" name="rsvp_num_of_seats"/> &nbsp;&nbsp;&nbsp;<span id="rsvp_status"></span>
 							</div>
 						</div>
 <%
@@ -487,12 +487,21 @@
 				}
 			}
 		}
-		function populateGuestEventData(varGuestEventData)
-		{
-			if(varGuestEventData!=undefined)
-			{
+		function populateGuestEventData(varGuestEventData) {
+			if(varGuestEventData!=undefined) {
 				$('#invited_num_of_seats').val(varGuestEventData.total_seats);
-				$('#rsvp_num_of_seats').val(varGuestEventData.rsvp_seats);
+
+                var varRsvpSeats =  varGuestEventData.rsvp_seats;
+                var varRsvpStatus = '';
+                if(varGuestEventData.rsvp_seats==-1){
+                    varRsvpStatus = '(No response from guest)';
+                    varRsvpSeats = '-';
+                } else if(varGuestEventData.rsvp_seats==0){
+                    varRsvpStatus = '(Will not attend)';
+                    varRsvpSeats = '0';
+                }
+                $('#rsvp_num_of_seats').val( varRsvpSeats );
+                $('#rsvp_status').html( varRsvpStatus );
 			}
 		}
 		function populateGuestData(varSingleGuest)
@@ -549,22 +558,6 @@
 					}
 				}
 			}
-			/*if(!jsonResult.success)
-			{
-				
-			}
-			else
-			{
-				var eventDetails = jsonResult.event_detail;
-				if(eventDetails!=undefined)
-				{
-					
-					var varEventDD = generateEventDropDown(eventDetails);
-					
-					$("#div_event_list").append(varEventDD);
-					
-				}
-			}*/
 		}
 		
 		function generateEventName(eventDetails)
@@ -625,11 +618,6 @@
 						{
 							createAssignmentButton(varGuestId);
 						}
-						
-						
-						
-						
-						
 						
 						if(!varIsAllGuest)
 						{
@@ -702,10 +690,8 @@
             }
         }
 
-        function displayMssgBoxMessages(varArrMessages, isError)
-        {
-            if(varArrMessages!=undefined)
-            {
+        function displayMssgBoxMessages(varArrMessages, isError) {
+            if(varArrMessages!=undefined) {
 
 
                 var varMssg = '';

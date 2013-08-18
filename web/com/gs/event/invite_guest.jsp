@@ -44,7 +44,7 @@
 				</div>
 			<form id='frm_event_guests'>
 				<div class="row" >
-					<div class="offset_0_5 span11" id='guest_list'>
+					<div class="offset_0_5 span12" id='guest_list'>
 					</div>
 				</div>
 			</form>
@@ -295,31 +295,29 @@
 		
 		function create_header()
 		{
-			var valHeader = '<thead><tr> ' + 
+			var valHeader = '<thead><tr> ' +
+            '<th style="width:18%"  >Guest Name</th>'+
 			'<th style="width:7%" >Invited</th>'+
-			'<th style="width:27%"  >Guest Name</th>'+
-			'<th style="width:18%" >Invited for seats</th>'+
-			'<th style="width:18%" >RSVP to seats</th><th style="width:30%" class="tbl_th"></th>'+
+			'<th style="width:15%;text-align:center;" >Invite seats</th>'+
+			'<th style="width:24%;text-align:center;" >RSVP<span style="font-size:13px;font-weight:normal;">(Leave this empty if guest has not sent RSVP)</span></th><th style="width:30%" class="tbl_th"></th>'+
 			'</tr></thead>';
 			return valHeader; 
 		}
 		function create_rows(varArrGuest)
 		{
 			valRows = '';
-			for(var i = 0; i<varArrGuest.length; i++)
-			{
+			for(var i = 0; i<varArrGuest.length; i++) {
 				var varTmpGuest = varArrGuest[i];
 				valRows = valRows + '<tr id="event_'+varTmpGuest.guest_id+'">'+
-					'<td ><span style="text-align:center;" id="event_invite_status_'+varTmpGuest.guest_id+'">No</span></td>'+
-					'<td  >'+varTmpGuest.user_info.first_name+' '+varTmpGuest.user_info.last_name+'</td>'+
-					'<td ><input id="event_invited_'+varTmpGuest.guest_id+'" name="event_invited_'+varTmpGuest.guest_id+'" class="span1"  type="textbox"></td>' +
-					'<td  ><input id="event_rsvp_'+varTmpGuest.guest_id+'" name="event_rsvp_'+varTmpGuest.guest_id+'" class="span1" type="textbox" ></td>'+
-					'<td  >'+
+                    '<td>'+varTmpGuest.user_info.first_name+' '+varTmpGuest.user_info.last_name+'</td>'+
+					'<td><span style="text-align:center;" id="event_invite_status_'+varTmpGuest.guest_id+'">No</span></td>'+
+					'<td><input id="event_invited_'+varTmpGuest.guest_id+'" name="event_invited_'+varTmpGuest.guest_id+'" class="span1"  type="textbox"></td>' +
+					'<td style="text-align: center;"><input id="event_rsvp_'+varTmpGuest.guest_id+'" name="event_rsvp_'+varTmpGuest.guest_id+'" class="span1" type="textbox" ></td>'+
+					'<td>'+
 					'<button id="event_assign_'+varTmpGuest.guest_id+'" name="event_assign_'+varTmpGuest.guest_id+'" type="button" class="btn btn-small" >Invite Guest</button>'+
 					'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+
 					'<button id="event_remove_'+varTmpGuest.guest_id+'" name="event_remove_'+varTmpGuest.guest_id+'" type="button" class="btn btn-small" style="display:none;">Uninvite Guest</button>'+
-					'</td><input type="hidden" value="" id="event_guest_id_'+varTmpGuest.guest_id+'" name="event_guest_id_'+varTmpGuest.guest_id+'"></tr>'
-					;
+					'</td></tr><input type="hidden" value="" id="event_guest_id_'+varTmpGuest.guest_id+'" name="event_guest_id_'+varTmpGuest.guest_id+'">' ;
 			}
 			return valRows;
 		}

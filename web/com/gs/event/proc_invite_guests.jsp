@@ -29,7 +29,11 @@ boolean  isLoadData = ParseUtil.sTob(request.getParameter("load_data"));
 boolean  isInviteGuest = ParseUtil.sTob(request.getParameter("invite_guest"));
 boolean  isUnInviteGuest = ParseUtil.sTob(request.getParameter("un_invite_guest"));
 Integer iInvitedSeats = ParseUtil.sToI(request.getParameter("invited_seats"));
-Integer iRsvpSeats = ParseUtil.sToI(request.getParameter("rsvp_seats"));
+String sRsvpSeat = ParseUtil.checkNull(request.getParameter("rsvp_seats"));
+Integer iRsvpSeats = -1;
+if(sRsvpSeat!=null && !"".equalsIgnoreCase(sRsvpSeat)){
+    iRsvpSeats = ParseUtil.sToI(request.getParameter("rsvp_seats"));
+}
 String sGuestID = ParseUtil.checkNull(request.getParameter("guest_id"));
 String sEventGuestId = ParseUtil.checkNull(request.getParameter("event_guest_id"));
 
@@ -119,7 +123,7 @@ try
 			}
 			else if(iRsvpSeats > iInvitedSeats)
 			{
-				Text errorText = new ErrorText("RSVP number of seats cannot be greated than invited number of seats.","err_mssg") ;		
+				Text errorText = new ErrorText("RSVP number of seats cannot be greater than invited number of seats.","err_mssg") ;
 				arrErrorText.add(errorText);
 				
 				responseStatus = RespConstants.Status.ERROR;
