@@ -1,13 +1,14 @@
 package com.gs.manager;
 
+import com.gs.bean.*;
 import com.gs.bean.email.EmailScheduleBean;
+import com.gs.bean.response.WebRespRequest;
+import com.gs.manager.event.EventManager;
+import com.gs.manager.event.TelNumberManager;
+import com.gs.manager.event.TelNumberMetaData;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gs.bean.AdminBean;
-import com.gs.bean.RegisterAdminBean;
-import com.gs.bean.RestPasswordResponseBean;
-import com.gs.bean.UserInfoBean;
 import com.gs.bean.email.EmailQueueBean;
 import com.gs.bean.email.EmailTemplateBean;
 import com.gs.common.BCrypt;
@@ -20,6 +21,8 @@ import com.gs.common.mail.MailingServiceData;
 import com.gs.common.mail.QuickMailSendThread;
 import com.gs.common.mail.SingleEmailCreator;
 import com.gs.data.AdminData;
+
+import java.util.ArrayList;
 
 public class AdminManager {
 	private static final Logger appLogging = LoggerFactory
@@ -208,6 +211,112 @@ public class AdminManager {
 		}
 
 	}
+
+    public EmailTemplateBean getFormattedRSVPResponseEmail(WebRespRequest webRespRequest ) {
+        EmailTemplateBean guestResponseEmailTemplate = getFormattedRSVPResponseEmail(webRespRequest, new EmailTemplateBean());
+
+        return guestResponseEmailTemplate;
+    }
+
+    public EmailTemplateBean getFormattedRSVPResponseEmail( WebRespRequest webRespRequest , EmailTemplateBean guestResponseEmailTemplate ) {
+
+        if(webRespRequest!=null && !"".equalsIgnoreCase(webRespRequest.getAdminId())  && !"".equalsIgnoreCase(webRespRequest.getEventId()) && guestResponseEmailTemplate!=null ) {
+            TelNumberMetaData telNumberMetaData = new TelNumberMetaData();
+            telNumberMetaData.setAdminId( webRespRequest.getAdminId() );
+            telNumberMetaData.setEventId( webRespRequest.getEventId() );
+            TelNumberManager telNumManager = new TelNumberManager();
+            ArrayList<TelNumberBean> arrTelNumberBean = telNumManager.getTelNumEventDetails(telNumberMetaData);
+
+            Constants.EMAIL_TEMPLATE emailTemplateType = Constants.EMAIL_TEMPLATE.RSVPRESPONSEDEMO;
+            TelNumberBean rsvpTelNumberBean = new TelNumberBean();
+            if(arrTelNumberBean!=null && !arrTelNumberBean.isEmpty()) {
+                for(TelNumberBean telNumberBean : arrTelNumberBean ){
+                    if( Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))  {
+                        emailTemplateType =  Constants.EMAIL_TEMPLATE.RSVPRESPONSE ;
+                        rsvpTelNumberBean = telNumberBean;
+                    } else if ( Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()) ) {
+                        emailTemplateType =  Constants.EMAIL_TEMPLATE.RSVPRESPONSEDEMO ;
+                        rsvpTelNumberBean = telNumberBean;
+                    }
+                }
+            }
+
+            if( Utility.isNullOrEmpty(guestResponseEmailTemplate.getEmailTemplateId())) {
+                MailingServiceData mailingServiceData = new MailingServiceData();
+                guestResponseEmailTemplate = mailingServiceData.getEmailTemplate(emailTemplateType);
+            }
+
+            if(guestResponseEmailTemplate!=null && !"".equalsIgnoreCase(guestResponseEmailTemplate.getEmailTemplateId())) {
+                String sSubject = guestResponseEmailTemplate.getEmailSubject();
+                sSubject = replaceRSVPResponseTemplateWithEventData(sSubject, telNumberMetaData.getEventId());
+                sSubject = replaceRSVPResponseTemplateWithPhoneData(sSubject, rsvpTelNumberBean);
+                sSubject = replaceRSVPResponseTemplateWithHostData(sSubject, telNumberMetaData.getAdminId());
+                guestResponseEmailTemplate.setEmailSubject(sSubject);
+
+                String sHtmlBody = guestResponseEmailTemplate.getHtmlBody();
+                sHtmlBody = replaceRSVPResponseTemplateWithEventData(sHtmlBody, telNumberMetaData.getEventId());
+                sHtmlBody = replaceRSVPResponseTemplateWithPhoneData(sHtmlBody, rsvpTelNumberBean );
+                sHtmlBody = replaceRSVPResponseTemplateWithHostData(sHtmlBody,  telNumberMetaData.getAdminId() );
+                guestResponseEmailTemplate.setHtmlBody(sHtmlBody);
+
+                String sTextBody = guestResponseEmailTemplate.getTextBody();
+                sTextBody = replaceRSVPResponseTemplateWithEventData(sTextBody, telNumberMetaData.getEventId());
+                sTextBody = replaceRSVPResponseTemplateWithPhoneData(sTextBody, rsvpTelNumberBean );
+                sTextBody = replaceRSVPResponseTemplateWithHostData(sTextBody,  telNumberMetaData.getAdminId() );
+                guestResponseEmailTemplate.setTextBody(sTextBody);
+            }
+        }
+        return guestResponseEmailTemplate;
+    }
+
+    private String  replaceRSVPResponseTemplateWithEventData(String sText , String sEventId ) {
+        String srcText = ParseUtil.checkNull(sText);
+        if(sText!=null && !"".equalsIgnoreCase(sText) && sEventId!=null && !"".equalsIgnoreCase(sEventId)) {
+            EventManager eventManager = new EventManager();
+            EventBean eventBean = eventManager.getEvent(sEventId);
+
+            if(eventBean!=null && eventBean.getEventId()!=null && !"".equalsIgnoreCase( eventBean.getEventId() ) ) {
+                srcText = srcText.replaceAll("__SEATINGPLANNAME__",ParseUtil.checkNull(eventBean.getEventName()));
+                srcText = srcText.replaceAll("__RSVPDEADLINE__",ParseUtil.checkNull(eventBean.getHumanEventDate()));
+            }
+
+        }
+        return srcText;
+    }
+    private String replaceRSVPResponseTemplateWithPhoneData(String sText, TelNumberBean rsvpTelNumberBean ) {
+        String srcText = ParseUtil.checkNull(sText);
+        if(sText!=null && !"".equalsIgnoreCase(sText) && rsvpTelNumberBean!=null && !"".equalsIgnoreCase(rsvpTelNumberBean.getTelNumberId())) {
+
+            String sTelephoneNumber = ParseUtil.checkNull(rsvpTelNumberBean.getHumanTelNumber());
+            if ( Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(rsvpTelNumberBean.getTelNumberType()) ) {
+                sTelephoneNumber = " Plan Id : " + ParseUtil.checkNull( rsvpTelNumberBean.getSecretEventIdentity() ) + " Extension : " +  ParseUtil.checkNull( rsvpTelNumberBean.getSecretEventKey() );
+            }
+            srcText = srcText.replaceAll("__RSVPPHONENUM__",ParseUtil.checkNull( sTelephoneNumber ));
+
+        }
+        return srcText;
+    }
+    private String replaceRSVPResponseTemplateWithHostData(String sText , String sAdminId  ) {
+        String srcText = ParseUtil.checkNull(sText);
+        if(sText!=null && !"".equalsIgnoreCase(sText) && sAdminId!=null && !"".equalsIgnoreCase(sAdminId)) {
+            AdminManager adminManager = new AdminManager();
+            AdminBean adminBean = adminManager.getAdmin(sAdminId);
+
+            if(adminBean!=null && adminBean.getAdminId()!=null && !"".equalsIgnoreCase( adminBean.getAdminId() ) ) {
+                srcText = srcText.replaceAll("__HOSTNAME__",ParseUtil.checkNull(adminBean.getAdminUserInfoBean().getFirstName()));
+            }
+
+        }
+        return srcText;
+    }
+
+    private String replaceRSVPResponseTemplateWithRsvpLinkData(String sText , String sGuestId , String sEventId ) {
+        String srcText = ParseUtil.checkNull(sText);
+        if(sText!=null && !"".equalsIgnoreCase(sText) && sGuestId!=null && !"".equalsIgnoreCase(sGuestId)&& sEventId!=null && !"".equalsIgnoreCase(sEventId)) {
+
+        }
+        return srcText;
+    }
 
 	public AdminBean getAdminBeanFromEmail(RegisterAdminBean loginAdminBean) {
 		AdminData adminData = new AdminData();

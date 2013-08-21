@@ -4,6 +4,7 @@ import com.gs.bean.email.EmailScheduleBean;
 import com.gs.bean.sms.SmsScheduleBean;
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
+import com.gs.common.ParseUtil;
 import com.gs.common.db.DBDAO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +36,7 @@ public class EmailSchedulerData {
                     " FK_ADMINID,FK_GUESTID, CREATEDATE, HUMANCREATEDATE,SCHEDULEDSENDDATE,HUMANSCHEDULEDSENDDATE," +
                     " SCHEDULE_STATUS ) VALUES(?,?,?, ?,?,?, ?,?,?, ?)";
             ArrayList<Object> aParams = DBDAO.createConstraint(emailRequestSchedulerBean.getEmailScheduleId(), emailRequestSchedulerBean.getEmailTemplateId(),
-                    emailRequestSchedulerBean.getEventId(), emailRequestSchedulerBean.getAdminId(), emailRequestSchedulerBean.getGuestId(),
+                    emailRequestSchedulerBean.getEventId(), emailRequestSchedulerBean.getAdminId(), ParseUtil.checkNull(emailRequestSchedulerBean.getGuestId()),
                     emailRequestSchedulerBean.getCreateDate(), emailRequestSchedulerBean.getHumanCreateDate(), emailRequestSchedulerBean.getScheduledSendDate(),
                     emailRequestSchedulerBean.getHumanScheduledSendDate(), emailRequestSchedulerBean.getScheduleStatus());
 
@@ -50,11 +51,14 @@ public class EmailSchedulerData {
         if(emailRequestSchedulerBean!=null)
         {
             String sQuery = "UPDATE GTEMAILSCHEDULE SET SCHEDULEDSENDDATE = ? , HUMANSCHEDULEDSENDDATE = ? , SCHEDULE_STATUS = ? , " +
-                    "  FK_EMAILTEMPLATEID = ? WHERE EMAILSCHEDULEID = ? AND FK_EVENTID = ? AND FK_ADMINID = ? AND FK_GUESTID = ? ";
+                    "  FK_EMAILTEMPLATEID = ? WHERE EMAILSCHEDULEID = ? AND FK_EVENTID = ? AND FK_ADMINID = ?";
             ArrayList<Object> aParams = DBDAO.createConstraint( emailRequestSchedulerBean.getScheduledSendDate(), emailRequestSchedulerBean.getHumanScheduledSendDate() ,
                     emailRequestSchedulerBean.getScheduleStatus(), emailRequestSchedulerBean.getEmailTemplateId(), emailRequestSchedulerBean.getEmailScheduleId(),
-                    emailRequestSchedulerBean.getEventId() , emailRequestSchedulerBean.getAdminId(), emailRequestSchedulerBean.getGuestId() );
-
+                    emailRequestSchedulerBean.getEventId() , emailRequestSchedulerBean.getAdminId() );
+            if(emailRequestSchedulerBean.getGuestId() == null || "".equalsIgnoreCase(ParseUtil.checkNull(emailRequestSchedulerBean.getGuestId()) )) {
+                sQuery = sQuery + "  AND FK_GUESTID = ? ";
+                aParams.add( emailRequestSchedulerBean.getGuestId() );
+            }
             iNumberOfRows = DBDAO.putRowsQuery( sQuery,aParams,ADMIN_DB,sourceFile,"updateSchedule()" );
         }
         return iNumberOfRows;
@@ -107,26 +111,34 @@ public class EmailSchedulerData {
         return arrSchedulerBean;
     }
 
-    public EmailScheduleBean getGuestScheduler( EmailScheduleBean emailRequestSchedulerBean , Constants.SCHEDULER_STATUS scheduleStatus )
+    public EmailScheduleBean getEmailScheduler( EmailScheduleBean emailRequestSchedulerBean , Constants.SCHEDULER_STATUS scheduleStatus )
     {
-        /*
-        CREATE TABLE GTSMSSCHEDULE( SMSSCHEDULEID VARCHAR(45) NOT NULL, FK_SMSTEMPLATEID VARCHAR(45) NOT NULL,  FK_EVENTID VARCHAR(45),
-         FK_ADMINID VARCHAR(45), FK_GUESTID VARCHAR(45), CREATEDATE BIGINT(20) NOT NULL DEFAULT 0, HUMANCREATEDATE VARCHAR(45), SCHEDULEDSENDDATE BIGINT(20)
-          NOT NULL DEFAULT 0, HUMANSCHEDULEDSENDDATE VARCHAR(45), SCHEDULE_STATUS VARCHAR(45) NOT NULL,PRIMARY KEY (SMSSCHEDULEID) )
-           ENGINE = MyISAM DEFAULT CHARSET = utf8;
-         */
-        EmailScheduleBean emailScheduleBean = new EmailScheduleBean();
+        String sQuery = Constants.EMPTY;
+        ArrayList<Object> aParams = new ArrayList<Object>();
+
         if(emailRequestSchedulerBean != null && emailRequestSchedulerBean.getEventId()!=null && !"".equalsIgnoreCase(emailRequestSchedulerBean.getEventId())
                 && emailRequestSchedulerBean.getAdminId()!=null && !"".equalsIgnoreCase(emailRequestSchedulerBean.getAdminId())
                 && emailRequestSchedulerBean.getGuestId()!=null && !"".equalsIgnoreCase(emailRequestSchedulerBean.getGuestId())
                 && scheduleStatus !=null)
         {
-            String sQuery = "SELECT * FROM GTSMSSCHEDULE WHERE FK_EVENTID = ? AND FK_ADMINID = ? AND FK_GUESTID = ? AND SCHEDULE_STATUS = ?" +
-                    " AND FK_SMSTEMPLATEID = ?";
-            ArrayList<Object> aParams = DBDAO.createConstraint( emailRequestSchedulerBean.getEventId() , emailRequestSchedulerBean.getAdminId(),
+            sQuery = "SELECT * FROM GTEMAILSCHEDULE WHERE FK_EVENTID = ? AND FK_ADMINID = ? AND FK_GUESTID = ? AND SCHEDULE_STATUS = ?" +
+                    " AND FK_EMAILTEMPLATEID = ?";
+            aParams = DBDAO.createConstraint( emailRequestSchedulerBean.getEventId() , emailRequestSchedulerBean.getAdminId(),
                     emailRequestSchedulerBean.getGuestId() , scheduleStatus.getSchedulerStatus(), emailRequestSchedulerBean.getEmailTemplateId() );
+        } else if( emailRequestSchedulerBean != null && emailRequestSchedulerBean.getEventId()!=null && !"".equalsIgnoreCase(emailRequestSchedulerBean.getEventId())
+                && emailRequestSchedulerBean.getAdminId()!=null && !"".equalsIgnoreCase(emailRequestSchedulerBean.getAdminId())
+                && scheduleStatus !=null ) {
+            sQuery = "SELECT * FROM GTEMAILSCHEDULE WHERE FK_EVENTID = ? AND FK_ADMINID = ? AND SCHEDULE_STATUS = ?" +
+                    " AND FK_EMAILTEMPLATEID = ?";
+            aParams = DBDAO.createConstraint( emailRequestSchedulerBean.getEventId() , emailRequestSchedulerBean.getAdminId(),
+                    scheduleStatus.getSchedulerStatus(), emailRequestSchedulerBean.getEmailTemplateId() );
+        }
 
-            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(ADMIN_DB,sQuery,aParams,true,sourceFile,"getGuestScheduler()");
+        EmailScheduleBean emailScheduleBean = new EmailScheduleBean();
+        if(emailRequestSchedulerBean != null)
+        {
+
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(ADMIN_DB,sQuery,aParams,true,sourceFile,"getEmailScheduler()");
 
             if(arrResult!=null && !arrResult.isEmpty())
             {

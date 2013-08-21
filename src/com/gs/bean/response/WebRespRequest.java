@@ -13,6 +13,7 @@ public class WebRespRequest {
     private String linkId = Constants.EMPTY;
     private String guestId = Constants.EMPTY;
     private String eventId = Constants.EMPTY;
+    private String adminId = Constants.EMPTY;
     private Constants.GUEST_WEB_RESPONSE_TYPE guestWebResponseType = Constants.GUEST_WEB_RESPONSE_TYPE.NONE;
 
     public String getLinkId() {
@@ -47,12 +48,21 @@ public class WebRespRequest {
         this.eventId = eventId;
     }
 
+    public String getAdminId() {
+        return adminId;
+    }
+
+    public void setAdminId(String adminId) {
+        this.adminId = adminId;
+    }
+
     @Override
     public String toString() {
         return "WebRespRequest{" +
                 "linkId='" + linkId + '\'' +
                 ", guestId='" + guestId + '\'' +
                 ", eventId='" + eventId + '\'' +
+                ", adminId='" + adminId + '\'' +
                 ", guestWebResponseType=" + guestWebResponseType +
                 '}';
     }

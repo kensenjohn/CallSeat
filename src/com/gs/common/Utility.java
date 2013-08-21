@@ -304,4 +304,12 @@ public class Utility {
         return numberVoiceBean;
     }
 
+    public static boolean isNullOrEmpty(String sText) {
+        boolean isNullOrEmpty = true;
+        if( sText!=null && !"".equalsIgnoreCase(sText)) {
+            isNullOrEmpty = false;
+        }
+        return isNullOrEmpty;
+    }
+
 }

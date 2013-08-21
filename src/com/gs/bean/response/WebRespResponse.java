@@ -2,6 +2,8 @@ package com.gs.bean.response;
 
 import com.gs.common.Constants;
 
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: kensen
@@ -15,6 +17,7 @@ public class WebRespResponse {
     private String eventId = Constants.EMPTY;
     private boolean isSuccess = false;
     private String message =  Constants.EMPTY;
+    private ArrayList<GuestWebResponseBean> arrGuestWebResponse = new ArrayList<GuestWebResponseBean>();
 
     public String getResponseId() {
         return responseId;
@@ -54,6 +57,14 @@ public class WebRespResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public ArrayList<GuestWebResponseBean> getArrGuestWebResponse() {
+        return arrGuestWebResponse;
+    }
+
+    public void setArrGuestWebResponse(ArrayList<GuestWebResponseBean> arrGuestWebResponse) {
+        this.arrGuestWebResponse = arrGuestWebResponse;
     }
 
     @Override

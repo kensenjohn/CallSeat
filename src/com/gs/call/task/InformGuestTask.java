@@ -3,11 +3,13 @@ package com.gs.call.task;
 import com.gs.bean.EventFeatureBean;
 import com.gs.bean.InformGuestBean;
 import com.gs.bean.email.EmailScheduleBean;
+import com.gs.bean.email.EmailSchedulerRequest;
 import com.gs.bean.email.EmailTemplateBean;
 import com.gs.bean.sms.SmsScheduleBean;
 import com.gs.bean.sms.SmsTemplateBean;
 import com.gs.common.*;
 import com.gs.common.mail.EmailSchedulerData;
+import com.gs.common.mail.EmailSchedulerService;
 import com.gs.common.mail.MailingServiceData;
 import com.gs.common.sms.SmsSchedulerData;
 import com.gs.common.sms.SmsServiceData;
@@ -107,50 +109,16 @@ public class InformGuestTask {
                         }
 
                         if( Constants.EVENT_FEATURES.RSVP_EMAIL_CONFIRMATION.getEventFeature().equalsIgnoreCase(mapFeatureValue.getKey())
-                                && ParseUtil.sTob(mapFeatureValue.getValue()) )
-                        {
-                            MailingServiceData emailServiceData = new MailingServiceData();
-                            EmailTemplateBean emailTemplateBean = emailServiceData.getEmailTemplate( Constants.EMAIL_TEMPLATE.RSVP_CONFIRMATION_EMAIL );
+                                && ParseUtil.sTob(mapFeatureValue.getValue()) ) {
+                            EmailSchedulerRequest emailSchedulerRequest = new EmailSchedulerRequest();
+                            emailSchedulerRequest.setEmailTemplate(Constants.EMAIL_TEMPLATE.RSVP_CONFIRMATION_EMAIL);
+                            emailSchedulerRequest.setEventId( informGuestBean.getEventId() );
+                            emailSchedulerRequest.setAdminId( informGuestBean.getAdminId()  );
+                            emailSchedulerRequest.setGuestId( informGuestBean.getGuestId() );
+                            emailSchedulerRequest.setUpdateScheduleIfExists( true );
 
-                            EmailScheduleBean requestEmailSchedulerBean = new EmailScheduleBean();
-                            requestEmailSchedulerBean.setEventId( informGuestBean.getEventId() );
-                            requestEmailSchedulerBean.setAdminId( informGuestBean.getAdminId() );
-                            requestEmailSchedulerBean.setGuestId( informGuestBean.getGuestId() );
-                            requestEmailSchedulerBean.setEmailTemplateId( emailTemplateBean.getEmailTemplateId() );
-
-
-                            EmailSchedulerData emailSchedulerData = new EmailSchedulerData();
-                            EmailScheduleBean emailScheduleBean = emailSchedulerData.getGuestScheduler( requestEmailSchedulerBean , Constants.SCHEDULER_STATUS.NEW_SCHEDULE );
-
-                            Long currentTime = DateSupport.getEpochMillis();
-                            Long futureTime = DateSupport.addTime(currentTime,  ParseUtil.sToI(emailConfig.get(Constants.PROP_EMAIL_SCHEDULE_EMAIL_DELAY)), Constants.TIME_UNIT.MINUTES);
-                            String sFutureTime = DateSupport.getTimeByZone(futureTime, Constants.DEFAULT_TIMEZONE);
-
-                            requestEmailSchedulerBean.setScheduledSendDate( futureTime );
-                            requestEmailSchedulerBean.setHumanScheduledSendDate( sFutureTime );
-                            requestEmailSchedulerBean.setScheduleStatus( Constants.SCHEDULER_STATUS.NEW_SCHEDULE.getSchedulerStatus() );
-
-                            requestEmailSchedulerBean.setEmailTemplateId( emailTemplateBean.getEmailTemplateId() );
-
-
-                            // appLogging.info("RSVP SMSSChedule bean  : " + smsScheduleBean  );
-                            if(emailScheduleBean!=null && emailScheduleBean.getEmailScheduleId()!=null && !"".equalsIgnoreCase(emailScheduleBean.getEmailScheduleId()))
-                            {
-                                requestEmailSchedulerBean.setEmailScheduleId(emailScheduleBean.getEmailScheduleId());
-
-
-                                emailSchedulerData.updateSchedule( requestEmailSchedulerBean );
-                            }
-                            else
-                            {
-
-                                requestEmailSchedulerBean.setEmailScheduleId(Utility.getNewGuid() );
-                                requestEmailSchedulerBean.setCreateDate( currentTime );
-                                requestEmailSchedulerBean.setHumanCreateDate( DateSupport.getUTCDateTime() );
-
-                                emailSchedulerData.createSchedule( requestEmailSchedulerBean );
-                            }
-
+                            EmailSchedulerService emailSchedulerService = new EmailSchedulerService();
+                            emailSchedulerService.createEmailSchedule( emailSchedulerRequest );
                         }
                     }
                 }
@@ -229,43 +197,15 @@ public class InformGuestTask {
                         if( Constants.EVENT_FEATURES.SEATING_EMAIL_GUEST_AFTER_CALL.getEventFeature().equalsIgnoreCase(mapFeatureValue.getKey())
                                 && ParseUtil.sTob(mapFeatureValue.getValue()) )
                         {
-                            MailingServiceData mailingServiceData = new MailingServiceData();
-                            EmailTemplateBean emailTemplateBean = mailingServiceData.getEmailTemplate(Constants.EMAIL_TEMPLATE.SEATING_CONFIRMATION_EMAIL);
+                            EmailSchedulerRequest emailSchedulerRequest = new EmailSchedulerRequest();
+                            emailSchedulerRequest.setEmailTemplate(Constants.EMAIL_TEMPLATE.SEATING_CONFIRMATION_EMAIL);
+                            emailSchedulerRequest.setEventId( informGuestBean.getEventId() );
+                            emailSchedulerRequest.setAdminId( informGuestBean.getAdminId()  );
+                            emailSchedulerRequest.setGuestId( informGuestBean.getGuestId() );
+                            emailSchedulerRequest.setUpdateScheduleIfExists( true );
 
-                            appLogging.info(" EmailTemplateBean  : " + emailTemplateBean   );
-
-                            EmailScheduleBean requestEmailSchedulerBean = new EmailScheduleBean();
-                            requestEmailSchedulerBean.setEventId( informGuestBean.getEventId() );
-                            requestEmailSchedulerBean.setAdminId( informGuestBean.getAdminId() );
-                            requestEmailSchedulerBean.setGuestId( informGuestBean.getGuestId() );
-                            requestEmailSchedulerBean.setEmailTemplateId(emailTemplateBean.getEmailTemplateId());
-
-                            EmailSchedulerData emailSchedulerData = new EmailSchedulerData();
-                            EmailScheduleBean emailScheduleBean = emailSchedulerData.getGuestScheduler( requestEmailSchedulerBean , Constants.SCHEDULER_STATUS.NEW_SCHEDULE );
-
-                            appLogging.info(" EmailTemplateBean  : email schedule bean : " + emailScheduleBean   );
-                            Long currentTime = DateSupport.getEpochMillis();
-                            Long futureTime = DateSupport.addTime(currentTime, ParseUtil.sToI(emailConfig.get(Constants.PROP_EMAIL_SCHEDULE_EMAIL_DELAY)), Constants.TIME_UNIT.MINUTES);
-                            String sFutureTime = DateSupport.getTimeByZone(futureTime, Constants.DEFAULT_TIMEZONE);
-
-                            requestEmailSchedulerBean.setScheduledSendDate( futureTime );
-                            requestEmailSchedulerBean.setHumanScheduledSendDate( sFutureTime );
-                            requestEmailSchedulerBean.setScheduleStatus( Constants.SCHEDULER_STATUS.NEW_SCHEDULE.getSchedulerStatus() );
-
-                            if(emailScheduleBean!=null && emailScheduleBean.getEmailScheduleId()!=null && !"".equalsIgnoreCase(emailScheduleBean.getEmailScheduleId()))
-                            {
-                                requestEmailSchedulerBean.setEmailScheduleId( emailScheduleBean.getEmailScheduleId() );
-
-                                emailSchedulerData.updateSchedule( requestEmailSchedulerBean );
-                            }
-                            else
-                            {
-                                requestEmailSchedulerBean.setEmailScheduleId(Utility.getNewGuid() );
-                                requestEmailSchedulerBean.setCreateDate( currentTime );
-                                requestEmailSchedulerBean.setHumanCreateDate( DateSupport.getUTCDateTime() );
-
-                                emailSchedulerData.createSchedule( requestEmailSchedulerBean );
-                            }
+                            EmailSchedulerService emailSchedulerService = new EmailSchedulerService();
+                            emailSchedulerService.createEmailSchedule( emailSchedulerRequest );
                         }
                     }
                 }

@@ -681,10 +681,67 @@
                                     &nbsp;
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="span6">
+                                    <h2>Email guests to RSVP online  </h2>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span2">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span12">
+                                    <h4>Subject: </h4> <span id="email_template_rsvp_response_subject"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span2">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span12">
+                                    <h4>Body: </h4>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span10"  style="height: 200px;background-color: #f7f7f7;border:1px solid #A4BE5F;">
+                                    <div class="row" style="height: 200px;">
+                                        <div class="offset_0_5 span9">
+                                            <span  id="email_template_rsvp_response_body" style="padding: 10px;"> </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span2">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span2">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span2">
+                                    &nbsp;
+                                </div>
+                                <div class="span2">
+                                    <input type="button" id="send_rsvp_response_email" name="send_rsvp_response_email" class="btn btn-large" value="Email guests now"/>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span2">
+                                    &nbsp;
+                                </div>
+                            </div>
                         </div>
                     </div>
-		</div>										
-		
+		</div>
+
 	</div>
 	<div style="clear:both">&nbsp;</div>
 		<div class="container rounded-corners">
@@ -805,7 +862,7 @@
             } else {
                 toggleActionNavs('li_email');
                 displayEmailView('li_email');
-                loadEventFeatures();
+                //loadEventFeatures();
             }
         });
 		
@@ -900,6 +957,10 @@
 
         $('#btn_save_phone_number').click( function(e){
             savePhoneNumberFeatures();
+        });
+
+        $('#send_rsvp_response_email').click(function(event) {
+            scheduleRsvpResponseEmailSend();
         });
 
 
@@ -1170,15 +1231,24 @@
 		getDataAjax(actionUrl,dataString,methodType,displayPhoneNumbers);
 	}
 
-    function loadEmails()
-    {
-        //alert("proc_load_phone_numbers.jsp");
+    function loadEmails() {
         var actionUrl = "proc_load_emails.jsp";
         var methodType = "POST";
         var dataString = "admin_id="+varAdminID+"&event_id="+varEventID;
 
 
         getDataAjax(actionUrl,dataString,methodType,displayEmails);
+    }
+
+    function scheduleRsvpResponseEmailSend(){
+        //displayMssgBoxAlert( 'schedule RSVP email',false );
+
+        var actionUrl = "proc_schedule_rsvp_emails.jsp";
+        var methodType = "POST";
+        var dataString = "admin_id="+varAdminID+"&event_id="+varEventID;
+
+
+        getDataAjax(actionUrl,dataString,methodType,getScheduleRsvpResult);
     }
 	
 	function loadActions()
@@ -1774,7 +1844,26 @@
 		toggleActionNavs('li_phone_num');
 		displayPhoneNumberView('li_phone_num');
 	}
-
+    function getScheduleRsvpResult(jsonResult) {
+        if(jsonResult!=undefined){
+            var varResponseObj = jsonResult.response;
+            if(jsonResult.status == 'error'  && varResponseObj !=undefined ) {
+                var varIsMessageExist = varResponseObj.is_message_exist;
+                if(varIsMessageExist == true) {
+                    var jsonResponseMessage = varResponseObj.messages;
+                    var varArrErrorMssg = jsonResponseMessage.error_mssg
+                    displayMssgBoxMessages( varArrErrorMssg , true );
+                }
+            } else if( jsonResult.status == 'ok' && varResponseObj !=undefined ) {
+                var varIsMessageExist = varResponseObj.is_message_exist;
+                if(varIsMessageExist == true) {
+                    var jsonResponseMessage = varResponseObj.messages;
+                    var varArrOkMssg = jsonResponseMessage.ok_mssg
+                    displayMssgBoxMessages( varArrOkMssg , false );
+                }
+            }
+        }
+    }
     function displayEmails( jsonResult ) {
         if(jsonResult!=undefined){
             var varResponseObj = jsonResult.response;
@@ -1783,7 +1872,7 @@
                 if(varIsMessageExist == true) {
                     var jsonResponseMessage = varResponseObj.messages;
                     var varArrErrorMssg = jsonResponseMessage.error_mssg
-                    displayMessages( varArrErrorMssg );
+                    displayMssgBoxMessages( varArrErrorMssg,true );
                 }
             } else if( jsonResult.status == 'ok' && varResponseObj !=undefined ) {
                 var varIsPayloadExist = varResponseObj.is_payload_exist;
@@ -1840,7 +1929,13 @@
 	}
 
     function processEmails( jsonResponseObj ) {
-        displayMssgBoxAlert("Invoked processEmails ", false);
+
+        var varRsvpResponseEmail = jsonResponseObj.rsvp_response_email;
+        if(varRsvpResponseEmail!=undefined) {
+            $('#email_template_rsvp_response_subject').text(varRsvpResponseEmail.email_subject);
+            $('#email_template_rsvp_response_body').html(varRsvpResponseEmail.html_body);
+        }
+
     }
 	function processTelNumbers( jsonResponseObj )
 	{
