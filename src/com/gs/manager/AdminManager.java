@@ -198,7 +198,6 @@ public class AdminManager {
 					ParseUtil.checkNull(regAdminBean.getEmail()));
             sTxtBody = sTxtBody.replaceAll("__GIVENNAME__",sRegisteredUserGivenName );
 
-            appLogging.info("email  __GIVENNAME__ : " + sRegisteredUserGivenName + " - sHtmlBody " + sHtmlBody );
 
 			EmailQueueBean emailQueueBean = new EmailQueueBean();
 			emailQueueBean.setEmailSubject(emailTemplate.getEmailSubject());
