@@ -26,9 +26,9 @@
 			create_header : function () {
 				var valHeader = '<thead><tr> ' + 
 				'<th style="width:20%"  class="tbl_th">Plan Number</th>'+
-				'<th style="width:25%" class="tbl_th">Title</th>'+
-				'<th style="width:10%" class="tbl_th">Date</th>'+
-				'<th style="width:45%" class="tbl_th">&nbsp;</th>'+
+				'<th style="width:30%" class="tbl_th">Title</th>'+
+				'<th style="width:25%" class="tbl_th">Date</th>'+
+				'<th style="width:25%" class="tbl_th">&nbsp;</th>'+
 				'</tr></thead>';
 				return valHeader; 
 			},

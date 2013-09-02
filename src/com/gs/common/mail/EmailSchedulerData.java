@@ -111,7 +111,7 @@ public class EmailSchedulerData {
         return arrSchedulerBean;
     }
 
-    public EmailScheduleBean getEmailScheduler( EmailScheduleBean emailRequestSchedulerBean , Constants.SCHEDULER_STATUS scheduleStatus )
+    public ArrayList<EmailScheduleBean> getEmailScheduler( EmailScheduleBean emailRequestSchedulerBean , Constants.SCHEDULER_STATUS scheduleStatus )
     {
         String sQuery = Constants.EMPTY;
         ArrayList<Object> aParams = new ArrayList<Object>();
@@ -134,7 +134,7 @@ public class EmailSchedulerData {
                     scheduleStatus.getSchedulerStatus(), emailRequestSchedulerBean.getEmailTemplateId() );
         }
 
-        EmailScheduleBean emailScheduleBean = new EmailScheduleBean();
+        ArrayList<EmailScheduleBean> arrEmailScheduleBean = new ArrayList<EmailScheduleBean>();
         if(emailRequestSchedulerBean != null)
         {
 
@@ -144,11 +144,12 @@ public class EmailSchedulerData {
             {
                 for( HashMap<String, String> hmResult : arrResult )
                 {
-                    emailScheduleBean = new EmailScheduleBean(hmResult);
+                    EmailScheduleBean emailScheduleBean = new EmailScheduleBean(hmResult);
+                    arrEmailScheduleBean.add(emailScheduleBean);
                 }
             }
         }
-        return emailScheduleBean;
+        return arrEmailScheduleBean;
     }
 
 

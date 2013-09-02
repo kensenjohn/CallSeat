@@ -7,6 +7,10 @@ public class EventCreationMetaDataBean {
 	private String eventDate = "";
 	private String eventDatePattern = "";
 	private String eventTimeZone = "";
+    private String rsvpDeadlineDate = "";
+    private String rsvpDeadlineDateDatePattern = "";
+    private boolean isCreateEvent = false;
+    private boolean isUpdateEvent = false;
 
 	public String getEventId() {
 		return eventId;
@@ -56,7 +60,39 @@ public class EventCreationMetaDataBean {
 		this.eventDatePattern = eventDatePattern;
 	}
 
-	@Override
+    public String getRsvpDeadlineDate() {
+        return rsvpDeadlineDate;
+    }
+
+    public void setRsvpDeadlineDate(String rsvpDeadlineDate) {
+        this.rsvpDeadlineDate = rsvpDeadlineDate;
+    }
+
+    public String getRsvpDeadlineDateDatePattern() {
+        return rsvpDeadlineDateDatePattern;
+    }
+
+    public void setRsvpDeadlineDateDatePattern(String rsvpDeadlineDateDatePattern) {
+        this.rsvpDeadlineDateDatePattern = rsvpDeadlineDateDatePattern;
+    }
+
+    public boolean isCreateEvent() {
+        return isCreateEvent;
+    }
+
+    public void setCreateEvent(boolean createEvent) {
+        isCreateEvent = createEvent;
+    }
+
+    public boolean isUpdateEvent() {
+        return isUpdateEvent;
+    }
+
+    public void setUpdateEvent(boolean updateEvent) {
+        isUpdateEvent = updateEvent;
+    }
+
+    @Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("EventCreationMetaDataBean [adminBean=")

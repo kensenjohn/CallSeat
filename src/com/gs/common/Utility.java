@@ -18,6 +18,17 @@ public class Utility {
 		return uuid.toString();
 	}
 
+    public static String getLinkId(Integer iSizeOfId) {
+        String sLinkId = getNewGuid();
+        if(iSizeOfId<5){
+            iSizeOfId = 5;
+        }
+        if(sLinkId.length() > iSizeOfId ) {
+            sLinkId = sLinkId.substring(0,iSizeOfId);
+        }
+        return sLinkId;
+    }
+
 	public static String convertTelNumToDigits(String sTelNumber) {
 		String sFinalString = " ";
 		if (sTelNumber != null && !"".equalsIgnoreCase(sTelNumber)) {

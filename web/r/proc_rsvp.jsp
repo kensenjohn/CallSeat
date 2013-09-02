@@ -84,6 +84,9 @@ try {
                     EventGuestManager eventGuestManager = new EventGuestManager();
                     Integer iNumOfEventGuestRecs = eventGuestManager.setGuestInviteRsvpForEvent( eventGuestBean );
 
+                    AlterWebRsvpResponse alertWebRsvpResponse = new AlterWebRsvpResponse();
+                    alertWebRsvpResponse.updateGuestResponseStatus( webRsvpRequestBean, Constants.GUEST_WEB_RESPONSE_STATUS.COMPLETED_RESPONSE );
+
                     Text okText = new OkText("Your RSVP has been updated.","rsvp_num_of_seats") ;
                     arrOkText.add(okText);
 

@@ -13,6 +13,19 @@ public class ParseUtil {
 		return iOutput;
 	}
 
+    public static boolean isValidInteger( String sInput ) {
+        boolean isValidInteger = false;
+        if (sInput != null && !"".equalsIgnoreCase(sInput)) {
+            try {
+                Integer iOutput = new Integer(sInput);
+                isValidInteger = true;
+            } catch (NumberFormatException e) {
+                isValidInteger = false;
+            }
+        }
+        return isValidInteger;
+    }
+
 	public static Integer iToI(int sInput) {
 		Integer iOutput = 0;
 

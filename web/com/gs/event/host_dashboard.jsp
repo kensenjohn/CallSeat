@@ -27,6 +27,7 @@
 %>
 
 <link rel="stylesheet" type="text/css" href="/web/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
 
 <link href="/web/css/jquery.datepick.css" rel="stylesheet" type="text/css" media="screen"/> 
 <body>
@@ -69,6 +70,7 @@
 <script type="text/javascript" src="/web/js/jquery.dashboard.1.0.0.js"></script>
 <script type="text/javascript" src="/web/js/jquery.datepick.js"></script> 
 <script type="text/javascript" src="/web/js/credential.js"></script>
+<script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
 <script type="text/javascript">
 	var varAdminID = '<%=sAdminId%>';
 	var varEventID = '<%=sEventId%>';
@@ -101,8 +103,8 @@
 				var varIsMessageExist = varResponseObj.is_message_exist;
 				if(varIsMessageExist == true) {
 					var jsonResponseMessage = varResponseObj.messages;
-					var varArrErrorMssg = jsonResponseMessage.error_mssg
-					displayMessages( varArrErrorMssg );
+					var varArrErrorMssg = jsonResponseMessage.error_mssg;
+                    displayMssgBoxMessages( varArrErrorMssg,true );
 				}
 			} else  if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
 				var varIsPayloadExist = varResponseObj.is_payload_exist;
@@ -128,6 +130,58 @@
 			  error:function(a,b,c) {  alert(a.responseText + ' = ' + b + " = " + c);  }
 			});
 	}
+
+
+    function displayMssgBoxAlert(varMessage, isError)
+    {
+        var varTitle = 'Status';
+        var varType = 'info';
+        if(isError)
+        {
+            varTitle = 'Error';
+            varType = 'error';
+        }
+        else
+        {
+            varTitle = 'Status';
+            varType = 'info';
+        }
+
+        if(varMessage!='')
+        {
+            $.msgBox({
+                title: varTitle,
+                content: varMessage,
+                type: varType
+            });
+        }
+    }
+
+    function displayMssgBoxMessages(varArrMessages, isError)
+    {
+        if(varArrMessages!=undefined)
+        {
+
+
+            var varMssg = '';
+            var isFirst = true;
+            for(var i = 0; i<varArrMessages.length; i++)
+            {
+                if(isFirst == false)
+                {
+                    varMssg = varMssg + '\n';
+                }
+                varMssg = varMssg + varArrMessages[i].text;
+            }
+
+            if(varMssg!='')
+            {
+                displayMssgBoxAlert(varMssg,isError);
+            }
+        }
+
+
+    }
 
 	//TODO: load the lobby after login with current admin's user.
 </script>

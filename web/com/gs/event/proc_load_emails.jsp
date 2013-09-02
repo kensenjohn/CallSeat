@@ -5,12 +5,12 @@
 <%@ page import="java.util.*"%>
 <%@ page import="com.gs.common.exception.ExceptionHandler" %>
 <%@ page import="com.gs.common.ParseUtil" %>
-<%@ page import="com.gs.common.mail.MailingServiceData" %>
 <%@ page import="com.gs.bean.email.EmailTemplateBean" %>
-<%@ page import="com.gs.manager.event.TelNumberMetaData" %>
-<%@ page import="com.gs.manager.event.TelNumberManager" %>
 <%@ page import="com.gs.manager.AdminManager" %>
 <%@ page import="com.gs.bean.response.WebRespRequest" %>
+<%@ page import="com.gs.bean.email.EmailScheduleBean" %>
+<%@ page import="com.gs.common.Constants" %>
+<%@ page import="com.gs.common.mail.EmailSchedulerData" %>
 <%@include file="/web/com/gs/common/security_proc_page.jsp"%>
 <%
 JSONObject jsonResponseObj = new JSONObject();
@@ -40,6 +40,28 @@ try {
 
         if(guestResponseEmailTemplate!=null && !"".equalsIgnoreCase(guestResponseEmailTemplate.getEmailTemplateId())) {
             jsonResponseObj.put("rsvp_response_email",  guestResponseEmailTemplate.toJson());
+
+            EmailScheduleBean requestEmailSchedulerBean = new EmailScheduleBean();
+            requestEmailSchedulerBean.setAdminId( sAdminId );
+            requestEmailSchedulerBean.setEventId( sEventId );
+            requestEmailSchedulerBean.setEmailTemplateId( guestResponseEmailTemplate.getEmailTemplateId() );
+
+            EmailSchedulerData emailSchedulerData = new EmailSchedulerData();
+            ArrayList<EmailScheduleBean> arrEmailNewScheduleBean =  emailSchedulerData.getEmailScheduler( requestEmailSchedulerBean , Constants.SCHEDULER_STATUS.NEW_SCHEDULE );
+            Integer iNumOfEmailsScheduled = 0;
+            if(arrEmailNewScheduleBean!=null && !arrEmailNewScheduleBean.isEmpty()) {
+                iNumOfEmailsScheduled = arrEmailNewScheduleBean.size();
+            }
+            jsonResponseObj.put("num_of_email_scheduled",  iNumOfEmailsScheduled );
+
+
+            ArrayList<EmailScheduleBean> arrEmailCompleteScheduleBean =  emailSchedulerData.getEmailScheduler( requestEmailSchedulerBean , Constants.SCHEDULER_STATUS.COMPLETE );
+            Integer iNumOfEmailsSentCompleted = 0;
+            if(arrEmailCompleteScheduleBean!=null && !arrEmailCompleteScheduleBean.isEmpty()) {
+                iNumOfEmailsSentCompleted = arrEmailCompleteScheduleBean.size();
+            }
+            jsonResponseObj.put("num_of_email_send_complete",  iNumOfEmailsSentCompleted );
+
 
             Text okText = new OkText("RSVP response was retrieved.","my_id");
             arrOkText.add(okText);

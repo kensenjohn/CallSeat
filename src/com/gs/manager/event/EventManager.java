@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Set;
 
+import com.gs.bean.*;
 import com.gs.bean.usage.PhoneCallUsageBean;
 import com.gs.bean.usage.TextMessageUsageBean;
 import com.gs.common.usage.PhoneCallUsage;
@@ -16,16 +17,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gs.bean.AdminBean;
-import com.gs.bean.EventBean;
-import com.gs.bean.EventCreationMetaDataBean;
-import com.gs.bean.EventGuestBean;
-import com.gs.bean.EventSummaryBean;
-import com.gs.bean.EventTableBean;
-import com.gs.bean.TableBean;
-import com.gs.bean.TableGuestsBean;
-import com.gs.bean.TelNumberBean;
-import com.gs.bean.UserInfoBean;
 import com.gs.common.Constants;
 import com.gs.common.DateSupport;
 import com.gs.common.exception.ExceptionHandler;
@@ -35,15 +26,14 @@ import com.gs.data.event.EventData;
 import com.gs.manager.AdminManager;
 
 public class EventManager {
-	private static final Logger appLogging = LoggerFactory.getLogger("AppLogging");
+	private static final Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 
 	public EventBean createEvent(EventBean eventBean) {
-		if (eventBean == null || eventBean.getEventAdminId() == null
-				|| "".equalsIgnoreCase(eventBean.getEventAdminId())) {
+		if (eventBean == null || (eventBean!=null && Utility.isNullOrEmpty(eventBean.getEventAdminId()))) {
 			appLogging.error("There Admin to create an event for." + eventBean);
 			eventBean = null;
-		} else if (eventBean != null && eventBean.getEventAdminId() != null
-				&& !"".equalsIgnoreCase(eventBean.getEventAdminId())) {
+		} else if (eventBean != null && !Utility.isNullOrEmpty(eventBean.getEventAdminId()))  {
+            appLogging.error("Before trying to insert the eventBean : " + eventBean.getEventId());
 			EventData eventData = new EventData();
 			int iNumOfRecords = eventData.insertEvent(eventBean);
 
@@ -59,7 +49,7 @@ public class EventManager {
 	}
 
 	public EventBean createEvent(EventCreationMetaDataBean eventMeta) {
-		EventBean eventBean = createTemporaryEvent(eventMeta);
+		EventBean eventBean = generateEventBean(eventMeta);
 
 		eventBean = createEvent(eventBean);
 
@@ -67,12 +57,17 @@ public class EventManager {
 		return eventBean;
 	}
 
-	private EventBean createTemporaryEvent(EventCreationMetaDataBean eventMeta) {
+	public EventBean generateEventBean(EventCreationMetaDataBean eventMeta) {
 		EventBean eventBean = new EventBean();
 
 		if (eventMeta != null && eventMeta.getAdminBean() != null
 				&& !"".equalsIgnoreCase(eventMeta.getAdminBean().getAdminId())) {
-			eventBean.setEventId(Utility.getNewGuid());
+            if(eventMeta.isUpdateEvent() && !Utility.isNullOrEmpty(eventMeta.getEventId())){
+                eventBean.setEventId( eventMeta.getEventId() );
+            } else if(eventMeta.isCreateEvent()) {
+                eventBean.setEventId(Utility.getNewGuid());
+            }
+
 			eventBean.setEventFolderId(Constants.ROOT_FOLDER);
 			eventBean.setEventAdminId(eventMeta.getAdminBean().getAdminId());
 			eventBean.setEventName(Constants.DEFAULT_EVENT_NAME);
@@ -84,11 +79,22 @@ public class EventManager {
 			eventBean.setHumanCreateDate(DateSupport.getUTCDateTime());
 			eventBean.setIsTmp("1");
 			eventBean.setDelRow("0");
+            eventBean.setEventTimeZone( eventMeta.getEventTimeZone() );
 
-			eventBean.setEventDate(DateSupport.getMillis(
-					eventMeta.getEventDate(), eventMeta.getEventDatePattern(),
-					eventMeta.getEventTimeZone()));
-			eventBean.setHumanEventDate(eventMeta.getEventDate());
+            try{
+                DateObject eventDate = DateSupport.convertTime(eventMeta.getEventDate(),DateSupport.getTimeZone( eventMeta.getEventTimeZone() ), eventMeta.getEventDatePattern() , DateSupport.getTimeZone(Constants.DEFAULT_TIMEZONE) , Constants.DATE_PATTERN_TZ  );
+
+                eventBean.setEventDate(eventDate.getMillis());
+                eventBean.setHumanEventDate(eventDate.getFormattedTime());
+
+                DateObject rsvpDeadline = DateSupport.convertTime(eventMeta.getRsvpDeadlineDate() , DateSupport.getTimeZone( eventMeta.getEventTimeZone() ), eventMeta.getRsvpDeadlineDateDatePattern(), DateSupport.getTimeZone(Constants.DEFAULT_TIMEZONE) , Constants.DATE_PATTERN_TZ  );
+
+                eventBean.setRsvpDeadlineDate( rsvpDeadline.getMillis() );
+                eventBean.setHumanRsvpDeadlineDate( rsvpDeadline.getFormattedTime() );
+            } catch (Exception e) {
+
+            }
+
 		}
 
 		return eventBean;
@@ -99,8 +105,12 @@ public class EventManager {
 
 		Integer iNumOfRows = 0;
 		if (eventCreateMetaBean != null) {
+            EventManager eventManager = new  EventManager();
+            EventBean eventBean = eventManager.generateEventBean(eventCreateMetaBean);
+            appLogging.info( " eventBean : " + eventBean + " eventCreateMetaBean : " + eventCreateMetaBean);
 			EventData eventData = new EventData();
-			iNumOfRows = eventData.updateEvent(eventCreateMetaBean);
+			iNumOfRows = eventData.updateEvent(eventBean);
+            appLogging.info( " num of rows updateed : " + iNumOfRows  );
 		}
 		return iNumOfRows;
 	}
@@ -159,13 +169,12 @@ public class EventManager {
 
 				if (adminUserInfoBean.isUserInfoExists()) {
 					EventData eventData = new EventData();
-					ArrayList<EventBean> tmpArrEventBean = eventData
-							.getAllEventsByAdmin(sAdminId);
+					ArrayList<EventBean> tmpArrEventBean = eventData.getAllEventsByAdmin(sAdminId);
 
 					if (tmpArrEventBean != null && !tmpArrEventBean.isEmpty()) {
 						for (EventBean eventBean : tmpArrEventBean) {
-							eventBean.setHumanEventDate(DateSupport.getTimeByZone(eventBean.getEventDate(),adminUserInfoBean.getTimezone(),
-                                    Constants.PRETTY_DATE_PATTERN_2 ));
+							eventBean.setHumanEventDate(DateSupport.getTimeByZone(eventBean.getEventDate(),DateSupport.getTimeZone(eventBean.getEventTimeZone()).getID(),
+                                    Constants.PRETTY_DATE_PATTERN_1 ));
 
 							arrEventBean.add(eventBean);
 						}
@@ -214,14 +223,21 @@ public class EventManager {
 				AdminManager adminManager = new AdminManager();
 				AdminBean adminBean = adminManager.getAdmin(sAdminId);
 
-				if (adminBean != null && adminBean.isAdminExists()) {
-					UserInfoBean adminUserInfoBean = adminBean
-							.getAdminUserInfoBean();
+                EventDateObj eventDateObj = new EventDateObj();
 
-					eventSummaryBean.setEventDate(DateSupport.getTimeByZone(
-							eventBean.getEventDate(),
-							adminUserInfoBean.getTimezone(), Constants.PRETTY_DATE_PATTERN_2 ));
-				}
+                DateObject dateObject = DateSupport.getTimeDateObjectByZone( eventBean.getEventDate() , DateSupport.getTimeZone(eventBean.getEventTimeZone()).getID(),  Constants.PRETTY_DATE_PATTERN_2  );
+                eventDateObj.setEventDate( dateObject.getFormattedTime() );
+                eventDateObj.setEventHr(DateSupport.getTimeByZone(dateObject.getMillis() , DateSupport.getTimeZone(eventBean.getEventTimeZone()).getID(),  "hh"  ));
+                eventDateObj.setEventMin(DateSupport.getTimeByZone(dateObject.getMillis() , DateSupport.getTimeZone(eventBean.getEventTimeZone()).getID(),  "mm"  ));
+                eventDateObj.setEventAmPm(DateSupport.getTimeByZone( dateObject.getMillis() , DateSupport.getTimeZone(eventBean.getEventTimeZone()).getID(),  "a"  ));
+                eventDateObj.setEventTimeZone( eventBean.getEventTimeZone() );
+                eventSummaryBean.setEventDateObj( eventDateObj );
+                appLogging.info("eventDateObj : "  + eventSummaryBean.getEventDateObj());
+
+
+                DateObject dateObjectRsvpDeadline = DateSupport.getTimeDateObjectByZone( eventBean.getRsvpDeadlineDate() , DateSupport.getTimeZone(eventBean.getEventTimeZone()).getID(),  Constants.PRETTY_DATE_PATTERN_2  );
+                eventSummaryBean.setRsvpDeadLineDate( dateObjectRsvpDeadline.getFormattedTime() ) ;
+                appLogging.info("sRsvpDeadlineDateUTC : "  + eventSummaryBean.getRsvpDeadLineDate() );
 
 			}
 

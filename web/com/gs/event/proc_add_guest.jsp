@@ -146,18 +146,9 @@ try
 		
 		
 		int iNumRsvp =  ParseUtil.sToI(sRsvpNumOfSeats);
-		if(sRsvpNumOfSeats==null || "".equalsIgnoreCase(sRsvpNumOfSeats) || iNumRsvp<0)
-		{
-			appLogging.warn("RSVP number of guests was invalid : " + sRsvpNumOfSeats );
-			
-			Text errorText = new ErrorText("We enter valid number of RSVP of seats by the guests.","rsvp_num_of_seats") ;
-			arrErrorText.add(errorText);
-			
-			responseStatus = RespConstants.Status.ERROR;
-			isError = true;
-		}
-		
-		
+		if(sRsvpNumOfSeats==null || "".equalsIgnoreCase(sRsvpNumOfSeats) || iNumRsvp<0){
+            sRsvpNumOfSeats = "-1";
+        }
 	}
 	String sMessage = "";
 

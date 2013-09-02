@@ -7,6 +7,8 @@ import com.gs.common.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * User: kensen
@@ -27,15 +29,15 @@ public class EmailSchedulerService {
             EmailTemplateBean emailTemplateBean = emailServiceData.getEmailTemplate( emailSchedulerRequest.getEmailTemplate() );
 
             EmailScheduleBean requestEmailSchedulerBean = new EmailScheduleBean();
-            if(!"".equalsIgnoreCase(ParseUtil.checkNull(emailSchedulerRequest.getEventId()))){
+            if( !Utility.isNullOrEmpty(emailSchedulerRequest.getEventId()) ){
                 requestEmailSchedulerBean.setEventId( ParseUtil.checkNull(emailSchedulerRequest.getEventId()) );
             }
 
-            if(!"".equalsIgnoreCase(ParseUtil.checkNull(emailSchedulerRequest.getAdminId()))){
+            if( !Utility.isNullOrEmpty(emailSchedulerRequest.getAdminId()) ){
                 requestEmailSchedulerBean.setAdminId( ParseUtil.checkNull(emailSchedulerRequest.getAdminId()) );
             }
 
-            if(!"".equalsIgnoreCase(ParseUtil.checkNull(emailSchedulerRequest.getGuestId()))){
+            if( !Utility.isNullOrEmpty(emailSchedulerRequest.getGuestId()) ){
                 requestEmailSchedulerBean.setGuestId( ParseUtil.checkNull(emailSchedulerRequest.getGuestId()) );
             }
 
@@ -62,13 +64,15 @@ public class EmailSchedulerService {
             EmailScheduleBean emailScheduleBean = new EmailScheduleBean();
             EmailSchedulerData emailSchedulerData = new EmailSchedulerData();
             if(emailSchedulerRequest.isUpdateScheduleIfExists()) {
-                emailScheduleBean = emailSchedulerData.getEmailScheduler( requestEmailSchedulerBean , Constants.SCHEDULER_STATUS.NEW_SCHEDULE );
+                ArrayList<EmailScheduleBean> arrEmailScheduleBean =  emailSchedulerData.getEmailScheduler( requestEmailSchedulerBean , Constants.SCHEDULER_STATUS.NEW_SCHEDULE );
+                if(arrEmailScheduleBean!=null && !arrEmailScheduleBean.isEmpty() ) {
+                    for(EmailScheduleBean tmpEmailScheduleBean :arrEmailScheduleBean  ) {
+                        emailScheduleBean =  tmpEmailScheduleBean;
+                        break;
+                    }
+                }
             }
-
-            appLogging.info("Upodating emailScheduleBean : " + emailScheduleBean);
-            if(emailScheduleBean!=null && emailScheduleBean.getEmailScheduleId()!=null && !"".equalsIgnoreCase(emailScheduleBean.getEmailScheduleId())
-                    && emailSchedulerRequest.isUpdateScheduleIfExists())
-            {
+            if(emailScheduleBean!=null && !Utility.isNullOrEmpty(emailScheduleBean.getEmailScheduleId()) && emailSchedulerRequest.isUpdateScheduleIfExists()){
                 requestEmailSchedulerBean.setEmailScheduleId(emailScheduleBean.getEmailScheduleId());
                 iNumOfRecords =emailSchedulerData.updateSchedule( requestEmailSchedulerBean );
             } else {

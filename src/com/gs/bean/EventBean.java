@@ -2,6 +2,7 @@ package com.gs.bean;
 
 import java.util.HashMap;
 
+import com.gs.common.Constants;
 import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,6 +27,10 @@ public class EventBean {
 	private String humanEventDate = "";
 	private String humanCreateDate = "";
 
+    private Long rsvpDeadlineDate = 0L;
+    private String humanRsvpDeadlineDate = Constants.EMPTY;
+    private String eventTimeZone = Constants.EMPTY;
+
 	public EventBean() {
 
 	}
@@ -34,17 +39,17 @@ public class EventBean {
 		this.eventId = ParseUtil.checkNull(hmEventBean.get("EVENTID"));
 		this.eventNum = ParseUtil.checkNull(hmEventBean.get("EVENTNUM"));
 		this.eventName = ParseUtil.checkNull(hmEventBean.get("EVENTNAME"));
-		this.eventFolderId = ParseUtil
-				.checkNull(hmEventBean.get("FK_FOLDERID"));
+		this.eventFolderId = ParseUtil.checkNull(hmEventBean.get("FK_FOLDERID"));
 		this.eventCreateDate = ParseUtil.sToL(hmEventBean.get("CREATEDATE"));
 		this.eventAdminId = ParseUtil.checkNull(hmEventBean.get("FK_ADMINID"));
 		this.isTmp = ParseUtil.checkNull(hmEventBean.get("IS_TMP"));
 		this.delRow = ParseUtil.checkNull(hmEventBean.get("DEL_ROW"));
 		this.eventDate = ParseUtil.sToL(hmEventBean.get("EVENTDATE"));
-		this.humanEventDate = ParseUtil.checkNull(hmEventBean
-				.get("HUMANEVENTDATE"));
-		this.humanCreateDate = ParseUtil.checkNull(hmEventBean
-				.get("HUMANCREATEDATE"));
+		this.humanEventDate = ParseUtil.checkNull(hmEventBean.get("HUMANEVENTDATE"));
+		this.humanCreateDate = ParseUtil.checkNull(hmEventBean.get("HUMANCREATEDATE"));
+        this.rsvpDeadlineDate = ParseUtil.sToL(hmEventBean.get("RSVPDEADLINEDATE"));
+        this.humanRsvpDeadlineDate = ParseUtil.checkNull(hmEventBean.get("HUMANRSVPDEADLINEDATE"));
+        this.eventTimeZone = ParseUtil.checkNull(hmEventBean.get("EVENTTIMEZONE"));
 	}
 
 	public String getEventNum() {
@@ -135,21 +140,49 @@ public class EventBean {
 		this.humanCreateDate = humanCreateDate;
 	}
 
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("EventBean [eventId=").append(eventId)
-				.append(", eventNum=").append(eventNum).append(", eventName=")
-				.append(eventName).append(", eventFolderId=")
-				.append(eventFolderId).append(", eventCreateDate=")
-				.append(eventCreateDate).append(", eventAdminId=")
-				.append(eventAdminId).append(", eventDate=").append(eventDate)
-				.append(", isTmp=").append(isTmp).append(", delRow=")
-				.append(delRow).append(", humanEventDate=")
-				.append(humanEventDate).append(", humanCreateDate=")
-				.append(humanCreateDate).append("]");
-		return builder.toString();
-	}
+    public Long getRsvpDeadlineDate() {
+        return rsvpDeadlineDate;
+    }
+
+    public void setRsvpDeadlineDate(Long rsvpDeadlineDate) {
+        this.rsvpDeadlineDate = rsvpDeadlineDate;
+    }
+
+    public String getHumanRsvpDeadlineDate() {
+        return humanRsvpDeadlineDate;
+    }
+
+    public void setHumanRsvpDeadlineDate(String humanRsvpDeadlineDate) {
+        this.humanRsvpDeadlineDate = humanRsvpDeadlineDate;
+    }
+
+    public String getEventTimeZone() {
+        return eventTimeZone;
+    }
+
+    public void setEventTimeZone(String eventTimeZone) {
+        this.eventTimeZone = eventTimeZone;
+    }
+
+    @Override
+    public String toString() {
+        return "EventBean{" +
+                "eventId='" + eventId + '\'' +
+                ", eventNum='" + eventNum + '\'' +
+                ", eventName='" + eventName + '\'' +
+                ", eventFolderId='" + eventFolderId + '\'' +
+                ", eventCreateDate=" + eventCreateDate +
+                ", eventAdminId='" + eventAdminId + '\'' +
+                ", eventDate=" + eventDate +
+                ", isTmp='" + isTmp + '\'' +
+                ", delRow='" + delRow + '\'' +
+                ", humanEventDate='" + humanEventDate + '\'' +
+                ", humanCreateDate='" + humanCreateDate + '\'' +
+                ", rsvpDeadlineDate=" + rsvpDeadlineDate +
+                ", humanRsvpDeadlineDate='" + humanRsvpDeadlineDate + '\'' +
+                ", eventTimeZone='" + eventTimeZone + '\'' +
+                '}';
+    }
 
 	public JSONObject toJson() {
 
@@ -168,6 +201,10 @@ public class EventBean {
 
 			jsonObject.put("human_event_date", humanEventDate);
 			jsonObject.put("human_create_date", humanCreateDate);
+
+            jsonObject.put("rsvp_deadline_date", rsvpDeadlineDate);
+            jsonObject.put("human_rsvp_deadline_date", humanRsvpDeadlineDate);
+            jsonObject.put("event_time_zone", eventTimeZone);
 		} catch (Exception e) {
 			appLogging.error("Error creating EventBean Object \n"
 					+ ExceptionHandler.getStackTrace(e));

@@ -1,5 +1,6 @@
 package com.gs.bean.response;
 
+import com.gs.bean.GuestBean;
 import com.gs.common.Constants;
 
 /**
@@ -15,6 +16,9 @@ public class WebRespRequest {
     private String eventId = Constants.EMPTY;
     private String adminId = Constants.EMPTY;
     private Constants.GUEST_WEB_RESPONSE_TYPE guestWebResponseType = Constants.GUEST_WEB_RESPONSE_TYPE.NONE;
+
+    private GuestBean guestBean = new GuestBean();
+    private GuestWebResponseBean guestWebResponseBean = new GuestWebResponseBean();
 
     public String getLinkId() {
         return linkId;
@@ -54,6 +58,22 @@ public class WebRespRequest {
 
     public void setAdminId(String adminId) {
         this.adminId = adminId;
+    }
+
+    public GuestBean getGuestBean() {
+        return guestBean;
+    }
+
+    public void setGuestBean(GuestBean guestBean) {
+        this.guestBean = guestBean;
+    }
+
+    public GuestWebResponseBean getGuestWebResponseBean() {
+        return guestWebResponseBean;
+    }
+
+    public void setGuestWebResponseBean(GuestWebResponseBean guestWebResponseBean) {
+        this.guestWebResponseBean = guestWebResponseBean;
     }
 
     @Override

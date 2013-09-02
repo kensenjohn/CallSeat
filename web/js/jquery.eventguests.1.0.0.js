@@ -75,9 +75,9 @@
 						{
 							var varRsvpSeat = tmpGuest.rsvp_seats;
                             if(varRsvpSeat==-1){
-                                varRsvpSeat = '-';
+                                varRsvpSeat = 'No response';
                             } else if ( varRsvpSeat==0 ) {
-                                varRsvpSeat = 'Not attending';
+                                varRsvpSeat = 'Will not attend';
                             }
 							valRows = valRows + '<tr id="guest_'+tmpGuest.guest_id+'" '+varOddClass+'>' + 
 									'<td  >' + tmpGuest.guest_bean.user_info.first_name + ' ' + tmpGuest.guest_bean.user_info.last_name + '</td>' + 

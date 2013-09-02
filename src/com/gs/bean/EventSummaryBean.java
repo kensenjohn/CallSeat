@@ -27,6 +27,9 @@ public class EventSummaryBean {
     private PhoneCallUsageBean phoneCallUsageBean = new PhoneCallUsageBean();
     private TextMessageUsageBean textMessageUsageBean = new TextMessageUsageBean();
 
+    private EventDateObj eventDateObj = new EventDateObj();
+    private String rsvpDeadLineDate = "";
+
 	public String getEventId() {
 		return eventId;
 	}
@@ -163,6 +166,22 @@ public class EventSummaryBean {
         this.textMessageUsageBean = textMessageUsageBean;
     }
 
+    public EventDateObj getEventDateObj() {
+        return eventDateObj;
+    }
+
+    public void setEventDateObj(EventDateObj eventDateObj) {
+        this.eventDateObj = eventDateObj;
+    }
+
+    public String getRsvpDeadLineDate() {
+        return rsvpDeadLineDate;
+    }
+
+    public void setRsvpDeadLineDate(String rsvpDeadLineDate) {
+        this.rsvpDeadLineDate = rsvpDeadLineDate;
+    }
+
     @Override
     public String toString() {
         return "EventSummaryBean{" +
@@ -181,6 +200,10 @@ public class EventSummaryBean {
                 ", telephonyRSVPSecretKey='" + telephonyRSVPSecretKey + '\'' +
                 ", telephonySeatingSecretKey='" + telephonySeatingSecretKey + '\'' +
                 ", isDemoMode=" + isDemoMode +
+                ", phoneCallUsageBean=" + phoneCallUsageBean +
+                ", textMessageUsageBean=" + textMessageUsageBean +
+                ", eventDateObj=" + eventDateObj +
+                ", rsvpDeadLineDate='" + rsvpDeadLineDate + '\'' +
                 '}';
     }
 
@@ -206,6 +229,8 @@ public class EventSummaryBean {
 
             jsonObject.put("phone_call_usage", this.phoneCallUsageBean.toJson());
             jsonObject.put("text_message_usage", this.textMessageUsageBean.toJson());
+            jsonObject.put("event_date_obj", this.eventDateObj.toJson());
+            jsonObject.put("rsvp_deadline_date", this.rsvpDeadLineDate );
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

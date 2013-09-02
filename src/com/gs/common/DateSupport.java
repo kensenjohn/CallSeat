@@ -1,5 +1,7 @@
 package com.gs.common;
 
+import com.gs.bean.DateObject;
+import com.gs.common.exception.ExceptionHandler;
 import org.joda.time.*;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -7,6 +9,12 @@ import org.joda.time.format.PeriodFormatter;
 import org.joda.time.format.PeriodFormatterBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 public class DateSupport {
 	private static final DateTimeFormatter PRETTY_DATE_2 = DateTimeFormat.forPattern(Constants.PRETTY_DATE_PATTERN_2);
@@ -28,6 +36,34 @@ public class DateSupport {
 		return DATE_PATTERN_TZ.print(utcTime);
 	}
 
+    public static DateObject convertTime(String  sFromTime, TimeZone inputFromTimeZone , String  sFromDatePattern ,  TimeZone inputToTimeZone, String sToDatePattern) {
+        DateObject fromDateObject = new DateObject();
+        try{
+            if(!Utility.isNullOrEmpty(sFromTime) && !Utility.isNullOrEmpty(sFromDatePattern)) {
+                fromDateObject = convertTime(  getDateObject(sFromTime,sFromDatePattern),inputFromTimeZone,inputToTimeZone, sToDatePattern  );
+            }
+        } catch(ParseException pe ) {
+            appLogging.info("Parseing Exception of Date : From Date : " + ParseUtil.checkNull(sFromTime) + " pattern : " + ParseUtil.checkNull(sFromDatePattern) + ExceptionHandler.getStackTrace(pe) );
+        }
+
+        return fromDateObject;
+
+    }
+
+    public static DateObject convertTime(DateObject dateObject, TimeZone inputFromTimeZone ,  TimeZone inputToTimeZone, String sToDatePattern) {
+
+        DateObject outputDateObject = new DateObject();
+
+        DateTime fromDateTime  = new DateTime(dateObject.getYear(), dateObject.getMonth(), dateObject.getDay(), dateObject.getHour(), dateObject.getMinute(), DateTimeZone.forID(inputFromTimeZone.getID()));
+
+        DateTime toDateTime = fromDateTime.withZone(DateTimeZone.forID(inputToTimeZone.getID()));
+
+        final DateTimeFormatter outputFormatter = DateTimeFormat.forPattern(sToDatePattern);
+        outputDateObject.setFormattedTime(outputFormatter.print(toDateTime));
+        outputDateObject.setMillis( toDateTime.getMillis() );
+        return outputDateObject;
+    }
+
 	public static Long getMillis(String sDate, String sPattern, String sTimeZone) {
 		DateTimeZone timeZone = DateTimeZone.forID(sTimeZone);
 
@@ -37,6 +73,24 @@ public class DateSupport {
 		return dateTime.getMillis();
 
 	}
+
+    public static DateObject getTimeDateObjectByZone(Long epochDate, String sTimeZone, String sPattern) {
+
+        if(sPattern==null || "".equalsIgnoreCase(sPattern))
+        {
+            sPattern = Constants.DATE_PATTERN_TZ;
+        }
+        final DateTimeFormatter dateTimePattern = DateTimeFormat.forPattern(sPattern);
+
+        DateTimeZone timeZone = DateTimeZone.forID(sTimeZone);
+
+        DateTime localDateTime = new DateTime(epochDate,timeZone);
+        DateObject dateObject = new DateObject();
+        dateObject.setFormattedTime( dateTimePattern.print(localDateTime) );
+        dateObject.setMillis( localDateTime.getMillis() );
+        return dateObject;
+    }
+
 
     public static String getTimeByZone(Long epochDate, String sTimeZone, String sPattern) {
 
@@ -49,7 +103,6 @@ public class DateSupport {
         DateTimeZone timeZone = DateTimeZone.forID(sTimeZone);
 
         DateTime localDateTime = new DateTime(epochDate,timeZone);
-        DateTime currentDateTime = new DateTime();
         return dateTimePattern.print(localDateTime);
     }
 
@@ -132,5 +185,43 @@ public class DateSupport {
                 break;
         }
        return milliseconds ;
+    }
+
+    public static TimeZone getTimeZone( String sTimeZone ) {
+        TimeZone dateTimeZone = DateTimeZone.UTC.toTimeZone();
+        if(!Utility.isNullOrEmpty(sTimeZone)) {
+            if("central".equalsIgnoreCase(sTimeZone)) {
+                dateTimeZone = DateTimeZone.forID("US/Central").toTimeZone();
+            } else if("eastern".equalsIgnoreCase(sTimeZone)) {
+                dateTimeZone = DateTimeZone.forID("US/Eastern").toTimeZone();
+            }  else if("pacific".equalsIgnoreCase(sTimeZone)) {
+                dateTimeZone = DateTimeZone.forID("US/Pacific").toTimeZone();
+            } else if("mountain".equalsIgnoreCase(sTimeZone)) {
+                dateTimeZone = DateTimeZone.forID("US/Mountain").toTimeZone();
+            } else if("hawaii".equalsIgnoreCase(sTimeZone)) {
+                dateTimeZone = DateTimeZone.forID("US/Hawaii").toTimeZone();
+            } else if("alaska".equalsIgnoreCase(sTimeZone)) {
+                dateTimeZone = DateTimeZone.forID("US/Alaska").toTimeZone();
+            }
+        }
+        return dateTimeZone;
+    }
+
+    public static DateObject getDateObject(String sInputDate, String dateTimePattern) throws ParseException {
+
+        DateObject dateObject = new DateObject();
+        if(!Utility.isNullOrEmpty(sInputDate) && !Utility.isNullOrEmpty(dateTimePattern)) {
+            SimpleDateFormat inputDf = new SimpleDateFormat(dateTimePattern);
+            Date iInputDate = inputDf.parse(sInputDate);
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(iInputDate);
+            dateObject.setYear(  cal.get(Calendar.YEAR) );
+            dateObject.setMonth( cal.get(Calendar.MONTH)+1 );
+            dateObject.setDay( cal.get(Calendar.DAY_OF_MONTH) );
+            dateObject.setHour(  cal.get(Calendar.HOUR_OF_DAY) );
+            dateObject.setMinute(  cal.get(Calendar.MINUTE) );
+        }
+
+        return dateObject;
     }
 }

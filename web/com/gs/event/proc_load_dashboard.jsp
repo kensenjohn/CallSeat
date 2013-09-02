@@ -6,12 +6,13 @@
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="java.util.*"%>
 <%@page import="com.gs.json.*"%>
+<%@ page import="com.gs.common.exception.ExceptionHandler" %>
 <%@include file="/web/com/gs/common/security_proc_page.jsp"%>
 <%
 JSONObject jsonResponseObj = new JSONObject();
 
-Logger jspLogging = LoggerFactory.getLogger("JspLogging");
-Logger appLogging = LoggerFactory.getLogger("AppLogging");
+Logger jspLogging = LoggerFactory.getLogger(Constants.JSP_LOGS);
+Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 response.setContentType("application/json");
 
 ArrayList<Text> arrOkText = new ArrayList<Text>();
@@ -56,7 +57,7 @@ try
 catch(Exception e)
 {
 	//jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
-	appLogging.error("Error creating table " );
+	appLogging.error("Error loading Dashboard events : " + ExceptionHandler.getStackTrace(e) );
 	
 	Text errorText = new ErrorText("Oops!! Your request could not be processed at this time.","my_id") ;		
 	arrErrorText.add(errorText);

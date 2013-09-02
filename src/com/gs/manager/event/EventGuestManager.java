@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.gs.bean.response.WebRespRequest;
+import com.gs.common.Utility;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -214,4 +216,25 @@ public class EventGuestManager {
 		}
 		return iNumOfRecs;
 	}
+
+    public ArrayList<EventGuestBean>  getGuestWhoDidNotRSVP(  EventGuestMetaData eventGuestMetaData ) {
+        ArrayList<EventGuestBean>  arrEventGuestWithNoRSVP = new ArrayList<EventGuestBean>();
+        if(eventGuestMetaData!=null && !Utility.isNullOrEmpty(eventGuestMetaData.getEventId())) {
+
+            ArrayList<EventGuestBean> arrEventGuestBean = getGuestsByEvent(eventGuestMetaData);
+            if(arrEventGuestBean!=null && !arrEventGuestBean.isEmpty()) {
+                for(EventGuestBean eventGuestBean : arrEventGuestBean )  {
+                    String sGuestRSVP = eventGuestBean.getRsvpSeats();
+                    if(Utility.isNullOrEmpty(sGuestRSVP) || !ParseUtil.isValidInteger(sGuestRSVP) || ParseUtil.sToI(sGuestRSVP) < 0 ) {
+                        arrEventGuestWithNoRSVP.add(eventGuestBean);
+                    }
+                }
+            }
+            appLogging.info("Number of event Guest with no RSVP : " + arrEventGuestWithNoRSVP.size() + " Seating plan id : " + eventGuestMetaData.getEventId() );
+        } else {
+            appLogging.info("Invalid request used or invalid event id used" );
+        }
+
+        return arrEventGuestWithNoRSVP;
+    }
 }

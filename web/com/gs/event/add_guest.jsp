@@ -125,13 +125,13 @@
 							</div>
 						</div>
 						<div class="row">
-							<div class="span6">
-								Guest's RSVP :
+							<div class="span12">
+								Guest's RSVP : <input type="checkbox" class="ispn1" style="width: 20px"id="did_not_rsvp" name="did_not_rsvp"> Has not responded
 							</div>
 						</div>
 						<div class="row">
-							<div class="span5" >
-								<input type="text" id="rsvp_num_of_seats" name="rsvp_num_of_seats"/> &nbsp;&nbsp;&nbsp;<span id="rsvp_status"></span>
+							<div class="span10" >
+								<input type="text" id="rsvp_num_of_seats" name="rsvp_num_of_seats"/> &nbsp;&nbsp;&nbsp;<span id="rsvp_status">(Enter 0 if guest will not attend.)</span>
 							</div>
 						</div>
 <%
@@ -309,6 +309,15 @@
                     $('#rsvp_num_of_seats').blur();
                 }
             });
+
+            $("#did_not_rsvp").live("click", function(event) {
+                if($("#did_not_rsvp").is(':checked')) {
+                    $('#rsvp_num_of_seats').prop("disabled",true);
+                } else {
+                    $('#rsvp_num_of_seats').prop("disabled",false);
+                }
+            });
+
 		});
 
         function enterButtonActivation()
@@ -494,8 +503,9 @@
                 var varRsvpSeats =  varGuestEventData.rsvp_seats;
                 var varRsvpStatus = '';
                 if(varGuestEventData.rsvp_seats==-1){
-                    varRsvpStatus = '(No response from guest)';
-                    varRsvpSeats = '-';
+                    varRsvpSeats = '';
+                    $('#did_not_rsvp').prop("checked",true);
+                    $('#rsvp_num_of_seats').prop("disabled",true);
                 } else if(varGuestEventData.rsvp_seats==0){
                     varRsvpStatus = '(Will not attend)';
                     varRsvpSeats = '0';

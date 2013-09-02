@@ -10,8 +10,8 @@
 
 	String sSelectedTab = ParseUtil.checkNull(request.getParameter("select_tab"));
 	String sHeaderTxt = ParseUtil.checkNull(request.getParameter("lobby_header"));
-    if(sHeaderTxt!=null && sHeaderTxt.length()>20) {
-        sHeaderTxt = sHeaderTxt.substring(0,17) + "...";
+    if(sHeaderTxt!=null && sHeaderTxt.length()>26) {
+        sHeaderTxt = sHeaderTxt.substring(0,23) + "...";
     }
 	String sSecHeaderTxt = ParseUtil.checkNull(request.getParameter("lobby_sec_header"));
 %>
@@ -24,7 +24,6 @@
 		<div class="row" id="lobby_link" >
 			<span class="span4" >
 				<span id="primary_header" class="h_big" style="margin-left:18px;"><%=sHeaderTxt%></span>
-                &nbsp;&nbsp;<span id="secondary_header" style="font-size:110%; color:#324B38;"><%=sSecHeaderTxt%></span>
 
 			</span>
 			<span class="span3" style="margin-left:45px;" >

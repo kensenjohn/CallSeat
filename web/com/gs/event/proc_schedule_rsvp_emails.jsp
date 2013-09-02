@@ -61,7 +61,7 @@ try {
             EmailSchedulerService emailSchedulerService = new EmailSchedulerService();
             Integer iNumOfRows = emailSchedulerService.createEmailSchedule( emailSchedulerRequest );
             if(iNumOfRows>0) {
-                Text okText = new OkText("Emails with the RSVP link will be sent out to the guest within 15 minutes.","my_id");
+                Text okText = new OkText("An email will be sent you to your guest within the next 15 minutes. The email will contain a link for your guests to RSVP.","my_id");
                 arrOkText.add(okText);
                 responseStatus = RespConstants.Status.OK;
             } else {

@@ -59,14 +59,6 @@
 			UserInfoBean adminUserInfoBean = adminManager.getAminUserInfo(adminBean.getAdminId());
 			
 			adminManager.createTemporaryContact(adminBean , sTmpEmail );
-			//UserInfoBean adminUserInfoBean = adminBean.getAdminUserInfoBean();
-			/*adminUserInfoBean.setEmail(sTmpEmail);
-			
-			jspLogging.info("User info bean : " + adminUserInfoBean.toJson());
-			
-			UserInfoData userInfoData = new UserInfoData();
-			userInfoData.updateGuestUserInfo(adminUserInfoBean);*/
-			//adminManager.updateUser();
 		}
 		
 		
@@ -182,7 +174,7 @@
 	else
 	{
 		eventName = eventBean.getEventName();
-		eventDate = "("+sEventDate+")";
+		eventDate = "("+DateSupport.getTimeByZone(eventBean.getEventDate(), DateSupport.getTimeZone(eventBean.getEventTimeZone()).getID(), Constants.PRETTY_DATE_PATTERN_2)+")";
 	}
 %>
 <link rel="stylesheet" type="text/css" href="/web/js/fancybox/jquery.fancybox-1.3.4.css" media="screen" />
@@ -281,28 +273,74 @@
 											<div class="span5" >
 												<span class="fld_name">When : </span>
 											</div>
+                                            <div class="span2" style="text-align : left;  padding-top:5px;" >
+                                                <span id="e_summ_event_date_mssg"></span>
+                                            </div>
 										</div>
 										<div class="row">											
-											<div class="span4" >
-												<input type="text" class="ispn4" id="e_summ_event_date" name="e_summ_event_date"/>
-											</div>
-											<div class="span2" style="text-align : left;  padding-top:5px;" >
-												<span id="e_summ_event_date_mssg"></span>
+											<div class="span12" >
+												<input type="text" class="ispn2" id="e_summ_event_date" name="e_summ_event_date"/>
+                                                <select id="e_summ_event_hour" name="e_summ_event_hour">
+                                                    <option value="01">1</option>
+                                                    <option value="02">2</option>
+                                                    <option value="03">3</option>
+                                                    <option value="04">4</option>
+                                                    <option value="05">5</option>
+                                                    <option value="06">6</option>
+                                                    <option value="07">7</option>
+                                                    <option value="08">8</option>
+                                                    <option value="09">9</option>
+                                                    <option value="10">10</option>
+                                                    <option value="11">11</option>
+                                                    <option value="12">12</option>
+                                                </select>
+                                                <select  id="e_summ_event_min" name="e_summ_event_min">
+                                                    <option value="00">00</option>
+                                                    <option value="30">30</option>
+                                                </select>
+                                                <select  id="e_summ_event_ampm" name="e_summ_event_ampm">
+                                                    <option value="AM">AM</option>
+                                                    <option value="PM">PM</option>
+                                                </select>
+                                                <select  id="e_summ_event_timezone" name="e_summ_event_timezone">
+                                                    <option value="central">Central Time</option>
+                                                    <option value="eastern">Eastern Time</option>
+                                                    <option value="pacific">Pacific Time</option>
+                                                    <option value="mountain">Mountain Time</option>
+                                                    <option value="hawaii">Hawaii Time</option>
+                                                    <option value="alaska">Alaska Time</option>
+                                                </select>
 											</div>
 										</div>
+                                        <div class="row">
+                                            <div class="span3" >
+                                                &nbsp;
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="span5" >
+                                                <span class="fld_name">RSVP deadline : </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="span12" >
+                                                <input type="text" class="ispn2" id="e_rsvp_deadline_date" name="e_rsvp_deadline_date"/>
+                                            </div>
+                                        </div>
 										<div class="row"style="text-align:right">											
-											<div class="span4" >
+											<div class="span6" >
 										<%
 												if(isNewEventClicked)
 												{
 		%>
-													<input type="button" class="btn ispn3" id="create_event" name="create_event" value="Create Seating Plan"/>
+													<input type="button" class="btn ispn3 btn-blue" id="create_event" name="create_event" value="Create Seating Plan"/>
 		<%											
 												}
 												else
 												{
 		%>
-													<input type="button" class="btn ispn2" id="save_event" name="save_event" value="Save Changes"/>
+													<input type="button" class="btn ispn2 btn-blue" id="save_event" name="save_event" value="Save Changes"/>
 		<%
 												}
 										%>
@@ -707,8 +745,8 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="span10"  style="height: 200px;background-color: #f7f7f7;border:1px solid #A4BE5F;">
-                                    <div class="row" style="height: 200px;">
+                                <div class="span10"  style="height: 325px;background-color: #f7f7f7;border:1px solid #A4BE5F;">
+                                    <div class="row" style="height: 325px;">
                                         <div class="offset_0_5 span9">
                                             <span  id="email_template_rsvp_response_body" style="padding: 10px;"> </span>
                                         </div>
@@ -721,8 +759,9 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="span2">
-                                    &nbsp;
+                                <div class="span12">
+                                    Number of times email was sent : <span id="num_of_times_email_sent">0</span><br>
+                                    Is email scheduled to be sent :  <span id="email_scheduled_for_send">No</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -801,7 +840,8 @@
 			setTopNavSingup(varAdminID,varEventID,'event_setup.jsp');
 			
 		}
-		$("#e_summ_event_date").datepick({ minDate: 1, maxDate: "+1Y" });
+		$("#e_summ_event_date").datepick({ defaultDate :1,minDate: 1, maxDate: "+1Y" ,showDefault: true});
+        $("#e_rsvp_deadline_date").datepick({ defaultDate:1, minDate: 1, maxDate: "+1Y" ,showDefault: true});
 		$("#event_summary_tab").click(function(){
 
 			toggleActionNavs('li_event_summary');
@@ -1338,7 +1378,6 @@
                      varEventName = varEventName.substr(0,17) + '...';
                  }
 				$("#primary_header").text( varEventName  );
-				$("#secondary_header").text( '('+$("#e_summ_event_date").val()+')' );
 				
 				var varIsPayloadExist = varResponseObj.is_payload_exist;
 				
@@ -1527,7 +1566,6 @@
 		if(eventSummary!=undefined)
 		{
 			$("#e_summ_event_name").val(eventSummary.event_name);
-			$("#e_summ_event_date").val(eventSummary.event_date);
 			$("#e_summ_total_table").text(eventSummary.total_table);
 			$("#e_summ_total_seats").text(eventSummary.total_seats);
 			$("#e_summ_assigned_seats").text(eventSummary.assigned_seats);
@@ -1536,6 +1574,14 @@
 			$("#e_summ_rsvp_telnum").text(eventSummary.rsvp_tel_number);
 			$("#e_summ_seating_telnum").text(eventSummary.seating_tel_number);
 
+            var varEventDateObj = eventSummary.event_date_obj;
+            $("#e_summ_event_date").val(varEventDateObj.event_date);
+            $("#e_summ_event_hour").val(varEventDateObj.event_hr);
+            $("#e_summ_event_min").val(varEventDateObj.event_min);
+            $("#e_summ_event_ampm").val(varEventDateObj.event_ampm);
+            $("#e_summ_event_timezone").val(varEventDateObj.event_timezone);
+
+            $("#e_rsvp_deadline_date").val(eventSummary.rsvp_deadline_date);
             // phone usage summary
             var varPhoneUsage = eventSummary.phone_call_usage;
             var varRemainingMinutes = eval(varPhoneUsage.telnum_premium_mins_remain) + eval( varPhoneUsage.telnum_demo_mins_remain );
@@ -1851,11 +1897,12 @@
                 var varIsMessageExist = varResponseObj.is_message_exist;
                 if(varIsMessageExist == true) {
                     var jsonResponseMessage = varResponseObj.messages;
-                    var varArrErrorMssg = jsonResponseMessage.error_mssg
+                    var varArrErrorMssg = jsonResponseMessage.error_mss;
                     displayMssgBoxMessages( varArrErrorMssg , true );
                 }
             } else if( jsonResult.status == 'ok' && varResponseObj !=undefined ) {
                 var varIsMessageExist = varResponseObj.is_message_exist;
+                resetRSVPWebEmaiStats();
                 if(varIsMessageExist == true) {
                     var jsonResponseMessage = varResponseObj.messages;
                     var varArrOkMssg = jsonResponseMessage.ok_mssg
@@ -1863,6 +1910,12 @@
                 }
             }
         }
+    }
+
+    function resetRSVPWebEmaiStats() {
+        $('#email_scheduled_for_send').empty();
+        $('#email_scheduled_for_send').text('Yes');
+
     }
     function displayEmails( jsonResult ) {
         if(jsonResult!=undefined){
@@ -1936,6 +1989,15 @@
             $('#email_template_rsvp_response_body').html(varRsvpResponseEmail.html_body);
         }
 
+        $('#num_of_times_email_sent').empty();
+        $('#num_of_times_email_sent').text(jsonResponseObj.num_of_email_send_complete);
+
+        $('#email_scheduled_for_send').empty();
+        if( jsonResponseObj.num_of_email_scheduled > 0 ) {
+            $('#email_scheduled_for_send').text('Yes');
+        } else {
+            $('#email_scheduled_for_send').text('No');
+        }
     }
 	function processTelNumbers( jsonResponseObj )
 	{

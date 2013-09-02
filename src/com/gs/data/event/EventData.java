@@ -9,21 +9,25 @@ import com.gs.bean.EventTableBean;
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
 import com.gs.common.DateSupport;
+import com.gs.common.Utility;
 import com.gs.common.db.DBDAO;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class EventData {
 	Configuration applicationConfig = Configuration
 			.getInstance(Constants.APPLICATION_PROP);
 
 	private String ADMIN_DB = applicationConfig.get(Constants.ADMIN_DB);
+    private final Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 
 	public Integer insertEvent(EventBean eventBean) {
 		int numOfRowsInserted = 0;
-		if (eventBean.getEventId() != null
-				&& !"".equalsIgnoreCase(eventBean.getEventId())) {
+		if ( !Utility.isNullOrEmpty(eventBean.getEventId()) ) {
 			String sQuery = "INSERT INTO GTEVENT ( EVENTID, EVENTNAME, FK_FOLDERID , CREATEDATE ,"
-					+ " FK_ADMINID , IS_TMP , DEL_ROW, EVENTDATE, HUMANCREATEDATE, HUMANEVENTDATE ) "
-					+ " VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ?) ";
+					+ " FK_ADMINID , IS_TMP , DEL_ROW, EVENTDATE, HUMANCREATEDATE, HUMANEVENTDATE, RSVPDEADLINEDATE," +
+                    " HUMANRSVPDEADLINEDATE , EVENTTIMEZONE ) "
+					+ " VALUES ( ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ? , ?) ";
 			ArrayList<Object> aParams = DBDAO.createConstraint(
 					eventBean.getEventId(), eventBean.getEventName(),
 					eventBean.getEventFolderId(),
@@ -31,7 +35,10 @@ public class EventData {
 					eventBean.getEventAdminId(), eventBean.getIsTmp(),
 					eventBean.getDelRow(), eventBean.getEventDate(),
 					eventBean.getHumanCreateDate(),
-					eventBean.getHumanEventDate());
+					eventBean.getHumanEventDate(),
+                    eventBean.getRsvpDeadlineDate(),
+                    eventBean.getHumanRsvpDeadlineDate(),
+                    eventBean.getEventTimeZone());
 
 			numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
 					"EventData.java", "insertEvent() ");
@@ -60,8 +67,7 @@ public class EventData {
 	public ArrayList<EventBean> getAllEventsByAdmin(String sAmindId) {
 		ArrayList<EventBean> arrEventBean = new ArrayList<EventBean>();
 		if (sAmindId != null && !"".equalsIgnoreCase(sAmindId)) {
-			String sQuery = "SELECT  EVENTID, EVENTNUM, EVENTNAME, FK_FOLDERID , CREATEDATE , FK_ADMINID , "
-					+ " IS_TMP , DEL_ROW , EVENTDATE FROM GTEVENT WHERE FK_ADMINID = ?";
+			String sQuery = "SELECT  * FROM GTEVENT WHERE FK_ADMINID = ?";
 
 			ArrayList<Object> aParams = DBDAO.createConstraint(sAmindId);
 
@@ -80,22 +86,20 @@ public class EventData {
 		return arrEventBean;
 	}
 
-	public Integer updateEvent(EventCreationMetaDataBean eventCreateMetaBean) {
+	public Integer updateEvent(EventBean eventBean) {
 
 		Integer numOfRowsInserted = 0;
-		if (eventCreateMetaBean != null
-				&& eventCreateMetaBean.getEventId() != null
-				&& !"".equalsIgnoreCase(eventCreateMetaBean.getEventId())) {
+        appLogging.info( "Event Id :" + eventBean.getEventId() + " isEmpty of null : "  +  !Utility.isNullOrEmpty(eventBean.getEventId()));
+		if (eventBean != null && !Utility.isNullOrEmpty(eventBean.getEventId())) {
 
-			String sQuery = "UPDATE GTEVENT SET EVENTNAME = ? ,  EVENTDATE= ? WHERE EVENTID = ?";
+			String sQuery = "UPDATE GTEVENT SET EVENTNAME = ? ,  EVENTDATE= ? ,HUMANEVENTDATE = ? ,  EVENTTIMEZONE = ? ,  RSVPDEADLINEDATE = ?, " +
+                    " HUMANRSVPDEADLINEDATE = ? WHERE EVENTID = ?";
 
 			ArrayList<Object> aParams = DBDAO.createConstraint(
-					eventCreateMetaBean.getEventName(), DateSupport.getMillis(
-							eventCreateMetaBean.getEventDate(),
-							eventCreateMetaBean.getEventDatePattern(),
-							eventCreateMetaBean.getEventTimeZone()),
-					eventCreateMetaBean.getEventId());
-
+                    eventBean.getEventName(), eventBean.getEventDate(), eventBean.getHumanEventDate(),
+                    eventBean.getEventTimeZone(), eventBean.getRsvpDeadlineDate(), eventBean.getHumanRsvpDeadlineDate(),
+                    eventBean.getEventId());
+            appLogging.info( "Query :" + sQuery + " aParams : "  + aParams);
 			numOfRowsInserted = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
 					"EventData.java", "insertEvent() ");
 		}
@@ -106,7 +110,8 @@ public class EventData {
 		EventBean eventBean = new EventBean();
 		if (sEventId != null && !"".equalsIgnoreCase(sEventId)) {
 			String sQuery = "SELECT  EVENTID, EVENTNUM, EVENTNAME, FK_FOLDERID , CREATEDATE , FK_ADMINID , "
-					+ " IS_TMP , DEL_ROW , EVENTDATE,HUMANEVENTDATE, HUMANCREATEDATE FROM GTEVENT WHERE EVENTID = ?";
+					+ " IS_TMP , DEL_ROW , EVENTDATE,HUMANEVENTDATE, HUMANCREATEDATE,RSVPDEADLINEDATE,HUMANRSVPDEADLINEDATE," +
+                    " EVENTTIMEZONE FROM GTEVENT WHERE EVENTID = ?";
 
 			ArrayList<Object> aParams = DBDAO.createConstraint(sEventId);
 

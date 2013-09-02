@@ -184,15 +184,21 @@ public class AdminManager {
 	public void sendNewRegUserEmail(RegisterAdminBean regAdminBean) {
 		if (regAdminBean != null) {
 			MailingServiceData mailingServiceData = new MailingServiceData();
-			EmailTemplateBean emailTemplate = mailingServiceData
-					.getEmailTemplate(Constants.EMAIL_TEMPLATE.REGISTRATION);
+			EmailTemplateBean emailTemplate = mailingServiceData.getEmailTemplate(Constants.EMAIL_TEMPLATE.REGISTRATION);
 
 			String sHtmlBody = emailTemplate.getHtmlBody();
 			String sTxtBody = emailTemplate.getTextBody();
+
+            String sRegisteredUserGivenName = ( !Utility.isNullOrEmpty(regAdminBean.getFirstName())? regAdminBean.getFirstName():"" ) + " " +
+                    ( !Utility.isNullOrEmpty(regAdminBean.getLastName())? regAdminBean.getLastName():"");
+            sHtmlBody = sHtmlBody.replaceAll("__GIVENNAME__",sRegisteredUserGivenName );
 			sHtmlBody = sHtmlBody.replaceAll("__USERNAME__",
 					ParseUtil.checkNull(regAdminBean.getEmail()));
 			sTxtBody = sTxtBody.replaceAll("__USERNAME__",
 					ParseUtil.checkNull(regAdminBean.getEmail()));
+            sTxtBody = sTxtBody.replaceAll("__GIVENNAME__",sRegisteredUserGivenName );
+
+            appLogging.info("email  __GIVENNAME__ : " + sRegisteredUserGivenName + " - sHtmlBody " + sHtmlBody );
 
 			EmailQueueBean emailQueueBean = new EmailQueueBean();
 			emailQueueBean.setEmailSubject(emailTemplate.getEmailSubject());
@@ -222,6 +228,7 @@ public class AdminManager {
 
         if(webRespRequest!=null && !"".equalsIgnoreCase(webRespRequest.getAdminId())  && !"".equalsIgnoreCase(webRespRequest.getEventId()) && guestResponseEmailTemplate!=null ) {
             TelNumberMetaData telNumberMetaData = new TelNumberMetaData();
+
             telNumberMetaData.setAdminId( webRespRequest.getAdminId() );
             telNumberMetaData.setEventId( webRespRequest.getEventId() );
             TelNumberManager telNumManager = new TelNumberManager();
@@ -277,7 +284,8 @@ public class AdminManager {
 
             if(eventBean!=null && eventBean.getEventId()!=null && !"".equalsIgnoreCase( eventBean.getEventId() ) ) {
                 srcText = srcText.replaceAll("__SEATINGPLANNAME__",ParseUtil.checkNull(eventBean.getEventName()));
-                srcText = srcText.replaceAll("__RSVPDEADLINE__",ParseUtil.checkNull(eventBean.getHumanEventDate()));
+                String sRSVPDeadline = DateSupport.getTimeByZone(eventBean.getRsvpDeadlineDate(), DateSupport.getTimeZone(eventBean.getEventTimeZone()).getID(), Constants.PRETTY_DATE_PATTERN_2) ;
+                srcText = srcText.replaceAll("__RSVPDEADLINE__",ParseUtil.checkNull(sRSVPDeadline));
             }
 
         }

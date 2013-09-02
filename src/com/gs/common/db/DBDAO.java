@@ -109,6 +109,43 @@ public class DBDAO {
 		return iRowsAffected;
 	}
 
+    public static int[] putBatch(String sResource, String sQuery,
+                          ArrayList<ArrayList<Object> > aBatchParams) {
+        DBPool p = null;
+        Connection c = null;
+        int[] iRowsAffected = new int[aBatchParams.size()];
+
+        try {
+            p = DBPool.getInstance();
+            c = p.getConnection();
+
+            PreparedStatement preparedStatement = c.prepareStatement(sQuery);
+            ParameterMetaData pmdMeta = preparedStatement.getParameterMetaData();
+
+            // Prepared Statement setObject() indexes start at 1
+            // ArrayList get() indexes start at 0
+            if (pmdMeta.getParameterCount() > 0 && aBatchParams!=null && !aBatchParams.isEmpty()) {
+                for( ArrayList<Object> aParams : aBatchParams ) {
+                    for (int i = 0; i < aParams.size(); i++) {
+                        preparedStatement.setObject(i + 1, aParams.get(i));
+                        preparedStatement.addBatch();
+                    }
+                }
+            }
+            iRowsAffected = preparedStatement.executeBatch();
+            preparedStatement.close();
+        } catch (SQLException ex) {
+            throw new RuntimeException(ex);
+        } finally {
+            // free up the connection.
+            if (c != null) {
+                p.freeConnection(c);
+            }
+        }
+
+        return iRowsAffected;
+    }
+
 	public static Connection getConnection(String sResource) {
 		DBPool p = null;
 		Connection c = null;
@@ -166,6 +203,20 @@ public class DBDAO {
 		return numOfRowsAffected;
 
 	}
+    public static int[] putBatchRowsQuery(String sQuery, ArrayList<ArrayList<Object> > aBatchParams,
+                                   String sDBName, String sInvokingClass, String sInvokingMethod) {
+        int[] numOfRowsAffected = new int[aBatchParams.size()];
+        try {
+            numOfRowsAffected = DBDAO.putBatch(sDBName, sQuery, aBatchParams);
+        } catch (Exception e) {
+            dbLogging.error(sQuery + ": " + aBatchParams + "\nPut DB: " + sDBName
+                    + " " + sInvokingClass + " " + sInvokingMethod + "\n"
+                    + ExceptionHandler.getStackTrace(e));
+        }
+
+        return numOfRowsAffected;
+
+    }
 
 	public static int putCommitRowsQuesry(String sQuery,
 			ArrayList<Object> aParams, Connection conn, String sInvokingClass,

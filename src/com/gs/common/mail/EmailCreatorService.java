@@ -17,7 +17,7 @@ import com.gs.common.sms.SmsServiceData;
 import com.gs.manager.AdminManager;
 import com.gs.manager.GuestManager;
 import com.gs.manager.event.*;
-import com.gs.response.CreateWebRsvpResponse;
+import com.gs.response.AlterWebRsvpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -113,7 +113,7 @@ public class EmailCreatorService {
                 emailLogging.info( " Invalid template ID :  " + emailNewScheduleBean );
             }
         } else  {
-            emailLogging.info( "Invalid Email Schedule Bean. Unable to create the SMS Object" );
+            emailLogging.info( "Invalid Email Schedule Bean. Unable to create the Email Object" );
         }
 
         return arrEmailObject;
@@ -135,7 +135,8 @@ public class EmailCreatorService {
                 arrEmailObject.add( getRSVPEmailObject(emailScheduleBean, emailTemplateBean) );
             } else if( Constants.EMAIL_TEMPLATE.SEATING_CONFIRMATION_EMAIL.getEmailTemplate().equalsIgnoreCase( emailTemplateBean.getTemplateName() )) {
                 arrEmailObject.add(getSeatingConfirmationEmailObject(emailScheduleBean, emailTemplateBean));
-            } else if( Constants.EMAIL_TEMPLATE.RSVPRESPONSE.getEmailTemplate().equalsIgnoreCase( emailTemplateBean.getTemplateName() )) {
+            } else if( Constants.EMAIL_TEMPLATE.RSVPRESPONSE.getEmailTemplate().equalsIgnoreCase( emailTemplateBean.getTemplateName() ) ||
+                    Constants.EMAIL_TEMPLATE.RSVPRESPONSEDEMO.getEmailTemplate().equalsIgnoreCase( emailTemplateBean.getTemplateName() )) {
                 arrEmailObject = getRsvpResponseEmail(emailScheduleBean , emailTemplateBean );
             }
         }
@@ -157,9 +158,10 @@ public class EmailCreatorService {
             WebRespRequest webRespRequest = new WebRespRequest();
             webRespRequest.setEventId( ParseUtil.checkNull(emailScheduleBean.getEventId()) );
             webRespRequest.setAdminId( ParseUtil.checkNull(emailScheduleBean.getAdminId()) );
+            webRespRequest.setGuestWebResponseType(Constants.GUEST_WEB_RESPONSE_TYPE.RSVP);
 
-            CreateWebRsvpResponse createWebRsvpResponse = new CreateWebRsvpResponse();
-            WebRespResponse webRespResponse = createWebRsvpResponse.generateGuestWebResponseBean(webRespRequest);
+            AlterWebRsvpResponse alterWebRsvpResponse = new AlterWebRsvpResponse();
+            WebRespResponse webRespResponse = alterWebRsvpResponse.generateGuestWebResponseBean(webRespRequest);
 
             if(webRespResponse!=null && webRespResponse.isSuccess() ) {
                 ArrayList<GuestWebResponseBean> arrGuestWebResponseBeans = webRespResponse.getArrGuestWebResponse();
@@ -171,11 +173,15 @@ public class EmailCreatorService {
                         String sGuestId = guestWebResponseBean.getGuestId();
                         GuestBean guestBean = getGuestBean( sGuestId );
 
-                        if(guestBean!=null && !Utility.isNullOrEmpty(guestBean.getGuestId())) {
+                        if(guestBean!=null && !Utility.isNullOrEmpty( sGuestId )) {
+                            WebRespRequest guestWebRespRequest = new WebRespRequest();
+                            guestWebRespRequest.setGuestBean( guestBean );
+                            guestWebRespRequest.setGuestWebResponseBean( guestWebResponseBean );
+
                             EmailObject emailObject = new EmailQueueBean();
-                            emailObject.setEmailSubject( replaceRSVPResponseTemplateWithGuestData( guestResponseEmailTemplate.getEmailSubject() , guestBean ) );
-                            emailObject.setHtmlBody( replaceRSVPResponseTemplateWithGuestData(guestResponseEmailTemplate.getHtmlBody(), guestBean ));
-                            emailObject.setTextBody( replaceRSVPResponseTemplateWithGuestData(guestResponseEmailTemplate.getTextBody(), guestBean ) );
+                            emailObject.setEmailSubject( replaceRSVPResponseTemplateWithGuestData( guestResponseEmailTemplate.getEmailSubject() , guestWebRespRequest ) );
+                            emailObject.setHtmlBody( replaceRSVPResponseTemplateWithGuestData(guestResponseEmailTemplate.getHtmlBody(), guestWebRespRequest ));
+                            emailObject.setTextBody( replaceRSVPResponseTemplateWithGuestData(guestResponseEmailTemplate.getTextBody(), guestWebRespRequest ) );
 
                             emailObject = updateToAddressData(emailObject , sGuestId );
                             emailObject = updateFromAddress( emailObject , emailTemplateBean ) ;
@@ -195,6 +201,7 @@ public class EmailCreatorService {
                 emailLogging.info( "Failed to generate the RSVP Links for guests : " + ParseUtil.checkNullObject( emailScheduleBean ) );
             }
         }
+        emailLogging.info( "Final all Email Object  :  " + arrEmailObject );
         return arrEmailObject;
     }
 
@@ -371,12 +378,24 @@ public class EmailCreatorService {
 
 
 
-    private String replaceRSVPResponseTemplateWithGuestData(String sText , GuestBean guestBean  ) {
+    private String replaceRSVPResponseTemplateWithGuestData(String sText , WebRespRequest guestWebRespRequest  ) {
         String srcText = ParseUtil.checkNull(sText);
-        if(guestBean!=null && !Utility.isNullOrEmpty(sText) && !Utility.isNullOrEmpty(guestBean.getGuestId()) ) {
-            srcText = srcText.replaceAll("__GIVENNAME__",ParseUtil.checkNull(guestBean.getUserInfoBean().getFirstName()) + " " + ParseUtil.checkNull(guestBean.getUserInfoBean().getLastName()));
+        if( guestWebRespRequest!=null ) {
+            GuestBean guestBean = guestWebRespRequest.getGuestBean();
+            GuestWebResponseBean guestWebResponseBean = guestWebRespRequest.getGuestWebResponseBean();
+            if(guestBean!=null && !Utility.isNullOrEmpty(sText) && !Utility.isNullOrEmpty(guestBean.getGuestId())
+                    && guestWebResponseBean!=null && !Utility.isNullOrEmpty(guestWebResponseBean.getLinkId() ) ) {
+                if(srcText.contains("__GIVENNAME__")) {
+                    srcText = srcText.replaceAll("__GIVENNAME__",ParseUtil.checkNull(guestBean.getUserInfoBean().getFirstName()) + " " + ParseUtil.checkNull(guestBean.getUserInfoBean().getLastName()));
+                }
+                if(srcText.contains("__RSVPLINK__")) {
+                    StringBuilder strRsvpLink = new StringBuilder("https://");
+                    strRsvpLink.append( guestWebResponseBean.getLinkDomain()).append("/web/r/rsvp.jsp?")
+                            .append(Constants.RSVP_WEB_PARAM.LINK_ID.getParam()).append("=").append(ParseUtil.checkNull( guestWebResponseBean.getLinkId()));
+                    srcText = srcText.replaceAll("__RSVPLINK__",strRsvpLink.toString() );
+                }
+            }
         }
         return srcText;
     }
-
 }

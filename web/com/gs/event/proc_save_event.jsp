@@ -9,13 +9,15 @@
 <%@ page import="java.util.*"%>
 <%@page import="com.gs.json.*"%>
 <%@ page import="org.joda.time.DateTimeZone" %>
+<%@ page import="com.gs.common.exception.ExceptionHandler" %>
+<%@ page import="java.text.SimpleDateFormat" %>
 
 <%@include file="/web/com/gs/common/security_proc_page.jsp"%>
 <%
 JSONObject jsonResponseObj = new JSONObject();
 
-Logger jspLogging = LoggerFactory.getLogger("JspLogging");
-Logger appLogging = LoggerFactory.getLogger("AppLogging");
+Logger jspLogging = LoggerFactory.getLogger(Constants.JSP_LOGS);
+Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 response.setContentType("application/json");
 
 ArrayList<Text> arrOkText = new ArrayList<Text>();
@@ -30,6 +32,11 @@ try
 	String sAdminId =  ParseUtil.checkNull(request.getParameter("admin_id"));
 	String sEventName =  ParseUtil.checkNull(request.getParameter("e_summ_event_name"));
 	String sEventDate =  ParseUtil.checkNull(request.getParameter("e_summ_event_date"));
+    String sEventHour =  ParseUtil.checkNull(request.getParameter("e_summ_event_hour"));
+    String sEventMin =  ParseUtil.checkNull(request.getParameter("e_summ_event_min"));
+    String sEventAmPm =  ParseUtil.checkNull(request.getParameter("e_summ_event_ampm"));
+    String sEventTimeZone =  ParseUtil.checkNull(request.getParameter("e_summ_event_timezone"));
+    String sRsvpDeadlineDate =  ParseUtil.checkNull(request.getParameter("e_rsvp_deadline_date"));
 
 	boolean  isCreateEvent =  ParseUtil.sTob(request.getParameter("create_event"));
 	
@@ -40,7 +47,7 @@ try
 		
 		responseStatus = RespConstants.Status.ERROR;
 	}
-	else if(sEventDate==null || "".equalsIgnoreCase(sEventDate))
+	else if( Utility.isNullOrEmpty(sEventDate) ||  Utility.isNullOrEmpty(sEventHour) ||  Utility.isNullOrEmpty(sEventMin) ||  Utility.isNullOrEmpty(sEventAmPm) ||  Utility.isNullOrEmpty(sEventTimeZone))
 	{
 		Text errorText = new ErrorText("*Required","e_summ_event_date") ;		
 		arrErrorText.add(errorText);
@@ -55,6 +62,17 @@ try
 	
 	if(responseStatus.equals(RespConstants.Status.OK))
 	{
+        Long lCurrentTime = DateSupport.getEpochMillis();
+
+        String sEventDateTime =  sEventDate + " " + sEventHour +":" +sEventMin+":00 " + sEventAmPm;
+        String sEventDateTimePattern = "MM/dd/yyyy hh:mm:ss a";
+
+        String sRsvpDeadlineDateTime = sRsvpDeadlineDate + " 23:59:59";
+        String sRsvpDeadlineDateTimePattern = "MM/dd/yyyy HH:mm:ss";
+
+        DateObject eventDateObject = DateSupport.convertTime(sEventDateTime ,DateSupport.getTimeZone( sEventTimeZone ), sEventDateTimePattern , DateSupport.getTimeZone(Constants.DEFAULT_TIMEZONE) , Constants.DATE_PATTERN_TZ  );
+
+        Long lEventCreateDate = eventDateObject.getMillis();
 		if(isCreateEvent)
 		{
 			if(sEventName==null || "".equalsIgnoreCase(sEventName))
@@ -63,11 +81,9 @@ try
 				arrErrorText.add(errorText);
 				
 				responseStatus = RespConstants.Status.ERROR;
-			}
-			else
-			{
-                Long lCurrentTime = DateSupport.getEpochMillis();
-                Long lEventCreateDate = DateSupport.getMillis( sEventDate + " 00:00:00","MM/dd/yyyy HH:mm:ss", DateTimeZone.UTC.getID() );
+			} else {
+
+
                 Long lFutureDateLimit = DateSupport.addTime( lCurrentTime , 1 , Constants.TIME_UNIT.YEARS  );
                 if( lEventCreateDate < lCurrentTime )
                 {
@@ -92,10 +108,13 @@ try
 
                         EventCreationMetaDataBean eventMeta = new EventCreationMetaDataBean();
                         eventMeta.setAdminBean(adminBean);
-                        eventMeta.setEventDate(sEventDate);
-                        eventMeta.setEventDatePattern("MM/dd/yyyy");
-                        eventMeta.setEventTimeZone("UTC");
+                        eventMeta.setEventDate(sEventDateTime);
+                        eventMeta.setEventDatePattern(sEventDateTimePattern);
+                        eventMeta.setEventTimeZone(sEventTimeZone);
                         eventMeta.setEventName(sEventName);
+                        eventMeta.setRsvpDeadlineDate(sRsvpDeadlineDateTime);
+                        eventMeta.setRsvpDeadlineDateDatePattern( sRsvpDeadlineDateTimePattern );
+                        eventMeta.setCreateEvent( true );
 
                         EventBean eventBean = eventManager.createEvent(eventMeta);
 
@@ -142,12 +161,9 @@ try
 		}
 		else
 		{
-			if(sEventId!=null && !"".equalsIgnoreCase(sEventId))
-			{
-                Long lCurrentTime = DateSupport.getEpochMillis();
-                Long lEventDate = DateSupport.getMillis( sEventDate + " 00:00:00","MM/dd/yyyy HH:mm:ss", DateTimeZone.UTC.getID() );
+			if(sEventId!=null && !"".equalsIgnoreCase(sEventId)){
+
                 Long lFutureDateLimit = 0L;
-                Long lEventCreateDate = 0L;
 
                 TelNumberMetaData telNumberMetaData = new TelNumberMetaData();
                 telNumberMetaData.setEventId(sEventId);
@@ -166,8 +182,7 @@ try
                             PurchaseTransactionManager purchaseTransactionManager = new PurchaseTransactionManager();
                             PurchaseTransactionBean purchaseResponseTransactionBean = purchaseTransactionManager.getPurchaseTransactionByEventAdmin(purchaseTransactionBean);
 
-                            if(purchaseResponseTransactionBean!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getPurchaseTransactionId()))
-                            {
+                            if(purchaseResponseTransactionBean!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getPurchaseTransactionId())) {
                                 lEventCreateDate = purchaseResponseTransactionBean.getCreateDate();
                                 lFutureDateLimit = DateSupport.addTime( lEventCreateDate , 1 , Constants.TIME_UNIT.YEARS  );
                                 break;
@@ -179,7 +194,7 @@ try
                             EventBean eventBean = eventManager.getEvent(sEventId);
                             if(eventBean!=null)
                             {
-                                lEventCreateDate = eventBean.getEventCreateDate();
+                                lEventCreateDate = eventDateObject.getMillis();
                                 lFutureDateLimit = DateSupport.addTime( lEventCreateDate , 1 , Constants.TIME_UNIT.YEARS  );
                                 break;
                             }
@@ -187,14 +202,14 @@ try
                     }
                 }
 
-                if( lEventDate < lCurrentTime )
+                if( lEventCreateDate < lCurrentTime )
                 {
                     Text errorText = new ErrorText("We were unable to create a seating plan for the selected date. Please select a date in the future.","e_summ_event_name") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
                 }
-                else if (lEventDate  > lFutureDateLimit  )
+                else if (lEventCreateDate  > lFutureDateLimit  )
                 {
                     Text errorText = new ErrorText("We were unable to create a seating plan for the selected date. The date must be before " +
                             DateSupport.getTimeByZone( lFutureDateLimit,DateTimeZone.UTC.getID(),Constants.PRETTY_DATE_PATTERN_2 )+ ".","e_summ_event_name") ;
@@ -204,14 +219,21 @@ try
                 }
                 else
                 {
-                    EventCreationMetaDataBean eventCreateMetaBean = new EventCreationMetaDataBean();
-                    eventCreateMetaBean.setEventId(sEventId);
-                    eventCreateMetaBean.setEventName(sEventName);
-                    eventCreateMetaBean.setEventDate(sEventDate);
-                    eventCreateMetaBean.setEventDatePattern("MM/dd/yyyy");
-                    eventCreateMetaBean.setEventTimeZone("UTC");
+                    AdminManager adminManager = new AdminManager();
+                    AdminBean adminBean = adminManager.getAdmin(sAdminId);
 
-                    Integer iNumOfRowsUpdated = eventManager.updateEvent(eventCreateMetaBean);
+                    EventCreationMetaDataBean eventMeta = new EventCreationMetaDataBean();
+                    eventMeta.setEventId(sEventId );
+                    eventMeta.setAdminBean(adminBean);
+                    eventMeta.setEventDate(sEventDateTime);
+                    eventMeta.setEventDatePattern(sEventDateTimePattern);
+                    eventMeta.setEventTimeZone(sEventTimeZone);
+                    eventMeta.setEventName(sEventName);
+                    eventMeta.setRsvpDeadlineDate(sRsvpDeadlineDateTime);
+                    eventMeta.setRsvpDeadlineDateDatePattern( sRsvpDeadlineDateTimePattern );
+                    eventMeta.setUpdateEvent( true );
+
+                    Integer iNumOfRowsUpdated = eventManager.updateEvent(eventMeta);
                     if(iNumOfRowsUpdated<1)
                     {
                         Text errorText = new ErrorText("Oops!! Please try again later.","e_summ_event_date") ;
@@ -252,7 +274,7 @@ try
 catch(Exception e)
 {
 	//jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
-	appLogging.error("Error creating table " );
+	appLogging.error("Error saving event data\n" + e.getMessage() + "\n" + ExceptionHandler.getStackTrace(e) );
 	
 	Text errorText = new ErrorText("Oops!! Your request could not be processed at this time.","my_id") ;		
 	arrErrorText.add(errorText);

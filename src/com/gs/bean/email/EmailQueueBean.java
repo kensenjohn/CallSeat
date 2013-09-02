@@ -89,7 +89,8 @@ public class EmailQueueBean extends EmailObject {
 		StringBuilder builder = new StringBuilder();
 		builder.append("EmailQueueBean [emailQueueId:").append(emailQueueId)
 				.append(", To: ").append(toAddress).append(", Sub: ")
-				.append(emailSubject).append("]");
+				.append(emailSubject).append(", Html Body: ")
+                .append(htmlBody).append("]");
 		return builder.toString();
 	}
 

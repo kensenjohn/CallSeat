@@ -12,7 +12,9 @@
 <%@ page import="com.gs.common.exception.ExceptionHandler" %>
 <%@ page import="com.gs.bean.UserInfoBean" %>
 
-<jsp:include page="/web/com/gs/common/header_top.jsp"/>
+<jsp:include page="/web/com/gs/common/header_top.jsp">
+    <jsp:param name="page_title" value="Guest RSVP"/>
+</jsp:include>
 
 <jsp:include page="/web/com/gs/common/header_bottom.jsp"/>
 

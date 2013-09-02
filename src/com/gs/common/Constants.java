@@ -29,9 +29,9 @@ public class Constants {
 	public static String APP_LOGS = "AppLogging";
 	public static String CONFIG_LOGS = "ConfiguLogging";
 
-	public static String DATE_PATTERN = "yyyy-MM-dd hh:mm:ss";
+	public static String DATE_PATTERN = "yyyy-MM-dd HH:mm:ss";
     public static String DATE_PATTERN_TZ = "yyyy-MM-dd HH:mm:ss z";
-	public static String PRETTY_DATE_PATTERN_1 = "MM/dd/yyyy hh:mm z";
+	public static String PRETTY_DATE_PATTERN_1 = "MM/dd/yyyy hh:mm a z";
 	public static String PRETTY_DATE_PATTERN_2 = "MM/dd/yyyy";
 	public static String TIME_PATTERN = "hh mm";
 
@@ -576,4 +576,9 @@ public class Constants {
         NONE,RSVP;
     }
 
+    public enum GUEST_WEB_RESPONSE_STATUS {
+        NEW,COMPLETED_RESPONSE, ERROR;
+    }
+
+    public static final int SIZE_OF_RSVP_LINK_ID = 10;
 }

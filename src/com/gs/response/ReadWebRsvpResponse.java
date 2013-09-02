@@ -6,6 +6,7 @@ import com.gs.bean.GuestBean;
 import com.gs.bean.response.GuestWebResponseBean;
 import com.gs.bean.response.WebRespRequest;
 import com.gs.common.ParseUtil;
+import com.gs.common.Utility;
 import com.gs.manager.GuestManager;
 import com.gs.manager.event.EventGuestManager;
 import com.gs.manager.event.EventGuestMetaData;
@@ -49,7 +50,7 @@ public class ReadWebRsvpResponse {
 
     public EventGuestBean getEventGuestSeating( WebRespRequest webRsvpRequestBean ) {
         EventGuestBean eventGuestBean = new EventGuestBean();
-        if(webRsvpRequestBean!=null && !"".equalsIgnoreCase(webRsvpRequestBean.getGuestId()) && !"".equalsIgnoreCase(webRsvpRequestBean.getEventId()) ){
+        if(webRsvpRequestBean!=null && !Utility.isNullOrEmpty(webRsvpRequestBean.getGuestId())   && !Utility.isNullOrEmpty(webRsvpRequestBean.getEventId()) ){
             EventGuestMetaData eventGuestMetaData = new EventGuestMetaData();
             eventGuestMetaData.setEventId(ParseUtil.checkNull(webRsvpRequestBean.getEventId()));
 

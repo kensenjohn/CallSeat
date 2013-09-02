@@ -33,6 +33,7 @@ try
 	String sEmailAddr =  ParseUtil.checkNull(request.getParameter("email_addr"));
 	String sInvitedNumOfSeats =  ParseUtil.checkNull(request.getParameter("invited_num_of_seats"));
 	String sRsvpNumOfSeats =  ParseUtil.checkNull(request.getParameter("rsvp_num_of_seats"));
+    boolean isGuestDidNotRSVP = ParseUtil.sTob(request.getParameter("did_not_rsvp"));
 	String sCellNumberHumanFormat =  ParseUtil.checkNull(request.getParameter("cell_num"));
 	String sHomeNumberHumanFormat =  ParseUtil.checkNull(request.getParameter("home_num"));
 	String sGuestId =  ParseUtil.checkNull(request.getParameter("guest_id"));
@@ -119,6 +120,9 @@ try
 			}
 			
 			int iNumRsvp =  ParseUtil.sToI(sRsvpNumOfSeats);
+            if(isGuestDidNotRSVP) {
+                sRsvpNumOfSeats = "-1";
+            }
 			if(sRsvpNumOfSeats==null || "".equalsIgnoreCase(sRsvpNumOfSeats) || iNumRsvp<0) {
 				appLogging.warn("RSVP number of guests was invalid : " + sRsvpNumOfSeats );
 				
