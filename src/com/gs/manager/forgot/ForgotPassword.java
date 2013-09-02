@@ -208,12 +208,17 @@ public class ForgotPassword implements ForgotInfoManager {
 			String sResetDomain = ParseUtil.checkNull(applicationConfig.get(Constants.DOMAIN));
 			if(sResetDomain!=null && !"".equalsIgnoreCase(sResetDomain))
 			{
+                String sRegisteredUserGivenName = ( !Utility.isNullOrEmpty(adminBean.getAdminUserInfoBean().getFirstName())? adminBean.getAdminUserInfoBean().getFirstName():"" ) + " " +
+                        ( !Utility.isNullOrEmpty(adminBean.getAdminUserInfoBean().getLastName())? adminBean.getAdminUserInfoBean().getLastName():"");
+                sTxtTemplate = sTxtTemplate.replaceAll("__GIVENNAME__",sRegisteredUserGivenName );
+                sHtmlTemplate = sHtmlTemplate.replaceAll("__GIVENNAME__",sRegisteredUserGivenName );
+
 				String sResetLink = "https://" + sResetDomain +
 					"/web/com/gs/common/forgot.jsp?lotophagi="+secForgInfoBean.getSecureTokenId();
 				sTxtTemplate = sTxtTemplate.replaceAll("__NEW_PASSWORD_RESET_LINK__",
 						ParseUtil.checkNull(sResetLink));
 				sHtmlTemplate = sHtmlTemplate.replaceAll("__NEW_PASSWORD_RESET_LINK__",
-						ParseUtil.checkNull(sResetLink));
+						ParseUtil.checkNull("<a href=\""+sResetLink+"\" target=\"_blank\">Reset Password</a>"));
 				
 				String sProductName = ParseUtil.checkNull(applicationConfig.get(Constants.PRODUCT_NAME));
 				sTxtTemplate = sTxtTemplate.replaceAll("__PRODUCT_NAME__",
