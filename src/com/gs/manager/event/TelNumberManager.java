@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.gs.bean.*;
 import com.gs.bean.email.EmailScheduleBean;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,13 +13,6 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.gs.bean.AdminTelephonyAccountBean;
-import com.gs.bean.DemoTelNumber;
-import com.gs.bean.EventGuestBean;
-import com.gs.bean.GuestBean;
-import com.gs.bean.TelNumberBean;
-import com.gs.bean.TelNumberTypeBean;
-import com.gs.bean.UserInfoBean;
 import com.gs.bean.email.EmailQueueBean;
 import com.gs.bean.email.EmailTemplateBean;
 import com.gs.common.Configuration;
@@ -540,8 +534,15 @@ public class TelNumberManager {
 			EmailTemplateBean emailTemplate = mailingServiceData
 					.getEmailTemplate(Constants.EMAIL_TEMPLATE.NEWTELNUMBERPURCHASE);
 
-			String sHtmlTemplate = emailTemplate.getHtmlBody();
-			String sTxtTemplate = emailTemplate.getTextBody();
+            String sHtmlTemplate = emailTemplate.getHtmlBody();
+            String sTxtTemplate = emailTemplate.getTextBody();
+
+            String sRegisteredUserGivenName = ( !Utility.isNullOrEmpty(adminUserInfoBean.getFirstName())? adminUserInfoBean.getFirstName():"" ) + " " +
+                    ( !Utility.isNullOrEmpty(adminUserInfoBean.getLastName())? adminUserInfoBean.getLastName():"");
+            sTxtTemplate = sTxtTemplate.replaceAll("__GIVENNAME__",sRegisteredUserGivenName );
+            sHtmlTemplate = sHtmlTemplate.replaceAll("__GIVENNAME__",sRegisteredUserGivenName );
+
+
 
 			sTxtTemplate = sTxtTemplate.replaceAll("__NEW__RSVP__TELNUM__",
 					telNumberMetaData.getRsvpTelNumDigit());
@@ -553,8 +554,36 @@ public class TelNumberManager {
 			sHtmlTemplate = sHtmlTemplate.replaceAll("__NEW_SEATING__TELNUM__",
 					telNumberMetaData.getSeatingTelNumDigit());
 
+            String sProductName = ParseUtil.checkNull(applicationConfig.get(Constants.PRODUCT_NAME));
+            String sProductPhone = ParseUtil.checkNull(applicationConfig.get(Constants.PROP_PRODUCT_PHONE));
+            String sProductAddress = ParseUtil.checkNull(applicationConfig.get(Constants.PROP_PRODUCT_ADDRESS));
+            sTxtTemplate = sTxtTemplate.replaceAll("__PRODUCT_NAME__",
+                    ParseUtil.checkNull(sProductName));
+            sHtmlTemplate = sHtmlTemplate.replaceAll("__PRODUCT_NAME__",
+                    ParseUtil.checkNull(sProductName));
+
+            sTxtTemplate = sTxtTemplate.replaceAll("__PRODUCT_PHONE__",
+                    ParseUtil.checkNull(sProductPhone));
+            sHtmlTemplate = sHtmlTemplate.replaceAll("__PRODUCT_PHONE__",
+                    ParseUtil.checkNull(sProductPhone));
+
+            sTxtTemplate = sTxtTemplate.replaceAll("__PRODUCT_ADDRESS__",
+                    ParseUtil.checkNull(sProductAddress));
+            sHtmlTemplate = sHtmlTemplate.replaceAll("__PRODUCT_ADDRESS__",
+                    ParseUtil.checkNull(sProductAddress));
+
+            EventManager eventManager = new EventManager();
+            EventBean eventBean = eventManager.getEvent( ParseUtil.checkNull(telNumberMetaData.getEventId()) );
+            String sSeatingPlanName = Constants.EMPTY;
+
+            if(eventBean!=null && !Utility.isNullOrEmpty(eventBean.getEventId())) {
+                sSeatingPlanName = ParseUtil.checkNull(eventBean.getEventName());
+            }
+            String sEmailSubject = ParseUtil.checkNull(emailTemplate.getEmailSubject());
+            sEmailSubject = sEmailSubject.replaceAll("__SEATINGPLANNAME__",sSeatingPlanName);
+
 			EmailQueueBean emailQueueBean = new EmailQueueBean();
-			emailQueueBean.setEmailSubject(emailTemplate.getEmailSubject());
+			emailQueueBean.setEmailSubject(sEmailSubject);
 			emailQueueBean.setFromAddress(emailTemplate.getFromAddress());
 			emailQueueBean.setFromAddressName(emailTemplate
 					.getFromAddressName());

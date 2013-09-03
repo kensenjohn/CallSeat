@@ -212,7 +212,7 @@ public class EmailCreatorService {
         {
             String sEventID = ParseUtil.checkNull( emailScheduleBean.getEventId() );
             String sGuestId = ParseUtil.checkNull( emailScheduleBean.getGuestId() );
-
+            String sAdminId = ParseUtil.checkNull( emailScheduleBean.getAdminId() );
             if( sEventID!=null && !"".equalsIgnoreCase(sEventID) && sGuestId!=null
                     && !"".equalsIgnoreCase(sGuestId) )
             {
@@ -234,10 +234,83 @@ public class EmailCreatorService {
                     Integer iRsvpNumber = ParseUtil.sToI( eventGuestBean.getRsvpSeats() );
 
                     boolean isRSVPDataExists = false;
-                    if(iRsvpNumber>0)
-                    {
-                        sHtmlBody = sHtmlBody.replaceAll("__RSVP_RESPONSE_CONFIRMATION__", ParseUtil.iToS(iRsvpNumber) );
-                        sTextBody = sTextBody.replaceAll("__RSVP_RESPONSE_CONFIRMATION__", ParseUtil.iToS(iRsvpNumber) );
+                    if(iRsvpNumber>0) {
+                        GuestManager guestManager = new GuestManager();
+                        GuestBean guestBean = guestManager.getGuest( sGuestId) ;
+                        String sGivenName = ParseUtil.checkNull(guestBean.getUserInfoBean().getFirstName()) + " " + ParseUtil.checkNull(guestBean.getUserInfoBean().getLastName());
+                        if(sHtmlBody.contains("__GIVENNAME__")) {
+                            sHtmlBody = sHtmlBody.replaceAll("__GIVENNAME__",sGivenName);
+                        }
+                        if(sTextBody.contains("__GIVENNAME__")) {
+                            sTextBody = sTextBody.replaceAll("__GIVENNAME__",sGivenName);
+                        }
+
+                        EventManager eventManager = new EventManager();
+                        EventBean eventBean = eventManager.getEvent(sEventID);
+
+                        sHtmlBody = sHtmlBody.replaceAll("__SEATINGPLANNAME__",ParseUtil.checkNull( eventBean.getEventName() ));
+                        sTextBody = sTextBody.replaceAll("__SEATINGPLANNAME__",ParseUtil.checkNull( eventBean.getEventName() ));
+
+                        //__RSVPRESPONSE__
+                        StringBuilder strRsvpResponse = new StringBuilder();
+                        if(iRsvpNumber <= 0) {
+                            strRsvpResponse.append("You responded that you will NOT be attending.");
+                        } else if( iRsvpNumber == 1) {
+                            strRsvpResponse.append("You responded that you will be attending.");
+                        }  else if( iRsvpNumber >1) {
+                            strRsvpResponse.append("You responded that you will attend along with ");
+                            Integer iNumOfGuests =  (iRsvpNumber-1);
+                            strRsvpResponse.append( iNumOfGuests );
+                            if( iNumOfGuests == 1) {
+                                strRsvpResponse.append( " guest." );
+                            }else if(  iNumOfGuests > 1) {
+                                strRsvpResponse.append( " guests." );
+                            }
+
+                        }
+
+
+
+                        sHtmlBody = sHtmlBody.replaceAll("__RSVPRESPONSE__", strRsvpResponse.toString() );
+                        sTextBody = sTextBody.replaceAll("__RSVPRESPONSE__", strRsvpResponse.toString() );
+
+                        TelNumberMetaData telNumberMetaData = new TelNumberMetaData();
+
+                        telNumberMetaData.setAdminId( sAdminId );
+                        telNumberMetaData.setEventId( sEventID );
+                        TelNumberManager telNumManager = new TelNumberManager();
+                        ArrayList<TelNumberBean> arrTelNumberBean = telNumManager.getTelNumEventDetails(telNumberMetaData);
+
+                        Constants.EMAIL_TEMPLATE emailTemplateType = Constants.EMAIL_TEMPLATE.RSVPRESPONSEDEMO;
+                        TelNumberBean rsvpTelNumberBean = new TelNumberBean();
+                        if(arrTelNumberBean!=null && !arrTelNumberBean.isEmpty()) {
+                            for(TelNumberBean telNumberBean : arrTelNumberBean ){
+                                if( Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))  {
+                                    emailTemplateType =  Constants.EMAIL_TEMPLATE.RSVPRESPONSE ;
+                                    rsvpTelNumberBean = telNumberBean;
+                                } else if ( Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()) ) {
+                                    emailTemplateType =  Constants.EMAIL_TEMPLATE.RSVPRESPONSEDEMO ;
+                                    rsvpTelNumberBean = telNumberBean;
+                                }
+                            }
+                        }
+
+                        String sTelephoneNumber = ParseUtil.checkNull(rsvpTelNumberBean.getHumanTelNumber());
+                        if ( Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(rsvpTelNumberBean.getTelNumberType()) ) {
+                            sTelephoneNumber = " Plan Id : " + ParseUtil.checkNull( rsvpTelNumberBean.getSecretEventIdentity() ) + " Extension : " +  ParseUtil.checkNull( rsvpTelNumberBean.getSecretEventKey() );
+                        }
+                        sHtmlBody = sHtmlBody.replaceAll("__RSVPPHONENUM__",ParseUtil.checkNull(sTelephoneNumber));
+                        sTextBody = sTextBody.replaceAll("__RSVPPHONENUM__",ParseUtil.checkNull(sTelephoneNumber));
+
+
+                        AdminManager adminManager = new AdminManager();
+                        AdminBean adminBean = adminManager.getAdmin(sAdminId);
+                        if(adminBean!=null && adminBean.getAdminId()!=null && !"".equalsIgnoreCase( adminBean.getAdminId() ) ) {
+
+                            String  sAdminName =  ParseUtil.checkNull(adminBean.getAdminUserInfoBean().getFirstName()) + " " +   ParseUtil.checkNull(adminBean.getAdminUserInfoBean().getLastName());
+                            sHtmlBody = sHtmlBody.replaceAll("__HOSTNAME__", sAdminName );
+                            sTextBody = sTextBody.replaceAll("__HOSTNAME__", sAdminName );
+                        }
 
                         isRSVPDataExists = true;
 
@@ -252,6 +325,7 @@ public class EmailCreatorService {
 
                         emailObject.setStatus( Constants.EMAIL_STATUS.NEW.getStatus() );
                         emailObject.setEmailSubject( ParseUtil.checkNull(emailTemplateBean.getEmailSubject() ) );
+
                     }
                 }
             }
@@ -266,6 +340,7 @@ public class EmailCreatorService {
         {
             String sEventID = ParseUtil.checkNull( emailScheduleBean.getEventId() );
             String sGuestId = ParseUtil.checkNull( emailScheduleBean.getGuestId() );
+            String sAdminId = ParseUtil.checkNull( emailScheduleBean.getAdminId() );
 
             if( sEventID!=null && !"".equalsIgnoreCase(sEventID) && sGuestId!=null
                     && !"".equalsIgnoreCase(sGuestId) )
@@ -309,8 +384,33 @@ public class EmailCreatorService {
 
                     if( isTableExists )
                     {
+                        GuestManager guestManager = new GuestManager();
+                        GuestBean guestBean = guestManager.getGuest( sGuestId) ;
+                        String sGivenName = ParseUtil.checkNull(guestBean.getUserInfoBean().getFirstName()) + " " + ParseUtil.checkNull(guestBean.getUserInfoBean().getLastName());
+                        if(sHtmlBody.contains("__GIVENNAME__")) {
+                            sHtmlBody = sHtmlBody.replaceAll("__GIVENNAME__",sGivenName);
+                        }
+                        if(sTextBody.contains("__GIVENNAME__")) {
+                            sTextBody = sTextBody.replaceAll("__GIVENNAME__",sGivenName);
+                        }
+
                         sHtmlBody = sHtmlBody.replaceAll("__SEATING_CONFIRMATION__",sTableText );
                         sTextBody = sTextBody.replaceAll("__SEATING_CONFIRMATION__",sTableText );
+
+                        EventManager eventManager = new EventManager();
+                        EventBean eventBean = eventManager.getEvent(sEventID);
+
+                        sHtmlBody = sHtmlBody.replaceAll("__SEATINGPLANNAME__",ParseUtil.checkNull( eventBean.getEventName() ));
+                        sTextBody = sTextBody.replaceAll("__SEATINGPLANNAME__",ParseUtil.checkNull( eventBean.getEventName() ));
+
+                        AdminManager adminManager = new AdminManager();
+                        AdminBean adminBean = adminManager.getAdmin(sAdminId);
+                        if(adminBean!=null && adminBean.getAdminId()!=null && !"".equalsIgnoreCase( adminBean.getAdminId() ) ) {
+
+                            String  sAdminName =  ParseUtil.checkNull(adminBean.getAdminUserInfoBean().getFirstName()) + " " +   ParseUtil.checkNull(adminBean.getAdminUserInfoBean().getLastName());
+                            sHtmlBody = sHtmlBody.replaceAll("__HOSTNAME__", sAdminName );
+                            sTextBody = sTextBody.replaceAll("__HOSTNAME__", sAdminName );
+                        }
 
                         emailObject.setHtmlBody( sHtmlBody );
                         emailObject.setTextBody( sTextBody );

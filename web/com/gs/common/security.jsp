@@ -1,4 +1,3 @@
-<%@ page contentType="text/html; charset=utf-8" %>
 <%@page import="com.gs.common.*"%>
 <%@page import="com.gs.bean.*"%>
 <%@page import="com.gs.manager.*"%>

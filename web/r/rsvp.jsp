@@ -11,6 +11,7 @@
 <%@ page import="com.gs.common.exception.InvalidRsvpResponseException" %>
 <%@ page import="com.gs.common.exception.ExceptionHandler" %>
 <%@ page import="com.gs.bean.UserInfoBean" %>
+<%@ page import="com.gs.common.DateSupport" %>
 
 <jsp:include page="/web/com/gs/common/header_top.jsp">
     <jsp:param name="page_title" value="Guest RSVP"/>
@@ -69,16 +70,17 @@
             Integer iTotalInvitedSeats = ParseUtil.sToI( eventGuestBean.getTotalNumberOfSeats() );
             Integer iRsvpSeats = ParseUtil.sToI( eventGuestBean.getRsvpSeats() );
 
+            String sSeatingPlanTime = ParseUtil.checkNull(DateSupport.getTimeByZone(eventBean.getEventDate(),DateSupport.getTimeZone(eventBean.getEventTimeZone()).getID(),Constants.PRETTY_DATE_PATTERN_1));
             StringBuilder strInvitationMessage = new StringBuilder("You are invited to attend ");
-            strInvitationMessage.append( ParseUtil.checkNull(eventBean.getEventName())).append(" on ").append(ParseUtil.checkNull(eventBean.getHumanEventDate())).append(".<br>");
+            strInvitationMessage.append( ParseUtil.checkNull(eventBean.getEventName())).append(" on ")
+                    .append(ParseUtil.checkNull(sSeatingPlanTime)).append(".<br>");
             if(iTotalInvitedSeats>1) {
-                strInvitationMessage.append("You may bring ").append( (iTotalInvitedSeats-1));
+                strInvitationMessage.append("<br>You may bring ").append( (iTotalInvitedSeats-1));
                 if((iTotalInvitedSeats-1) == 1 ) {
-                    strInvitationMessage.append(" guest ");
+                    strInvitationMessage.append(" guest with you.");
                 } else {
-                    strInvitationMessage.append(" guests ");
+                    strInvitationMessage.append(" guests with you.");
                 }
-                strInvitationMessage.append(" with you.") ;
             }
 
             boolean isYesSelected = false;

@@ -341,6 +341,9 @@ public class Constants {
 	public static String PRODUCT_NAME="product_name";
 	public static String DOMAIN="domain";
 
+    public static String PROP_PRODUCT_PHONE = "product_phone";
+    public static String PROP_PRODUCT_ADDRESS = "product_address";
+
     public enum US_STATES
     {
         Alabama ("Alabama","AL"),

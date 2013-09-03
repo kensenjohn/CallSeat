@@ -310,7 +310,7 @@ public class AdminManager {
             AdminBean adminBean = adminManager.getAdmin(sAdminId);
 
             if(adminBean!=null && adminBean.getAdminId()!=null && !"".equalsIgnoreCase( adminBean.getAdminId() ) ) {
-                srcText = srcText.replaceAll("__HOSTNAME__",ParseUtil.checkNull(adminBean.getAdminUserInfoBean().getFirstName()));
+                srcText = srcText.replaceAll("__HOSTNAME__",ParseUtil.checkNull(adminBean.getAdminUserInfoBean().getFirstName()) +  " " + ParseUtil.checkNull(adminBean.getAdminUserInfoBean().getLastName()));
             }
 
         }

@@ -5,9 +5,9 @@
 <%@ page import="java.util.ArrayList" %>
 
 <%
-    String sErrorParam = com.gs.common.ParseUtil.checkNull( (String)request.getAttribute("INSECURE_PARAMS_ERROR") );
-    boolean isSecurityError = com.gs.common.ParseUtil.sTob(sErrorParam) ;
-    if(isSecurityError)  {
+    String sInsecureErrorParam = com.gs.common.ParseUtil.checkNull( (String)request.getAttribute("INSECURE_PARAMS_ERROR") );
+    boolean isSecurityInsecureError = com.gs.common.ParseUtil.sTob(sInsecureErrorParam) ;
+    if(isSecurityInsecureError)  {
         ArrayList<Text> arrOkText = new ArrayList<Text>();
         ArrayList<Text> arrErrorText = new ArrayList<Text>();
         RespConstants.Status responseStatus = RespConstants.Status.ERROR;

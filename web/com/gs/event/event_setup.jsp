@@ -721,7 +721,7 @@
                             </div>
                             <div class="row">
                                 <div class="span6">
-                                    <h2>Email guests to RSVP online  </h2>
+                                    <h2>Online RSVP Link Email </h2>
                                 </div>
                             </div>
                             <div class="row">
