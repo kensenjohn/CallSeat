@@ -1,5 +1,6 @@
 package com.gs.payment;
 
+import com.gs.bean.PaymentChannelRequest;
 import com.gs.common.Configuration;
 import com.gs.common.Constants;
 
@@ -12,7 +13,7 @@ public abstract class PaymentChannel {
 
 	public abstract BillingResponse chargeUser(BillingMetaData billingMetaData);
 
-    public abstract String getPublicKey();
+    public abstract String getPublicKey(PaymentChannelRequest paymentChannelRequest);
 
 	public static PaymentChannel getPaymentChannel() {
 		PaymentChannel paymentChannel = null;

@@ -7,6 +7,8 @@
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="java.util.*"%>
 <%@page import="com.gs.json.*"%>
+<%@ page import="com.gs.user.User" %>
+<%@ page import="com.gs.user.Permission" %>
 <%@include file="/web/com/gs/common/security_proc_page.jsp"%>
 <%
 JSONObject jsonResponseObj = new JSONObject();
@@ -19,6 +21,7 @@ response.setContentType("application/json");
     String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
     String sPricingGroupId = ParseUtil.checkNull(request.getParameter("purchase_grid_id"));
+    boolean isTestAPIKeyUsed = ParseUtil.sTob(request.getParameter("use_test_api"));
 
 ArrayList<Text> arrOkText = new ArrayList<Text>();
 ArrayList<Text> arrErrorText = new ArrayList<Text>();
@@ -32,8 +35,18 @@ try
     if(isProcessTransactionId)
     {
         if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId) && sEventId!=null && !"".equalsIgnoreCase(sEventId)
-                && sPricingGroupId!=null && !"".equalsIgnoreCase(sPricingGroupId))
-        {
+                && sPricingGroupId!=null && !"".equalsIgnoreCase(sPricingGroupId)) {
+
+
+            AdminManager adminManager = new AdminManager();
+            AdminBean adminBean = adminManager.getAdmin(sAdminId);
+
+            boolean hasPermToUsePayChannelTestKey = false;
+            if(adminBean!=null && !Utility.isNullOrEmpty(adminBean.getAdminId())) {
+                User user = new User(adminBean );
+                hasPermToUsePayChannelTestKey = user.can(Permission.USE_PAYMENT_CHANNEL_TEST_API_KEY);
+            }
+
             PurchaseTransactionManager purchaseTransactionManager = new PurchaseTransactionManager();
 
             PurchaseTransactionBean requestPurchaseTransactionBean = new  PurchaseTransactionBean();
@@ -43,6 +56,13 @@ try
             PurchaseTransactionBean responsePurchaseTransactionBean = purchaseTransactionManager.getPurchaseTransactionByEventAdmin(requestPurchaseTransactionBean);
             appLogging.info("Response Purchase Transaction Id." + responsePurchaseTransactionBean );
             Integer iNumOfRows = 0;
+            if(hasPermToUsePayChannelTestKey && isTestAPIKeyUsed){
+                responsePurchaseTransactionBean.setApiKeyType(Constants.API_KEY_TYPE.TEST_KEY.name());
+                requestPurchaseTransactionBean.setApiKeyType(Constants.API_KEY_TYPE.TEST_KEY.name());
+            } else {
+                responsePurchaseTransactionBean.setApiKeyType(Constants.API_KEY_TYPE.LIVE_KEY.name());
+                requestPurchaseTransactionBean.setApiKeyType(Constants.API_KEY_TYPE.LIVE_KEY.name());
+            }
             if(responsePurchaseTransactionBean != null && responsePurchaseTransactionBean.getPurchaseTransactionId()!=null && !"".equalsIgnoreCase(responsePurchaseTransactionBean.getPurchaseTransactionId()))
             {
                 responsePurchaseTransactionBean.setPriceGroupId(sPricingGroupId);

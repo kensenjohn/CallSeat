@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.gs.bean.PaymentChannelRequest;
 import com.stripe.model.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,19 +24,20 @@ public class StripePaymentChannel extends PaymentChannel {
 	private static Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
     private static BigDecimal CENTS_PER_DOLLAR = new BigDecimal("100");
 
-	public String getPublicKey() {
+	public String getPublicKey(PaymentChannelRequest paymentChannelRequest) {
 		String sPublicKey = ParseUtil.checkNull(applicationConfig.get(Constants.PROP_STRIPE_TEST_PUBLISHABLE_KEY));
-		if (Constants.STRIPE_ENVIRONMENT.LIVE.getStripeEnv().equalsIgnoreCase( getStripeEnvironment())) {
+		if (Constants.STRIPE_ENVIRONMENT.LIVE.getStripeEnv().equalsIgnoreCase( getStripeEnvironment())
+                && (paymentChannelRequest!=null && Constants.API_KEY_TYPE.LIVE_KEY.equals(paymentChannelRequest.getApiKeyType()))) {
 			sPublicKey = ParseUtil.checkNull(applicationConfig.get(Constants.PROP_STRIPE_LIVE_PUBLISHABLE_KEY));
 		}
 		return sPublicKey;
 	}
 
-	private String getSecretKey() {
+	private String getSecretKey(PaymentChannelRequest paymentChannelRequest) {
 		String sSecretKey = ParseUtil.checkNull(applicationConfig
 				.get(Constants.PROP_STRIPE_TEST_SECRET_KEY));
-		if (Constants.STRIPE_ENVIRONMENT.LIVE.getStripeEnv().equalsIgnoreCase(
-				getStripeEnvironment())) {
+		if (Constants.STRIPE_ENVIRONMENT.LIVE.getStripeEnv().equalsIgnoreCase(getStripeEnvironment())
+                && (paymentChannelRequest!=null && Constants.API_KEY_TYPE.LIVE_KEY.equals(paymentChannelRequest.getApiKeyType())) ) {
 			sSecretKey = ParseUtil.checkNull(applicationConfig
 					.get(Constants.PROP_STRIPE_LIVE_SECRET_KEY));
 		}
@@ -60,7 +62,9 @@ public class StripePaymentChannel extends PaymentChannel {
 		if (billingMetaData.isStripeTokenUsed()
 				&& billingMetaData.getStripeToken() != null
 				&& !"".equalsIgnoreCase(billingMetaData.getStripeToken())) {
-			Stripe.apiKey = getPublicKey();
+            PaymentChannelRequest paymentChannelRequest = new PaymentChannelRequest();
+            paymentChannelRequest.setApiKeyType( billingMetaData.getApiKeyType()==null?billingMetaData.getApiKeyType(): Constants.API_KEY_TYPE.LIVE_KEY );
+			Stripe.apiKey = getPublicKey( paymentChannelRequest );
 			com.stripe.model.Token token = null;
 			try {
 				token = Token.retrieve(billingMetaData.getStripeToken());
@@ -112,7 +116,10 @@ public class StripePaymentChannel extends PaymentChannel {
 			}
 			if (token != null && token.getId().equalsIgnoreCase(billingMetaData.getStripeToken()))
             {
-				Stripe.apiKey = getSecretKey();
+
+                PaymentChannelRequest paymentChannelRequest = new PaymentChannelRequest();
+                paymentChannelRequest.setApiKeyType( billingMetaData.getApiKeyType()==null?billingMetaData.getApiKeyType(): Constants.API_KEY_TYPE.LIVE_KEY );
+				Stripe.apiKey = getSecretKey(paymentChannelRequest);
 
                 Map<String, Object> customerParams = new HashMap<String, Object>();
                 customerParams.put("card", billingMetaData.getStripeToken());

@@ -3,6 +3,8 @@
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="com.gs.manager.event.PurchaseTransactionManager" %>
 <%@ page import="com.gs.payment.PaymentChannel" %>
+<%@ page import="com.gs.user.Permission" %>
+<%@ page import="com.gs.user.User" %>
 
 <jsp:include page="../common/header_top.jsp"/>
 <%@include file="../common/security.jsp"%>
@@ -31,6 +33,7 @@
     String sLastName = "";
     String sZipCode = "";
     String sState = "";
+    String sApiKeyType = Constants.API_KEY_TYPE.LIVE_KEY.name();
     if(purchaseResponseTransactionBean!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getPurchaseTransactionId()))
     {
         if(purchaseResponseTransactionBean.getFirstName()!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getFirstName()) )
@@ -52,6 +55,10 @@
         {
             sZipCode = ParseUtil.checkNull(purchaseResponseTransactionBean.getZipcode());
         }
+
+        if(purchaseResponseTransactionBean.getApiKeyType()!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getApiKeyType()) ) {
+            sApiKeyType = ParseUtil.checkNull(purchaseResponseTransactionBean.getApiKeyType());
+        }
     }
 
     Long currentServerTime = DateSupport.getEpochMillis();
@@ -64,8 +71,23 @@
     }
 
 	String sGateAdminId = sAdminId;
+
+    AdminManager adminManager = new AdminManager();
+    AdminBean adminBean = adminManager.getAdmin(sAdminId);
+
+    boolean hasPermToUsePayChannelTestKey = false;
+    if(adminBean!=null && !Utility.isNullOrEmpty(adminBean.getAdminId())) {
+        User user = new User(adminBean );
+        hasPermToUsePayChannelTestKey = user.can(Permission.USE_PAYMENT_CHANNEL_TEST_API_KEY);
+    }
+    PaymentChannelRequest paymentChannelRequest = new PaymentChannelRequest();
+    if(hasPermToUsePayChannelTestKey && Constants.API_KEY_TYPE.TEST_KEY.name().equalsIgnoreCase(sApiKeyType)) {
+        paymentChannelRequest.setApiKeyType( Constants.API_KEY_TYPE.TEST_KEY );
+    } else {
+        paymentChannelRequest.setApiKeyType( Constants.API_KEY_TYPE.LIVE_KEY );
+    }
     PaymentChannel paymentChannel = PaymentChannel.getPaymentChannel();
-    String sPublishableKey = paymentChannel.getPublicKey();
+    String sPublishableKey = paymentChannel.getPublicKey( paymentChannelRequest );
 %>
 <%@include file="../common/gatekeeper.jsp"%>
 <link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >

@@ -34,7 +34,7 @@ public class PurchaseTransactionData {
         if (sAdminId != null && !"".equalsIgnoreCase(sAdminId) && sEventId!=null && !"".equalsIgnoreCase(sEventId)) {
             String sQuery = "select PURCHASETRANSACTIONID , FK_EVENTID  , FK_ADMINID  , IS_PURCHASE_COMPLETE , RSVP_TELNUMBER ," +
                     " SEATING_TELNUMBER , FK_PRICEGROUPID  , FIRSTNAME , LASTNAME , ADDRESS1  , STATE , ZIPCODE  , COUNTRY  ," +
-                    " STRIPE_CUSTOMER_ID , STRIPE_TOKEN , CREDIT_CARD_LAST4_DIGITS , CREATEDATE , HUMANCREATEDATE   , UNIQUE_PURCHASE_TOKEN  "+
+                    " STRIPE_CUSTOMER_ID , STRIPE_TOKEN , CREDIT_CARD_LAST4_DIGITS , CREATEDATE , HUMANCREATEDATE   , UNIQUE_PURCHASE_TOKEN  , API_KEY_TYPE "+
                     " from GTPURCHASETRANSACTIONS where FK_ADMINID = ? and FK_EVENTID = ?";
 
             ArrayList<Object> aParams = DBDAO.createConstraint(sAdminId,sEventId);
@@ -60,7 +60,7 @@ public class PurchaseTransactionData {
         {
             String sQuery = "select PURCHASETRANSACTIONID , FK_EVENTID  , FK_ADMINID  , IS_PURCHASE_COMPLETE , RSVP_TELNUMBER ," +
                     " SEATING_TELNUMBER , FK_PRICEGROUPID  , FIRSTNAME , LASTNAME , ADDRESS1  , STATE , ZIPCODE  , COUNTRY  ," +
-                    " STRIPE_CUSTOMER_ID , STRIPE_TOKEN , CREDIT_CARD_LAST4_DIGITS , CREATEDATE , HUMANCREATEDATE   , UNIQUE_PURCHASE_TOKEN  "+
+                    " STRIPE_CUSTOMER_ID , STRIPE_TOKEN , CREDIT_CARD_LAST4_DIGITS , CREATEDATE , HUMANCREATEDATE   , UNIQUE_PURCHASE_TOKEN  , API_KEY_TYPE   "+
                     " from GTPURCHASETRANSACTIONS where PURCHASETRANSACTIONID = ?";
 
             ArrayList<Object> aParams = DBDAO.createConstraint(sPricingTransactionId);
@@ -87,8 +87,8 @@ public class PurchaseTransactionData {
         {
             String sQuery = "INSERT INTO GTPURCHASETRANSACTIONS (PURCHASETRANSACTIONID,FK_EVENTID,FK_ADMINID, " +
                     " IS_PURCHASE_COMPLETE,RSVP_TELNUMBER,SEATING_TELNUMBER, FK_PRICEGROUPID,FIRSTNAME,LASTNAME, STATE,ZIPCODE,STRIPE_CUSTOMER_ID," +
-                    " CREATEDATE,HUMANCREATEDATE,UNIQUE_PURCHASE_TOKEN ) "
-                    + " VALUES(?,?,?,   ?,?,?,	 ?,?,?,  ?,?,?,  ?,?,?)";
+                    " CREATEDATE,HUMANCREATEDATE,UNIQUE_PURCHASE_TOKEN,API_KEY_TYPE ) "
+                    + " VALUES(?,?,?,   ?,?,?,	 ?,?,?,  ?,?,?,  ?,?,?,  ?)";
 
             Long lCreateDate = DateSupport.getEpochMillis();
             String sHumanCreateDate = DateSupport.getUTCDateTime();
@@ -100,7 +100,8 @@ public class PurchaseTransactionData {
                     ParseUtil.checkNull(purchaseTransactionBean.getFirstName()),ParseUtil.checkNull(purchaseTransactionBean.getLastName()),
                     ParseUtil.checkNull(purchaseTransactionBean.getState()),ParseUtil.checkNull(purchaseTransactionBean.getZipcode()),
                     ParseUtil.checkNull(purchaseTransactionBean.getStripeCustomerId()), lCreateDate , sHumanCreateDate,
-                    ParseUtil.checkNull(purchaseTransactionBean.getUniquePurchaseToken()) );
+                    ParseUtil.checkNull(purchaseTransactionBean.getUniquePurchaseToken()),
+                    ParseUtil.checkNull(purchaseTransactionBean.getApiKeyType()) );
             iNumOfRows = DBDAO.putRowsQuery(sQuery,aParams,ADMIN_DB,"PurchaseTransactionData.java","insertPurchaseTransaction()");
         }
         return iNumOfRows;
@@ -114,7 +115,7 @@ public class PurchaseTransactionData {
             String sQuery = "UPDATE GTPURCHASETRANSACTIONS set FK_EVENTID = ? , FK_ADMINID = ? , IS_PURCHASE_COMPLETE = ?," +
                     " RSVP_TELNUMBER = ? , SEATING_TELNUMBER = ? , FK_PRICEGROUPID = ? , FIRSTNAME = ? , LASTNAME = ? , " +
                     " STATE = ? , ZIPCODE = ? , COUNTRY = ? , STRIPE_CUSTOMER_ID = ? , CREATEDATE = ? , HUMANCREATEDATE = ? , STRIPE_TOKEN = ? , " +
-                    " CREDIT_CARD_LAST4_DIGITS = ? , UNIQUE_PURCHASE_TOKEN = ? WHERE PURCHASETRANSACTIONID = ?";
+                    " CREDIT_CARD_LAST4_DIGITS = ? , UNIQUE_PURCHASE_TOKEN = ?, API_KEY_TYPE = ? WHERE PURCHASETRANSACTIONID = ?";
 
             Long lCreateDate = DateSupport.getEpochMillis();
             String sHumanCreateDate = DateSupport.getUTCDateTime();
@@ -137,6 +138,7 @@ public class PurchaseTransactionData {
                     ParseUtil.checkNull(purchaseTransactionBean.getStripeToken()),
                     ParseUtil.checkNull(purchaseTransactionBean.getCreditCardLast4Digits()),
                     ParseUtil.checkNull(purchaseTransactionBean.getUniquePurchaseToken()),
+                    ParseUtil.checkNull(purchaseTransactionBean.getApiKeyType()),
                     ParseUtil.checkNull(purchaseTransactionBean.getPurchaseTransactionId()) );
             appLogging.info("Calling this forever there is nothing to do here. move along" +
                     " " + aParams.toString() + " - " + purchaseTransactionBean );

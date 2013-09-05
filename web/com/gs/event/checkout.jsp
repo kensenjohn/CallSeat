@@ -3,6 +3,8 @@
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="com.gs.manager.event.PurchaseTransactionManager" %>
 <%@ page import="com.gs.manager.event.EventPricingGroupManager" %>
+<%@ page import="com.gs.user.User" %>
+<%@ page import="com.gs.user.Permission" %>
 
 <jsp:include page="../common/header_top.jsp"/>
 <%@include file="../common/security.jsp"%>

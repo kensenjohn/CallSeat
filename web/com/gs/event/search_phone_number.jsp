@@ -183,6 +183,16 @@
 				  		</div>
 				   	</div>
 				  </div>
+                      <div class="span8">
+                          <div class="row">
+                              &nbsp;
+                          </div>
+                      </div>
+                      <div class="span8">
+                          <div class="row">
+                              &nbsp;
+                          </div>
+                      </div>
 				</div>
 			</div>
 			</div>

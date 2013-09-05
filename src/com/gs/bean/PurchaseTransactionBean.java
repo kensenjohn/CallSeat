@@ -1,5 +1,6 @@
 package com.gs.bean;
 
+import com.gs.common.Constants;
 import com.gs.common.ParseUtil;
 
 import java.util.HashMap;
@@ -29,6 +30,7 @@ public class PurchaseTransactionBean {
     private String creditCardLast4Digits = "";
     private Long createDate = 0L;
     private String uniquePurchaseToken = "";
+    private String apiKeyType = Constants.EMPTY;
 
     public PurchaseTransactionBean()
     {
@@ -54,6 +56,7 @@ public class PurchaseTransactionBean {
         setStripeToken(ParseUtil.checkNull(hmResult.get("STRIPE_TOKEN")));
         setCreditCardLast4Digits(ParseUtil.checkNull(hmResult.get("CREDIT_CARD_LAST4_DIGITS")));
         setUniquePurchaseToken( ParseUtil.checkNull(hmResult.get("UNIQUE_PURCHASE_TOKEN")) );
+        setApiKeyType( ParseUtil.checkNull(hmResult.get("API_KEY_TYPE"))  );
     }
 
     public String getPurchaseTransactionId() {
@@ -192,6 +195,14 @@ public class PurchaseTransactionBean {
         this.uniquePurchaseToken = uniquePurchaseToken;
     }
 
+    public String getApiKeyType() {
+        return apiKeyType;
+    }
+
+    public void setApiKeyType(String apiKeyType) {
+        this.apiKeyType = apiKeyType;
+    }
+
     @Override
     public String toString() {
         return "PurchaseTransactionBean{" +
@@ -211,6 +222,8 @@ public class PurchaseTransactionBean {
                 ", stripeToken='" + stripeToken + '\'' +
                 ", creditCardLast4Digits='" + creditCardLast4Digits + '\'' +
                 ", createDate=" + createDate +
+                ", uniquePurchaseToken='" + uniquePurchaseToken + '\'' +
+                ", apiKeyType='" + apiKeyType + '\'' +
                 '}';
     }
 }

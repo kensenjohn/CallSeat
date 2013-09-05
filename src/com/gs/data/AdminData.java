@@ -17,7 +17,7 @@ import com.gs.common.db.DBDAO;
 
 public class AdminData {
 	private static final Logger appLogging = LoggerFactory
-			.getLogger("AppLogging");
+			.getLogger(Constants.APP_LOGS);
 
 	Configuration applicationConfig = Configuration
 			.getInstance(Constants.APPLICATION_PROP);

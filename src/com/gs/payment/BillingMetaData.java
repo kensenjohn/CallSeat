@@ -1,5 +1,7 @@
 package com.gs.payment;
 
+import com.gs.common.Constants;
+
 public class BillingMetaData {
 
 	private String adminId = "";
@@ -25,6 +27,8 @@ public class BillingMetaData {
 
 	private String email = "";
     private String paymentChannelCustomerId = "";
+
+    private Constants.API_KEY_TYPE apiKeyType = Constants.API_KEY_TYPE.LIVE_KEY;
 
 	public String getAdminId() {
 		return adminId;
@@ -192,5 +196,13 @@ public class BillingMetaData {
 
     public void setPaymentChannelCustomerId(String paymentChannelCustomerId) {
         this.paymentChannelCustomerId = paymentChannelCustomerId;
+    }
+
+    public Constants.API_KEY_TYPE getApiKeyType() {
+        return apiKeyType;
+    }
+
+    public void setApiKeyType(Constants.API_KEY_TYPE apiKeyType) {
+        this.apiKeyType = apiKeyType;
     }
 }

@@ -584,4 +584,12 @@ public class Constants {
     }
 
     public static final int SIZE_OF_RSVP_LINK_ID = 10;
+
+    public enum GROUP_NAME{
+        SUPERUSER,HOST,EVENT_MANAGER,GUEST;
+    }
+
+    public enum API_KEY_TYPE{
+        LIVE_KEY,TEST_KEY;
+    }
 }

@@ -2,6 +2,8 @@
 <%@ page import="org.slf4j.Logger" %>
 <%@ page import="org.slf4j.LoggerFactory" %>
 <%@ page import="com.gs.manager.event.PurchaseTransactionManager" %>
+<%@ page import="com.gs.user.User" %>
+<%@ page import="com.gs.user.Permission" %>
 
 <jsp:include page="../common/header_top.jsp"/>
 <%@include file="../common/security.jsp"%>
@@ -14,6 +16,14 @@
 		String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 
     String sGateAdminId = sAdminId;
+    AdminManager adminManager = new AdminManager();
+    AdminBean adminBean = adminManager.getAdmin(sAdminId);
+
+    boolean hasPermToUsePayChannelTestKey = false;
+    if(adminBean!=null && !Utility.isNullOrEmpty(adminBean.getAdminId())) {
+        User user = new User(adminBean );
+        hasPermToUsePayChannelTestKey = user.can(Permission.USE_PAYMENT_CHANNEL_TEST_API_KEY);
+    }
 %>
 <%@include file="../common/gatekeeper.jsp"%>
 
@@ -34,9 +44,12 @@
 				<div class="row">
 				  <div class="offset1 span11">
 						<div class="row">							
-							<div class="span8">
+							<div class="span3">
 								<h2 style="font-size:155%; color:#793866; margin : 0px; clear:both">Select a Pricing Plan</h2>
 							</div>
+                            <div class="span5">
+                                <input type="checkbox" id="test_api" style="width:50px" checked>&nbsp;&nbsp;<span style="font-size:110%; color:#793866; margin : 0px; clear:both">Use Test API Key</span>
+                            </div>
 						</div>
 						<div class="row">							
 							<div class="span8">
@@ -50,6 +63,16 @@
                               </form>
                           </div> -->
                         </div>
+                          <div class="row">
+                              <div class="span8">
+                                  &nbsp;
+                              </div>
+                          </div>
+                      <div class="row">
+                          <div class="span8">
+                              &nbsp;
+                          </div>
+                      </div>
 				</div>
 		</div>
 	</div>
@@ -59,7 +82,7 @@
 					<input type="hidden" id="pricing_plan" name="pricing_plan" value=""/>
 
 					<input type="hidden" id="referrer_source" name="referrer_source" value="pricing_plan.jsp"/>
-					<input type="hidden" id="pass_thru_action" name="pass_thru_action" value="true"/>
+                <input type="hidden" id="pass_thru_action" name="pass_thru_action" value="true"/>
 					
 			</form>
 
@@ -76,6 +99,7 @@
             <input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
             <input type="hidden" id="purchase_grid_id" name="purchase_grid_id" value=""/>
             <input type="hidden" id="process_purchase_transaction" name="process_purchase_transaction" value="true"/>
+            <input type="hidden" id="use_test_api" name="use_test_api"  value=""/>
         </form>
 </body>
 <!-- Le javascript
@@ -169,7 +193,7 @@ function processPricingPlan(varResponse)
         var varPricingGrid = '';
         if(varArrPricingPlan[vari].is_default == true)
         {
-            varPricingGrid = varPricingGrid + '<div class="span3 pricing4 no-zoom shadow" id="div_pricing_'+varArrPricingPlan[vari].pricing_group_id+'"><ul class="popullar"><li class="head" ><h1>Popular</h1>';
+            varPricingGrid = varPricingGrid + '<div class="span2 pricing4 no-zoom shadow" id="div_pricing_'+varArrPricingPlan[vari].pricing_group_id+'"><ul class="popullar"><li class="head" ><h1>Popular</h1>';
         }
         else
         {
@@ -191,17 +215,25 @@ function processPricingPlan(varResponse)
 	}
 	
 }
+
+function setIsTestApiUsed() {
+    if ($('#test_api').is(':checked')) {
+        $('#use_test_api').val("true");
+    } else {
+        $('#use_test_api').val( "false");
+    }
+
+}
 function submitPricingPlan(event)
 {
     //alert(event.data.pricingGridId + ' -- ' + event.data.price );
     if( varIsSignedIn )
     {
+        setIsTestApiUsed();
         $('#purchase_grid_id').val(event.data.pricingGridId);
         var actionUrl = "proc_pricing_plan.jsp";
         var methodType = "POST";
         var dataString = $('#frm_process_purchase_transaction').serialize();
-
-
         purchaseGridData(actionUrl,dataString,methodType,processPurchaseTransactions);
     }
     else
@@ -248,8 +280,10 @@ function processPurchaseTransactions(jsonResult)
             $('#pass_thru_rsvp_num').val( $("#rsvp_gen_num").text() );
             $('#pass_thru_seating_num').val( $("#seating_gen_num").text() );
 
-            if( varIsSignedIn )
-            {
+            if( varIsSignedIn ) {
+
+
+
                 $("#frm_billing_passthru").attr('action','/web/com/gs/event/billing.jsp');
                 $("#frm_billing_passthru").attr('method','POST');
 

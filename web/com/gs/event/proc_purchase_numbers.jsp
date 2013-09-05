@@ -15,6 +15,8 @@
 <%@ page import="com.gs.common.usage.TextMessageUsage" %>
 <%@ page import="com.gs.bean.usage.TextMessageUsageBean" %>
 <%@ page import="com.gs.common.exception.ExceptionHandler" %>
+<%@ page import="com.gs.user.User" %>
+<%@ page import="com.gs.user.Permission" %>
 
 <%@include file="/web/com/gs/common/security_proc_page.jsp"%>
 <%@include file="../common/security.jsp" %>
@@ -99,6 +101,18 @@
                                 billingMetaData.setEmail(ParseUtil.checkNull(adminUserInfoBean.getEmail()));
                             }
 
+                            boolean hasPermToUsePayChannelTestKey = false;
+                            AdminBean adminBean = adminManager.getAdmin(sAdminId)
+                            if(adminBean!=null && !Utility.isNullOrEmpty(adminBean.getAdminId())) {
+                                User user = new User(adminBean );
+                                hasPermToUsePayChannelTestKey = user.can(Permission.USE_PAYMENT_CHANNEL_TEST_API_KEY);
+                            }
+
+                            if(hasPermToUsePayChannelTestKey && Constants.API_KEY_TYPE.TEST_KEY.name().equalsIgnoreCase(purchaseResponseTransactionBean.getApiKeyType())){
+                                billingMetaData.setApiKeyType(Constants.API_KEY_TYPE.TEST_KEY );
+                            } else {
+                                billingMetaData.setApiKeyType(Constants.API_KEY_TYPE.LIVE_KEY );
+                            }
 
                             BillingManager billingManager = new BillingManager();
 
