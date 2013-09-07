@@ -2,7 +2,7 @@
 <%@ page import="com.gs.common.Configuration" %>
 <%@ page import="com.gs.common.ParseUtil" %>
 <jsp:include page="/web/com/gs/common/header_top.jsp">
-    <jsp:param name="page_title" value="Page not found"/>
+    <jsp:param name="page_title" value="Callseat"/>
 </jsp:include>
 <jsp:include page="/web/com/gs/common/header_bottom.jsp"/>
 <%

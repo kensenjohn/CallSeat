@@ -21,7 +21,7 @@ if(cookies!=null)
 %>
 
 <jsp:include page="common/header_top.jsp">
-	<jsp:param name="page_title" value="Host Landing"/>	
+	<jsp:param name="page_title" value="Callseat"/>
 </jsp:include>
 <%@include file="common/security.jsp"%>
 <%

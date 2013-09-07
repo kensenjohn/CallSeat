@@ -55,160 +55,184 @@
 
                 if(purchaseResponseTransactionBean!=null)
                 {
-                    if(sUniquePurchaseToken!=null && sUniquePurchaseToken.equalsIgnoreCase(purchaseResponseTransactionBean.getUniquePurchaseToken()))
-                    {
+                    TelNumberManager telNumManager = new TelNumberManager();
 
-                        EventPricingGroupManager eventPricingGroupManager = new EventPricingGroupManager();
-                        PricingGroupBean pricingGroupBean = eventPricingGroupManager.getPricingGroups(purchaseResponseTransactionBean.getPriceGroupId());
+                    String sUnformattedRSVPText = purchaseResponseTransactionBean.getRsvpTelNumber().replaceAll(" ","").replace(")","").replace("(","");
+                    String sUnformattedSeatingText = purchaseResponseTransactionBean.getSeatingTelNumber().replaceAll(" ","").replace(")","").replace("(","");
 
-                        if(pricingGroupBean!=null )
+                    TelNumberMetaData searchRsvpTelNumberMetaData = new TelNumberMetaData();
+                    searchRsvpTelNumberMetaData.setTextPatternSearch( sUnformattedRSVPText  );
+                    ArrayList<TelNumberBean> arrRSVPTelNumberBean  = telNumManager.searchTelNumber(searchRsvpTelNumberMetaData,Constants.EVENT_TASK.RSVP.getTask());
+                    appLogging.info("RSVP number : "  + sUnformattedRSVPText + " Result after search : " + arrRSVPTelNumberBean );
+
+                    TelNumberMetaData searchSeatingtelNumberMetaData = new TelNumberMetaData();
+                    searchSeatingtelNumberMetaData.setTextPatternSearch( sUnformattedSeatingText );
+                    ArrayList<TelNumberBean> arrSeatingTelNumberBean  = telNumManager.searchTelNumber(searchSeatingtelNumberMetaData,Constants.EVENT_TASK.SEATING.getTask());
+                    appLogging.info("Seating number : "  + sUnformattedSeatingText + " Result after search : " + arrSeatingTelNumberBean );
+                    if(arrRSVPTelNumberBean!=null && !arrRSVPTelNumberBean.isEmpty() && arrSeatingTelNumberBean!=null && !arrSeatingTelNumberBean.isEmpty() ){
+                        if(sUniquePurchaseToken!=null && sUniquePurchaseToken.equalsIgnoreCase(purchaseResponseTransactionBean.getUniquePurchaseToken()))
                         {
-                            CheckoutBean checkoutBean = eventPricingGroupManager.getCheckoutBean(sAdminId, sEventId);
 
+                            EventPricingGroupManager eventPricingGroupManager = new EventPricingGroupManager();
+                            PricingGroupBean pricingGroupBean = eventPricingGroupManager.getPricingGroups(purchaseResponseTransactionBean.getPriceGroupId());
 
-                            BillingMetaData billingMetaData = new BillingMetaData();
-                            billingMetaData.setAdminId(sAdminId);
-                            billingMetaData.setEventId(sEventId);
-                            billingMetaData.setFirstName(purchaseResponseTransactionBean.getFirstName());
-                            billingMetaData.setLastName(purchaseResponseTransactionBean.getLastName());
-                            billingMetaData.setMiddletName("");
-                            billingMetaData.setAddress1("");
-                            billingMetaData.setAddress2("");
-                            billingMetaData.setZip(purchaseResponseTransactionBean.getZipcode());
-                            billingMetaData.setCity("");
-                            billingMetaData.setState(purchaseResponseTransactionBean.getState());
-                            billingMetaData.setCountry(purchaseResponseTransactionBean.getCountry());
-                            billingMetaData.setCreditCardNum("");
-                            billingMetaData.setSecureNum("");
-                            if(checkoutBean.getFormattedGrandTotal()!=null && !"".equalsIgnoreCase(checkoutBean.getFormattedGrandTotal())
-                                    && checkoutBean.getFormattedGrandTotal().length()>1)
+                            if(pricingGroupBean!=null )
                             {
-                                billingMetaData.setPrice(checkoutBean.getFormattedGrandTotal().substring(1));
-                            }
-                            else
-                            {
-                                throw new Exception();
-                            }
+                                CheckoutBean checkoutBean = eventPricingGroupManager.getCheckoutBean(sAdminId, sEventId);
 
-                            billingMetaData.setCardLast4(purchaseResponseTransactionBean.getCreditCardLast4Digits());
-                            billingMetaData.setStripeToken(purchaseResponseTransactionBean.getStripeToken());
-                            billingMetaData.setStripeTokenUsed(true);
 
-                            AdminManager adminManager  = new AdminManager();
-                            UserInfoBean adminUserInfoBean = adminManager.getAminUserInfo(sAdminId);
-                            if(adminUserInfoBean!=null)
-                            {
-                                billingMetaData.setEmail(ParseUtil.checkNull(adminUserInfoBean.getEmail()));
-                            }
-
-                            boolean hasPermToUsePayChannelTestKey = false;
-                            AdminBean adminBean = adminManager.getAdmin(sAdminId)
-                            if(adminBean!=null && !Utility.isNullOrEmpty(adminBean.getAdminId())) {
-                                User user = new User(adminBean );
-                                hasPermToUsePayChannelTestKey = user.can(Permission.USE_PAYMENT_CHANNEL_TEST_API_KEY);
-                            }
-
-                            if(hasPermToUsePayChannelTestKey && Constants.API_KEY_TYPE.TEST_KEY.name().equalsIgnoreCase(purchaseResponseTransactionBean.getApiKeyType())){
-                                billingMetaData.setApiKeyType(Constants.API_KEY_TYPE.TEST_KEY );
-                            } else {
-                                billingMetaData.setApiKeyType(Constants.API_KEY_TYPE.LIVE_KEY );
-                            }
-
-                            BillingManager billingManager = new BillingManager();
-
-                            BillingResponse billingResponse = billingManager.chargePriceToUser(billingMetaData);
-
-                            if(billingResponse!=null && Constants.BILLING_RESPONSE_CODES.SUCCESS.equals( billingResponse.getBillingResponseCode()))
-                            {
-                                AdminTelephonyAccountMeta adminAccountMeta = new AdminTelephonyAccountMeta();
-                                adminAccountMeta.setAdminId(sAdminId);
-                                adminAccountMeta.setFriendlyName(purchaseResponseTransactionBean.getLastName()+billingMetaData.getEmail()+purchaseResponseTransactionBean.getZipcode());
-
-                                AdminTelephonyAccountManager accountManager = new AdminTelephonyAccountManager();
-                                accountManager.createAccount(adminAccountMeta);
-
-                                TelNumberManager telNumManager = new TelNumberManager();
-                                //String sPurchasedRsvpNum = "678690589";
-                                String sPurchasedRsvpNum =  telNumManager.purchaseTelephoneNumber(adminAccountMeta,purchaseResponseTransactionBean.getRsvpTelNumber() );
-                                String sPurchasedSeatingNum = telNumManager.purchaseTelephoneNumber(adminAccountMeta,purchaseResponseTransactionBean.getSeatingTelNumber() );
-
-                                if(pricingGroupBean!=null)
+                                BillingMetaData billingMetaData = new BillingMetaData();
+                                billingMetaData.setAdminId(sAdminId);
+                                billingMetaData.setEventId(sEventId);
+                                billingMetaData.setFirstName(purchaseResponseTransactionBean.getFirstName());
+                                billingMetaData.setLastName(purchaseResponseTransactionBean.getLastName());
+                                billingMetaData.setMiddletName("");
+                                billingMetaData.setAddress1("");
+                                billingMetaData.setAddress2("");
+                                billingMetaData.setZip(purchaseResponseTransactionBean.getZipcode());
+                                billingMetaData.setCity("");
+                                billingMetaData.setState(purchaseResponseTransactionBean.getState());
+                                billingMetaData.setCountry(purchaseResponseTransactionBean.getCountry());
+                                billingMetaData.setCreditCardNum("");
+                                billingMetaData.setSecureNum("");
+                                if(checkoutBean.getFormattedGrandTotal()!=null && !"".equalsIgnoreCase(checkoutBean.getFormattedGrandTotal())
+                                        && checkoutBean.getFormattedGrandTotal().length()>1)
                                 {
-                                    EventFeatureManager eventFeatureManager = new EventFeatureManager();
-                                    eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.PREMIUM_TOTAL_CALL_MINUTES,ParseUtil.iToS(pricingGroupBean.getMaxMinutes()));
-                                    eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.PREMIUM_TOTAL_TEXT_MESSAGES,ParseUtil.iToS(pricingGroupBean.getSmsCount()));
-
-                                    if ( EventFeatureManager.isEventFeatureExists( sEventId, Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE ) )
-                                    {
-                                        eventFeatureManager.updateEventFeatures( sEventId , Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE, Constants.TELNUMBER_TYPE.PREMIUM.getType()  );
-                                    }
-                                    else
-                                    {
-                                        eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE,Constants.TELNUMBER_TYPE.PREMIUM.getType());
-                                    }
-
-
-                                    UsageMetaData usageMetaData = new UsageMetaData();
-                                    usageMetaData.setEventId(sEventId);
-                                    usageMetaData.setAdminId(sAdminId);
-
-                                    Usage phoneCallUsage = new PhoneCallUsage();
-                                    PhoneCallUsageBean phoneCallUsageBean = (PhoneCallUsageBean)phoneCallUsage.getUsage(usageMetaData);
-                                    jspLogging.error("Phone CAll Usage : " + phoneCallUsageBean );
-                                    if(phoneCallUsageBean!=null)
-                                    {
-                                        eventFeatureManager.createEventFeatures(sEventId , Constants.EVENT_FEATURES.DEMO_FINAL_CALL_MINUTES_USED, ParseUtil.iToS(phoneCallUsageBean.getNumOfDemoMinutesUsed()) );
-                                    }
-
-                                    Usage textMessageUsage = new TextMessageUsage();
-                                    TextMessageUsageBean textMessageUsageBean = (TextMessageUsageBean)textMessageUsage.getUsage(usageMetaData);
-                                    if(textMessageUsageBean!=null)
-                                    {
-                                        eventFeatureManager.createEventFeatures(sEventId , Constants.EVENT_FEATURES.DEMO_FINAL_TEXT_MESSAGES_SENT, ParseUtil.iToS(textMessageUsageBean.getNumOfDemoTextSent()) );
-                                    }
-
-                                }
-
-                                if(sPurchasedRsvpNum!=null && !"".equalsIgnoreCase(sPurchasedRsvpNum)
-                                        && sPurchasedSeatingNum!=null && !"".equalsIgnoreCase(sPurchasedSeatingNum)){
-
-
-
-                                    TelNumberMetaData telNumberMetaData = new TelNumberMetaData();
-                                    telNumberMetaData.setAdminId(sAdminId);
-                                    telNumberMetaData.setEventId(sEventId);
-                                    telNumberMetaData.setRsvpTelNumDigit(purchaseResponseTransactionBean.getRsvpTelNumber());
-                                    telNumberMetaData.setSeatingTelNumDigit(purchaseResponseTransactionBean.getSeatingTelNumber());
-
-                                    telNumManager.saveTelNumbers(telNumberMetaData);
-                                    telNumManager.sendNewTelnumberPurchasedEmail(telNumberMetaData,adminUserInfoBean);
-
-                                    Text okText = new OkText("Your purchase was completed successfully.","my_id");
-                                    arrOkText.add(okText);
-
-                                    responseStatus = RespConstants.Status.OK;
+                                    billingMetaData.setPrice(checkoutBean.getFormattedGrandTotal().substring(1));
                                 }
                                 else
                                 {
-                                    Text errorText = new ErrorText("Your purchase was not completed."+
-                                            "Please try again later.","my_id") ;
+                                    throw new Exception();
+                                }
+
+                                billingMetaData.setCardLast4(purchaseResponseTransactionBean.getCreditCardLast4Digits());
+                                billingMetaData.setStripeToken(purchaseResponseTransactionBean.getStripeToken());
+                                billingMetaData.setStripeTokenUsed(true);
+
+                                AdminManager adminManager  = new AdminManager();
+                                UserInfoBean adminUserInfoBean = adminManager.getAminUserInfo(sAdminId);
+                                if(adminUserInfoBean!=null)
+                                {
+                                    billingMetaData.setEmail(ParseUtil.checkNull(adminUserInfoBean.getEmail()));
+                                }
+
+                                boolean hasPermToUsePayChannelTestKey = false;
+                                AdminBean adminBean = adminManager.getAdmin(sAdminId);
+                                if(adminBean!=null && !Utility.isNullOrEmpty(adminBean.getAdminId())) {
+                                    User user = new User(adminBean );
+                                    hasPermToUsePayChannelTestKey = user.can(Permission.USE_PAYMENT_CHANNEL_TEST_API_KEY);
+                                }
+
+                                if(hasPermToUsePayChannelTestKey && Constants.API_KEY_TYPE.TEST_KEY.name().equalsIgnoreCase(purchaseResponseTransactionBean.getApiKeyType())){
+                                    billingMetaData.setApiKeyType(Constants.API_KEY_TYPE.TEST_KEY );
+                                } else {
+                                    billingMetaData.setApiKeyType(Constants.API_KEY_TYPE.LIVE_KEY );
+                                }
+                                appLogging.info("API Key Type : " + billingMetaData.getApiKeyType().name() );
+                                BillingManager billingManager = new BillingManager();
+
+                                BillingResponse billingResponse = billingManager.chargePriceToUser(billingMetaData);
+
+                                if(billingResponse!=null && Constants.BILLING_RESPONSE_CODES.SUCCESS.equals( billingResponse.getBillingResponseCode()))
+                                {
+                                    AdminTelephonyAccountMeta adminAccountMeta = new AdminTelephonyAccountMeta();
+                                    adminAccountMeta.setAdminId(sAdminId);
+                                    adminAccountMeta.setFriendlyName(purchaseResponseTransactionBean.getLastName()+billingMetaData.getEmail()+purchaseResponseTransactionBean.getZipcode());
+
+                                    AdminTelephonyAccountManager accountManager = new AdminTelephonyAccountManager();
+                                    accountManager.createAccount(adminAccountMeta);
+
+                                    //String sPurchasedRsvpNum = "678690589";
+                                    String sPurchasedRsvpNum =  telNumManager.purchaseTelephoneNumber(adminAccountMeta,purchaseResponseTransactionBean.getRsvpTelNumber() );
+                                    String sPurchasedSeatingNum = telNumManager.purchaseTelephoneNumber(adminAccountMeta,purchaseResponseTransactionBean.getSeatingTelNumber() );
+
+                                    if(pricingGroupBean!=null)
+                                    {
+                                        EventFeatureManager eventFeatureManager = new EventFeatureManager();
+                                        eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.PREMIUM_TOTAL_CALL_MINUTES,ParseUtil.iToS(pricingGroupBean.getMaxMinutes()));
+                                        eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.PREMIUM_TOTAL_TEXT_MESSAGES,ParseUtil.iToS(pricingGroupBean.getSmsCount()));
+
+                                        if ( EventFeatureManager.isEventFeatureExists( sEventId, Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE ) )
+                                        {
+                                            eventFeatureManager.updateEventFeatures( sEventId , Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE, Constants.TELNUMBER_TYPE.PREMIUM.getType()  );
+                                        }
+                                        else
+                                        {
+                                            eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE,Constants.TELNUMBER_TYPE.PREMIUM.getType());
+                                        }
+
+
+                                        UsageMetaData usageMetaData = new UsageMetaData();
+                                        usageMetaData.setEventId(sEventId);
+                                        usageMetaData.setAdminId(sAdminId);
+
+                                        Usage phoneCallUsage = new PhoneCallUsage();
+                                        PhoneCallUsageBean phoneCallUsageBean = (PhoneCallUsageBean)phoneCallUsage.getUsage(usageMetaData);
+                                        jspLogging.error("Phone CAll Usage : " + phoneCallUsageBean );
+                                        if(phoneCallUsageBean!=null)
+                                        {
+                                            eventFeatureManager.createEventFeatures(sEventId , Constants.EVENT_FEATURES.DEMO_FINAL_CALL_MINUTES_USED, ParseUtil.iToS(phoneCallUsageBean.getNumOfDemoMinutesUsed()) );
+                                        }
+
+                                        Usage textMessageUsage = new TextMessageUsage();
+                                        TextMessageUsageBean textMessageUsageBean = (TextMessageUsageBean)textMessageUsage.getUsage(usageMetaData);
+                                        if(textMessageUsageBean!=null)
+                                        {
+                                            eventFeatureManager.createEventFeatures(sEventId , Constants.EVENT_FEATURES.DEMO_FINAL_TEXT_MESSAGES_SENT, ParseUtil.iToS(textMessageUsageBean.getNumOfDemoTextSent()) );
+                                        }
+
+                                    }
+
+                                    if(sPurchasedRsvpNum!=null && !"".equalsIgnoreCase(sPurchasedRsvpNum)
+                                            && sPurchasedSeatingNum!=null && !"".equalsIgnoreCase(sPurchasedSeatingNum)){
+
+
+
+                                        TelNumberMetaData telNumberMetaData = new TelNumberMetaData();
+                                        telNumberMetaData.setAdminId(sAdminId);
+                                        telNumberMetaData.setEventId(sEventId);
+                                        telNumberMetaData.setRsvpTelNumDigit(purchaseResponseTransactionBean.getRsvpTelNumber());
+                                        telNumberMetaData.setSeatingTelNumDigit(purchaseResponseTransactionBean.getSeatingTelNumber());
+
+                                        telNumManager.saveTelNumbers(telNumberMetaData);
+                                        telNumManager.sendNewTelnumberPurchasedEmail(telNumberMetaData,adminUserInfoBean);
+
+                                        Text okText = new OkText("Your purchase was completed successfully.","my_id");
+                                        arrOkText.add(okText);
+
+                                        responseStatus = RespConstants.Status.OK;
+                                    }
+                                    else
+                                    {
+                                        Text errorText = new ErrorText("Your purchase was not completed."+
+                                                "Please try again later.","my_id") ;
+                                        arrErrorText.add(errorText);
+
+                                        responseStatus = RespConstants.Status.ERROR;
+
+                                        jspLogging.error("Error purchasing your selected number from the telephony provider." );
+                                    }
+                                }
+                                else
+                                {
+                                    Text errorText = new ErrorText(billingResponse.getMessage(),"my_id") ;
                                     arrErrorText.add(errorText);
 
                                     responseStatus = RespConstants.Status.ERROR;
 
-                                    jspLogging.error("Error purchasing your selected number from the telephony provider." );
+                                    jspLogging.error("Error purchasing , response code is emtpy or null."  + billingResponse.getMessage() );
                                 }
+
                             }
                             else
                             {
-                                Text errorText = new ErrorText("Oops the purchase could not be completed. " + billingResponse.getMessage(),"my_id") ;
+                                Text errorText = new ErrorText("Oops the purchase could not be completed. Please try again later.","my_id") ;
                                 arrErrorText.add(errorText);
 
                                 responseStatus = RespConstants.Status.ERROR;
 
-                                jspLogging.error("Error purchasing , response code is emtpy or null."  + billingResponse.getMessage() );
+                                jspLogging.error("Pricing group bean does not exist" );
                             }
-
                         }
                         else
                         {
@@ -217,18 +241,29 @@
 
                             responseStatus = RespConstants.Status.ERROR;
 
-                            jspLogging.error("Pricing group bean does not exist" );
+                            jspLogging.error("Matching Unique Purchase Token Failed "  + sUniquePurchaseToken +" = " + purchaseResponseTransactionBean.getUniquePurchaseToken() );
                         }
-                    }
-                    else
-                    {
-                        Text errorText = new ErrorText("Oops the purchase could not be completed. Please try again later.","my_id") ;
+                    } else {
+                        // At least one number is not available for purchase
+                        StringBuilder sErrorMessage = new StringBuilder("The following phone number/s are sold out:<br>");
+
+
+                        if(arrRSVPTelNumberBean==null || (arrRSVPTelNumberBean!=null && arrRSVPTelNumberBean.isEmpty()) ) {
+                            sErrorMessage.append("RSVP: ").append( purchaseResponseTransactionBean.getRsvpTelNumber() ).append("<br>");
+                            jspLogging.error("The RSVP phone number "  + purchaseResponseTransactionBean.getRsvpTelNumber() +" already exists. Admin Id : " + sAdminId + " Event Id : " + sEventId);
+                        }
+
+                        if( arrSeatingTelNumberBean ==null || (arrSeatingTelNumberBean!=null && arrSeatingTelNumberBean.isEmpty()) ) {
+                            sErrorMessage.append("Seating: ").append( purchaseResponseTransactionBean.getSeatingTelNumber() ).append("<br>");
+                            jspLogging.error("The Seating phone number "  + purchaseResponseTransactionBean.getSeatingTelNumber() +" already exists. Admin Id : " + sAdminId + " Event Id : " + sEventId);
+                        }
+
+                        Text errorText = new ErrorText(sErrorMessage.append("Please select new phone numbers and try again.").toString(),"my_id") ;
                         arrErrorText.add(errorText);
 
-                        responseStatus = RespConstants.Status.ERROR;
-
-                        jspLogging.error("Matching Unique Purchase Token Failed "  + sUniquePurchaseToken +" = " + purchaseResponseTransactionBean.getUniquePurchaseToken() );
+                        responseStatus = RespConstants.Status.ERROR ;
                     }
+
 
                 }
                 else
@@ -259,7 +294,7 @@
 
             responseStatus = RespConstants.Status.ERROR;
             //jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
-            jspLogging.error("User has not signed in Admin Id : " + sAdminId  + " Event ID : " +  sEventId );
+            jspLogging.error("User has not signed in Admin Id : " + sAdminId + " Event ID : " + sEventId);
         }
 
         jspLogging.error("Response status  : " + responseStatus.getStatus() );

@@ -86,8 +86,11 @@
                 EventCreationMetaDataBean eventMeta = new EventCreationMetaDataBean();
                 eventMeta.setAdminBean(adminBean);
                 eventMeta.setEventDate(sEventDate);
-                eventMeta.setEventDatePattern("MM/dd/yyyy");
-                eventMeta.setEventTimeZone("UTC");
+                eventMeta.setEventDatePattern(Constants.PRETTY_DATE_PATTERN_2);
+                eventMeta.setEventTimeZone("central");
+                eventMeta.setCreateEvent(true);
+                eventMeta.setRsvpDeadlineDate(sEventDate);
+                eventMeta.setRsvpDeadlineDateDatePattern(Constants.PRETTY_DATE_PATTERN_2);
 
                 EventManager eventManager = new EventManager();
                 eventBean = eventManager.createEvent(eventMeta);

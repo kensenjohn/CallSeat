@@ -343,8 +343,23 @@ $.ajaxSetup({
 
 function stripeResponseHandler(status, response) {
 	if (response.error) {
-		//alert('error');
-        displayMssgBoxAlert('There was an error processing your request. Please try again later.' , true);
+        var varErrorCode = response.error.code;
+        var varErrorMessage = '';
+        if( varErrorCode == 'card_declined' || varErrorCode == 'expired_card' ) {
+            varErrorMessage = 'Please use a valid credit card and try again.';
+        } else if( varErrorCode == 'incorrect_number' || varErrorCode == 'invalid_number' ) {
+            varErrorMessage = 'Please use a valid credit card number and try again.';
+        } else if( varErrorCode == 'invalid_expiry_month' || varErrorCode == 'invalid_expiry_year' ) {
+            varErrorMessage = 'Please use a valid expiration date and try again.';
+        } else if( varErrorCode == 'invalid_cvc' || varErrorCode == 'incorrect_cvc' ) {
+            varErrorMessage = 'Please use a valid security (CVC/CVV) code and try again.';
+        } else if( varErrorCode == 'incorrect_zip' ) {
+            varErrorMessage = 'Please use a valid zip code or postal code and try again.';
+        } else if( varErrorCode == 'processing_error' ) {
+            varErrorMessage = 'There was an error processing your request. Please try again later.(1)';
+        }
+        displayMssgBoxAlert( varErrorMessage , true);
+        $("#loading_wheel").hide();
 	}
 	else
 	{
@@ -361,20 +376,6 @@ function stripeResponseHandler(status, response) {
 
 
         phoneNumberData(actionUrl,dataString,methodType,processPurchaseTransactions);
-
-		// var form$ = $("#payment-form");
-	        // token contains id, last4, and card type
-	   /*  var token = response['id'];
-	     var last4 = response.card['last4'];
-	 	
-	 	
-		var actionUrl = "proc_save_phone_numbers.jsp";
-		var methodType = "POST";
-		var dataString = $("#frm_billing_info").serialize();
-		dataString = dataString + '&stripe_token='+token+'&last4='+last4;
-		
-		phoneNumberData(actionUrl,dataString,methodType,savePhoneNumbers);
-		*/
 	}
 }
 

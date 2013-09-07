@@ -12,7 +12,8 @@
 <link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
 <body style="height:auto;">
 	<%
-		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
+		Logger jspLogging = LoggerFactory.getLogger(Constants.JSP_LOGS);
+        Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 		String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 
@@ -24,28 +25,48 @@
         PurchaseTransactionManager purchaseTransactionManager = new PurchaseTransactionManager();
         PurchaseTransactionBean purchaseResponseTransactionBean = purchaseTransactionManager.getPurchaseTransactionByEventAdmin(purchaseTransactionBean);
 
-        boolean isNumberSelectedPreviously = false;
+        boolean isRSVPNumberSelectedPreviously = false;
+        boolean isSeatingNumberSelectedPreviously = false;
         if(purchaseResponseTransactionBean!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getRsvpTelNumber())
                 && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getSeatingTelNumber()))
         {
-            isNumberSelectedPreviously = true;
+            String sUnformattedRSVPText = purchaseResponseTransactionBean.getRsvpTelNumber().replaceAll(" ","").replace(")","").replace("(","");
+            String sUnformattedSeatingText = purchaseResponseTransactionBean.getSeatingTelNumber().replaceAll(" ","").replace(")","").replace("(","");
+
+            TelNumberManager telNumManager = new TelNumberManager();
+
+            TelNumberMetaData searchRsvpTelNumberMetaData = new TelNumberMetaData();
+            searchRsvpTelNumberMetaData.setTextPatternSearch( sUnformattedRSVPText  );
+            ArrayList<TelNumberBean> arrRSVPTelNumberBean  = telNumManager.searchTelNumber(searchRsvpTelNumberMetaData,Constants.EVENT_TASK.RSVP.getTask());
+            if( arrRSVPTelNumberBean!=null && !arrRSVPTelNumberBean.isEmpty()) {
+                isRSVPNumberSelectedPreviously = true;
+            }
+            appLogging.info("RSVP number : "  + sUnformattedRSVPText + " Result after search : " + arrRSVPTelNumberBean );
+
+            TelNumberMetaData searchSeatingtelNumberMetaData = new TelNumberMetaData();
+            searchSeatingtelNumberMetaData.setTextPatternSearch( sUnformattedSeatingText );
+            ArrayList<TelNumberBean> arrSeatingTelNumberBean  = telNumManager.searchTelNumber(searchSeatingtelNumberMetaData,Constants.EVENT_TASK.SEATING.getTask());
+            if( arrRSVPTelNumberBean!=null && !arrRSVPTelNumberBean.isEmpty()) {
+                isSeatingNumberSelectedPreviously = true;
+            }
+            appLogging.info("Seating number : "  + sUnformattedSeatingText + " Result after search : " + arrSeatingTelNumberBean );
         }
 
         String sRsvpNumber = "Loading new number ..";
         String sSeatingNumber = "Loading new number ..";
-        if(isNumberSelectedPreviously)
-        {
+        if(isRSVPNumberSelectedPreviously){
             if(purchaseResponseTransactionBean.getRsvpTelNumber()!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getRsvpTelNumber()))
             {
                 sRsvpNumber = ParseUtil.checkNull(purchaseResponseTransactionBean.getRsvpTelNumber());
             }
+        }
 
+        if(isSeatingNumberSelectedPreviously){
             if(purchaseResponseTransactionBean.getSeatingTelNumber()!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getSeatingTelNumber()))
             {
                 sSeatingNumber = ParseUtil.checkNull(purchaseResponseTransactionBean.getSeatingTelNumber());
             }
         }
-
 
 	%>
     <jsp:include page="/web/com/gs/common/top_nav_fancybox.jsp"/>
@@ -228,7 +249,7 @@ var varRsvpNumType = '<%=Constants.EVENT_TASK.RSVP.getTask()%>';
 
 var varIsSignedIn = <%=isSignedIn%>;
 
-var varIsNumberSelectedPreviously = <%=isNumberSelectedPreviously%>;
+var varIsNumberSelectedPreviously = <%=(isRSVPNumberSelectedPreviously||isSeatingNumberSelectedPreviously)%>;
 
 	$(document).ready(function() {
 

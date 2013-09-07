@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.gs.bean.PaymentChannelRequest;
+import com.gs.common.Utility;
 import com.stripe.model.Customer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,8 +35,7 @@ public class StripePaymentChannel extends PaymentChannel {
 	}
 
 	private String getSecretKey(PaymentChannelRequest paymentChannelRequest) {
-		String sSecretKey = ParseUtil.checkNull(applicationConfig
-				.get(Constants.PROP_STRIPE_TEST_SECRET_KEY));
+		String sSecretKey = ParseUtil.checkNull(applicationConfig.get(Constants.PROP_STRIPE_TEST_SECRET_KEY));
 		if (Constants.STRIPE_ENVIRONMENT.LIVE.getStripeEnv().equalsIgnoreCase(getStripeEnvironment())
                 && (paymentChannelRequest!=null && Constants.API_KEY_TYPE.LIVE_KEY.equals(paymentChannelRequest.getApiKeyType())) ) {
 			sSecretKey = ParseUtil.checkNull(applicationConfig
@@ -59,20 +59,17 @@ public class StripePaymentChannel extends PaymentChannel {
 	@Override
 	public BillingResponse validateUserInput(BillingMetaData billingMetaData) {
 		BillingResponse billingResponse = new BillingResponse();
-		if (billingMetaData.isStripeTokenUsed()
-				&& billingMetaData.getStripeToken() != null
-				&& !"".equalsIgnoreCase(billingMetaData.getStripeToken())) {
+		if (billingMetaData.isStripeTokenUsed() && !Utility.isNullOrEmpty(billingMetaData.getStripeToken())) {
             PaymentChannelRequest paymentChannelRequest = new PaymentChannelRequest();
-            paymentChannelRequest.setApiKeyType( billingMetaData.getApiKeyType()==null?billingMetaData.getApiKeyType(): Constants.API_KEY_TYPE.LIVE_KEY );
+            paymentChannelRequest.setApiKeyType( billingMetaData.getApiKeyType()!=null?billingMetaData.getApiKeyType(): Constants.API_KEY_TYPE.LIVE_KEY );
+            appLogging.error("paymentChannelRequest : "  + paymentChannelRequest.getApiKeyType().name() );
 			Stripe.apiKey = getPublicKey( paymentChannelRequest );
 			com.stripe.model.Token token = null;
 			try {
 				token = Token.retrieve(billingMetaData.getStripeToken());
 			} catch (StripeException e) {
-				appLogging
-						.error("There was an error retrieving token from Stripe. "
-								+ " Token : "
-								+ billingMetaData.getStripeToken());
+				appLogging.error("There was an error retrieving token from Stripe. "
+								+ " Token : " + billingMetaData.getStripeToken() + " - " + ExceptionHandler.getStackTrace(e));
 			}
 			if (token != null
 					&& token.getId().equalsIgnoreCase(
@@ -118,7 +115,7 @@ public class StripePaymentChannel extends PaymentChannel {
             {
 
                 PaymentChannelRequest paymentChannelRequest = new PaymentChannelRequest();
-                paymentChannelRequest.setApiKeyType( billingMetaData.getApiKeyType()==null?billingMetaData.getApiKeyType(): Constants.API_KEY_TYPE.LIVE_KEY );
+                paymentChannelRequest.setApiKeyType( billingMetaData.getApiKeyType()!=null?billingMetaData.getApiKeyType(): Constants.API_KEY_TYPE.LIVE_KEY );
 				Stripe.apiKey = getSecretKey(paymentChannelRequest);
 
                 Map<String, Object> customerParams = new HashMap<String, Object>();
@@ -166,30 +163,24 @@ public class StripePaymentChannel extends PaymentChannel {
                                     + billingMetaData.getEmail() + " Price :"
                                     + ParseUtil.checkNull(billingMetaData.getPrice())+"_dollars");
                         }
-
-
-
                     }
-
-
-
-
 				} catch (StripeException e) {
 					appLogging
 							.error("Error charging customer with a price. "
 									+ " Token : "
 									+ billingMetaData.getStripeToken()
-									+ "_"
+									+ " eventid : "
 									+ billingMetaData.getEventId()
-									+ "_"
+									+ "\n zip:"
 									+ billingMetaData.getZip()
-									+ "_"
+									+ " email : "
 									+ billingMetaData.getEmail()
-									+ "_"
+									+  "\nEException Message"
+                                    + e.getMessage()
+                                    + "\n"
 									+ ExceptionHandler.getStackTrace(e));
-					billingResponse
-							.setBillingResponseCode(Constants.BILLING_RESPONSE_CODES.GENERAL_ERROR);
-					billingResponse.setMessage("Payment authentication error.");
+					billingResponse.setBillingResponseCode(Constants.BILLING_RESPONSE_CODES.GENERAL_ERROR);
+					billingResponse.setMessage( e.getMessage() );
 				}
 			} else {
 
@@ -198,5 +189,26 @@ public class StripePaymentChannel extends PaymentChannel {
 
 		return billingResponse;
 	}
+
+    private String getErrorMessage( String sCode ) {
+        String sMessage = "We were unable to process you request. Please try again.";
+        if( !Utility.isNullOrEmpty(sCode) ) {
+            if( "Your card number is incorrect.".equalsIgnoreCase(sCode) || "Your card number is not a valid credit card number.".equalsIgnoreCase(sCode)
+                    || "Your card has expired.".equalsIgnoreCase(sCode)  || "Your card was declined.".equalsIgnoreCase(sCode) )  {
+                sMessage = "Please use a valid credit card and try again.";
+            } else if( "Your card's expiration month is invalid.".equalsIgnoreCase(sCode) || "The card's expiration year is invalid.".equalsIgnoreCase(sCode) ) {
+                sMessage = "Please use a valid expiration date and try again.";
+            } else if( "Your card's security code is invalid.".equalsIgnoreCase(sCode) || "The card's security code is incorrect.".equalsIgnoreCase(sCode) ) {
+                sMessage = "Please use a valid security code (CVC/CVV) and try again.";
+            } else if( "There is no card on a customer that is being charged.".equalsIgnoreCase(sCode)  ) {
+                sMessage = "Please use a valid security code (CVC/CVV) and try again.";
+            } else if ( "An error occurred while processing the card.".equalsIgnoreCase(sCode) ) {
+                sMessage = "We were unable to process you request. Please try again. (1)";
+            } else {
+                sMessage = "We were unable to process you request. Please try again. (2)";
+            }
+        }
+        return sMessage;
+    }
 
 }
