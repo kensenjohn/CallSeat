@@ -55,5 +55,15 @@
             'padding'			: 0,
             'margin'			: 0
         });
+        $("#footer_pricing_plan").fancybox({
+            'width'				: '75%',
+            'height'			: '90%',
+            'autoScale'			: false,
+            'transitionIn'		: 'none',
+            'transitionOut'		: 'none',
+            'type'				: 'iframe',
+            'padding'			: 0,
+            'margin'			: 0
+        });
 	 });
 </script>

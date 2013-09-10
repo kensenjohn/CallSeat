@@ -70,7 +70,7 @@ public class PricingGroupData {
 
         ArrayList<PricingGroupBean> arrPricingGroupBean = new ArrayList<PricingGroupBean>();
 
-        String sQuery = "select * from GTPRICEGROUP GPG WHERE GPG.PRICEGROUPNAME !='Demo'";
+        String sQuery = "select * from GTPRICEGROUP GPG WHERE GPG.PRICEGROUPNAME !='Demo' ORDER BY PRICE DESC";
 
         ArrayList<Object> aParams = new ArrayList<Object>();
 

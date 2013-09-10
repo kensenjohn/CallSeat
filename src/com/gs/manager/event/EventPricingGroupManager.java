@@ -9,6 +9,7 @@ import java.util.Locale;
 import com.gs.bean.CheckoutBean;
 import com.gs.bean.PurchaseTransactionBean;
 import com.gs.bean.TaxBean;
+import com.gs.common.Constants;
 import com.gs.common.exception.ExceptionHandler;
 import com.gs.common.ParseUtil;
 import com.gs.manager.TaxManager;
@@ -21,7 +22,7 @@ import org.slf4j.LoggerFactory;
 
 public class EventPricingGroupManager {
 
-    Logger appLogging = LoggerFactory.getLogger("AppLogging");
+    Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 
     public ArrayList<PricingGroupBean> getPremiumPricingGroups() {
 

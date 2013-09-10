@@ -626,3 +626,58 @@ a.btn-rust[disabled],
     background-color: RGB(255,255,255);
 }
 
+#pricing_grid > div {
+    border: 1px solid rgba(0,0,0,0.35);
+    background-color: #f7f7f7;
+    -moz-box-shadow: 1px 1px 1px rgba(0,0,0,0.25) !important;
+    -webkit-box-shadow: 1px 1px 1px rgba(0,0,0,0.25) !important;
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.25) !important;
+    -ms-box-shadow: 1px 1px 1px rgba(0,0,0,0.25) !important;
+    -o-box-shadow: 1px 1px 1px rgba(0,0,0,0.25) !important;
+    -khtml-box-shadow: 1px 1px 1px rgba(0,0,0,0.25) !important;
+    margin: 10px 0 0 5px;
+    float: left;
+    position: relative;
+    border-radius: 5px;
+    text-align: center;
+}
+
+#pricing_grid .display_dimension{
+    width: 150px;
+    height: 315px;
+    cursor:default;
+}
+
+#pricing_grid .action_display{
+    width: 150px;
+    height: 375px;
+    cursor:pointer;
+}
+
+#pricing_grid > div:first-child {
+    margin-left: 0;
+}
+
+#pricing_grid  .most_popular {
+    background-color:#d5eed8;
+    border: 3px solid rgba(0,0,0,0.35);
+}
+#pricing_grid h1 {
+    text-align: center;
+    width: 140px;
+    top: 20px;
+    margin-top: 20px;
+}
+#pricing_grid .header {
+    border-bottom: 1px solid;
+    border-color: RGB(175, 170, 170);
+}
+#pricing_grid .body {
+    margin-top:10px; margin-bottom:10px;text-align: center; font-size:115%;
+}
+
+#pricing_grid .body_most_popular {
+    margin-top:10px; margin-bottom:10px;text-align: center; font-size:120%;
+}
+
+

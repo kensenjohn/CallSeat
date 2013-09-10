@@ -21,7 +21,17 @@
                     </div>
                     <div class="row">
                         <div class="offset1 span7" >
-                            <span>To learn how we can help you, please contact kensenjohn@callseat.com</span>  <br>
+                            <span>You may contact us through email or phone for any question regarding our product, issues or cancellations.</span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="span2" >
+                            &nbsp;
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="offset1 span7" >
+                            <h4>Email:</h4><span> kjohn@callseat.com</span>
                         </div>
                     </div>
                     <div class="row">
@@ -47,7 +57,7 @@
                     </div>
                     <div class="row">
                         <div class="offset1 span7" >
-                            <span>5316 Carnaby St #155</span>  <br>
+                            <span>5316 Carnaby Suite #155</span>  <br>
                             <span>Irving, TX 75038</span>
                         </div>
                     </div>

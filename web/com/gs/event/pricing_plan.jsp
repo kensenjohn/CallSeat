@@ -11,26 +11,18 @@
 
 
 <%
-		Logger jspLogging = LoggerFactory.getLogger("JspLogging");
+		Logger jspLogging = LoggerFactory.getLogger(Constants.JSP_LOGS);
 		String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 		String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 
     String sGateAdminId = sAdminId;
     AdminManager adminManager = new AdminManager();
     AdminBean adminBean = adminManager.getAdmin(sAdminId);
-
-    boolean hasPermToUsePayChannelTestKey = false;
-    if(adminBean!=null && !Utility.isNullOrEmpty(adminBean.getAdminId())) {
-        User user = new User(adminBean );
-        hasPermToUsePayChannelTestKey = user.can(Permission.USE_PAYMENT_CHANNEL_TEST_API_KEY);
-    }
 %>
 <%@include file="../common/gatekeeper.jsp"%>
 
-<link href="/web/css/pricing/pricing.css" rel="stylesheet">
-<link href="/web/css/pricing/bootstrap.css" rel="stylesheet">
-<link href="/web/css/pricing/bootstrap-responsive.css" rel="stylesheet">
 <link rel="stylesheet" type="text/css" href="/web/css/msgBoxLight.css" media="screen" >
+<link rel="stylesheet" type="text/css" href="/web/css/style.css" media="screen" >
 <body style="height:auto;">
         <jsp:include page="/web/com/gs/common/top_nav_fancybox.jsp"/>
 		<div class="fnbx_scratch_area">
@@ -56,20 +48,56 @@
 								&nbsp;
 							</div>
 						</div>
-                        <div class="row" id="pricing_grid_options">
+                        <div class="row" id="pricing_grid">
                           <!-- <div class="span11">
                               <form id="frm_pricing_plan" >
 
                               </form>
                           </div> -->
                         </div>
-                          <div class="row">
-                              <div class="span8">
-                                  &nbsp;
-                              </div>
-                          </div>
                       <div class="row">
-                          <div class="span8">
+                          <div class="span12">
+                              &nbsp;
+                          </div>
+                      </div>
+
+                      <div class="row">
+                          <div class="span12">
+                              <span>1) One  phone number is for your guests to RSVP. The second phone number is to provide seating information.</span>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="span12">
+                              <span>2) Guests can RSVP online.</span>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="span12">
+                              <span>3) Send text message or email to confirm RSVP or to provide seating information.</span>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="span12">
+                              &nbsp;
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="span12">
+                              <h4>Coming Soon</h4>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="span12">
+                              <span>Your guests will be able to select their food preference online or on the phone.</span>
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="span12">
+                              &nbsp;
+                          </div>
+                      </div>
+                      <div class="row">
+                          <div class="span12">
                               &nbsp;
                           </div>
                       </div>
@@ -191,25 +219,28 @@ function processPricingPlan(varResponse)
 	{
 		//alert('pricing grid. - ' + varArrPricingPlan[vari].pricing_group_id);
         var varPricingGrid = '';
-        if(varArrPricingPlan[vari].is_default == true)
-        {
-            varPricingGrid = varPricingGrid + '<div class="span2 pricing4 no-zoom shadow" id="div_pricing_'+varArrPricingPlan[vari].pricing_group_id+'"><ul class="popullar"><li class="head" ><h1>Popular</h1>';
+
+        var varPriceClass = '';
+        var varSubTitle = '&nbsp;';
+        if(varArrPricingPlan[vari].is_default == true) {
+            varPriceClass = 'most_popular';
+            varSubTitle = 'Most Popular';
         }
-        else
-        {
-            varPricingGrid = varPricingGrid + '<div class="span2 pricing2 no-zoom shadow" id="div_pricing_'+varArrPricingPlan[vari].pricing_group_id+'"><ul><li class="head" ><h1>&nbsp;</h1>';
-        }
-        varPricingGrid = varPricingGrid + '</li>';
-        varPricingGrid = varPricingGrid + '<li class="price">$'+varArrPricingPlan[vari].price+'</li>';
-        varPricingGrid = varPricingGrid + '<li>'+varArrPricingPlan[vari].max_minutes+' minutes</li>';
-        varPricingGrid = varPricingGrid + '<li>'+varArrPricingPlan[vari].sms_count+' texts</li>';
-        varPricingGrid = varPricingGrid + '<li class="footer"><a href="#" id="" class="btn btn-inverse btn-large">Select</a></li>';
-        varPricingGrid = varPricingGrid + '</ul></div>';
+        varPricingGrid = varPricingGrid + '<div  class="'+varPriceClass+' action_display" id="div_pricing_'+varArrPricingPlan[vari].pricing_group_id+'">';
+        varPricingGrid = varPricingGrid + '<div class="header"><h1>'+varArrPricingPlan[vari].pricing_group_name+'</h1><span style="text-align: center;">'+varSubTitle+'</span></div>';
+        varPricingGrid = varPricingGrid + '<div style="padding: 3px;">';
+        varPricingGrid = varPricingGrid + '<div class="body" ><span >'+ varArrPricingPlan[vari].max_minutes +' call minutes</span></div>';
+        varPricingGrid = varPricingGrid + '<div class="body" ><span >'+ varArrPricingPlan[vari].sms_count +' txt messages</span></div>';
+        varPricingGrid = varPricingGrid + '<div class="body"><span >&nbsp;</span></div>';
+        varPricingGrid = varPricingGrid + '<div class="body" ><span >2 private phone numbers</span></div>';
+        varPricingGrid = varPricingGrid + '<div class="body"><span >&nbsp;</span></div>';
+        varPricingGrid = varPricingGrid + '<div class="body" ><span >$'+varArrPricingPlan[vari].price+' per plan</span></div>';
+        varPricingGrid = varPricingGrid + '<div class="body"><span >&nbsp;</span></div>';
+        varPricingGrid = varPricingGrid + '<div class="body"><span ><input class="btn btn-blue ispn2" type="button" value="Select"></span></div>';
+        varPricingGrid = varPricingGrid + '</div>';
+        varPricingGrid = varPricingGrid + '</div>';
 
-        $('#pricing_grid_options').append(varPricingGrid);
-
-        //$('#div_pricing_'+varArrPricingPlan[vari].pricing_group_id).bind('click',submitPricingPlan(varArrPricingPlan[vari].pricing_group_id));
-
+        $('#pricing_grid').append(varPricingGrid);
         $('#div_pricing_' + varArrPricingPlan[vari].pricing_group_id).click({pricingGridId: varArrPricingPlan[vari].pricing_group_id,price: varArrPricingPlan[vari].price }, submitPricingPlan);
 
 	}
