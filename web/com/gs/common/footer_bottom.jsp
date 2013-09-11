@@ -12,8 +12,8 @@ String sCopyrightCompany = applicationConfig.get("copyright_company");
         <div class="row">
             <div class="offset1 span6">
                 <div id="footer_nav">
-                        <a id="footer_contact" class="bold_text nav_link" href="/web/com/gs/common/contact.jsp">Contact</a>   <br>
-                        <a id="footer_pricing_plan" class="bold_text nav_link" href="/web/com/gs/common/pricing_plan_display.jsp">Pricing Plan</a>
+                        <a id="footer_contact" class="bold_text nav_link links" href="/web/com/gs/common/contact.jsp">Contact</a>   <br>
+                        <a id="footer_pricing_plan" class="bold_text nav_link links" href="/web/com/gs/common/pricing_plan_display.jsp">Pricing Plan</a>
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@ String sCopyrightCompany = applicationConfig.get("copyright_company");
             &nbsp;
         </div>
         <div class="row" style="margin: auto;text-align:right;">
-            <a id="copyright_company" target="_blank" href="http://www.smarasoft.com" style="text-decoration: none;" class="nav_link">
+            <a id="copyright_company" target="_blank" href="http://www.smarasoft.com" style="text-decoration: none;" class="nav_link links">
                    <span style="padding:5px;text-align:right; margin : 0px; color: #fdfff7 ;clear:both ;text-decoration: none;">
                        &copy<%=sCopyrightYear%> <%=sCopyrightCompany%>
                     </span>

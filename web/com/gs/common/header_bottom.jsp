@@ -1,6 +1,6 @@
 
-    <!--[if lte IE 8]>
-      <script type="text/javascript" src="/web/js/html5.js"></script>
+    <!--[if lte IE 9]>
+      <script type="text/javascript" src="/web/js/html5shiv.js"></script>
     <![endif]--> 
     
      <%@page import="com.gs.common.ParseUtil"%>

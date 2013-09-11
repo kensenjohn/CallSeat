@@ -48,7 +48,7 @@ if(cookies!=null)
 			<jsp:param name="referrer_source" value="host_landing.jsp"/>	
 		</jsp:include>
 		<div class="welcome_img">
-			<div class="blank_scratch_area">
+            <div class="blank_scratch_area">
                 <div class="row">
                     <div class="offset3 span9">
                         &nbsp;
@@ -59,8 +59,8 @@ if(cookies!=null)
                         <div class="slide-caption" style="text-align:center;">
                             <h1 style="color:#f5f5f5">Seat your guests with a phone call or text</h1>
                             <form id="frm_event_dt" name="frm_event_dt">
-                                <input type="text" id="tmp_email" class="ispn3 inp-large" style="vertical-align: bottom;" placeholder="Email" name="tmp_email">
-                                <input type="text" id="event_date" class="ispn3 inp-large" style="vertical-align: bottom;"  placeholder="Wedding Date" name="event_date" readonly>
+                                <input type="text" id="tmp_email" class="ispn3 inp-large" style="vertical-align: bottom;"  value="Email" name="tmp_email">
+                                <input type="text" id="event_date" class="ispn3 inp-large" style="vertical-align: bottom;"  value="Wedding Date" name="event_date" readonly>
 
                                 <input type="button" class="btn btn-large btn-green" style="margin-bottom: 7px;" id="event_dt_sbt" value="Create Free Seating Plan"/>
                             </form>
@@ -140,6 +140,9 @@ if(cookies!=null)
 <jsp:include page="common/footer_top.jsp"/>
 	<script type="text/javascript">
 	$(document).ready(function() {
+        managePlaceholder('tmp_email','Email');
+        managePlaceholder('event_date','Wedding Date');
+
 		$("#event_date").datepick({ minDate: 1, maxDate: "+1Y" });
 		$("#event_dt_sbt").click( 
 				function()
@@ -188,6 +191,18 @@ if(cookies!=null)
         });
 
 	});
+
+    function managePlaceholder(varId, defaultTxt) {
+        $('#'+varId).focus(function() {
+            if( $('#'+varId).val() == defaultTxt) {
+                $('#'+varId).val('');
+            }
+        }).blur(function() {
+                    if( $('#'+varId).val() == '') {
+                        $('#'+varId).val(defaultTxt);
+                    }
+                });
+    }
 	function callSubmitEvent()
 	{
 		var url = 'proc_host_landing.jsp';
