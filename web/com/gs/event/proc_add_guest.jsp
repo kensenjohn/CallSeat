@@ -61,29 +61,21 @@ try
 	}
 
     String sCellNumber = "";
-    if(sCellNumberHumanFormat!=null&& !"".equalsIgnoreCase(sCellNumberHumanFormat))
-    {
+    if(  !Utility.isNullOrEmpty(sCellNumberHumanFormat) ) {
         sCellNumber = Utility.convertHumanToInternationalTelNum(sCellNumberHumanFormat);
-
-        if(sCellNumber!=null && !"".equalsIgnoreCase(sCellNumber) && sCellNumber.length()>0)
-        {
-            sCellNumber = sCellNumber.substring(1);
-        }
     }
     appLogging.info("Human format number "+ sCellNumberHumanFormat + " cellnumber :"+sCellNumber);
-	if(sCellNumber==null || "".equalsIgnoreCase(sCellNumber))
+	if( !Utility.isNullOrEmpty(sCellNumber) )
 	{
 		Text errorText = new ErrorText("Please enter a valid cellphone number.<br>","cell_num") ;
 		arrErrorText.add(errorText);
 		
 		responseStatus = RespConstants.Status.ERROR;
 		isError = true;
-	}
-    else
-    {
+	}  else  {
         com.google.i18n.phonenumbers.Phonenumber.PhoneNumber cellPhoneNumber = new Phonenumber.PhoneNumber();
         cellPhoneNumber.setCountryCode(iCountryCode);
-        cellPhoneNumber.setNationalNumber(ParseUtil.sToL(sCellNumber.substring(1)));
+        cellPhoneNumber.setNationalNumber(ParseUtil.sToL(sCellNumber.substring(2)));
         PhoneNumberUtil cellPhoneNumberUtil = PhoneNumberUtil.getInstance();
         if(!cellPhoneNumberUtil.isValidNumber(cellPhoneNumber))
         {
@@ -93,28 +85,17 @@ try
             responseStatus = RespConstants.Status.ERROR;
             isError = true;
         }
-        else
-        {
-            //sCellNumber = ParseUtil.iToS(iCountryCode)+sCellNumber.substring(1);
-        }
     }
 
     String sHomeNumber = "";
-    if(sHomeNumberHumanFormat!=null&& !"".equalsIgnoreCase(sHomeNumberHumanFormat))
-    {
+    if( !Utility.isNullOrEmpty(sHomeNumberHumanFormat) ) {
         sHomeNumber = Utility.convertHumanToInternationalTelNum(sHomeNumberHumanFormat);
-
-        if(sHomeNumber!=null && !"".equalsIgnoreCase(sHomeNumber) && sHomeNumber.length()>0)
-        {
-            sHomeNumber = sHomeNumber.substring(1);
-        }
     }
 
-    if(sHomeNumber!=null && !"".equalsIgnoreCase(sHomeNumber))
-    {
+    if( !Utility.isNullOrEmpty(sHomeNumber) )  {
         com.google.i18n.phonenumbers.Phonenumber.PhoneNumber homePhoneNumber = new Phonenumber.PhoneNumber();
         homePhoneNumber.setCountryCode(iCountryCode);
-        homePhoneNumber.setNationalNumber(ParseUtil.sToL(sHomeNumber.substring(1)));
+        homePhoneNumber.setNationalNumber(ParseUtil.sToL(sHomeNumber.substring(2)));
         PhoneNumberUtil homePhoneNumberUtil = PhoneNumberUtil.getInstance();
         if(!homePhoneNumberUtil.isValidNumber(homePhoneNumber))
         {
@@ -123,10 +104,6 @@ try
 
             responseStatus = RespConstants.Status.ERROR;
             isError = true;
-        }
-        else
-        {
-            //sCellNumber = ParseUtil.iToS(iCountryCode)+sCellNumber.substring(1);
         }
     }
 	if(isGuestAddToEvent)

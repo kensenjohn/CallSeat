@@ -16,10 +16,9 @@ import com.gs.common.Constants;
 
 public class IncomingCallManager {
 
-	Logger appLogging = LoggerFactory.getLogger("AppLogging");
+    Logger telephonyLogging = LoggerFactory.getLogger(Constants.TELEPHONY_LOGS);
 
-	Configuration applicationConfig = Configuration
-			.getInstance(Constants.APPLICATION_PROP);
+	Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
 	private String SELECTED_CALL_SERVICE = applicationConfig
 			.get(Constants.PROP_CALL_SERVICE);
@@ -122,7 +121,7 @@ public class IncomingCallManager {
 				}
 			}
 		}
-		appLogging.info(twilioIncomingCallBean.toString());
+        telephonyLogging.debug(twilioIncomingCallBean.toString());
 		return twilioIncomingCallBean;
 	}
 
@@ -130,8 +129,7 @@ public class IncomingCallManager {
 			HttpServletRequest httpRequest) {
 		IncomingCallBean incomingCallBean = null;
 
-		if (Constants.CALL_SERVICE.TWILIO.getCallService().equalsIgnoreCase(
-				SELECTED_CALL_SERVICE)) {
+		if (Constants.CALL_SERVICE.TWILIO.getCallService().equalsIgnoreCase(SELECTED_CALL_SERVICE)) {
 			incomingCallBean = getTwilioIncomingCallBean(httpRequest);
 		}
 		return incomingCallBean;

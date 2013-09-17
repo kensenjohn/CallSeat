@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import com.gs.bean.CallTransactionBean;
 import com.gs.common.CallTransaction;
+import com.gs.common.ParseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -23,9 +24,9 @@ public class DemoIncomingCall extends HttpServlet {
 	 * 
 	 */
 	private static final long serialVersionUID = 4602825715164087568L;
-	Logger appLogging = LoggerFactory.getLogger("AppLogging");
-	Configuration applicationConfig = Configuration
-			.getInstance(Constants.APPLICATION_PROP);
+	Logger telephonyLogging = LoggerFactory.getLogger(Constants.TELEPHONY_LOGS);
+    Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
+	Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
@@ -59,17 +60,18 @@ public class DemoIncomingCall extends HttpServlet {
 		IncomingCallManager incominManager = new IncomingCallManager();
 
 		IncomingCallBean incomingCallBean = incominManager.getIncomingCallRequest(request);
-
+        telephonyLogging.info("Demo Incoming Caller number Type : " + ParseUtil.checkNull(sCallType) ) ;
         CallTransaction callTransaction = CallTransaction.getInstance();
         if ("demo_get_event_num".equalsIgnoreCase(sCallType)) {
 			if (incomingCallBean != null && incomingCallBean.getTo() != null && !"".equalsIgnoreCase(incomingCallBean.getTo())) {
 
 				int iNumOfAttempts = incomingCallBean.getCallAttemptNumber();
 
-				if (iNumOfAttempts <= 2) {
+				if (iNumOfAttempts <= 6) {
 					incomingCallBean.setCallType(Constants.CALL_TYPE.DEMO_GATHER_EVENT_NUM);
 				} else {
-					incomingCallBean.setCallType(Constants.CALL_TYPE.DEMO_ERROR_HANGUP);
+                    telephonyLogging.info("Reached the limit of  a phone call. HAnd up called by : " + sCallType);
+                    incomingCallBean.setCallType(Constants.CALL_TYPE.DEMO_ERROR_HANGUP);
 				}
 
 				callResponse = incominManager.processCall(incomingCallBean);
@@ -79,12 +81,11 @@ public class DemoIncomingCall extends HttpServlet {
             {
 				int iNumOfAttempts = incomingCallBean.getCallAttemptNumber();
 
-				if (iNumOfAttempts <= 2) {
-					incomingCallBean
-							.setCallType(Constants.CALL_TYPE.DEMO_GATHER_SECRET_KEY);
+				if (iNumOfAttempts <= 6) {
+					incomingCallBean.setCallType(Constants.CALL_TYPE.DEMO_GATHER_SECRET_KEY);
 				} else {
-					incomingCallBean
-							.setCallType(Constants.CALL_TYPE.DEMO_ERROR_HANGUP);
+                    telephonyLogging.info("Reached the limit of  a phone call. HAnd up called by : " + sCallType);
+					incomingCallBean.setCallType(Constants.CALL_TYPE.DEMO_ERROR_HANGUP);
 				}
 				callResponse = incominManager.processCall(incomingCallBean);
 			}
@@ -93,12 +94,11 @@ public class DemoIncomingCall extends HttpServlet {
 
 				int iNumOfAttempts = incomingCallBean.getCallAttemptNumber();
 
-				if (iNumOfAttempts <= 2) {
-					incomingCallBean
-							.setCallType(Constants.CALL_TYPE.DEMO_GATHER_RSVP_NUM);
+				if (iNumOfAttempts <= 6) {
+					incomingCallBean.setCallType(Constants.CALL_TYPE.DEMO_GATHER_RSVP_NUM);
 				} else {
-					incomingCallBean
-							.setCallType(Constants.CALL_TYPE.DEMO_ERROR_HANGUP);
+                    telephonyLogging.info("Reached the limit of  a phone call. HAnd up called by : " + sCallType);
+					incomingCallBean.setCallType(Constants.CALL_TYPE.DEMO_ERROR_HANGUP);
 				}
 				callResponse = incominManager.processCall(incomingCallBean);
 			}
@@ -106,10 +106,11 @@ public class DemoIncomingCall extends HttpServlet {
         else if ("end_call".equalsIgnoreCase(sCallType)) {
             CallTransactionBean callTransactionBean = new CallTransactionBean();
             callTransaction.updateTransaction(incomingCallBean,callTransactionBean );
-        }
-        else {
-            // Step 1 : The first request comes in here.
+        } else {
+            telephonyLogging.info("First Demo incoming request from the telephony server");
 			if (incomingCallBean != null && incomingCallBean.getTo() != null && !"".equalsIgnoreCase(incomingCallBean.getTo())) {
+
+                telephonyLogging.info("Demo Incoming Caller number : " + incomingCallBean.getFrom() );
 
                 incomingCallBean.setCallType(Constants.CALL_TYPE.DEMO_FIRST_REQUEST);
                 callTransaction.createTransaction(incomingCallBean);

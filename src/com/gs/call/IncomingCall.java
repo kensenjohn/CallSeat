@@ -12,6 +12,7 @@ import com.gs.bean.CallTransactionBean;
 import com.gs.bean.twilio.IncomingCallBean;
 import com.gs.common.CallTransaction;
 import com.gs.common.Constants;
+import com.gs.common.Utility;
 import com.gs.common.exception.ExceptionHandler;
 import com.twilio.sdk.verbs.TwiMLResponse;
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import org.slf4j.LoggerFactory;
 public class IncomingCall extends HttpServlet
 {
     Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
+    Logger telephonyLogging = LoggerFactory.getLogger(Constants.TELEPHONY_LOGS);
 	/**
 	 * 
 	 */
@@ -58,7 +60,7 @@ public class IncomingCall extends HttpServlet
         {
 
             String sCallType = request.getParameter("incoming_call_type");
-            appLogging.info("Incoming Call Type " + sCallType);
+            telephonyLogging.info("Incoming Call Type " + sCallType);
 
             IncomingCallManager incominManager = new IncomingCallManager();
 
@@ -67,35 +69,31 @@ public class IncomingCall extends HttpServlet
             CallTransaction callTransaction = CallTransaction.getInstance();
             if ("rsvp_ans".equalsIgnoreCase(sCallType))
             {
-                if (incomingCallBean != null && incomingCallBean.getTo() != null
-                        && !"".equalsIgnoreCase(incomingCallBean.getTo()))
+                if (incomingCallBean != null && !Utility.isNullOrEmpty(incomingCallBean.getTo()) )
                 {
                     int iNumOfAttempts = incomingCallBean.getCallAttemptNumber();
-
-                    if (iNumOfAttempts <= 2) {
-                        incomingCallBean
-                                .setCallType(Constants.CALL_TYPE.RSVP_DIGIT_RESP);
+                    telephonyLogging.info(" RSVP - for rsvp ans iNumOfAttempts " + iNumOfAttempts);
+                    if (iNumOfAttempts <= 6) {
+                        incomingCallBean.setCallType(Constants.CALL_TYPE.RSVP_DIGIT_RESP);
                     } else {
-                        incomingCallBean
-                                .setCallType(Constants.CALL_TYPE.DEMO_ERROR_HANGUP);
+                        incomingCallBean.setCallType(Constants.CALL_TYPE.ERROR_HANGUP);
                     }
                     callResponse = incominManager.processCall(incomingCallBean);
                 }
-            }
-            else if ("end_call".equalsIgnoreCase(sCallType)) {
+            } else if ("end_call".equalsIgnoreCase(sCallType)) {
                 CallTransactionBean callTransactionBean = new CallTransactionBean();
                 callTransaction.updateTransaction(incomingCallBean,callTransactionBean );
             } else if ("call_fail".equalsIgnoreCase(sCallType)) {
-                appLogging.info("Call Failed : " + incomingCallBean);
+                telephonyLogging.info(" RSVP - Call Failed : " + incomingCallBean);
             }  else {
-                if (incomingCallBean != null && incomingCallBean.getTo() != null && !"".equalsIgnoreCase(incomingCallBean.getTo()))  {
+                if (incomingCallBean != null  && !Utility.isNullOrEmpty(incomingCallBean.getTo()) )  {
                     incomingCallBean.setCallType(Constants.CALL_TYPE.FIRST_REQUEST);
                     callTransaction.createTransaction(incomingCallBean);
                     callResponse = incominManager.processCall(incomingCallBean);
                 }
             }
         }  catch(Exception e)  {
-            appLogging.error("Exception while Incoming Call Request\n" + e.getMessage() + "\n" + ExceptionHandler.getStackTrace(e));
+            appLogging.error("RSVP - Exception while Incoming Call Request\n" + e.getMessage() + "\n" + ExceptionHandler.getStackTrace(e));
         }
 		return callResponse;
 

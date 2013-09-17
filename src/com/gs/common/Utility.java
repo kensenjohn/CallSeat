@@ -171,83 +171,7 @@ public class Utility {
 
     private static String getSingleDigitVoice( int iNumber )
     {
-        String sNumberVoiceName = "";
-        if(iNumber==1)
-        {
-            sNumberVoiceName = "one_stereo.wav";
-        }
-        else if(iNumber==2)
-        {
-            sNumberVoiceName = "two_stereo.wav";
-        }
-        else if(iNumber==3)
-        {
-            sNumberVoiceName = "three_stereo.wav";
-        }
-        else if(iNumber==4)
-        {
-            sNumberVoiceName = "four_stereo.wav";
-        }
-        else if(iNumber==5)
-        {
-            sNumberVoiceName = "five_stereo.wav";
-        }
-        else if(iNumber==6)
-        {
-            sNumberVoiceName = "six_stereo.wav";
-        }
-        else if(iNumber==7)
-        {
-            sNumberVoiceName = "seven_stereo.wav";
-        }
-        else if(iNumber==8)
-        {
-            sNumberVoiceName = "eight_stereo.wav";
-        }
-        else if(iNumber==9)
-        {
-            sNumberVoiceName = "nine_stereo.wav";
-        }
-        else if(iNumber==10)
-        {
-            sNumberVoiceName = "ten_stereo.wav";
-        }
-        else if(iNumber==11)
-        {
-            sNumberVoiceName = "eleven_stereo.wav";
-        }
-        else if(iNumber==12)
-        {
-            sNumberVoiceName = "twelve_stereo.wav";
-        }
-        else if(iNumber==13)
-        {
-            sNumberVoiceName = "thirteen_stereo.wav";
-        }
-        else if(iNumber==14)
-        {
-            sNumberVoiceName = "fourteen_stereo.wav";
-        }
-        else if(iNumber==15)
-        {
-            sNumberVoiceName = "fifteen_stereo.wav";
-        }
-        else if(iNumber==16)
-        {
-            sNumberVoiceName = "sixteen_stereo.wav";
-        }
-        else if(iNumber==17)
-        {
-            sNumberVoiceName = "seventeen_stereo.wav";
-        }
-        else if(iNumber==18)
-        {
-            sNumberVoiceName = "eighteen_stereo.wav";
-        }
-        else if(iNumber==19)
-        {
-            sNumberVoiceName = "nineteen_stereo.wav";
-        }
+        String sNumberVoiceName = "_"+iNumber+".wav";
         return sNumberVoiceName;
     }
 
@@ -260,53 +184,18 @@ public class Utility {
         if(iNumber>=0 && iNumber<=19)
         {
             sOnesPlace = getSingleDigitVoice( iNumber );
-        }
-        else if( iNumber>19 && iNumber<100 )
-        {
+        } else if( iNumber>19 && iNumber<100 )  {
 
             int iReminder = iNumber%10;
             int iTenPlace = iNumber - iReminder;
 
-            if( iTenPlace == 20 )
-            {
-                sTenPlaceNumberVoiceName = "twenty_stereo.wav";
-            }
-            else if( iTenPlace == 30 )
-            {
-                sTenPlaceNumberVoiceName = "thirty_stereo.wav";
-            }
-            else if( iTenPlace == 40 )
-            {
-                sTenPlaceNumberVoiceName = "forty_stereo.wav";
-            }
-            else if( iTenPlace == 50 )
-            {
-                sTenPlaceNumberVoiceName = "fifty_stereo.wav";
-            }
-            else if( iTenPlace == 60 )
-            {
-                sTenPlaceNumberVoiceName = "sixty_stereo.wav";
-            }
-            else if( iTenPlace == 70 )
-            {
-                sTenPlaceNumberVoiceName = "seventy_stereo.wav";
-            }
-            else if( iTenPlace == 80 )
-            {
-                sTenPlaceNumberVoiceName = "eighty_stereo.wav";
-            }
-            else if( iTenPlace == 90 )
-            {
-                sTenPlaceNumberVoiceName = "ninety_stereo.wav";
-            }
-
+            sTenPlaceNumberVoiceName = "_"+iTenPlace+".wav";
 
             if(iReminder>0)
             {
                 sOnesPlace = getSingleDigitVoice( iReminder );
             }
         }
-
 
         numberVoiceBean.setNumber( iNumber );
         numberVoiceBean.setOnesPlace( sOnesPlace );

@@ -32,18 +32,20 @@ public class RsvpTask extends Task {
 		if (incomingCallBean != null) {
 
 			RsvpTwiml rsvpTwiml = new RsvpTwiml();
-            appLogging.info("ProcessTask call type bean : " + incomingCallBean.getCallType() );
+            telephonyLogging.info("RSVP processTask invoked calltype : " + incomingCallBean.getCallType() + " From :" + incomingCallBean.getFrom() + " To : " + incomingCallBean.getTo());
 			if (Constants.CALL_TYPE.FIRST_REQUEST.equals(incomingCallBean.getCallType())) {
 				callResponse = processFirstResponseTask(incomingCallBean);
 
                 if( canCallUsageFeatureContinue( callResponse ) ) {
                     if(callResponse!=null && callResponse.getEventGuestBean()!=null  && callResponse.isEventBeanExists() && callResponse.isEventGuestBeanExists()) {
+                        telephonyLogging.info("RSVP First Response  From :" + incomingCallBean.getFrom() + " To : " + incomingCallBean.getTo() );
                         callResponse = rsvpTwiml.getFirstResponse(callResponse,incomingCallBean);
                     }  else  {
+                        telephonyLogging.info("RSVP Call forwarding  From :" + incomingCallBean.getFrom() + " To : " + incomingCallBean.getTo() );
                         callResponse = rsvpTwiml.getCallForwardingResponse(callResponse,incomingCallBean);
                     }
                 }  else  {
-                    appLogging.info("Reject Call Invoked " + callResponse.getEventGuestBean() );
+                    telephonyLogging.info("RSVP Reject Call Invoked  From :" +  incomingCallBean.getFrom() + " To : " + incomingCallBean.getTo() );
                     callResponse = TwimlSupport.rejectCall( callResponse );
                 }
 			} else if (Constants.CALL_TYPE.RSVP_DIGIT_RESP.equals(incomingCallBean.getCallType())) {
@@ -88,23 +90,25 @@ public class RsvpTask extends Task {
 
 			RsvpTwiml rsvpTwiml = new RsvpTwiml();
 
+
+            ArrayList<String> arrGuestID = new ArrayList<String>();
+            arrGuestID.add(tmpEventGuestBean.getGuestId());
+
+            EventGuestMetaData eventGuestMetaData = new EventGuestMetaData();
+            eventGuestMetaData.setEventId(super.eventId);
+            eventGuestMetaData.setRsvpDigits(twilioIncomingCallBean
+                    .getDigits());
+            eventGuestMetaData.setArrGuestId(arrGuestID);
+
+            EventGuestManager eventGuestManager = new EventGuestManager();
+            EventGuestBean eventGuestBean = eventGuestManager
+                    .getGuest(eventGuestMetaData);
+
+            callResponse.setEventGuestBean(eventGuestBean);
+
 			if (iRsvpSeatsSel <= iTotalSeats) {
-				ArrayList<String> arrGuestID = new ArrayList<String>();
-				arrGuestID.add(tmpEventGuestBean.getGuestId());
-
-				EventGuestMetaData eventGuestMetaData = new EventGuestMetaData();
-				eventGuestMetaData.setEventId(super.eventId);
-				eventGuestMetaData.setRsvpDigits(twilioIncomingCallBean
-						.getDigits());
-				eventGuestMetaData.setArrGuestId(arrGuestID);
-
-				EventGuestManager eventGuestManager = new EventGuestManager();
 				eventGuestManager.setGuestRsvpForEvent(eventGuestMetaData);
 
-				EventGuestBean eventGuestBean = eventGuestManager
-						.getGuest(eventGuestMetaData);
-
-				callResponse.setEventGuestBean(eventGuestBean);
 
 				if (eventGuestBean.getRsvpSeats().equalsIgnoreCase(
 						twilioIncomingCallBean.getDigits())) {

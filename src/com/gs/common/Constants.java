@@ -23,6 +23,7 @@ public class Constants {
 	public static String SCHEDULER_LOGS = "SchedulerLogging";
 	public static String EMAILER_LOGS = "EmailerLogging";
     public static String SMS_LOGS = "SmsLogging";
+    public static String TELEPHONY_LOGS = "TelephonyLogging";
 
 	public static String DB_ERROR_LOGS = "DataBaseErrors";
 	public static String JSP_LOGS = "JspLogging";
@@ -69,8 +70,8 @@ public class Constants {
 	public static String PROP_SMS_SERVICE = "sms_service";
 
 	public static String PROP_TWILIO_VOICE = "twilio_voice";
-    public static String PROP_VOICE_RECORDING_DOMAIN = "voice_recording_domain";
-    public static String PROP_VOICE_RECORDING_FOLDER = "voice_recording_folder";
+    public static String PROP_VOICE_RECORDING_FOLDER = "voice_recording.folder";
+    public static String PROP_VOICE_RECORDING_DEFAULT_VOICE = "voice_recording.default_voice";
 
 	public enum CALL_SERVICE {
 		TWILIO("twilio");
@@ -119,7 +120,7 @@ public class Constants {
 
 	public enum CALL_TYPE {
 		FIRST_REQUEST, RSVP_DIGIT_RESP, DEMO_FIRST_REQUEST, DEMO_GATHER_EVENT_NUM, DEMO_GATHER_SECRET_KEY, DEMO_GATHER_RSVP_NUM,
-        DEMO_GATHER_SEATING_NUM, DEMO_ERROR_HANGUP;
+        DEMO_GATHER_SEATING_NUM, DEMO_ERROR_HANGUP, ERROR_HANGUP;
 
 	}
 

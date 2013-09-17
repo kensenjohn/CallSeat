@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.gs.bean.*;
 import com.gs.bean.twilio.IncomingCallBean;
+import com.gs.bean.twilio.TwilioIncomingCallBean;
 import com.gs.call.CallResponse;
 import com.gs.call.twilio.twiml.SeatingTwiml;
 import com.gs.call.twilio.twiml.TwimlSupport;
@@ -36,7 +37,8 @@ public class SeatingTask extends Task
 			{
 				callResponse = processFirstResponseTask(incomingCallBean);
                 if( canCallUsageFeatureContinue( callResponse ) ) {
-                    callResponse = seatingTwiml.getFirstResponse(callResponse);
+                    TwilioIncomingCallBean twilioIncomingCallBean = (TwilioIncomingCallBean) incomingCallBean;
+                    callResponse = seatingTwiml.getFirstResponse(callResponse, twilioIncomingCallBean);
                 } else {
                     callResponse = TwimlSupport.rejectCall( callResponse );
                 }

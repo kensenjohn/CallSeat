@@ -16,6 +16,7 @@ public abstract class Task
 	protected String adminId = "";
 
     protected Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
+    protected Logger telephonyLogging = LoggerFactory.getLogger(Constants.TELEPHONY_LOGS);
 
 	public Task(String eventId, String adminId)
 	{

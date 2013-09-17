@@ -3,6 +3,7 @@ package com.gs.call.task;
 import java.util.ArrayList;
 
 import com.gs.bean.*;
+import com.gs.common.Utility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,7 +28,8 @@ import com.gs.common.CallTransaction;
 
 public class DemoCallTask extends Task {
 
-	private Logger appLogging = LoggerFactory.getLogger("AppLogging");
+	//private Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
+    //private Logger telephonyLogging = LoggerFactory.getLogger(Constants.TELEPHONY_LOGS);
 
 	public DemoCallTask(String eventId, String adminId) {
 		super(eventId, adminId);
@@ -49,63 +51,57 @@ public class DemoCallTask extends Task {
 					boolean isValidEventNum = processEventNum(incomingCallBean);
 					if (isValidEventNum) {
 						twilioIncomingCallBean.setCallAttemptNumber(0);
-						twilioIncomingCallBean
-								.setCallerInputEventId(twilioIncomingCallBean
-										.getDigits());
-						callResponse = demoTwiml.getSecretKeyFromUser(
-								callResponse, twilioIncomingCallBean);
+						twilioIncomingCallBean.setCallerInputEventId(twilioIncomingCallBean.getDigits());
+                        telephonyLogging.info("Guest entered a valid Seating plan ID, get Extension num next : From " + twilioIncomingCallBean.getFrom() + " To(Event Number) : " + twilioIncomingCallBean.getTo() );
+                        callResponse = demoTwiml.getSecretKeyFromUser(callResponse, twilioIncomingCallBean);
 					} else {
-						callResponse = demoTwiml.getEventNumFromUser(
-								callResponse, twilioIncomingCallBean);
+                        telephonyLogging.info("get Seating plan ID again because of error : From " + twilioIncomingCallBean.getFrom() + " To(Event Number) : " + twilioIncomingCallBean.getTo() );
+						callResponse = demoTwiml.getEventNumFromUser( callResponse, twilioIncomingCallBean);
 					}
 					break;
 				case DEMO_GATHER_SECRET_KEY:
 					ArrayList<TelNumberBean> arrTelNumBean = processSecretKey(incomingCallBean);
 
 					twilioIncomingCallBean.setCallerInputSecretKey(twilioIncomingCallBean.getDigits());
-					if (arrTelNumBean != null && !arrTelNumBean.isEmpty())
-                    {
+					if (arrTelNumBean != null && !arrTelNumBean.isEmpty())  {
 						callResponse = processTelephoneNumber(callResponse,	arrTelNumBean, twilioIncomingCallBean);
 						String sTelNumType = TwimlSupport.getTelNumberType(arrTelNumBean);
 
-                        if (Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(sTelNumType))
-                        {
-                            appLogging.debug("RSVP Demo Task. Is event guest bean exists : " + callResponse.isEventGuestBeanExists()
-                                    + "\nevent bean exists : " + callResponse.isEventBeanExists()  );
+                        if (Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(sTelNumType))  {
+                            telephonyLogging.info("Guest trying to  RSVP  : From " + twilioIncomingCallBean.getFrom() + " To(Event Number) : " + twilioIncomingCallBean.getTo() );
+
                             if(callResponse!=null && callResponse.getEventGuestBean()!=null
-                                    && !callResponse.isEventBeanExists() && !callResponse.isEventGuestBeanExists())
-                            {
-                                callResponse = demoTwiml.getCallForwardingResponse(callResponse,incomingCallBean);
-                            }
-                            else
-                            {
+                                    && !callResponse.isEventBeanExists() && !callResponse.isEventGuestBeanExists()){
+                                telephonyLogging.info("Guest RSVP could not find valid event match. Does not return RSVP response : From " + twilioIncomingCallBean.getFrom() + " To(Event Number) : " + twilioIncomingCallBean.getTo() );
+                                callResponse = demoTwiml.getCallForwardingResponse(callResponse,incomingCallBean,Constants.EVENT_FEATURES.RSVP_CALL_FORWARD_NUMBER);
+                            } else  {
+                                telephonyLogging.info("Going to get voice to Gather guest RSVP  : From " + twilioIncomingCallBean.getFrom() + " To(Event Number) : " + twilioIncomingCallBean.getTo() );
                                 callResponse = demoTwiml.getRsvpResponse(callResponse, twilioIncomingCallBean);
                             }
-						}
-                        else if (Constants.EVENT_TASK.DEMO_SEATING.getTask().equalsIgnoreCase(sTelNumType))
-                        {
+						}  else if (Constants.EVENT_TASK.DEMO_SEATING.getTask().equalsIgnoreCase(sTelNumType)) {
+                            telephonyLogging.info("Guest request seating info  : From " + twilioIncomingCallBean.getFrom() + " To(Event Number) : " + twilioIncomingCallBean.getTo() );
 
-							callResponse = processSeatingResponse(callResponse,	twilioIncomingCallBean);
+                            callResponse = processSeatingResponse(callResponse,	twilioIncomingCallBean);
 							callResponse = demoTwiml.getSeatingResponse(callResponse, twilioIncomingCallBean);
-						} else
-                        {
+						} else  {
 
 						}
 					} else {
-						callResponse = demoTwiml.getSecretKeyFromUser(
-								callResponse, twilioIncomingCallBean);
+                        telephonyLogging.info("get Extension id again because of error : From " + twilioIncomingCallBean.getFrom() + " To(Event Number) : " + twilioIncomingCallBean.getTo() );
+                        callResponse = demoTwiml.getSecretKeyFromUser( callResponse, twilioIncomingCallBean);
 					}
 					break;
 				case DEMO_GATHER_RSVP_NUM:
-					callResponse = processRsvpDigits(callResponse,twilioIncomingCallBean);
+                    telephonyLogging.info("Gathering the RSVP digits that a guest enters : From " + twilioIncomingCallBean.getFrom() + " To(Event Number) : " + twilioIncomingCallBean.getTo() );
+                    callResponse = processRsvpDigits(callResponse,twilioIncomingCallBean);
 					break;
 				}
 			} catch (TwiMLException e) {
                 isErrorEncountered = true;
-				appLogging.error("Twiml exception encountered : "+ ExceptionHandler.getStackTrace(e));
+                telephonyLogging.error("Twiml exception encountered : "+ ExceptionHandler.getStackTrace(e));
 			} catch (Exception e) {
                 isErrorEncountered = true;
-				appLogging.error("Generic exception encountered : "+ ExceptionHandler.getStackTrace(e));
+                telephonyLogging.error("Generic exception encountered : "+ ExceptionHandler.getStackTrace(e));
 			}
             finally
             {
@@ -122,8 +118,7 @@ public class DemoCallTask extends Task {
     {
 		ArrayList<TelNumberBean> arrTelNumBean = new ArrayList<TelNumberBean>();
 		TwilioIncomingCallBean twilioIncomingCallBean = (TwilioIncomingCallBean) incomingCallBean;
-		if (twilioIncomingCallBean != null && twilioIncomingCallBean.getDigits() != null
-                && !"".equalsIgnoreCase(twilioIncomingCallBean.getDigits()))
+		if (twilioIncomingCallBean != null && !Utility.isNullOrEmpty(twilioIncomingCallBean.getDigits() ) )
         {
 			TelNumberMetaData telNumMetaData = new TelNumberMetaData();
 			telNumMetaData.setSecretEventSecretKey(ParseUtil.checkNull(twilioIncomingCallBean.getDigits()));
@@ -131,6 +126,9 @@ public class DemoCallTask extends Task {
 
 			TelNumberManager telNumManager = new TelNumberManager();
 			arrTelNumBean = telNumManager.getTelNumbersFromSecretEventNumAndKey(telNumMetaData);
+
+            telephonyLogging.info("DEMO - Processing Extension number - seating plan id" + telNumMetaData.getSecretEventIdentifier() +  " extension number : " +  telNumMetaData.getSecretEventSecretKey() + ". Associated Numbers from event " + ParseUtil.checkNullObject(arrTelNumBean)
+                    + " : From " + twilioIncomingCallBean.getFrom() + " To(Event Number) : " + twilioIncomingCallBean.getTo() );
 		}
 		return arrTelNumBean;
 	}
@@ -138,11 +136,10 @@ public class DemoCallTask extends Task {
 	private boolean processEventNum(IncomingCallBean incomingCallBean) {
 		boolean isValidEventNum = false;
 		TwilioIncomingCallBean twilioIncomingCallBean = (TwilioIncomingCallBean) incomingCallBean;
-		if (twilioIncomingCallBean != null
-				&& twilioIncomingCallBean.getDigits() != null
-				&& !"".equalsIgnoreCase(twilioIncomingCallBean.getDigits())) {
+		if (twilioIncomingCallBean != null && !Utility.isNullOrEmpty(twilioIncomingCallBean.getDigits()) ) {
 
-			TelNumberMetaData telNumMetaData = new TelNumberMetaData();
+
+            TelNumberMetaData telNumMetaData = new TelNumberMetaData();
 			telNumMetaData.setSecretEventIdentifier(ParseUtil.checkNull(twilioIncomingCallBean.getDigits()));
 
 			TelNumberManager telNumManager = new TelNumberManager();
@@ -151,7 +148,11 @@ public class DemoCallTask extends Task {
 				isValidEventNum = true;
 			}
 
-		}
+            telephonyLogging.info("Processing Seating plan Id " + telNumMetaData.getSecretEventIdentifier() +  ". It is " + (isValidEventNum?"valid" : " NOT valid " )
+                    + " : From " + twilioIncomingCallBean.getFrom() + " To(Event Number) : " + twilioIncomingCallBean.getTo() );
+        } else {
+            telephonyLogging.error("Invalid request to process the Seating plan ID entered by the guest " + ParseUtil.checkNullObject(twilioIncomingCallBean)  );
+        }
 
 		return isValidEventNum;
 	}
@@ -200,57 +201,54 @@ public class DemoCallTask extends Task {
 			telNumMetaData.setDigits(twilioIncomingCallBean.getDigits());
 
 			TelNumberManager telNumManager = new TelNumberManager();
-			EventGuestBean tmpEventGuestBean = telNumManager
-					.getTelNumGuestDetails(telNumMetaData);
+			EventGuestBean tmpEventGuestBean = telNumManager.getTelNumGuestDetails(telNumMetaData);
 
-			int iTotalSeats = ParseUtil.sToI(tmpEventGuestBean
-					.getTotalNumberOfSeats());
+			int iTotalSeats = ParseUtil.sToI(tmpEventGuestBean.getTotalNumberOfSeats());
 			int iRsvpSeatsSel = ParseUtil.sToI(rsvpNum);
+
+
+            ArrayList<String> arrGuestID = new ArrayList<String>();
+            arrGuestID.add(tmpEventGuestBean.getGuestId());
+
+            EventGuestMetaData eventGuestMetaData = new EventGuestMetaData();
+            eventGuestMetaData.setEventId(super.eventId);
+            eventGuestMetaData.setRsvpDigits(twilioIncomingCallBean
+                    .getDigits());
+            eventGuestMetaData.setArrGuestId(arrGuestID);
+
+            EventGuestManager eventGuestManager = new EventGuestManager();
 
 			DemoCallTwiml demoTwiml = new DemoCallTwiml();
 
 			if (iRsvpSeatsSel <= iTotalSeats) {
-				ArrayList<String> arrGuestID = new ArrayList<String>();
-				arrGuestID.add(tmpEventGuestBean.getGuestId());
 
-				EventGuestMetaData eventGuestMetaData = new EventGuestMetaData();
-				eventGuestMetaData.setEventId(super.eventId);
-				eventGuestMetaData.setRsvpDigits(twilioIncomingCallBean
-						.getDigits());
-				eventGuestMetaData.setArrGuestId(arrGuestID);
 
-				EventGuestManager eventGuestManager = new EventGuestManager();
-				eventGuestManager.setGuestRsvpForEvent(eventGuestMetaData);
+                eventGuestManager.setGuestRsvpForEvent(eventGuestMetaData);
+                EventGuestBean eventGuestBean = eventGuestManager
+                        .getGuest(eventGuestMetaData);
 
-				EventGuestBean eventGuestBean = eventGuestManager
-						.getGuest(eventGuestMetaData);
+                callResponse.setEventGuestBean(eventGuestBean);
 
-				callResponse.setEventGuestBean(eventGuestBean);
+				if (eventGuestBean.getRsvpSeats().equalsIgnoreCase(twilioIncomingCallBean.getDigits())) {
+                    telephonyLogging.info("RSVP of guest was accepted => RSVP digits " + eventGuestBean.getRsvpSeats() + ": From " + twilioIncomingCallBean.getFrom() + " To(Event Number) : " + twilioIncomingCallBean.getTo() );
 
-				if (eventGuestBean.getRsvpSeats().equalsIgnoreCase(
-						twilioIncomingCallBean.getDigits())) {
-					callResponse = demoTwiml.getRsvpDigitsSuccess(callResponse,
-							"Your RSVP of "
-									+ eventGuestBean.getRsvpSeats() + " has been accepted.",
+                    callResponse = demoTwiml.getRsvpDigitsSuccess(callResponse,"Your RSVP of "+ eventGuestBean.getRsvpSeats() + " has been accepted.",
 							twilioIncomingCallBean);
 				} else {
-					callResponse = demoTwiml
-							.getRsvpDigitsFail(
-									callResponse,
-									"We were unable to process your RSVP. Please call again later.",
-									Constants.RSVP_STATUS.RSVP_UPDATE_FAIL,
-									twilioIncomingCallBean);
+                    telephonyLogging.info("Unable to process Guests' RSVP : From " + twilioIncomingCallBean.getFrom() + " To(Event Number) : " + twilioIncomingCallBean.getTo() );
 
+                    callResponse = demoTwiml.getRsvpDigitsFail(callResponse,"We were unable to process your RSVP. Please call again later.",
+									Constants.RSVP_STATUS.RSVP_UPDATE_FAIL, twilioIncomingCallBean);
 				}
-
 			} else {
-				// RSVP selected has exceed the total invited seats.
-				callResponse = demoTwiml
-						.getRsvpDigitsFail(
-								callResponse,
-								"Please select a RSVP number less than or equal to " + iTotalSeats ,
-								Constants.RSVP_STATUS.RSVP_EXCEED_TOTAL_SEATS,
-								twilioIncomingCallBean);
+                telephonyLogging.info("Guest entered RSVP greater than Invited seats : From " + twilioIncomingCallBean.getFrom() + " To(Event Number) : " + twilioIncomingCallBean.getTo() );
+                EventGuestBean eventGuestBean = eventGuestManager
+                        .getGuest(eventGuestMetaData);
+
+                callResponse.setEventGuestBean(eventGuestBean);
+                // RSVP selected has exceed the total invited seats.
+				callResponse = demoTwiml.getRsvpDigitsFail(callResponse,"Please select a RSVP number less than or equal to " + iTotalSeats ,
+								Constants.RSVP_STATUS.RSVP_EXCEED_TOTAL_SEATS, twilioIncomingCallBean);
 			}
 
 		}
@@ -281,8 +279,11 @@ public class DemoCallTask extends Task {
 
                 if(eventGuestBean!=null && eventGuestBean.getGuestId()!=null && !"".equalsIgnoreCase(eventGuestBean.getGuestId() ))
                 {
-                    appLogging.debug("Event Guest Bean was identified. Set it in response. guest Id : " + eventGuestBean.getGuestId() );
+                    telephonyLogging.debug("Event Guest Bean was identified. Set it in response. guest Id : " + eventGuestBean.getGuestId() + " Invited to " + eventGuestBean.getTotalNumberOfSeats() );
                     callResponse.setEventGuestBean(eventGuestBean);
+                } else {
+                    telephonyLogging.debug("Vould not idenify a valid Event Guest Bean : GuestCall Number " +sGuestTelNumber + " Event Id  " + super.eventId + " Admin Id : " + super.adminId );
+
                 }
 
                 CallTransactionBean callTransactionBean = new CallTransactionBean();

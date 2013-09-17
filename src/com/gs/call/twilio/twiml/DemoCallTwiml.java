@@ -19,14 +19,15 @@ import com.gs.bean.twilio.TwilioIncomingCallBean;
 import com.gs.call.CallResponse;
 
 public class DemoCallTwiml {
-	Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
+    private static Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
-	private String VOICE_ACTOR = applicationConfig.get(Constants.PROP_TWILIO_VOICE);
-    //private String VOICE_RECORDING_DOMAIN = applicationConfig.get(Constants.PROP_VOICE_RECORDING_DOMAIN);
-    private String VOICE_RECORDING_FOLDER = applicationConfig.get(Constants.PROP_VOICE_RECORDING_FOLDER);
-	private Say sayThankYou = new Say("Thank You.");
+    private static String VOICE_RECORDING_FOLDER = applicationConfig.get(Constants.PROP_VOICE_RECORDING_FOLDER);
+    private static String DEFAULT_VOICE = applicationConfig.get(Constants.PROP_VOICE_RECORDING_DEFAULT_VOICE);
 
-	Logger appLogging = LoggerFactory.getLogger("AppLogging");
+    private static String VOICE_PATH = VOICE_RECORDING_FOLDER + "/"  + DEFAULT_VOICE;
+
+	Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
+    Logger telephonyLogging = LoggerFactory.getLogger(Constants.TELEPHONY_LOGS);
 
 	public CallResponse getSeatingResponse(CallResponse callResponse,
 			TwilioIncomingCallBean twilioIncomingBean) throws TwiMLException,
@@ -41,16 +42,12 @@ public class DemoCallTwiml {
 
 			TwiMLResponse response = new TwiMLResponse();
 
-			//Say sayWelcome = new Say("Welcome");
-			//sayWelcome.setVoice(VOICE_ACTOR);
-            Play playWelcome = new Play(VOICE_RECORDING_FOLDER+"/welcome_stereo.wav");
+            Play playWelcome = new Play(VOICE_PATH+"_i_will_help_you_find_your_table.wav");
 
-			ArrayList<TableGuestsBean> arrTableGuestBean = callResponse
-					.getArrTableGuestBean();
+			ArrayList<TableGuestsBean> arrTableGuestBean = callResponse.getArrTableGuestBean();
 
             Play playSeatingMessage = null;
             String sCallForwaringNum = "";
-			String sSeatingMessage = "";
 			boolean isFirst = true;
             HashMap<Integer,Play> hmPlaySequence = new HashMap<Integer,Play>();
             Integer iPlaySequece = 0;
@@ -58,80 +55,61 @@ public class DemoCallTwiml {
                 int totalNumOfSeats = 0;
                 String sTableNumberMessage = "";
                 for (TableGuestsBean tableGuestBean : arrTableGuestBean) {
-					int numOfSeats = ParseUtil.sToI(tableGuestBean
-							.getGuestAssignedSeats());
+					int numOfSeats = ParseUtil.sToI(tableGuestBean.getGuestAssignedSeats());
                     totalNumOfSeats = totalNumOfSeats + numOfSeats;
                 }
+
+                telephonyLogging.info("DEMO - Seating Info for guest Total Seats : " + totalNumOfSeats  + " From : "  + twilioIncomingBean.getFrom() + " To : " + twilioIncomingBean.getTo() );
                 if(totalNumOfSeats>0)
                 {
-                    if (totalNumOfSeats == 1)
-                    {
-                        sSeatingMessage = "You are seated at ";
-                        playSeatingMessage = new Play( VOICE_RECORDING_FOLDER+"/you_are_seated_at_table_stereo.wav" );
+                    if (totalNumOfSeats == 1) {
+                        playSeatingMessage = new Play( VOICE_PATH+"_you_are_seated_at_table.wav" );
+                    }  else if( totalNumOfSeats == 2 )  {
+                        playSeatingMessage = new Play( VOICE_PATH+"_you_and_guest_seated_table.wav" );
+                    }  else if( totalNumOfSeats > 2 )  {
+                        playSeatingMessage = new Play( VOICE_PATH+"_you_and_guest_seated_table.wav" );
                     }
-                    else if( totalNumOfSeats == 2 )
-                    {
-                        sSeatingMessage = "You and your guest are seated at ";
-                        playSeatingMessage = new Play( VOICE_RECORDING_FOLDER+"/you_and_your_guest_are_seated_at_table_stereo.wav" );
-                    }
-                    else if( totalNumOfSeats > 2 )
-                    {
-                        sSeatingMessage = "You and your guests are seated at ";
-                        playSeatingMessage = new Play( VOICE_RECORDING_FOLDER+"/you_and_guests_are_seated_at_table_stereo.wav" );
-                    }
-                    sSeatingMessage = sSeatingMessage + sTableNumberMessage;
-                }
-                else
-                {
-                    sSeatingMessage = "We are sorry we were unable to retrieve your information. Please call again later.";
-                    playSeatingMessage = new Play( VOICE_RECORDING_FOLDER+"/we_were_unable_to_retrieve_your_info_stereo.wav" );
+                } else  {
+                    playSeatingMessage = new Play( VOICE_PATH+"_i_am_sorry_unable_to_retrieve_your_information.wav" );
                 }
 
-                Play playTenthOfSecondDelay = new Play(VOICE_RECORDING_FOLDER+"/tenth_of_a_second_stereo.wav") ;
-                Play playTableData = new Play( VOICE_RECORDING_FOLDER+"/table_stereo.wav" );
+                Play playSilenceHalfSecond = new Play(VOICE_PATH+"_silence_0.5.wav") ;
+                Play playTableData = new Play( VOICE_PATH+"_table.wav" );
+                Play playAndTable = new Play( VOICE_PATH+"_and_table.wav" );
+                Integer iNumOfTables = 1;
                 for (TableGuestsBean tableGuestBean : arrTableGuestBean) {
                     if (!isFirst) {
-                        sTableNumberMessage = sTableNumberMessage + ", ";
-
-                        hmPlaySequence.put(iPlaySequece, playTableData );
-                        iPlaySequece++;
+                        iNumOfTables++;
+                        if(iNumOfTables == arrTableGuestBean.size() && iNumOfTables>1) {
+                            hmPlaySequence.put(iPlaySequece, playAndTable );
+                            iPlaySequece++;
+                        } else {
+                            hmPlaySequence.put(iPlaySequece, playTableData );
+                            iPlaySequece++;
+                        }
                     }
-
-
-                    //playSeatingMessage.append( playTableData );
 
                     int iTableNum = ParseUtil.sToI( tableGuestBean.getTableNum());
                     NumberVoiceBean numberVoiceTableNum = Utility.getNumberInVoice(  iTableNum );
 
-                    Play playTensPlaceTableNum = new Play(VOICE_RECORDING_FOLDER+"/"+numberVoiceTableNum.getTensPlace()) ;
-                    Play playOnesPlaceTableNum = new Play(VOICE_RECORDING_FOLDER+"/"+numberVoiceTableNum.getOnesPlace()) ;
+                    Play playTensPlaceTableNum = new Play(VOICE_PATH + numberVoiceTableNum.getTensPlace()) ;
+                    Play playOnesPlaceTableNum = new Play(VOICE_PATH + numberVoiceTableNum.getOnesPlace()) ;
 
-                    if( (iTableNum)>19 )
-                    {
-                        if( (iTableNum%10) == 0 )
-                        {
+                    if( (iTableNum)>19 ) {
+                        if( (iTableNum%10) == 0 ) {
                             hmPlaySequence.put(iPlaySequece, playTensPlaceTableNum );
                             iPlaySequece++;
-                            //playSeatingMessage.append( playTensPlaceTableNum );
-                        }
-                        else
-                        {
+                        } else {
                             hmPlaySequence.put(iPlaySequece, playTensPlaceTableNum );
                             iPlaySequece++;
                             hmPlaySequence.put(iPlaySequece, playOnesPlaceTableNum );
                             iPlaySequece++;
-                            // playSeatingMessage.append( playTensPlaceTableNum );
-                           // playSeatingMessage.append( playOnesPlaceTableNum );
                         }
-
-                    }
-                    else
-                    {
+                    }  else {
                         hmPlaySequence.put(iPlaySequece, playOnesPlaceTableNum );
                         iPlaySequece++;
-                        //playSeatingMessage.append( playOnesPlaceTableNum );
                     }
-                    hmPlaySequence.put(iPlaySequece, playTenthOfSecondDelay );
+                    hmPlaySequence.put(iPlaySequece, playSilenceHalfSecond );
                     iPlaySequece++;
                     sTableNumberMessage = sTableNumberMessage + " table "
                             + tableGuestBean.getTableNum();
@@ -140,25 +118,19 @@ public class DemoCallTwiml {
 
 			} else {
                 sCallForwaringNum = EventFeatureManager.getStringValueFromEventFeature( eventBean.getEventId(), Constants.EVENT_FEATURES.SEATING_CALL_FORWARD_NUMBER );
-                if( sCallForwaringNum!=null && !"".equalsIgnoreCase(sCallForwaringNum) )
-                {
-                    sSeatingMessage = "Your call will be forwarded to an usher.";
-                    playSeatingMessage = new Play( VOICE_RECORDING_FOLDER+"/your_call_will_be_forwarded_stereo.wav" );
+                if( sCallForwaringNum!=null && !"".equalsIgnoreCase(sCallForwaringNum) ) {
+                    playSeatingMessage = new Play( VOICE_PATH+"_please_hold_transfer_call_to_seating_coordinator.wav" );
                     isCallForward = true;
+                } else {
+                    playSeatingMessage = new Play( VOICE_PATH+"_i_am_sorry_unable_to_retrieve_your_information.wav" );
                 }
 			}
 
-			//Say sayMessage = new Say(sSeatingMessage);
-			//sayMessage.setVoice(VOICE_ACTOR);
+            Play playThankYouEnjoyDay = new Play(VOICE_PATH+"_thank_you.wav");
 
-			//Say sayThankYou = new Say("Thank You, and enjoy your day.");
-			//sayThankYou.setVoice(VOICE_ACTOR);
-            Play playThankYouEnjoyDay = new Play(VOICE_RECORDING_FOLDER+"/thank_you_enjoy_your_day_stereo.wav");
-
-            Play playQuarterSecondDelay = new Play(VOICE_RECORDING_FOLDER+"/quarter_second_stereo.wav");
+          //  Play playQuarterSecondDelay = new Play(VOICE_RECORDING_FOLDER+"/quarter_second_stereo.wav");
             try {
 				response.append(playWelcome);
-				response.append(playQuarterSecondDelay);
 
 				//
                 response.append(playSeatingMessage);
@@ -169,8 +141,6 @@ public class DemoCallTwiml {
                         response.append( hmPlaySequence.get(i) );
                     }
                 }
-				//response.append(pause);
-                response.append(playQuarterSecondDelay);
 				if (isCallForward) {
 					response.append(callForwardUsher(sCallForwaringNum));
 				}
@@ -189,55 +159,40 @@ public class DemoCallTwiml {
                 InformGuestTask.sendSeatingConfirmation( informGuestBean );
 			} catch (TwiMLException e) {
 				callResponse.setTwilResponseSuccess(false);
-				appLogging.info(ExceptionHandler.getStackTrace(e));
+				telephonyLogging.info("Twilio exception while trying to get Seating response" + ExceptionHandler.getStackTrace(e));
 			}
 		}
 		return callResponse;
 	}
 
-    public CallResponse getCallForwardingResponse(CallResponse callResponse,IncomingCallBean incomingCallBean )
-    {
-        if (callResponse != null && incomingCallBean!=null)
-        {
+    public CallResponse getCallForwardingResponse(CallResponse callResponse,IncomingCallBean incomingCallBean,Constants.EVENT_FEATURES eventFeatures ) {
+        if (callResponse != null && incomingCallBean!=null) {
             EventBean eventBean = callResponse.getEventBean();
-
-            TwilioIncomingCallBean twilioIncomingBean = (TwilioIncomingCallBean)incomingCallBean;
-            String sFromNumber = ParseUtil.checkNull( twilioIncomingBean.getFrom() );
-            String sToNumber = ParseUtil.checkNull( twilioIncomingBean.getTo() );
 
             TwiMLResponse response = new TwiMLResponse();
 
-            //Say sayWelcome = new Say("Welcome");
-            //sayWelcome.setVoice(VOICE_ACTOR);
-            Play playWelcome = new Play(VOICE_RECORDING_FOLDER+"/welcome_stereo.wav");
+            Play playWelcome = new Play(VOICE_PATH+"_hello_and_welcome_to_callseat.wav");
 
             boolean isCallForward = false;
-            //String sMessage = "";
-            String sCallForwaringNum = EventFeatureManager.getStringValueFromEventFeature(eventBean.getEventId(), Constants.EVENT_FEATURES.SEATING_CALL_FORWARD_NUMBER);
+            String sCallForwaringNum = EventFeatureManager.getStringValueFromEventFeature(eventBean.getEventId(), eventFeatures );
 
             Play playMessage = null;
-            if( sCallForwaringNum!=null && !"".equalsIgnoreCase(sCallForwaringNum) )
-            {
-               // sMessage = "An usher will assist you. Please wait for the call to be forwarded.";
-                playMessage = new Play( VOICE_RECORDING_FOLDER+"/your_call_will_be_forwarded_stereo.wav" );
-                isCallForward = true;
-            }
-            else
-            {
-              //  sMessage = "We are sorry we were unable to process your RSVP. Please call again later.";
-                playMessage = new Play( VOICE_RECORDING_FOLDER+"/unable_to_process_rsvp_call_again_stereo.wav" );
+            if( sCallForwaringNum!=null && !"".equalsIgnoreCase(sCallForwaringNum) ) {
+                if(eventFeatures.getEventFeature().equalsIgnoreCase(Constants.EVENT_FEATURES.RSVP_CALL_FORWARD_NUMBER.getEventFeature())) {
+                    playMessage = new Play( VOICE_PATH+"_please_hold_while_transfer_to_rsvp_coordinator.wav" );
+                    isCallForward = true;
+                } else if( eventFeatures.getEventFeature().equalsIgnoreCase(Constants.EVENT_FEATURES.SEATING_CALL_FORWARD_NUMBER.getEventFeature()) ) {
+                    playMessage = new Play( VOICE_PATH+"_please_hold_transfer_call_to_seating_coordinator.wav" );
+                    isCallForward = true;
+                }
+            }  else {
+                playMessage = new Play( VOICE_PATH+"_i_am_sorry_unable_to_process_your_request.wav" );
                 isCallForward = false;
             }
 
-            // Say sayMessage = new Say(sMessage);
-            // sayMessage.setVoice(VOICE_ACTOR);
-
-            //Say sayThankYou = new Say("Thank You, and enjoy your day.");
-            //sayThankYou.setVoice(VOICE_ACTOR);
-            Play playThankYouEnjoyDay = new Play(VOICE_RECORDING_FOLDER+"/thank_you_enjoy_your_day_stereo.wav");
-            try
-            {
-                //Verb pauseVerb = new Verb(Verb.V_PAUSE,null);
+            Play playThankYouEnjoyDay = new Play(VOICE_PATH+"_thank_you_and_enjoy_your_day.wav");
+            Play playHalfSecondDelaySilence = new Play(VOICE_PATH+"_silence_0.5.wav");
+            try {
                 Pause pause = new Pause();
                 pause.setLength(1);
 
@@ -248,8 +203,7 @@ public class DemoCallTwiml {
                 response.append(playMessage);
                 response.append(pause);
 
-                if (isCallForward)
-                {
+                if (isCallForward) {
                     response.append(callForwardUsher(sCallForwaringNum));
                 }
 
@@ -262,7 +216,7 @@ public class DemoCallTwiml {
             catch (TwiMLException e)
             {
                 callResponse.setTwilResponseSuccess(false);
-                appLogging.info(ExceptionHandler.getStackTrace(e));
+                telephonyLogging.info("DEMO - Twilio exception while doing call forward " + ExceptionHandler.getStackTrace(e));
             }
 
         }
@@ -284,152 +238,65 @@ public class DemoCallTwiml {
 		if (callResponse != null && callResponse.getEventGuestBean() != null) {
 			EventGuestBean eventGuestBean = callResponse.getEventGuestBean();
 
-            //Say sayWelcome = new Say("Welcome");
-            //sayWelcome.setVoice(VOICE_ACTOR);
-            Play playWelcome = new Play(VOICE_RECORDING_FOLDER+"/welcome_stereo.wav");
-
-			Gather gatherRsvp = new Gather();
-
-			gatherRsvp.setMethod("POST");
-			gatherRsvp.setAction(TwimlSupport.buildURL(twilioIncomingBean,
-					Constants.CALL_TYPE.DEMO_GATHER_RSVP_NUM).toString());
-
             Integer iTotalInvitedSeats = ParseUtil.sToI(eventGuestBean.getTotalNumberOfSeats());
 
-            String sInfoMessage = "You have been been invited to ";
+            Play playThankYouForResponse = new Play(VOICE_PATH+"_thank_you.wav") ;
 
-            Play playYouHaveBeenInvited = new Play(VOICE_RECORDING_FOLDER+"/you_have_been_invited_to_stereo.wav") ;
-            Play playSingleSeat = new Play(VOICE_RECORDING_FOLDER+"/single_seat_stereo.wav") ;
-            Play playMultipleSeats = new Play(VOICE_RECORDING_FOLDER+"/multiple_seats_stereo.wav") ;
-
-            NumberVoiceBean upperLimitSeats = Utility.getNumberInVoice(iTotalInvitedSeats + 1);
-
-            Play playTensPlaceUpperLimitSeats = new Play(VOICE_RECORDING_FOLDER+"/"+upperLimitSeats.getTensPlace()) ;
-            Play playOnesPlaceUpperLimitSeats = new Play(VOICE_RECORDING_FOLDER+"/"+upperLimitSeats.getOnesPlace()) ;
-
-
-            NumberVoiceBean invitedSeats = Utility.getNumberInVoice(iTotalInvitedSeats);
-
-            Play playSelectRsvpNumber = new Play(VOICE_RECORDING_FOLDER+"/please_select_rsvp_less_than_stereo.wav") ;
-            Play playTensPlaceInvitedSeats = new Play(VOICE_RECORDING_FOLDER+"/"+invitedSeats.getTensPlace()) ;
-            Play playOnesPlaceInvitedSeats = new Play(VOICE_RECORDING_FOLDER+"/"+invitedSeats.getOnesPlace()) ;
-            Play playFollowedByPoundSign = new Play(VOICE_RECORDING_FOLDER+"/followed_by_pound_sign_stereo.wav") ;
-
-            Play playThankYouForResponse = new Play(VOICE_RECORDING_FOLDER+"/thank_you_for_response_stereo.wav") ;
-
-            Play playQuarterSecondDelay = new Play(VOICE_RECORDING_FOLDER+"/quarter_second_stereo.wav") ;
-            Play playTenthOfSecondDelay = new Play(VOICE_RECORDING_FOLDER+"/tenth_of_a_second_stereo.wav") ;
-
-			/*Say sayInfo = new Say(
-                    sInfoMessage + " To RSVP please select a number from 0 to " + iTotalInvitedSeats + " followed by the pound sign." );
-			sayInfo.setVoice(VOICE_ACTOR);
-			// sayInfo.setLoop(3);
-
-			Say sayThankYou = new Say("Thank You for your response.");
-			sayThankYou.setVoice(VOICE_ACTOR);   */
 
 			try {
 				TwiMLResponse response = new TwiMLResponse();
-                gatherRsvp.append(playWelcome);
 
-                gatherRsvp.append( playYouHaveBeenInvited );
-                if( (iTotalInvitedSeats)>19 )
-                {
-                    if( ((iTotalInvitedSeats)%10) == 0 )
-                    {
-                        gatherRsvp.append( playTensPlaceInvitedSeats );
-                    }
-                    else
-                    {
-                        gatherRsvp.append( playTensPlaceInvitedSeats );
-                        gatherRsvp.append( playOnesPlaceInvitedSeats );
-                    }
 
-                }
-                else
-                {
-                    gatherRsvp.append( playOnesPlaceInvitedSeats );
-                }
-                gatherRsvp.append( playTenthOfSecondDelay );
-                if( iTotalInvitedSeats<=1 )
-                {
-                    gatherRsvp.append( playSingleSeat );
-                }
-                else
-                {
-                    gatherRsvp.append( playMultipleSeats );
-                }
-                gatherRsvp.append( playQuarterSecondDelay );
-
-                gatherRsvp.append( playSelectRsvpNumber );
-                gatherRsvp.append( playTenthOfSecondDelay );
-
-                if( (iTotalInvitedSeats+1)>19 )
-                {
-                    if( ((iTotalInvitedSeats+1)%10) == 0 )
-                    {
-                        gatherRsvp.append( playTensPlaceUpperLimitSeats );
-                    }
-                    else
-                    {
-                        gatherRsvp.append( playTensPlaceUpperLimitSeats );
-                        gatherRsvp.append( playOnesPlaceUpperLimitSeats );
-                    }
-
-                }
-                else
-                {
-                    gatherRsvp.append( playOnesPlaceUpperLimitSeats );
+                telephonyLogging.error("DEMO - Building Voice to gather RSVP exception occurred when trying to RSVP Respond to guest " +
+                        " From : " + twilioIncomingBean.getFrom()  + " To : " + twilioIncomingBean.getFrom() + " Invited seats : " + iTotalInvitedSeats );
+                Gather gatherRsvp = RsvpTwiml.getGatherRSVPVerb(iTotalInvitedSeats,twilioIncomingBean,Constants.CALL_TYPE.DEMO_GATHER_RSVP_NUM) ;
+                if( gatherRsvp!=null )  {
+                    response.append(gatherRsvp);
+                }  else {
+                    telephonyLogging.error("Invalid Gather Verb encountered " +
+                            " From : " + twilioIncomingBean.getFrom()  + " To : " + twilioIncomingBean.getFrom() + " Invited seats : " + iTotalInvitedSeats );
                 }
 
-                gatherRsvp.append( playQuarterSecondDelay );
-
-                gatherRsvp.append( playFollowedByPoundSign );
-				response.append(gatherRsvp);
 				response.append(playThankYouForResponse);
 
 				callResponse.setResponse(response);
 				callResponse.setTwilResponseSuccess(true);
 			} catch (TwiMLException e) {
 				callResponse.setTwilResponseSuccess(false);
-				appLogging.info(ExceptionHandler.getStackTrace(e));
+				telephonyLogging.error("Twilio exception occurred when trying to RSVP Respond to guest " +ExceptionHandler.getStackTrace(e));
 				throw e;
 			}
 		}
 		return callResponse;
 	}
 
+
 	public CallResponse getSecretKeyFromUser(CallResponse callResponse,
 			TwilioIncomingCallBean twilioIncomingBean) throws EncoderException,
 			TwiMLException {
 		if (callResponse != null) {
 			int iNumOfCallAttempt = twilioIncomingBean.getCallAttemptNumber();
-			appLogging.info("Gathering Secret Key from user : attempt : "
-					+ iNumOfCallAttempt + " from : "
-					+ twilioIncomingBean.getFrom());
-			//Say saySorryWrongSecretKey = new Say("I am sorry, The key you entered was not valid.");
-			//saySorryWrongSecretKey.setVoice(VOICE_ACTOR);
-
-            Play playSorryInvalid = new Play(VOICE_RECORDING_FOLDER+"/i_am_sorry_stereo.wav");
-
 			Gather gatherSecretKey = new Gather();
 
 			gatherSecretKey.setMethod("POST");
 			gatherSecretKey.setAction(TwimlSupport.buildURL(twilioIncomingBean,
 					Constants.CALL_TYPE.DEMO_GATHER_SECRET_KEY).toString());
 
-			//Say sayGetSecretKey = new Say("Please enter your secret key followed by the pound sign.");
-			//sayGetSecretKey.setVoice(VOICE_ACTOR);
-            Play playGatherSecretKey = new Play(VOICE_RECORDING_FOLDER+"/please_enter_secret_key_stereo.wav");
+
 
 			try {
 				TwiMLResponse response = new TwiMLResponse();
 
 				if (iNumOfCallAttempt > 0) {
-					// previous attempt errored out, so apologize
+                    telephonyLogging.info("User entered wrong extension number : attempt : " + iNumOfCallAttempt + " From : "
+                            + twilioIncomingBean.getFrom() + " To : " + twilioIncomingBean.getTo() );
+                    Play playSorryInvalid = new Play(VOICE_PATH+"_i_am_sorry_unable_to_recognize_extension_number.wav");
 					response.append(playSorryInvalid);
 				}
 
+                telephonyLogging.info("Build Voice to gathering Extension Number from user : attempt : " + iNumOfCallAttempt +
+                        " From : " + twilioIncomingBean.getFrom()  + " To : " + twilioIncomingBean.getFrom());
+                Play playGatherSecretKey = new Play(VOICE_PATH+"_please_enter_extension_number_followed_by_pound.wav");
 				gatherSecretKey.append(playGatherSecretKey);
 				response.append(gatherSecretKey);
 
@@ -437,7 +304,7 @@ public class DemoCallTwiml {
 				callResponse.setTwilResponseSuccess(true);
 			} catch (TwiMLException e) {
 				callResponse.setTwilResponseSuccess(false);
-				appLogging.info(ExceptionHandler.getStackTrace(e));
+                telephonyLogging.error("Twilio exception occurred when trying to gather the extension number : " + ExceptionHandler.getStackTrace(e));
 				throw e;
 			}
 		}
@@ -450,37 +317,27 @@ public class DemoCallTwiml {
 		if (callResponse != null) {
 
 			int iNumOfCallAttempt = twilioIncomingBean.getCallAttemptNumber();
-
-			//Say sayWelcome = new Say("Welcome to call seat.");
-			//sayWelcome.setVoice(VOICE_ACTOR);
-
-            Play playWelcome = new Play(VOICE_RECORDING_FOLDER+"/welcome_stereo.wav");
-
-			//Say saySorryWrongEvent = new Say("I am sorry, The event number was not valid.");
-			//saySorryWrongEvent.setVoice(VOICE_ACTOR);
-
-            Play playSorryInvalid = new Play(VOICE_RECORDING_FOLDER+"/i_am_sorry_stereo.wav");
-
-			Gather gatherEventNum = new Gather();
-
-			gatherEventNum.setMethod("POST");
-			URLCodec urlEncoder = new URLCodec();
-			gatherEventNum.setAction(TwimlSupport.buildURL(twilioIncomingBean,Constants.CALL_TYPE.DEMO_GATHER_EVENT_NUM).toString());
-
-			//Say sayGetEventNum = new Say("Please enter the event number followed by the pound sign.");
-			//sayGetEventNum.setVoice(VOICE_ACTOR);
-
-            Play playGatherEventNumber = new Play(VOICE_RECORDING_FOLDER+"/please_enter_event_number_stereo.wav");
-
-
 			try {
 				TwiMLResponse response = new TwiMLResponse();
-				gatherEventNum.append(playGatherEventNumber);
 				if (iNumOfCallAttempt == 0) {
-					//response.append(playWelcome);
+                    telephonyLogging.info("Hello and Welcome to Callseat invoked : From " + twilioIncomingBean.getFrom() + " To(Event Number) : " + twilioIncomingBean.getTo() );
+                    Play playWelcome = new Play(VOICE_PATH+"_hello_and_welcome_to_callseat.wav");
+                    response.append(playWelcome);
 				} else {
+                    telephonyLogging.info("User entered a wrong seating id : From " + twilioIncomingBean.getFrom() + " To(Event Number) : " + twilioIncomingBean.getTo() );
+                    Play playSorryInvalid = new Play(VOICE_PATH+"_i_am_sorry_unable_to_recognize_seating_plan_id.wav");
 					response.append(playSorryInvalid);
 				}
+
+                telephonyLogging.info("Build voice to gather seating id : From " + twilioIncomingBean.getFrom() + " To(Event Number) : " + twilioIncomingBean.getTo() );
+
+                Gather gatherEventNum = new Gather();
+                gatherEventNum.setMethod("POST");
+                gatherEventNum.setAction(TwimlSupport.buildURL(twilioIncomingBean,Constants.CALL_TYPE.DEMO_GATHER_EVENT_NUM).toString());
+
+
+                Play playGatherEventNumber = new Play(VOICE_PATH+"_please_enter_seating_plan_id_followed_by_pound.wav");
+                gatherEventNum.append(playGatherEventNumber);
 
 				response.append(gatherEventNum);
 
@@ -488,7 +345,7 @@ public class DemoCallTwiml {
 				callResponse.setTwilResponseSuccess(true);
 			} catch (TwiMLException e) {
 				callResponse.setTwilResponseSuccess(false);
-				appLogging.info(ExceptionHandler.getStackTrace(e));
+				telephonyLogging.error("Twilio Exception occurred when first request came in " + ExceptionHandler.getStackTrace(e));
 				throw e;
 			}
 		}
@@ -500,82 +357,19 @@ public class DemoCallTwiml {
 		if (callResponse != null && callResponse.getEventGuestBean() != null) {
 			EventGuestBean eventGuestBean = callResponse.getEventGuestBean();
 			TwiMLResponse response = new TwiMLResponse();
-
-			//Say sayThankYou = new Say("Your RSVP response of " + eventGuestBean.getRsvpSeats() + " has been accepted.");
-			//sayThankYou.setVoice(VOICE_ACTOR);
-            Play playThankYouYourRsvpResponse= new Play(VOICE_RECORDING_FOLDER+"/your_rsvp_response_of_stereo.wav");
-            int iRsvpSeats =  ParseUtil.sToI(eventGuestBean.getRsvpSeats() );
-            NumberVoiceBean numberVoiceRsvpSeats = Utility.getNumberInVoice( iRsvpSeats );
+            Play playThankYou = new Play(VOICE_PATH+"_thank_you.wav");
+            Play playYourRSVPhasBeenAccepted = new Play(VOICE_PATH+"_your_rsvp_has_been_accepted.wav");
 
 
-            Play playTensPlaceIRSVPSeats = new Play(VOICE_RECORDING_FOLDER+"/"+numberVoiceRsvpSeats.getTensPlace()) ;
-            Play playOnesPlaceRSVPSeats = new Play(VOICE_RECORDING_FOLDER+"/"+numberVoiceRsvpSeats.getOnesPlace()) ;
-
-            Play playHasBeenAccepted= new Play(VOICE_RECORDING_FOLDER+"/has_been_accepted_stereo.wav");
-
-			Gather gatherRsvp = new Gather();
-
-			gatherRsvp.setMethod("POST");
-			gatherRsvp.setAction(TwimlSupport.buildURL(twilioIncomingBean, Constants.CALL_TYPE.DEMO_GATHER_RSVP_NUM).toString());
-
-
-            Play playToChangeYourRsvp = new Play(VOICE_RECORDING_FOLDER+"/to_change_your_rsvp_stereo.wav");
-            Play playPleaseSelectNumfrom = new Play(VOICE_RECORDING_FOLDER+"/please_select_number_zero_to_stereo.wav");
-            int iTotalNumberOfSeats =  ParseUtil.sToI(eventGuestBean.getTotalNumberOfSeats() );
-            NumberVoiceBean numberVoiceTotalSeats = Utility.getNumberInVoice( iTotalNumberOfSeats );
-            Play playTensPlaceTotalSeats = new Play(VOICE_RECORDING_FOLDER+"/"+numberVoiceTotalSeats.getTensPlace()) ;
-            Play playOnesPlaceTotalSeats = new Play(VOICE_RECORDING_FOLDER+"/"+numberVoiceTotalSeats.getOnesPlace()) ;
-
-            Play playFollowedByPoundSign = new Play(VOICE_RECORDING_FOLDER+"/followed_by_pound_sign_stereo.wav");
-            //Say sayInfo = new Say("To change your RSVP please select a number from 0 to " + eventGuestBean.getTotalNumberOfSeats()+ " followed by the pound sign.");
-			//sayInfo.setVoice(VOICE_ACTOR);
-
+            Play playToChangeYourRsvp = new Play(VOICE_PATH+"_please_call_back_if_you_would_like_to_change_rsvp.wav");
 			Hangup hangup = new Hangup();
 
 			try {
-				response.append( playThankYouYourRsvpResponse );
-                if( (iRsvpSeats+1)>19 )
-                {
-                    if( ((iRsvpSeats+1)%10) == 0 )
-                    {
-                        response.append( playTensPlaceIRSVPSeats );
-                    }
-                    else
-                    {
-                        response.append( playTensPlaceIRSVPSeats );
-                        response.append( playOnesPlaceRSVPSeats );
-                    }
+                response.append( playThankYou );
+				response.append( playYourRSVPhasBeenAccepted );
 
-                }
-                else
-                {
-                    response.append( playOnesPlaceRSVPSeats );
-                }
-                response.append( playHasBeenAccepted );
+                response.append( playToChangeYourRsvp );
 
-				gatherRsvp.append( playToChangeYourRsvp );
-                gatherRsvp.append( playPleaseSelectNumfrom );
-
-                if( (iTotalNumberOfSeats+1)>19 )
-                {
-                    if( ((iTotalNumberOfSeats+1)%10) == 0 )
-                    {
-                        gatherRsvp.append( playTensPlaceTotalSeats );
-                    }
-                    else
-                    {
-                        gatherRsvp.append( playTensPlaceTotalSeats );
-                        gatherRsvp.append( playOnesPlaceTotalSeats );
-                    }
-
-                }
-                else
-                {
-                    gatherRsvp.append( playOnesPlaceTotalSeats );
-                }
-                gatherRsvp.append(  playFollowedByPoundSign );
-
-				response.append(gatherRsvp);
 				response.append(hangup);
 
 				callResponse.setResponse(response);
@@ -591,7 +385,7 @@ public class DemoCallTwiml {
                 InformGuestTask.sendRSVPConfirmation(informGuestBean);
 			} catch (TwiMLException e) {
 				callResponse.setTwilResponseSuccess(false);
-				appLogging.info(ExceptionHandler.getStackTrace(e));
+				telephonyLogging.error("Demo - Twilio exception for RSVP digit success : " +ExceptionHandler.getStackTrace(e));
 			}
 		}
 		return callResponse;
@@ -606,72 +400,42 @@ public class DemoCallTwiml {
 
 			if (Constants.RSVP_STATUS.RSVP_EXCEED_TOTAL_SEATS.equals(rsvpStaus)
 					|| Constants.RSVP_STATUS.RSVP_UPDATE_FAIL.equals(rsvpStaus)) {
-				//Say saySorry = new Say("We are sorry, " + sMessage + ".");
-				// saySorry.setVoice(VOICE_ACTOR);
-                Play playIAmSorry = new Play(VOICE_RECORDING_FOLDER+"/i_am_sorry_stereo.wav") ;
-
-				Gather gatherRsvp = new Gather();
-
-				gatherRsvp.setMethod("POST");
-				gatherRsvp.setAction(TwimlSupport.buildURL(twilioIncomingBean,
-						Constants.CALL_TYPE.DEMO_GATHER_RSVP_NUM).toString());
-
-                Play playYouCanHangupNow = new Play(VOICE_RECORDING_FOLDER+"/you_can_hangup_stereo.wav") ;
-                Play playPleaseSelectNumber= new Play(VOICE_RECORDING_FOLDER+"/please_select_number_zero_to_stereo.wav") ;
 
                 int iTotalNumberOfSeats =  ParseUtil.sToI(eventGuestBean.getTotalNumberOfSeats() );
-                NumberVoiceBean numberVoiceTotalSeats = Utility.getNumberInVoice( iTotalNumberOfSeats );
-                Play playTensPlaceTotalSeats = new Play(VOICE_RECORDING_FOLDER+"/"+numberVoiceTotalSeats.getTensPlace()) ;
-                Play playOnesPlaceTotalSeats = new Play(VOICE_RECORDING_FOLDER+"/"+numberVoiceTotalSeats.getOnesPlace()) ;
 
-                Play playFollowedByPoundSign = new Play(VOICE_RECORDING_FOLDER+"/followed_by_pound_sign_stereo.wav");
-
-				//Say sayInfo = new Say( "You can hang up now or try again. Please select a number from zero to "	+ ParseUtil.sToI( eventGuestBean.getTotalNumberOfSeats() )	+ " followed by the pound sign.");
-				//sayInfo.setVoice(VOICE_ACTOR);
-
-                Play playThankYouForResponse = new Play(VOICE_RECORDING_FOLDER+"/thank_you_for_response_stereo.wav");
-				//Say sayThankYou = new Say("Thank You for your response.");
-				//sayThankYou.setVoice(VOICE_ACTOR);
+                Play playThankYou = new Play(VOICE_PATH+"_thank_you.wav");
 
 				try {
-					response.append(playIAmSorry);
+                    telephonyLogging.info("DEMO - Creating the Gather RSVP Verb : Total Invited " + iTotalNumberOfSeats + " From " + twilioIncomingBean.getFrom() + " To(Event Number) : " + twilioIncomingBean.getTo() );
+                    Gather gatherRsvp = RsvpTwiml.getGatherRSVPVerb(iTotalNumberOfSeats, twilioIncomingBean,Constants.CALL_TYPE.DEMO_GATHER_RSVP_NUM);
+                    if(gatherRsvp!=null && Constants.RSVP_STATUS.RSVP_EXCEED_TOTAL_SEATS.equals(rsvpStaus) ) {
+                        Play playThatWasAnInvalidEntry = new Play(VOICE_PATH+"_that_was_an_invalid_entry.wav") ;
+                        Play playPleaseTryAgain = new Play(VOICE_PATH+"_please_try_again.wav") ;
+                        response.append(playThatWasAnInvalidEntry);
+                        response.append(playPleaseTryAgain);
+                        response.append(gatherRsvp);
+                        response.append(playThankYou);
+                    } else {
+                        Play playIamSorryUnableTOProcessRequest = new Play(VOICE_PATH+"_i_am_sorry_we_were_unable_to_process_request.wav");
+                        Play playPleaseTryAgainLater = new Play(VOICE_PATH+"_please_try_again_later.wav");
 
-					gatherRsvp.append(playYouCanHangupNow);
-                    gatherRsvp.append(playPleaseSelectNumber);
-                    if( (iTotalNumberOfSeats+1)>19 )
-                    {
-                        if( ((iTotalNumberOfSeats+1)%10) == 0 )
-                        {
-                            gatherRsvp.append( playTensPlaceTotalSeats );
-                        }
-                        else
-                        {
-                            gatherRsvp.append( playTensPlaceTotalSeats );
-                            gatherRsvp.append( playOnesPlaceTotalSeats );
-                        }
+                        response.append(playIamSorryUnableTOProcessRequest);
+                        response.append(playPleaseTryAgainLater);
+                        response.append(playThankYou);
 
+                        Hangup hangup = new Hangup();
+                        response.append( hangup );
                     }
-                    else
-                    {
-                        gatherRsvp.append( playOnesPlaceTotalSeats );
-                    }
-                    gatherRsvp.append(  playFollowedByPoundSign );
-
-					response.append(gatherRsvp);
-					response.append(playThankYouForResponse);
 
 					callResponse.setResponse(response);
 					callResponse.setTwilResponseSuccess(true);
 				} catch (TwiMLException e) {
 					callResponse.setTwilResponseSuccess(false);
-					appLogging.info(ExceptionHandler.getStackTrace(e));
+					telephonyLogging.info(ExceptionHandler.getStackTrace(e));
 				}
 
 			}
-		} else {
-
 		}
-
 		return callResponse;
 	}
 
