@@ -113,6 +113,18 @@
 									<span id="err_mssg"></span>
 								</div>
 							</div>
+
+                            <div class="row">
+                                <div class="span6">
+                                    &nbsp;
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="span6">
+                                    &nbsp;
+                                </div>
+                            </div>
 							
 							<input type="hidden" id="event_id" name="event_id" value="<%=sEventId%>"/>
 							<input type="hidden" id="admin_id" name="admin_id"  value="<%=sAdminId%>"/>

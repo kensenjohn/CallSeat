@@ -73,16 +73,6 @@ public class GuestTableData {
 			String sTableId) {
 		HashMap<Integer, AssignedGuestBean> hmTableGuests = new HashMap<Integer, AssignedGuestBean>();
 
-		String sQuery = "SELECT GG.GUESTID , GU.FIRST_NAME, GU.LAST_NAME, GU.CELL_PHONE, GU.PHONE_NUM, "
-				+ " GEG.TOTAL_INVITED_SEATS, GEG.RSVP_SEATS, GTG.ASSIGNED_SEATS, GT.NUMOFSEATS FROM GTGUESTS GG , "
-				+ "GTUSERINFO GU ,  GTEVENT GE , GTEVENTGUESTS GEG , GTEVENTTABLES GET, GTTABLE GT , "
-				+ "GTTABLEGUESTS GTG "
-				+ " WHERE "
-				+ " GG.FK_USERINFOID = GU.USERINFOID AND GE.EVENTID = GEG.FK_EVENTID AND "
-				+ " GEG.FK_GUESTID = GG.GUESTID AND GE.EVENTID = ?  AND GET.FK_TABLEID = GT.TABLEID AND "
-				+ " GET.FK_EVENTID = GE.EVENTID AND GT.TABLEID = ? AND GTG.FK_TABLEID = GT.TABLEID AND "
-				+ " GTG.FK_GUESTID = GG.GUESTID ";
-
 		String sTableGuestQuery = "select * from GTTABLEGUESTS GTG, GTEVENTTABLES GTE, GTTABLE GT WHERE "
 				+ " GT.TABLEID=GTG.FK_TABLEID AND GTG.FK_TABLEID=? "
 				+ " AND GTE.FK_TABLEID = GTG.FK_TABLEID AND GTE.FK_EVENTID = ? ";
@@ -365,20 +355,19 @@ public class GuestTableData {
 		return iNumOfRows;
 	}
 
-	public ArrayList<TableGuestsBean> getGuestAssgnments(String sGuestId) {
+	public ArrayList<TableGuestsBean> getGuestAssignments(String sGuestId, String sEventId) {
 		ArrayList<TableGuestsBean> arrTableGuestBean = new ArrayList<TableGuestsBean>();
 		if (sGuestId != null && !"".equalsIgnoreCase(sGuestId)) {
-			String sQuery = "select GTB.TABLEID,GTB.TABLENAME,GTB.TABLENUM,GTB.NUMOFSEATS,GTB.IS_TMP,GTB.DEL_ROW, "
-					+ " GTB.CREATEDATE,GTB.FK_ADMINID,GTB.MODIFYDATE,GTB.MODIFIEDBY,GTB.HUMAN_CREATEDATE,GTB.HUMAN_MODIFYDATE, "
-					+ " GTG.TABLEGUESTID,GTG.FK_TABLEID,GTG.FK_GUESTID,GTG.IS_TMP,GTG.DEL_ROW,GTG.ASSIGNED_SEATS FROM GTTABLE GTB, "
-					+ " GTTABLEGUESTS GTG WHERE GTG.FK_GUESTID=? "
-					+ " and GTG.FK_TABLEID = GTB.TABLEID";
+			String sQuery = "select GTB.TABLEID,GTB.TABLENAME,GTB.TABLENUM,GTB.NUMOFSEATS,GTB.IS_TMP,GTB.DEL_ROW, " +
+                    " GTB.CREATEDATE,GTB.FK_ADMINID,GTB.MODIFYDATE,GTB.MODIFIEDBY,GTB.HUMAN_CREATEDATE,GTB.HUMAN_MODIFYDATE," +
+                    "  GTG.TABLEGUESTID,GTG.FK_TABLEID,GTG.FK_GUESTID,GTG.IS_TMP,GTG.DEL_ROW,GTG.ASSIGNED_SEATS FROM GTTABLE GTB, " +
+                    "  GTTABLEGUESTS GTG, GTEVENTTABLES GTE WHERE GTG.FK_GUESTID=?  and GTG.FK_TABLEID = GTB.TABLEID  AND" +
+                    "  GTE.FK_TABLEID =GTG.FK_TABLEID AND GTE.FK_EVENTID = ? ";
 
-			ArrayList<Object> aParams = DBDAO.createConstraint(sGuestId);
+			ArrayList<Object> aParams = DBDAO.createConstraint(sGuestId, sEventId);
 
 			ArrayList<HashMap<String, String>> arrGuestAssignment = DBDAO
-					.getDBData(ADMIN_DB, sQuery, aParams, false,
-							"GuestTableData.java", "getGuestAssgnments()");
+					.getDBData(ADMIN_DB, sQuery, aParams, false,"GuestTableData.java", "getGuestAssignments()");
 
 			if (arrGuestAssignment != null && !arrGuestAssignment.isEmpty()) {
 				for (HashMap<String, String> hmGuestAssignment : arrGuestAssignment) {

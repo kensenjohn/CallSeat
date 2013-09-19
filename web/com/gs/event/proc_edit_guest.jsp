@@ -10,6 +10,7 @@
 <%@ page import="com.google.i18n.phonenumbers.Phonenumber" %>
 <%@ page import="com.google.i18n.phonenumbers.PhoneNumberUtil" %>
 <%@ page import="com.gs.common.exception.ExceptionHandler" %>
+<%@ page import="com.gs.data.event.GuestTableData" %>
 <%@include file="/web/com/gs/common/security_proc_page.jsp"%>
 <%
 JSONObject jsonResponseObj = new JSONObject();
@@ -160,15 +161,44 @@ try
 			Integer iNumOfRecs = userInforManager.updateGuestUserInfo(userInfoBean);
 			
 			if(!isAllGuestEdit && isSingleGuestEventEdit) {
+
+                EventGuestMetaData eventGuestMetaData = new EventGuestMetaData();
+                eventGuestMetaData.setEventId(sEventId);
+
+                ArrayList<String> arrGuestId = new ArrayList<String>();
+                arrGuestId.add(sGuestId);
+                eventGuestMetaData.setArrGuestId(arrGuestId);
+
+                EventGuestManager eventGuestManager = new EventGuestManager();
+                EventGuestBean currentEventGuestBean = eventGuestManager.getGuest(eventGuestMetaData);
+
 				EventGuestBean eventGuestBean = new EventGuestBean();
 				eventGuestBean.setEventId(sEventId);
 				
 				eventGuestBean.setGuestId( sGuestId );
 				eventGuestBean.setTotalNumberOfSeats( sInvitedNumOfSeats );
 				eventGuestBean.setRsvpSeats( sRsvpNumOfSeats );
-				
-				EventGuestManager eventGuestManager = new EventGuestManager();
+
 				Integer iNumOfEventGuestRecs = eventGuestManager.setGuestInviteRsvpForEvent( eventGuestBean );
+
+                if( iNumOfEventGuestRecs > 0 ) {
+                    //update was successful
+                   if( !currentEventGuestBean.getTotalNumberOfSeats().equalsIgnoreCase( sInvitedNumOfSeats )  || !currentEventGuestBean.getRsvpSeats().equalsIgnoreCase(sRsvpNumOfSeats) )  {
+
+                       GuestTableMetaData guestTableMetaData = new GuestTableMetaData();
+                       guestTableMetaData.setGuestId(eventGuestBean.getGuestId());
+                       guestTableMetaData.setEventId( sEventId );
+
+                       GuestTableManager guestTableManager = new GuestTableManager();
+                       ArrayList<TableGuestsBean> arrTableGuestBean = guestTableManager.getGuestsAssignments(guestTableMetaData);
+
+                       ArrayList<String> arrTableId = new ArrayList<String>();
+                       for(TableGuestsBean tableGuestsBean : arrTableGuestBean ){
+                           arrTableId.add( tableGuestsBean.getTableId() );
+                       }
+                       GuestTableResponse guestTableResponse = guestTableManager.deleteSeatingForGuest(guestTableMetaData , arrTableId );
+                   }
+                }
 							
 			}
 			

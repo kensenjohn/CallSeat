@@ -10,8 +10,8 @@
 <%
 JSONObject jsonResponseObj = new JSONObject();
 
-Logger jspLogging = LoggerFactory.getLogger("JspLogging");
-Logger appLogging = LoggerFactory.getLogger("AppLogging");
+Logger jspLogging = LoggerFactory.getLogger(Constants.JSP_LOGS);
+Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 response.setContentType("application/json");
 
 ArrayList<Text> arrOkText = new ArrayList<Text>();
@@ -37,15 +37,11 @@ try
 
     boolean isValidationError = false;
 	if(sTableName==null || "".equalsIgnoreCase(sTableName) || sTableNum==null || "".equalsIgnoreCase(sTableNum)
-			|| sNumOfSeats==null || "".equalsIgnoreCase(sNumOfSeats)  )
-	{
+			|| sNumOfSeats==null || "".equalsIgnoreCase(sNumOfSeats)  ) {
 
-		if(isEditTableAction)
-		{
+		if(isEditTableAction) {
 			appLogging.warn("Error in data to editing Table for event " + sEventId );
-		}
-		else
-		{
+		} else {
 			appLogging.warn("Error in data to create Table for event " + sEventId );
 		}
 		
@@ -56,18 +52,14 @@ try
 
         isValidationError = true;
 		
-	}
-    else if( ParseUtil.sToI(sTableNum) <= 0 )
-    {
+	} else if( ParseUtil.sToI(sTableNum) <= 0 )  {
         appLogging.warn("Invalid Table number used " + sEventId );
         Text errorText = new ErrorText("Please select a valid table number.","my_id") ;
         arrErrorText.add(errorText);
         responseStatus = RespConstants.Status.ERROR;
 
         isValidationError = true;
-    }
-    else if( ParseUtil.sToI(sNumOfSeats) <= 0 )
-    {
+    } else if( ParseUtil.sToI(sNumOfSeats) <= 0 ) {
         appLogging.warn("Invalid seat number used " + sEventId );
         Text errorText = new ErrorText("Please select a valid seat number.","my_id") ;
         arrErrorText.add(errorText);
@@ -79,7 +71,7 @@ try
     TableManager tableManager = new TableManager();
     ArrayList<EventTableBean> arrEventTableBean = tableManager.getTableByNum( sTableNum , sEventId);
 
-    if(arrEventTableBean!=null && !arrEventTableBean.isEmpty())
+    if( !isEditTableAction && arrEventTableBean!=null && !arrEventTableBean.isEmpty())
     {
         appLogging.warn("Invalid seat number used " + sEventId );
         Text errorText = new ErrorText("The selected table number already exists for this event. Please select a different table number.","my_id") ;
@@ -89,14 +81,10 @@ try
         isValidationError = true;
     }
 
-    if(!isValidationError)
-    {
-        if(isSaveData )
-        {
-            if(!"".equalsIgnoreCase(sEventId) &&  !"".equalsIgnoreCase(sAdminId))
-            {
-                if(!isEditTableAction)
-                {
+    if(!isValidationError) {
+        if(isSaveData )  {
+            if(!"".equalsIgnoreCase(sEventId) &&  !"".equalsIgnoreCase(sAdminId)) {
+                if(!isEditTableAction) {
                     sTableId = (Utility.getNewGuid());
                 }
                 Long lCurrentDate = DateSupport.getEpochMillis();
@@ -114,42 +102,31 @@ try
 
                 String sHumanDate = DateSupport.getUTCDateTime();
                 tableBean.setHumanModifyDate(sHumanDate);
-                if(!isEditTableAction)
-                {
+                if(!isEditTableAction) {
                     tableBean.setHumanCreateDate(sHumanDate);
                     tableBean = tableManager.createNewTable(tableBean);
-                }
-                else
-                {
+                } else {
                     Integer iNumOfRows = tableManager.updateTable(tableBean);
-                    if(iNumOfRows <= 0)
-                    {
+                    if(iNumOfRows <= 0) {
                         tableBean = null;
                     }
                 }
 
 
 
-                if(tableBean!=null && tableBean.getTableId()!=null && !"".equalsIgnoreCase(tableBean.getTableId()))
-                {
+                if(tableBean!=null && tableBean.getTableId()!=null && !"".equalsIgnoreCase(tableBean.getTableId())) {
                     appLogging.info("Success saving table  for event " + sEventId + " table : " + tableBean.getTableId() );
 
-                    if(!isEditTableAction)
-                    {
+                    if( !isEditTableAction ) {
                         EventManager eventManager = new EventManager();
                         EventTableBean eventTableBean = eventManager.assignTableToEvent(sEventId,tableBean.getTableId());
 
-                        if(eventTableBean!=null && !"".equalsIgnoreCase(eventTableBean.getEventTableId()))
-                        {
-                            //jsonResponseObj.put(Constants.J_RESP_SUCCESS, true);
+                        if(eventTableBean!=null && !"".equalsIgnoreCase(eventTableBean.getEventTableId())) {
                             jsonResponseObj.put("value","1");
-
                             Text okText = new OkText("Loading Data Complete ","my_id");
                             arrOkText.add(okText);
                             responseStatus = RespConstants.Status.OK;
-                        }
-                        else
-                        {
+                        } else {
                             appLogging.error("Error assigning table : " + tableBean.getTableId() + "  to event : " + sEventId);
 
                             Text errorText = new ErrorText("The table could not be assigned to the event.","my_id") ;
@@ -157,54 +134,31 @@ try
 
                             responseStatus = RespConstants.Status.ERROR;
                         }
-                    }
-                    else
-                    {
+                    }  else {
                         jsonResponseObj.put("value","1");
 
                         Text okText = new OkText("Your changes were saved successfully.","my_id");
                         arrOkText.add(okText);
                         responseStatus = RespConstants.Status.OK;
                     }
-
-
-
-                }
-                else
-                {
+                } else  {
                     appLogging.error("Error creating table for " + sEventId  + " Admin = " + sAdminId );
-
-				/*jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
-
-				JSONObject jsonErrMessage = new JSONObject();
-				jsonErrMessage.put(Constants.J_RESP_ERR_MSSG, "Please try again later." );
-
-				jsonResponseObj.put(Constants.J_RESP_RESPONSE,jsonErrMessage);*/
-
                     Text errorText = new ErrorText("Please try again later. You request was not saved.","my_id") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
                 }
-            }
-            else
-            {
+            } else {
                 appLogging.error(" Missing data in request eventid = " + sEventId + " admin id : " + sAdminId );
             }
 
-        }
-        else
-        {
-            //jsonResponseObj.put(Constants.J_RESP_SUCCESS, false);
-
+        }  else  {
             Text errorText = new ErrorText("Oops!! Your request could not be processed at this time.","my_id") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;
         }
-    }
-    else
-    {
+    }  else  {
         appLogging.error("Validation error for event : " + sEventId);
     }
 	

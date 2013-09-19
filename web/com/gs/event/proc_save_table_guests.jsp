@@ -22,8 +22,8 @@
 <%
 JSONObject jsonResponseObj = new JSONObject();
 
-Logger jspLogging = LoggerFactory.getLogger("JspLogging");
-Logger appLogging = LoggerFactory.getLogger("AppLogging");
+Logger jspLogging = LoggerFactory.getLogger(Constants.JSP_LOGS);
+Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 response.setContentType("application/json");
 
 

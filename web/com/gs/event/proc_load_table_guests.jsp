@@ -43,13 +43,8 @@ try
 	
 	RespJsonObject custRespJson = new RespJsonObject();
 	
-	if(sEventId!=null && !"".equalsIgnoreCase(sEventId) && sAdminId!=null && !"".equalsIgnoreCase(sAdminId)
-		&& sTableId!=null && !"".equalsIgnoreCase(sTableId))
-	{
-				
-		
+	if(!Utility.isNullOrEmpty(sEventId)  && !Utility.isNullOrEmpty(sAdminId) && !Utility.isNullOrEmpty(sTableId)) {
 		GuestTableManager guestTableManager = new GuestTableManager();
-		guestTableManager.getGuestWithNoTable(sEventId);
 		
 		
 		HashMap<Integer, AssignedGuestBean> hmAssignedTables =  guestTableManager.getAssignedGuest(sEventId,sTableId);
@@ -71,25 +66,6 @@ try
 		Text okText = new OkText("Loading Data Complete ","my_id");		
 		arrOkText.add(okText);
 		responseStatus = RespConstants.Status.OK;
-		
-		/*Messages messages = new Messages();
-		messages.setArrOkText(arrOkText);
-		
-		
-		
-		Payload payload = new Payload(jsonResponseObj);
-		Response processResponse = new Response();
-		processResponse.setPayload(payload);
-		processResponse.setMessages(messages);
-		
-		
-		custRespJson.setStatus( RespConstants.Status.OK);
-		custRespJson.setResponse( processResponse );*/
-		
-		
-		//jsonResponseObj.put("new_stuff" , custRespJson.toJson());
-		
-		
 		
 	}
 	else

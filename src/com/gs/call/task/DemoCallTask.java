@@ -173,6 +173,7 @@ public class DemoCallTask extends Task {
 
 		GuestTableMetaData guestTableMetaData = new GuestTableMetaData();
 		guestTableMetaData.setGuestId(eventGuestBean.getGuestId());
+        guestTableMetaData.setEventId( eventBean.getEventId() );
 
 		GuestTableManager guestTableManager = new GuestTableManager();
 		ArrayList<TableGuestsBean> arrTableGuestBean = guestTableManager.getGuestsAssignments(guestTableMetaData);

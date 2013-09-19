@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
+import com.gs.common.Constants;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -25,7 +26,7 @@ import com.gs.data.event.GuestTableData;
 import com.gs.data.event.TableData;
 
 public class GuestTableManager {
-	Logger appLogging = LoggerFactory.getLogger("AppLogging");
+	Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 
 	public HashMap<Integer, AssignedGuestBean> getUnAssignedGuest(
 			GuestTableMetaData guestTableMetaData) {
@@ -128,10 +129,6 @@ public class GuestTableManager {
 		return hmTableGuests;
 	}
 
-	public void getGuestWithNoTable(String sEventId) {
-
-	}
-
 	public HashMap<Integer, TableGuestsBean> getTablesAndGuest(String sEventId) {
 		GuestTableData guestTableData = new GuestTableData();
 
@@ -140,6 +137,14 @@ public class GuestTableManager {
 
 		return hmTableGuests;
 	}
+
+    public ArrayList<TableGuestsBean> getGuestTableAssignments(GuestTableMetaData guestTableMetaData){
+        ArrayList<TableGuestsBean> arrTableGuestBean = new ArrayList<TableGuestsBean>();
+        if(guestTableMetaData!=null && !Utility.isNullOrEmpty(guestTableMetaData.getEventId()) && Utility.isNullOrEmpty(guestTableMetaData.getGuestId()) ) {
+            GuestTableData guestTableData = new GuestTableData();
+        }
+        return arrTableGuestBean;
+    }
 
 	public HashMap<String, TableGuestsBean> consolidateTableAndGuest(
 			HashMap<Integer, TableGuestsBean> hmTableGuests) {
@@ -316,36 +321,37 @@ public class GuestTableManager {
 		}
 		return arrTableId;
 	}
+
+    public GuestTableResponse deleteSeatingForGuest( GuestTableMetaData guestTableMetaData, ArrayList<String> arrTableId ) {
+        GuestTableResponse guestTableResponse = new GuestTableResponse();
+        if(guestTableMetaData!=null && !Utility.isNullOrEmpty(guestTableMetaData.getGuestId())){
+            GuestTableData guestTableData = new GuestTableData();
+            Integer iNumOfRowsDeleted = guestTableData.deleteGuestEventTable(arrTableId, guestTableMetaData.getGuestId());
+            if(iNumOfRowsDeleted>0)  {
+                guestTableResponse.setSuccess(true);
+                guestTableResponse.setMessage("Guest was successfully assigned to table.");
+            } else {
+                guestTableResponse.setSuccess(false);
+                guestTableResponse.setMessage("This guest's seating was not deleted. Please try again later.");
+            }
+        }
+        return guestTableResponse;
+    }
 				
 	public GuestTableResponse deleteSeatingForGuest(
 			GuestTableMetaData guestTableMetaData)
 	{
 		GuestTableResponse guestTableResponse = new GuestTableResponse();
-		String sAdminId = guestTableMetaData.getAdminId();
 		String sTableId = guestTableMetaData.getTableId();
 		String sGuestId = guestTableMetaData.getGuestId();
 		
-		if(sTableId!=null && !"".equalsIgnoreCase(sTableId) 
-				&& sGuestId!=null && !"".equalsIgnoreCase(sGuestId))
-		{
+		if(!Utility.isNullOrEmpty(sTableId) && !Utility.isNullOrEmpty(sTableId) ) {
 			
 			ArrayList<String> arrTableId = new ArrayList<String>();
 			arrTableId.add(sTableId);
-			
-			appLogging.info(arrTableId + " " + sGuestId );
-			
-			GuestTableData guestTableData = new GuestTableData();
-			Integer iNumOfRowsDeleted = guestTableData.deleteGuestEventTable(arrTableId, sGuestId);
-			if(iNumOfRowsDeleted>0)
-			{
-				guestTableResponse.setSuccess(true);
-				guestTableResponse.setMessage("Guest was successfully assigned to table.");
-			}
-			else
-			{
-				guestTableResponse.setSuccess(false);
-				guestTableResponse.setMessage("This guest's seating was not deleted. Please try again later.");
-			}
+
+            guestTableResponse = deleteSeatingForGuest(guestTableMetaData , arrTableId );
+
 		}
 		
 		return guestTableResponse;
@@ -536,12 +542,10 @@ public class GuestTableManager {
 	public ArrayList<TableGuestsBean> getGuestsAssignments(
 			GuestTableMetaData guestTableMetaData) {
 		ArrayList<TableGuestsBean> arrTableGuestBean = new ArrayList<TableGuestsBean>();
-		if (guestTableMetaData != null
-				&& guestTableMetaData.getGuestId() != null
-				&& !"".equalsIgnoreCase(guestTableMetaData.getGuestId())) {
+		if (guestTableMetaData != null && !Utility.isNullOrEmpty(guestTableMetaData.getGuestId()) &&
+                !Utility.isNullOrEmpty(guestTableMetaData.getEventId())) {
 			GuestTableData guestTableData = new GuestTableData();
-			arrTableGuestBean = guestTableData
-					.getGuestAssgnments(guestTableMetaData.getGuestId());
+			arrTableGuestBean = guestTableData.getGuestAssignments( guestTableMetaData.getGuestId() , guestTableMetaData.getEventId() );
 		}
 		return arrTableGuestBean;
 	}

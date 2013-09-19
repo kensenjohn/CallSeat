@@ -60,8 +60,7 @@ public class DemoCallTwiml {
                 }
 
                 telephonyLogging.info("DEMO - Seating Info for guest Total Seats : " + totalNumOfSeats  + " From : "  + twilioIncomingBean.getFrom() + " To : " + twilioIncomingBean.getTo() );
-                if(totalNumOfSeats>0)
-                {
+                if(totalNumOfSeats>0)  {
                     if (totalNumOfSeats == 1) {
                         playSeatingMessage = new Play( VOICE_PATH+"_you_are_seated_at_table.wav" );
                     }  else if( totalNumOfSeats == 2 )  {
