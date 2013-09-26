@@ -3,6 +3,7 @@ package com.gs.common.mail;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.gs.common.Utility;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -48,7 +49,18 @@ public class AmazonEmailSend implements MailSender {
 
 			List<String> toAddresses = new ArrayList<String>();
 			toAddresses.add(emailObject.getToAddress());
-			Destination dest = new Destination().withToAddresses(toAddresses);
+            Destination dest = new Destination().withToAddresses(toAddresses);
+            List<String> ccAddresses = new ArrayList<String>();
+            if( !Utility.isNullOrEmpty(emailObject.getCcAddress()) ) {
+                ccAddresses.add( emailObject.getBccAddress() );
+                dest.withCcAddresses(ccAddresses);
+            }
+
+            List<String> bccAddresses = new ArrayList<String>();
+            if( !Utility.isNullOrEmpty(emailObject.getBccAddress()) ) {
+                bccAddresses.add( emailObject.getBccAddress() );
+                dest.withBccAddresses(bccAddresses );
+            }
 			request.setDestination(dest);
 
 			Content subjContent = new Content().withData(emailObject

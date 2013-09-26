@@ -72,6 +72,9 @@ public class Constants {
 	public static String PROP_TWILIO_VOICE = "twilio_voice";
     public static String PROP_VOICE_RECORDING_FOLDER = "voice_recording.folder";
     public static String PROP_VOICE_RECORDING_DEFAULT_VOICE = "voice_recording.default_voice";
+    public static String PROP_EMAIL_ADMIN = "email_admin";
+    public static String PROP_EMAIL_ADMIN_NEW_REGISTRATION = "email_admin.new_registration";
+    public static String PROP_EMAIL_ADMIN_NEW_PURCHASE = "email_admin.new_purchase";
 
 	public enum CALL_SERVICE {
 		TWILIO("twilio");
@@ -593,4 +596,7 @@ public class Constants {
     public enum API_KEY_TYPE{
         LIVE_KEY,TEST_KEY;
     }
+
+    public final static String FALSE = "false";
+    public final static String TRUE = "true";
 }

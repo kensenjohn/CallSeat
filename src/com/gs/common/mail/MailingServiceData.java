@@ -3,6 +3,7 @@ package com.gs.common.mail;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.gs.common.ParseUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,9 +19,9 @@ public class MailingServiceData {
 	private static String queryUpdateEmailStatus = "UPDATE GTEMAILQUEUE SET STATUS = ?, "
 			+ " MODIFIEDDATE = ?, HUMANMODIFYDATE = ?  WHERE EMAILQUEUEID = ?";
 	private static String queryInsertEmailQueue = "insert into GTEMAILQUEUE (EMAILQUEUEID, "
-			+ " FROM_ADDRESS ,FROM_ADDRESS_NAME ,TO_ADDRESS,TO_ADDRESS_NAME, EMAIL_SUBJECT, HTML_BODY, TEXT_BODY, STATUS, CREATEDATE,"
+			+ " FROM_ADDRESS ,FROM_ADDRESS_NAME ,TO_ADDRESS,TO_ADDRESS_NAME,CC_ADDRESS,CC_ADDRESSNAME,BCC_ADDRESS,BCC_ADDRESSNAME, EMAIL_SUBJECT, HTML_BODY, TEXT_BODY, STATUS, CREATEDATE,"
 			+ " MODIFIEDDATE , HUMANCREATEDATE, HUMANMODIFYDATE ) "
-			+ " VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?, ? )";
+			+ " VALUES (?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,?,?, ?,? )";
 	private static String queryEmailsTemplate = "SELECT * FROM GTEMAILTEMPLATE WHERE EMAILTEMPLATENAME = ?";
     private static String queryEmailsTemplateById = "SELECT * FROM GTEMAILTEMPLATE WHERE EMAILTEMPLATEID = ?";
 
@@ -133,6 +134,10 @@ public class MailingServiceData {
 					emailQueueBean.getFromAddressName(),
 					emailQueueBean.getToAddress(),
 					emailQueueBean.getToAddressName(),
+                    emailQueueBean.getCcAddress(),
+                    emailQueueBean.getCcAddressName(),
+                    emailQueueBean.getBccAddress(),
+                    emailQueueBean.getBccAddressName(),
 					emailQueueBean.getEmailSubject(),
 					emailQueueBean.getHtmlBody(), emailQueueBean.getTextBody(),
 					emailQueueBean.getStatus(), lCurrentDate, lCurrentDate,
@@ -140,11 +145,13 @@ public class MailingServiceData {
 
 			iNumOfRows = DBDAO.putRowsQuery(queryInsertEmailQueue, aParams,
 					ADMIN_DB, "MailingServiceData.java", "insertEmailQueue()");
+            appLogging.error("aParams : "
+                    + aParams + " sQuery : " + queryInsertEmailQueue );
 		} else {
 			appLogging.error("EmailQueueBean is null or has no ID : "
-					+ appLogging);
+					+ ParseUtil.checkNullObject(emailQueueBean));
 			emailLogging.error("EmailQueueBean is null or has no ID : "
-					+ appLogging);
+					+  ParseUtil.checkNullObject(emailQueueBean));
 		}
 		return iNumOfRows;
 	}

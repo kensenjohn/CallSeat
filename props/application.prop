@@ -26,3 +26,6 @@ site_protocol=https
 voice_recording.folderfolder=/web/voice
 voice_recording.default_voice=american_woman
 application_domain=http://ec2-23-23-19-25.compute-1.amazonaws.com:8080
+email_admin.new_registration=true
+email_admin.new_purchase=true
+email_admin=kjohn@smarasoft.com

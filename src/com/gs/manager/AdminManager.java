@@ -3,6 +3,7 @@ package com.gs.manager;
 import com.gs.bean.*;
 import com.gs.bean.email.EmailScheduleBean;
 import com.gs.bean.response.WebRespRequest;
+import com.gs.common.*;
 import com.gs.manager.event.EventManager;
 import com.gs.manager.event.TelNumberManager;
 import com.gs.manager.event.TelNumberMetaData;
@@ -11,11 +12,6 @@ import org.slf4j.LoggerFactory;
 
 import com.gs.bean.email.EmailQueueBean;
 import com.gs.bean.email.EmailTemplateBean;
-import com.gs.common.BCrypt;
-import com.gs.common.Constants;
-import com.gs.common.DateSupport;
-import com.gs.common.ParseUtil;
-import com.gs.common.Utility;
 import com.gs.common.mail.MailCreator;
 import com.gs.common.mail.MailingServiceData;
 import com.gs.common.mail.QuickMailSendThread;
@@ -25,8 +21,8 @@ import com.gs.data.AdminData;
 import java.util.ArrayList;
 
 public class AdminManager {
-	private static final Logger appLogging = LoggerFactory
-			.getLogger("AppLogging");
+	private static final Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
+    Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
 	/**
 	 * This will create an Admin record. If admin is null or does not have a
@@ -210,6 +206,13 @@ public class AdminManager {
 			emailQueueBean.setHtmlBody(sHtmlBody);
 			emailQueueBean.setTextBody(sTxtBody);
 			emailQueueBean.setStatus(Constants.EMAIL_STATUS.NEW.getStatus());
+
+            //Bcc to keep track of who registered to event. This can be put in a property file
+            if( ParseUtil.sTob(applicationConfig.get(Constants.PROP_EMAIL_ADMIN_NEW_REGISTRATION , Constants.FALSE ))  ) {
+                final String emailAdmin =  applicationConfig.get(Constants.PROP_EMAIL_ADMIN , "kjohn@smarasoft.com" );
+                emailQueueBean.setBccAddress( emailAdmin );
+                emailQueueBean.setBccAddressName( emailAdmin );
+            }
 
 			MailCreator mailCreator = new SingleEmailCreator();
 			mailCreator.create(emailQueueBean, new EmailScheduleBean());

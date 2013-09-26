@@ -18,6 +18,7 @@ public class SimpleEmailBean extends EmailObject {
 		this.toAddress = toAddress;
 	}
 
+
 	public String getEmailSubject() {
 		return emailSubject;
 	}
@@ -73,5 +74,45 @@ public class SimpleEmailBean extends EmailObject {
 		// TODO Auto-generated method stub
 
 	}
+
+    @Override
+    public String getCcAddress() {
+        return this.ccAddress;
+    }
+
+    @Override
+    public void setCcAddress(String ccAddress) {
+        this.ccAddress = ccAddress;
+    }
+
+    @Override
+    public String getCcAddressName() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void setCcAddressName(String ccAddressName) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public String getBccAddress() {
+        return this.bccAddress;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void setBccAddress(String bccAddress) {
+        this.bccAddress = bccAddress;
+    }
+
+    @Override
+    public String getBccAddressName() {
+        return null;  //To change body of implemented methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public void setBccAddressName(String bccAddressName) {
+        //To change body of implemented methods use File | Settings | File Templates.
+    }
 
 }

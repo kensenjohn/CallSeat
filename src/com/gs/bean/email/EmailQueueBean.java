@@ -17,6 +17,12 @@ public class EmailQueueBean extends EmailObject {
 		this.toAddress = ParseUtil.checkNull(hmEmailQueue.get("TO_ADDRESS"));
 		this.toAddressName = ParseUtil.checkNull(hmEmailQueue
 				.get("TO_ADDRESS_NAME"));
+        this.ccAddress = ParseUtil.checkNull(hmEmailQueue.get("CC_ADDRESS"));
+        this.ccAddressName = ParseUtil.checkNull(hmEmailQueue
+                .get("CC_ADDRESSNAME"));
+        this.bccAddress = ParseUtil.checkNull(hmEmailQueue.get("BCC_ADDRESS"));
+        this.bccAddressName = ParseUtil.checkNull(hmEmailQueue
+                .get("BCC_ADDRESSNAME"));
 		this.emailSubject = ParseUtil.checkNull(hmEmailQueue
 				.get("EMAIL_SUBJECT"));
 		this.htmlBody = ParseUtil.checkNull(hmEmailQueue.get("HTML_BODY"));
@@ -89,6 +95,7 @@ public class EmailQueueBean extends EmailObject {
 		StringBuilder builder = new StringBuilder();
 		builder.append("EmailQueueBean [emailQueueId:").append(emailQueueId)
 				.append(", To: ").append(toAddress).append(", Sub: ")
+                .append(", Bcc: ").append(bccAddress)
 				.append(emailSubject).append(", Html Body: ")
                 .append(htmlBody).append("]");
 		return builder.toString();
@@ -113,4 +120,44 @@ public class EmailQueueBean extends EmailObject {
 	public void setToAddressName(String toAddressName) {
 		this.toAddressName = toAddressName;
 	}
+
+    @Override
+    public String getCcAddress() {
+        return this.ccAddress ;
+    }
+
+    @Override
+    public void setCcAddress(String ccAddress) {
+        this.ccAddress = ccAddress;
+    }
+
+    @Override
+    public String getCcAddressName() {
+        return this.ccAddressName;
+    }
+
+    @Override
+    public void setCcAddressName(String ccAddressName) {
+        this.ccAddressName = ccAddressName;
+    }
+
+    @Override
+    public String getBccAddress() {
+        return this.bccAddress;
+    }
+
+    @Override
+    public void setBccAddress(String bccAddress) {
+        this.bccAddress = bccAddress;
+    }
+
+    @Override
+    public String getBccAddressName() {
+        return this.bccAddressName;
+    }
+
+    @Override
+    public void setBccAddressName(String bcAddressName) {
+        this.bccAddressName = bcAddressName;
+    }
 }

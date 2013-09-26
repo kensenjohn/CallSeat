@@ -1,15 +1,21 @@
 package com.gs.bean.email;
 
+import com.gs.common.Constants;
+
 public abstract class EmailObject {
 
-	protected String fromAddress = "";
-	protected String fromAddressName = "";
-	protected String toAddress = "";
-	protected String toAddressName = "";
-	protected String emailSubject = "";
-	protected String htmlBody = "";
-	protected String textBody = "";
-	protected String status = "";
+	protected String fromAddress = Constants.EMPTY;
+	protected String fromAddressName = Constants.EMPTY;
+	protected String toAddress = Constants.EMPTY;
+	protected String toAddressName = Constants.EMPTY;
+    protected String ccAddress = Constants.EMPTY;
+    protected String ccAddressName = Constants.EMPTY;
+    protected String bccAddress = Constants.EMPTY;
+    protected String bccAddressName = Constants.EMPTY;
+	protected String emailSubject = Constants.EMPTY;
+	protected String htmlBody = Constants.EMPTY;
+	protected String textBody = Constants.EMPTY;
+	protected String status = Constants.EMPTY;
 
 	public abstract String getFromAddress();
 
@@ -26,6 +32,22 @@ public abstract class EmailObject {
 	public abstract String getToAddressName();
 
 	public abstract void setToAddressName(String toAddressName);
+
+    public abstract String getCcAddress();
+
+    public abstract void setCcAddress(String ccAddress);
+
+    public abstract String getCcAddressName();
+
+    public abstract void setCcAddressName(String ccAddressName);
+
+    public abstract String getBccAddress();
+
+    public abstract void setBccAddress(String bccAddress);
+
+    public abstract String getBccAddressName();
+
+    public abstract void setBccAddressName(String bccAddressName);
 
 	public abstract String getEmailSubject();
 
