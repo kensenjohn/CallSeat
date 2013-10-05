@@ -224,4 +224,18 @@ public class DateSupport {
 
         return dateObject;
     }
+
+    public static boolean isValidDate( String sInputDate, String dateTimePattern ) {
+        boolean isValidDate = false;
+        if( !Utility.isNullOrEmpty(sInputDate) && !Utility.isNullOrEmpty(dateTimePattern)) {
+            try{
+                SimpleDateFormat inputDf = new SimpleDateFormat(dateTimePattern);
+                Date iInputDate = inputDf.parse(sInputDate);
+                isValidDate = true;
+            } catch (ParseException e) {
+                isValidDate = false;
+            }
+        }
+        return isValidDate;
+    }
 }

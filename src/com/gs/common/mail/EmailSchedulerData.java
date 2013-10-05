@@ -111,6 +111,16 @@ public class EmailSchedulerData {
         return arrSchedulerBean;
     }
 
+    public Integer getNumOfEmailScheduled ( EmailScheduleBean emailRequestSchedulerBean , Constants.SCHEDULER_STATUS scheduleStatus ) {
+        Integer iNumOfEmailsScheduled = 0;
+        if(emailRequestSchedulerBean!=null && scheduleStatus!=null) {
+            ArrayList<EmailScheduleBean> arrEmailScheduleBean = getEmailScheduler(emailRequestSchedulerBean , scheduleStatus ) ;
+            if(arrEmailScheduleBean!=null && !arrEmailScheduleBean.isEmpty()) {
+                iNumOfEmailsScheduled = arrEmailScheduleBean.size();
+            }
+        }
+        return iNumOfEmailsScheduled;
+    }
     public ArrayList<EmailScheduleBean> getEmailScheduler( EmailScheduleBean emailRequestSchedulerBean , Constants.SCHEDULER_STATUS scheduleStatus )
     {
         String sQuery = Constants.EMPTY;

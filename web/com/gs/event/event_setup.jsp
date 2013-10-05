@@ -32,10 +32,7 @@
 	
 	jspLogging.info("Invoked by landing page : " + isFromLanding);
 	String sEventTitle = "New Seating Plan";
-	
-	//UserInfoManager userInfo = new UserInfoManager();	
-	//userInfo.createUserInfoBean(new UserInfoBean());
-	
+
 	String sAdminUserId = "";
 	AdminBean adminBean = new AdminBean();
 	EventBean eventBean = new EventBean();	
@@ -51,13 +48,8 @@
 		if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId))
 		{
 			 adminBean = adminManager.getAdmin(sAdminId);
-		}
-		else
-		{
+		} else {
 			adminBean = adminManager.createAdmin();
-			
-			UserInfoBean adminUserInfoBean = adminManager.getAminUserInfo(adminBean.getAdminId());
-			
 			adminManager.createTemporaryContact(adminBean , sTmpEmail );
 		}
 		
@@ -67,22 +59,9 @@
             Long lCurrentTime = DateSupport.getEpochMillis();
             Long lEventCreateDate = DateSupport.getMillis( sEventDate + " 00:00:00","MM/dd/yyyy HH:mm:ss", DateTimeZone.UTC.getID() );
             Long lFutureDateLimit = DateSupport.addTime( lCurrentTime , 1 , Constants.TIME_UNIT.YEARS  );
-            if( lEventCreateDate < lCurrentTime )
-            {
-                //Text errorText = new ErrorText("We were unable to create a seating plan for the selected date. Please select a date in the future.","e_summ_event_name") ;
-                //arrErrorText.add(errorText);
-
-                //responseStatus = RespConstants.Status.ERROR;
-            }
-            else if (lEventCreateDate  > lFutureDateLimit )
-            {
-                //Text errorText = new ErrorText("We were unable to create a seating plan for the selected date. Please select a date within a year from today.","e_summ_event_name") ;
-                //arrErrorText.add(errorText);
-
-                //responseStatus = RespConstants.Status.ERROR;
-            }
-            else
-            {
+            if( lEventCreateDate < lCurrentTime ) {
+            }  else if (lEventCreateDate  > lFutureDateLimit )  {
+            } else {
                 EventCreationMetaDataBean eventMeta = new EventCreationMetaDataBean();
                 eventMeta.setAdminBean(adminBean);
                 eventMeta.setEventDate(sEventDate);
@@ -724,34 +703,62 @@
                             </div>
                             <div class="row">
                                 <div class="span6">
-                                    <h2>Online RSVP Link Email </h2>
+                                    <h2>Gather RSVP from Guests</h2>
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="span2">
-                                    &nbsp;
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="span12">
-                                    <h4>Subject: </h4> <span id="email_template_rsvp_response_subject"></span>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="span2">
-                                    &nbsp;
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="span12">
-                                    <h4>Body: </h4>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="span10"  style="height: 325px;background-color: #f7f7f7;border:1px solid #A4BE5F;">
-                                    <div class="row" style="height: 325px;">
-                                        <div class="offset_0_5 span9">
-                                            <span  id="email_template_rsvp_response_body" style="padding: 10px;"> </span>
+                                <div class="offset_0_5 span12">
+                                    <div class="row">
+                                        <div class="span2">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span12">
+                                            <h4>Subject: </h4> <span id="email_template_rsvp_response_subject"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span2">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span12">
+                                            <h4>Body: </h4>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span10"  style="height: 325px;background-color: #f7f7f7;border:1px solid #A4BE5F;">
+                                            <div class="row" style="height: 325px;">
+                                                <div class="offset_0_5 span9">
+                                                    <span  id="email_template_rsvp_response_body" style="padding: 10px;"> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span2">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span12">
+                                            Number of times email was sent : <span id="rsvp_num_of_times_email_sent">0</span><br>
+                                            Is email scheduled to be sent :  <span id="rsvp_email_scheduled_for_send">No</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span2">
+                                            &nbsp;
+                                        </div>
+                                        <div class="span2">
+                                            <input type="button" id="send_rsvp_response_email" name="send_rsvp_response_email" class="btn btn-large ispn5" value="Email guests RSVP options"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span2">
+                                            &nbsp;
                                         </div>
                                     </div>
                                 </div>
@@ -762,22 +769,67 @@
                                 </div>
                             </div>
                             <div class="row">
-                                <div class="span12">
-                                    Number of times email was sent : <span id="num_of_times_email_sent">0</span><br>
-                                    Is email scheduled to be sent :  <span id="email_scheduled_for_send">No</span>
+                                <div class="span6">
+                                    <h2>Seating Information for Guests </h2>
                                 </div>
                             </div>
+
                             <div class="row">
-                                <div class="span2">
-                                    &nbsp;
-                                </div>
-                                <div class="span2">
-                                    <input type="button" id="send_rsvp_response_email" name="send_rsvp_response_email" class="btn btn-large" value="Email guests now"/>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="span2">
-                                    &nbsp;
+                                <div class="offset_0_5 span12">
+
+                                    <div class="row">
+                                        <div class="span2">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span12">
+                                            <h4>Subject: </h4> <span id="email_template_seating_info_subject"></span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span2">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span12">
+                                            <h4>Body: </h4>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span10"  style="height: 325px;background-color: #f7f7f7;border:1px solid #A4BE5F;">
+                                            <div class="row" style="height: 325px;">
+                                                <div class="offset_0_5 span9">
+                                                    <span  id="email_template_seating_info_body" style="padding: 10px;"> </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span2">
+                                            &nbsp;
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span12">
+                                            Number of times email was sent : <span id="seating_info_num_of_times_email_sent">0</span><br>
+                                            Is email scheduled to be sent :  <span id="seating_info_email_scheduled_for_send">No</span>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span2">
+                                            &nbsp;
+                                        </div>
+                                        <div class="span2">
+                                            <input type="button" id="send_seating_info_email" name="send_seating_info_email" class="btn btn-large" value="Email guests seating information"/>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="span2">
+                                            &nbsp;
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1004,6 +1056,9 @@
 
         $('#send_rsvp_response_email').click(function(event) {
             scheduleRsvpResponseEmailSend();
+        });
+        $('#send_seating_info_email').click(function(event) {
+            scheduleSeatingInfoEmailSend();
         });
 
 
@@ -1287,6 +1342,17 @@
         //displayMssgBoxAlert( 'schedule RSVP email',false );
 
         var actionUrl = "proc_schedule_rsvp_emails.jsp";
+        var methodType = "POST";
+        var dataString = "admin_id="+varAdminID+"&event_id="+varEventID;
+
+
+        getDataAjax(actionUrl,dataString,methodType,getScheduleRsvpResult);
+    }
+
+    function scheduleSeatingInfoEmailSend(){
+        //displayMssgBoxAlert( 'schedule RSVP email',false );
+
+        var actionUrl = "proc_schedule_seating_info_emails.jsp";
         var methodType = "POST";
         var dataString = "admin_id="+varAdminID+"&event_id="+varEventID;
 
@@ -1905,7 +1971,7 @@
                 }
             } else if( jsonResult.status == 'ok' && varResponseObj !=undefined ) {
                 var varIsMessageExist = varResponseObj.is_message_exist;
-                resetRSVPWebEmaiStats();
+                resetWebEmailStats();
                 if(varIsMessageExist == true) {
                     var jsonResponseMessage = varResponseObj.messages;
                     var varArrOkMssg = jsonResponseMessage.ok_mssg
@@ -1915,9 +1981,13 @@
         }
     }
 
-    function resetRSVPWebEmaiStats() {
-        $('#email_scheduled_for_send').empty();
-        $('#email_scheduled_for_send').text('Yes');
+    function resetWebEmailStats() {
+        $('#seating_info_email_scheduled_for_send').empty();
+        $('#seating_info_email_scheduled_for_send').text('Yes');
+
+        $('#rsvp_email_scheduled_for_send').empty();
+        $('#rsvp_email_scheduled_for_send').text('Yes');
+
 
     }
     function displayEmails( jsonResult ) {
@@ -1992,14 +2062,31 @@
             $('#email_template_rsvp_response_body').html(varRsvpResponseEmail.html_body);
         }
 
-        $('#num_of_times_email_sent').empty();
-        $('#num_of_times_email_sent').text(jsonResponseObj.num_of_email_send_complete);
+        $('#rsvp_num_of_times_email_sent').empty();
+        $('#rsvp_num_of_times_email_sent').text(jsonResponseObj.num_of_rsvp_email_send_complete);
 
-        $('#email_scheduled_for_send').empty();
-        if( jsonResponseObj.num_of_email_scheduled > 0 ) {
-            $('#email_scheduled_for_send').text('Yes');
+        $('#rsvp_email_scheduled_for_send').empty();
+        if( jsonResponseObj.num_of_rsvp_email_scheduled > 0 ) {
+            $('#rsvp_email_scheduled_for_send').text('Yes');
         } else {
-            $('#email_scheduled_for_send').text('No');
+            $('#rsvp_email_scheduled_for_send').text('No');
+        }
+
+
+        var varSeatingInfoEmail = jsonResponseObj.seating_info_email;
+        if(varSeatingInfoEmail!=undefined) {
+            $('#email_template_seating_info_subject').text(varSeatingInfoEmail.email_subject);
+            $('#email_template_seating_info_body').html(varSeatingInfoEmail.html_body);
+        }
+
+        $('#seating_info_num_of_times_email_sent').empty();
+        $('#seating_info_num_of_times_email_sent').text(jsonResponseObj.num_of_seating_info_email_send_complete);
+
+        $('#seating_info_email_scheduled_for_send').empty();
+        if( jsonResponseObj.num_of_seating_info_email_scheduled > 0 ) {
+            $('#seating_info_email_scheduled_for_send').text('Yes');
+        } else {
+            $('#seating_info_email_scheduled_for_send').text('No');
         }
     }
 	function processTelNumbers( jsonResponseObj )

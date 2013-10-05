@@ -23,20 +23,17 @@ import com.gs.common.exception.ExceptionHandler;
 
 public class AmazonEmailSend implements MailSender {
 
+
+    private Logger emailerLogging = LoggerFactory.getLogger(Constants.EMAILER_LOGS);
 	public AmazonEmailSend() {
 		emailerLogging.info("Amazon email send");
 	}
 
-	private Logger emailerLogging = LoggerFactory
-			.getLogger(Constants.EMAILER_LOGS);
 
-	private Configuration applicationConfig = Configuration
-			.getInstance(Constants.APPLICATION_PROP);
+	private Configuration applicationConfig = Configuration.getInstance(Constants.APPLICATION_PROP);
 
-	private String AMAZON_ACCESS_KEY = applicationConfig
-			.get(Constants.PROP_AMAZON_ACCESS_KEY);
-	private String AMAZON_ACCESS_SECRET = applicationConfig
-			.get(Constants.PROP_AMAZON_ACCESS_SECRET);
+	private String AMAZON_ACCESS_KEY = applicationConfig.get(Constants.PROP_AMAZON_ACCESS_KEY);
+	private String AMAZON_ACCESS_SECRET = applicationConfig.get(Constants.PROP_AMAZON_ACCESS_SECRET);
 
 	@Override
 	public boolean send(EmailObject emailObject) {
@@ -44,24 +41,10 @@ public class AmazonEmailSend implements MailSender {
 		if (emailObject != null) {
             emailerLogging.info("Send invoked ");
             emailerLogging.debug("The email Object to send : " + emailObject);
-			SendEmailRequest request = new SendEmailRequest()
-					.withSource(emailObject.getFromAddress());
+			SendEmailRequest emailSendRequest = new SendEmailRequest();
+            emailSendRequest.withSource(emailObject.getFromAddress());
 
-			List<String> toAddresses = new ArrayList<String>();
-			toAddresses.add(emailObject.getToAddress());
-            Destination dest = new Destination().withToAddresses(toAddresses);
-            List<String> ccAddresses = new ArrayList<String>();
-            if( !Utility.isNullOrEmpty(emailObject.getCcAddress()) ) {
-                ccAddresses.add( emailObject.getBccAddress() );
-                dest.withCcAddresses(ccAddresses);
-            }
-
-            List<String> bccAddresses = new ArrayList<String>();
-            if( !Utility.isNullOrEmpty(emailObject.getBccAddress()) ) {
-                bccAddresses.add( emailObject.getBccAddress() );
-                dest.withBccAddresses(bccAddresses );
-            }
-			request.setDestination(dest);
+            emailSendRequest.setDestination( createDestinationEmailAddress(emailObject) );
 
 			Content subjContent = new Content().withData(emailObject
 					.getEmailSubject());
@@ -75,21 +58,15 @@ public class AmazonEmailSend implements MailSender {
 			Body body = new Body().withHtml(htmlContent).withText(textContent);
 			msg.setBody(body);
 
-			request.setMessage(msg);
+            emailSendRequest.setMessage(msg);
 
 			// Set AWS access credentials
-			AmazonSimpleEmailServiceClient client = new AmazonSimpleEmailServiceClient(
-					new BasicAWSCredentials(AMAZON_ACCESS_KEY,
-							AMAZON_ACCESS_SECRET));
-
-			emailerLogging.info("AWS Amazon Client : " + client);
+			AmazonSimpleEmailServiceClient client = new AmazonSimpleEmailServiceClient(new BasicAWSCredentials(AMAZON_ACCESS_KEY,AMAZON_ACCESS_SECRET));
 
 			// Call Amazon SES to send the message
 			try {
-				SendEmailResult sendEmailResult = client.sendEmail(request);
-				emailerLogging.info("After send result : "
-						+ sendEmailResult.getMessageId() + " - "
-						+ sendEmailResult);
+				SendEmailResult sendEmailResult = client.sendEmail( emailSendRequest );
+				emailerLogging.info("After send result : " + sendEmailResult.getMessageId() + " - " + sendEmailResult);
 			} catch (AmazonClientException e) {
 				isSuccess = false;
 				emailerLogging.error("AmazonClientException "
@@ -108,4 +85,29 @@ public class AmazonEmailSend implements MailSender {
         }
 		return isSuccess;
 	}
+
+    private Destination createDestinationEmailAddress(EmailObject emailObject) {
+        Destination destinationEmailAddress = new Destination();
+
+        if(emailObject!=null) {
+            List<String> toAddresses = new ArrayList<String>();
+            toAddresses.add(emailObject.getToAddress());
+            destinationEmailAddress.withToAddresses(toAddresses);
+
+
+            List<String> ccAddresses = new ArrayList<String>();
+            if( !Utility.isNullOrEmpty(emailObject.getCcAddress()) ) {
+                ccAddresses.add( emailObject.getCcAddress() );
+                destinationEmailAddress.withCcAddresses(ccAddresses);
+            }
+
+            List<String> bccAddresses = new ArrayList<String>();
+            if( !Utility.isNullOrEmpty(emailObject.getBccAddress()) ) {
+                bccAddresses.add( emailObject.getBccAddress() );
+                destinationEmailAddress.withBccAddresses(bccAddresses );
+            }
+        }
+
+        return destinationEmailAddress;
+    }
 }

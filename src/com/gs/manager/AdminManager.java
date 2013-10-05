@@ -220,10 +220,44 @@ public class AdminManager {
 
 	}
 
+    public EmailTemplateBean getFormattedSeatingInformationEmail(WebRespRequest webRespRequest ) {
+        EmailTemplateBean guestResponseEmailTemplate = getFormattedSeatingInformationEmail(webRespRequest, new EmailTemplateBean());
+
+        return guestResponseEmailTemplate;
+    }
+
     public EmailTemplateBean getFormattedRSVPResponseEmail(WebRespRequest webRespRequest ) {
         EmailTemplateBean guestResponseEmailTemplate = getFormattedRSVPResponseEmail(webRespRequest, new EmailTemplateBean());
 
         return guestResponseEmailTemplate;
+    }
+
+    public EmailTemplateBean getFormattedSeatingInformationEmail( WebRespRequest webRespRequest , EmailTemplateBean seatingInfoEmailTemplate ) {
+        if(webRespRequest!=null && !"".equalsIgnoreCase(webRespRequest.getAdminId())  && !"".equalsIgnoreCase(webRespRequest.getEventId()) && seatingInfoEmailTemplate!=null ) {
+            Constants.EMAIL_TEMPLATE emailTemplateType = Constants.EMAIL_TEMPLATE.SEATING_CONFIRMATION_EMAIL;
+            if( Utility.isNullOrEmpty(seatingInfoEmailTemplate.getEmailTemplateId())) {
+                MailingServiceData mailingServiceData = new MailingServiceData();
+                seatingInfoEmailTemplate = mailingServiceData.getEmailTemplate(emailTemplateType);
+            }
+
+            if(seatingInfoEmailTemplate!=null && !"".equalsIgnoreCase(seatingInfoEmailTemplate.getEmailTemplateId())) {
+                String sSubject = seatingInfoEmailTemplate.getEmailSubject();
+                sSubject = replaceTemplateWithEventData(sSubject, webRespRequest.getEventId());
+                sSubject = replaceTemplateWithAdminData(sSubject, webRespRequest.getAdminId());
+                seatingInfoEmailTemplate.setEmailSubject(sSubject);
+
+                String sHtmlBody = seatingInfoEmailTemplate.getHtmlBody();
+                sHtmlBody = replaceTemplateWithEventData(sHtmlBody, webRespRequest.getEventId());
+                sHtmlBody = replaceTemplateWithAdminData(sHtmlBody, webRespRequest.getAdminId());
+                seatingInfoEmailTemplate.setHtmlBody( sHtmlBody );
+
+                String sTextBody = seatingInfoEmailTemplate.getTextBody();
+                sTextBody = replaceTemplateWithEventData(sTextBody, webRespRequest.getEventId());
+                sTextBody = replaceTemplateWithAdminData(sTextBody, webRespRequest.getAdminId());
+                seatingInfoEmailTemplate.setTextBody( sTextBody );
+            }
+        }
+        return seatingInfoEmailTemplate;
     }
 
     public EmailTemplateBean getFormattedRSVPResponseEmail( WebRespRequest webRespRequest , EmailTemplateBean guestResponseEmailTemplate ) {
@@ -257,19 +291,19 @@ public class AdminManager {
 
             if(guestResponseEmailTemplate!=null && !"".equalsIgnoreCase(guestResponseEmailTemplate.getEmailTemplateId())) {
                 String sSubject = guestResponseEmailTemplate.getEmailSubject();
-                sSubject = replaceRSVPResponseTemplateWithEventData(sSubject, telNumberMetaData.getEventId());
+                sSubject = replaceTemplateWithEventData(sSubject, telNumberMetaData.getEventId());
                 sSubject = replaceRSVPResponseTemplateWithPhoneData(sSubject, rsvpTelNumberBean);
                 sSubject = replaceRSVPResponseTemplateWithHostData(sSubject, telNumberMetaData.getAdminId());
                 guestResponseEmailTemplate.setEmailSubject(sSubject);
 
                 String sHtmlBody = guestResponseEmailTemplate.getHtmlBody();
-                sHtmlBody = replaceRSVPResponseTemplateWithEventData(sHtmlBody, telNumberMetaData.getEventId());
+                sHtmlBody = replaceTemplateWithEventData(sHtmlBody, telNumberMetaData.getEventId());
                 sHtmlBody = replaceRSVPResponseTemplateWithPhoneData(sHtmlBody, rsvpTelNumberBean );
                 sHtmlBody = replaceRSVPResponseTemplateWithHostData(sHtmlBody,  telNumberMetaData.getAdminId() );
                 guestResponseEmailTemplate.setHtmlBody(sHtmlBody);
 
                 String sTextBody = guestResponseEmailTemplate.getTextBody();
-                sTextBody = replaceRSVPResponseTemplateWithEventData(sTextBody, telNumberMetaData.getEventId());
+                sTextBody = replaceTemplateWithEventData(sTextBody, telNumberMetaData.getEventId());
                 sTextBody = replaceRSVPResponseTemplateWithPhoneData(sTextBody, rsvpTelNumberBean );
                 sTextBody = replaceRSVPResponseTemplateWithHostData(sTextBody,  telNumberMetaData.getAdminId() );
                 guestResponseEmailTemplate.setTextBody(sTextBody);
@@ -278,7 +312,22 @@ public class AdminManager {
         return guestResponseEmailTemplate;
     }
 
-    private String  replaceRSVPResponseTemplateWithEventData(String sText , String sEventId ) {
+    public String  replaceTemplateWithAdminData(String sText , String sAdminId ) {
+        String srcText = ParseUtil.checkNull(sText);
+        String  sAdminName = Constants.EMPTY;
+        if( !Utility.isNullOrEmpty(sText)  && !Utility.isNullOrEmpty(sAdminId)  ) {
+            AdminManager adminManager = new AdminManager();
+            AdminBean adminBean = adminManager.getAdmin(sAdminId);
+            if(adminBean!=null && adminBean.getAdminId()!=null && !"".equalsIgnoreCase( adminBean.getAdminId() ) ) {
+
+                sAdminName =  ParseUtil.checkNull(adminBean.getAdminUserInfoBean().getFirstName()) + " " +   ParseUtil.checkNull(adminBean.getAdminUserInfoBean().getLastName());
+            }
+        }
+        srcText = srcText.replaceAll("__HOSTNAME__", sAdminName );
+        return srcText;
+    }
+
+    public String  replaceTemplateWithEventData(String sText , String sEventId ) {
         String srcText = ParseUtil.checkNull(sText);
         if(sText!=null && !"".equalsIgnoreCase(sText) && sEventId!=null && !"".equalsIgnoreCase(sEventId)) {
             EventManager eventManager = new EventManager();

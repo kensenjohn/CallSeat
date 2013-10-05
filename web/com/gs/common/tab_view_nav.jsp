@@ -9,17 +9,17 @@
 			<li  id="li_event_summary"  class="active" >
 				<a  id="event_summary_tab"  >Seating Plan Summary</a>
 			</li>
+            <li  id="li_guest_view" >
+                <a  id="guest_view_tab">Invite Guests</a>
+            </li>
 			<li id="li_table_view">
-				<a id="table_view_tab" >Tables</a>
-			</li>
-			<li  id="li_guest_view" >
-				<a  id="guest_view_tab">Invited Guests</a>
+				<a id="table_view_tab" >Add/Edit Tables</a>
 			</li>
 			<li  id="li_phone_num">
 				<a  id="phone_num_tab">Phone Numbers</a>
 			</li>
             <li  id="li_email">
-                <a  id="email_tab">Emails</a>
+                <a  id="email_tab">Email Guests</a>
             </li>
 		</ul>
 	</div>

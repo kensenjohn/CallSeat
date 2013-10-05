@@ -21,7 +21,10 @@ import com.gs.response.AlterWebRsvpResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created with IntelliJ IDEA.
@@ -333,98 +336,129 @@ public class EmailCreatorService {
         return emailObject;
     }
 
+    private ArrayList<String> getEventGuestId( EmailScheduleBean emailScheduleBean) {
+        ArrayList<String> arrEventGuestId = new ArrayList<String>();
+        if( emailScheduleBean!=null && !Utility.isNullOrEmpty(emailScheduleBean.getGuestId()) ) {
+            arrEventGuestId.add(  ParseUtil.checkNull( emailScheduleBean.getGuestId() ) );
+        } else {
+            GuestTableManager guestTableManager = new GuestTableManager();
+            HashMap<Integer, TableGuestsBean> hmTableGuests = guestTableManager.getTablesAndGuest(  ParseUtil.checkNull( emailScheduleBean.getEventId() ) );
+            if(hmTableGuests!=null && !hmTableGuests.isEmpty()) {
+                HashMap<String,String> hmGuestId = new HashMap<String, String>();
+                for(Map.Entry<Integer,TableGuestsBean>mapTableGuestsBean : hmTableGuests.entrySet() ) {
+                    TableGuestsBean tableGuestsBean = mapTableGuestsBean.getValue();
+
+                    if(tableGuestsBean!=null && !Utility.isNullOrEmpty(tableGuestsBean.getGuestId())) {
+                        hmGuestId.put(tableGuestsBean.getGuestId(),tableGuestsBean.getGuestId());
+                    }
+                }
+
+                if( hmGuestId!=null && !hmGuestId.isEmpty() ) {
+                    for(Map.Entry<String,String>mapGuestId : hmGuestId.entrySet() ) {
+                        arrEventGuestId.add( mapGuestId.getKey() );
+                    }
+                }
+            }
+
+        }
+        return arrEventGuestId;
+    }
+
+    private String getTableAssignmentFormattedText(  ArrayList<TableGuestsBean> arrTableGuestBean ) {
+        String sTableFormattedText = Constants.EMPTY;
+        boolean  isFirstTable = true;
+        for( TableGuestsBean  tableGuestBean : arrTableGuestBean ) {
+            int numOfSeats = ParseUtil.sToI(tableGuestBean.getGuestAssignedSeats());
+
+            if( !isFirstTable) {
+                sTableFormattedText = sTableFormattedText + ", ";
+            }
+
+            Integer iTableNum = ParseUtil.sToI( tableGuestBean.getTableNum() );
+            if(iTableNum>0)  {
+                sTableFormattedText = sTableFormattedText + " table " + iTableNum;
+            }
+            isFirstTable = false;
+        }
+        return sTableFormattedText;
+    }
+
     private EmailObject getSeatingConfirmationEmailObject( EmailScheduleBean emailScheduleBean,EmailTemplateBean emailTemplateBean  )
     {
         EmailObject emailObject = new EmailQueueBean();
         if( emailScheduleBean!=null )
         {
             String sEventID = ParseUtil.checkNull( emailScheduleBean.getEventId() );
-            String sGuestId = ParseUtil.checkNull( emailScheduleBean.getGuestId() );
             String sAdminId = ParseUtil.checkNull( emailScheduleBean.getAdminId() );
+            ArrayList<String> arrEventGuestId = getEventGuestId( emailScheduleBean );
+            if( sEventID!=null && !"".equalsIgnoreCase(sEventID) && arrEventGuestId!=null
+                    && !arrEventGuestId.isEmpty() )  {
 
-            if( sEventID!=null && !"".equalsIgnoreCase(sEventID) && sGuestId!=null
-                    && !"".equalsIgnoreCase(sGuestId) )
-            {
-                GuestTableManager guestTableManager = new GuestTableManager();
-                //ArrayList<String> arrTableId = guestTableManager.getEventGuestTables(sGuestId, sEventID);
+                for(String sTmpGuestId : arrEventGuestId) {
+                    GuestTableManager guestTableManager = new GuestTableManager();
 
-                GuestTableMetaData guestTableMetaData = new GuestTableMetaData();
-                guestTableMetaData.setGuestId( sGuestId );
-                guestTableMetaData.setEventId( sEventID );
+                    GuestTableMetaData guestTableMetaData = new GuestTableMetaData();
+                    guestTableMetaData.setGuestId( sTmpGuestId );
+                    guestTableMetaData.setEventId( sEventID );
 
 
-                ArrayList<TableGuestsBean> arrTableGuestBean = guestTableManager.getGuestsEventTableAssignments( guestTableMetaData );
+                    ArrayList<TableGuestsBean> arrTableGuestBean = guestTableManager.getGuestsEventTableAssignments( guestTableMetaData );
 
-                if(arrTableGuestBean!=null && !arrTableGuestBean.isEmpty())
-                {
-                    String sHtmlBody  =  ParseUtil.checkNull(emailTemplateBean.getHtmlBody());
-                    String sTextBody  =  ParseUtil.checkNull(emailTemplateBean.getTextBody());
+                    if(arrTableGuestBean!=null && !arrTableGuestBean.isEmpty()) {
+                        String sTableText = getTableAssignmentFormattedText(arrTableGuestBean);
+                        if( !Utility.isNullOrEmpty(sTableText) ) {
 
-                    TableManager tableManager = new TableManager();
-                    boolean isFirstTable = true;
-                    boolean isTableExists = false;
-                    String sTableText = "";
-                    for( TableGuestsBean  tableGuestBean : arrTableGuestBean )
-                    {
-                        int numOfSeats = ParseUtil.sToI(tableGuestBean.getGuestAssignedSeats());
+                            String sHtmlBody  =  ParseUtil.checkNull(emailTemplateBean.getHtmlBody());
+                            String sTextBody  =  ParseUtil.checkNull(emailTemplateBean.getTextBody());
 
-                        if( !isFirstTable)
-                        {
-                            sTableText = sTableText + ", ";
+                            GuestManager guestManager = new GuestManager();
+                            GuestBean guestBean = guestManager.getGuest( sTmpGuestId) ;
+                            String sGivenName = ParseUtil.checkNull(guestBean.getUserInfoBean().getFirstName()) + " " + ParseUtil.checkNull(guestBean.getUserInfoBean().getLastName());
+                            if(sHtmlBody.contains("__GIVENNAME__")) {
+                                sHtmlBody = sHtmlBody.replaceAll("__GIVENNAME__",sGivenName);
+                            }
+                            if(sTextBody.contains("__GIVENNAME__")) {
+                                sTextBody = sTextBody.replaceAll("__GIVENNAME__",sGivenName);
+                            }
+
+                            sHtmlBody = sHtmlBody.replaceAll("__SEATING_CONFIRMATION__",sTableText );
+                            sTextBody = sTextBody.replaceAll("__SEATING_CONFIRMATION__",sTableText );
+
+
+                            AdminManager adminManager = new AdminManager();
+                            sHtmlBody = adminManager.replaceTemplateWithEventData( sHtmlBody , sEventID);
+                            sHtmlBody = adminManager.replaceTemplateWithAdminData( sHtmlBody , sAdminId);
+
+                            sTextBody = adminManager.replaceTemplateWithEventData( sTextBody , sEventID);
+                            sTextBody = adminManager.replaceTemplateWithAdminData( sTextBody , sAdminId);
+
+
+
+                            emailObject.setHtmlBody( sHtmlBody );
+                            emailObject.setTextBody( sTextBody );
+
+                            emailObject = updateEventData( emailObject , sEventID );
+
+                            emailObject = updateToAddressData(emailObject , sTmpGuestId );
+                            emailObject = updateFromAddress( emailObject , emailTemplateBean ) ;
+
+                            emailObject.setStatus( Constants.EMAIL_STATUS.NEW.getStatus() );
+                            emailObject.setEmailSubject( ParseUtil.checkNull(emailTemplateBean.getEmailSubject() ) );
+
+
+                        } else {
+                            emailLogging.info("This guest has no table assigned,");
                         }
-
-                        Integer iTableNum = ParseUtil.sToI( tableGuestBean.getTableNum() );
-                        if(iTableNum>0)
-                        {
-                            sTableText = sTableText + " table " + iTableNum;
-                            isTableExists = true;
-                        }
-                        isFirstTable = false;
-                    }
-
-                    if( isTableExists )
-                    {
-                        GuestManager guestManager = new GuestManager();
-                        GuestBean guestBean = guestManager.getGuest( sGuestId) ;
-                        String sGivenName = ParseUtil.checkNull(guestBean.getUserInfoBean().getFirstName()) + " " + ParseUtil.checkNull(guestBean.getUserInfoBean().getLastName());
-                        if(sHtmlBody.contains("__GIVENNAME__")) {
-                            sHtmlBody = sHtmlBody.replaceAll("__GIVENNAME__",sGivenName);
-                        }
-                        if(sTextBody.contains("__GIVENNAME__")) {
-                            sTextBody = sTextBody.replaceAll("__GIVENNAME__",sGivenName);
-                        }
-
-                        sHtmlBody = sHtmlBody.replaceAll("__SEATING_CONFIRMATION__",sTableText );
-                        sTextBody = sTextBody.replaceAll("__SEATING_CONFIRMATION__",sTableText );
-
-                        EventManager eventManager = new EventManager();
-                        EventBean eventBean = eventManager.getEvent(sEventID);
-
-                        sHtmlBody = sHtmlBody.replaceAll("__SEATINGPLANNAME__",ParseUtil.checkNull( eventBean.getEventName() ));
-                        sTextBody = sTextBody.replaceAll("__SEATINGPLANNAME__",ParseUtil.checkNull( eventBean.getEventName() ));
-
-                        AdminManager adminManager = new AdminManager();
-                        AdminBean adminBean = adminManager.getAdmin(sAdminId);
-                        if(adminBean!=null && adminBean.getAdminId()!=null && !"".equalsIgnoreCase( adminBean.getAdminId() ) ) {
-
-                            String  sAdminName =  ParseUtil.checkNull(adminBean.getAdminUserInfoBean().getFirstName()) + " " +   ParseUtil.checkNull(adminBean.getAdminUserInfoBean().getLastName());
-                            sHtmlBody = sHtmlBody.replaceAll("__HOSTNAME__", sAdminName );
-                            sTextBody = sTextBody.replaceAll("__HOSTNAME__", sAdminName );
-                        }
-
-                        emailObject.setHtmlBody( sHtmlBody );
-                        emailObject.setTextBody( sTextBody );
-
-                        emailObject = updateEventData( emailObject , sEventID );
-
-                        emailObject = updateToAddressData(emailObject , sGuestId );
-                        emailObject = updateFromAddress( emailObject , emailTemplateBean ) ;
-
-                        emailObject.setStatus( Constants.EMAIL_STATUS.NEW.getStatus() );
-                        emailObject.setEmailSubject( ParseUtil.checkNull(emailTemplateBean.getEmailSubject() ) );
+                    } else {
+                        emailLogging.info("This list of table guest bean is empty");
                     }
                 }
+
+            } else {
+                emailLogging.info("Invalid Guest Id and event guest Id");
             }
+        } else{
+            emailLogging.info("Invalid request bean");
         }
         return emailObject;
     }

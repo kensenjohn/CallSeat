@@ -31,7 +31,7 @@ if(cookies!=null)
         }
 	}
 }
-response.sendRedirect("/web/com/gs/welcome.jsp");
+response.sendRedirect("/");
 %>
 <body>
 	<div class="container rounded-corners">
@@ -41,12 +41,12 @@ response.sendRedirect("/web/com/gs/welcome.jsp");
 		<div class="blank_scratch_area">
 			<div>
 				<h2>Thank for using our application. </h2> <br><br>
-				<h3><a id="go_home" href="/web/com/gs/welcome.jsp">Go back to Home Page</a></h3>
+				<h3><a id="go_home" href="/">Go back to Home Page</a></h3>
 			</div>
 		</div>
 	</div>
 	
-	<form id="sign_out_forward" action="/web/com/gs/welcome.jsp">
+	<form id="sign_out_forward" action="/">
 	</form>
 </body>
 	
@@ -61,7 +61,7 @@ response.sendRedirect("/web/com/gs/welcome.jsp");
 	{
 		var exdays = 1;
 		var exdate=new Date();
-		exdate.setDate(exdate.getDate() - exdays);
+		exdate.setDate(exdate.getDate() - exdays);   event_setup.jsp
 		var c_value=escape(cookieValue) + ((exdays==null) ? "" : "; expires="+exdate.toUTCString())
 		 	+ ("; path=/");
 		

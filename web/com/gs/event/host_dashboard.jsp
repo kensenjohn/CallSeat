@@ -22,7 +22,7 @@
 <%@include file="../common/gatekeeper.jsp"%>
 <%
     if(sAdminId==null || "".equalsIgnoreCase(sAdminId)){
-        response.sendRedirect("/web/com/gs/host_landing.jsp");
+        response.sendRedirect("/index.jsp");
     }
 %>
 

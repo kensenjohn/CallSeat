@@ -65,28 +65,30 @@ try
         sCellNumber = Utility.convertHumanToInternationalTelNum(sCellNumberHumanFormat);
     }
     appLogging.info("Human format number "+ sCellNumberHumanFormat + " cellnumber :"+sCellNumber);
-	if( !Utility.isNullOrEmpty(sCellNumber) )
-	{
-		Text errorText = new ErrorText("Please enter a valid cellphone number.<br>","cell_num") ;
-		arrErrorText.add(errorText);
-		
-		responseStatus = RespConstants.Status.ERROR;
-		isError = true;
-	}  else  {
+	if( !Utility.isNullOrEmpty(sCellNumber) ) {
         com.google.i18n.phonenumbers.Phonenumber.PhoneNumber cellPhoneNumber = new Phonenumber.PhoneNumber();
         cellPhoneNumber.setCountryCode(iCountryCode);
         cellPhoneNumber.setNationalNumber(ParseUtil.sToL(sCellNumber.substring(2)));
         PhoneNumberUtil cellPhoneNumberUtil = PhoneNumberUtil.getInstance();
+        appLogging.info("cellPhoneNumber just before checking validity :"+cellPhoneNumber);
         if(!cellPhoneNumberUtil.isValidNumber(cellPhoneNumber))
         {
-            Text errorText = new ErrorText("Please enter a valid cellphone number.<br>","cell_num") ;
+            Text errorText = new ErrorText("Please enter a valid cellphone number.<br>" + cellPhoneNumber.getNationalNumber(),"cell_num") ;
             arrErrorText.add(errorText);
 
             responseStatus = RespConstants.Status.ERROR;
             isError = true;
         }
+	}  else  {
+
+        Text errorText = new ErrorText("Please enter a valid cellphone number.<br>","cell_num") ;
+        arrErrorText.add(errorText);
+
+        responseStatus = RespConstants.Status.ERROR;
+        isError = true;
     }
 
+    appLogging.info("BEfore checking home number");
     String sHomeNumber = "";
     if( !Utility.isNullOrEmpty(sHomeNumberHumanFormat) ) {
         sHomeNumber = Utility.convertHumanToInternationalTelNum(sHomeNumberHumanFormat);
@@ -105,6 +107,13 @@ try
             responseStatus = RespConstants.Status.ERROR;
             isError = true;
         }
+    }   else  {
+
+        Text errorText = new ErrorText("Please enter a valid home phone number.<br>","cell_num") ;
+        arrErrorText.add(errorText);
+
+        responseStatus = RespConstants.Status.ERROR;
+        isError = true;
     }
 	if(isGuestAddToEvent)
 	{

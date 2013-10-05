@@ -12,7 +12,7 @@
     <div class="fnbx_scratch_area">
         <div style="padding:20px">
             <div id="div_login" name="div_login" class="row">
-                <div class="offset1 span5">
+                <div class="offset_0_5 span5">
                     <h1>Contact Us</h1>
                     <div class="row">
                         <div class="span2" >
@@ -20,7 +20,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="offset1 span7" >
+                        <div class="offset_0_5 span7" >
                             <span>You may contact us through email or phone for any question regarding our product, issues or cancellations.</span>
                         </div>
                     </div>
@@ -30,7 +30,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="offset1 span7" >
+                        <div class="offset_0_5 span7" >
                             <h4>Email:</h4><span> kjohn@callseat.com</span>
                         </div>
                     </div>
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="offset1 span7" >
+                        <div class="offset_0_5 span7" >
                             <h4>Phone:</h4><span> (267) 250 2719</span>
                         </div>
                     </div>
@@ -51,13 +51,13 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="offset1 span7" >
+                        <div class="offset_0_5 span7" >
                             <h4>Address</h4>
                         </div>
                     </div>
                     <div class="row">
-                        <div class="offset1 span7" >
-                            <span>5316 Carnaby Suite #155</span>  <br>
+                        <div class="offset_0_5 span7" >
+                            <span>5316 Carnaby St, Suite 155</span>  <br>
                             <span>Irving, TX 75038</span>
                         </div>
                     </div>

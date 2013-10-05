@@ -22,7 +22,7 @@ function credentialSuccess(jsonResponse,varSource)
 	$('#link_goto_lobby').removeAttr("href");
 	$('#link_goto_lobby').attr('href','/web/com/gs/event/host_dashboard.jsp?host_lobby_admin_id='+jsonResponse.user_id);
 	
-	if(varSource == 'host_landing.jsp')
+	if(varSource == 'index.jsp')
 	{
 		$('#host_lobby_admin_id').val(jsonResponse.user_id);
 		$('#frm_lobby_admin').submit();

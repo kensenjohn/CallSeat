@@ -47,20 +47,8 @@ try {
             requestEmailSchedulerBean.setEmailTemplateId( guestResponseEmailTemplate.getEmailTemplateId() );
 
             EmailSchedulerData emailSchedulerData = new EmailSchedulerData();
-            ArrayList<EmailScheduleBean> arrEmailNewScheduleBean =  emailSchedulerData.getEmailScheduler( requestEmailSchedulerBean , Constants.SCHEDULER_STATUS.NEW_SCHEDULE );
-            Integer iNumOfEmailsScheduled = 0;
-            if(arrEmailNewScheduleBean!=null && !arrEmailNewScheduleBean.isEmpty()) {
-                iNumOfEmailsScheduled = arrEmailNewScheduleBean.size();
-            }
-            jsonResponseObj.put("num_of_email_scheduled",  iNumOfEmailsScheduled );
-
-
-            ArrayList<EmailScheduleBean> arrEmailCompleteScheduleBean =  emailSchedulerData.getEmailScheduler( requestEmailSchedulerBean , Constants.SCHEDULER_STATUS.COMPLETE );
-            Integer iNumOfEmailsSentCompleted = 0;
-            if(arrEmailCompleteScheduleBean!=null && !arrEmailCompleteScheduleBean.isEmpty()) {
-                iNumOfEmailsSentCompleted = arrEmailCompleteScheduleBean.size();
-            }
-            jsonResponseObj.put("num_of_email_send_complete",  iNumOfEmailsSentCompleted );
+            jsonResponseObj.put("num_of_rsvp_email_scheduled",  emailSchedulerData.getNumOfEmailScheduled( requestEmailSchedulerBean , Constants.SCHEDULER_STATUS.NEW_SCHEDULE ) );
+            jsonResponseObj.put("num_of_rsvp_email_send_complete",   emailSchedulerData.getNumOfEmailScheduled( requestEmailSchedulerBean , Constants.SCHEDULER_STATUS.COMPLETE )  );
 
 
             Text okText = new OkText("RSVP response was retrieved.","my_id");
@@ -73,6 +61,34 @@ try {
             responseStatus = RespConstants.Status.ERROR;
             jspLogging.error("Email Template for RSVP Response empty Admin Id : " + sAdminId  + " Event ID : " +  sEventId );
         }
+
+
+        EmailTemplateBean seatingInfoEmailTemplate = adminManager.getFormattedSeatingInformationEmail( webRespRequest );
+        if(seatingInfoEmailTemplate!=null && !"".equalsIgnoreCase(seatingInfoEmailTemplate.getEmailTemplateId())) {
+            jsonResponseObj.put("seating_info_email",  seatingInfoEmailTemplate.toJson());
+
+            EmailScheduleBean requestEmailSchedulerBean = new EmailScheduleBean();
+            requestEmailSchedulerBean.setAdminId( sAdminId );
+            requestEmailSchedulerBean.setEventId( sEventId );
+            requestEmailSchedulerBean.setEmailTemplateId( seatingInfoEmailTemplate.getEmailTemplateId() );
+
+            EmailSchedulerData emailSchedulerData = new EmailSchedulerData();
+            jsonResponseObj.put("num_of_seating_info_email_scheduled",  emailSchedulerData.getNumOfEmailScheduled( requestEmailSchedulerBean , Constants.SCHEDULER_STATUS.NEW_SCHEDULE ) );
+            jsonResponseObj.put("num_of_seating_info_email_send_complete",   emailSchedulerData.getNumOfEmailScheduled( requestEmailSchedulerBean , Constants.SCHEDULER_STATUS.COMPLETE )  );
+
+            Text okText = new OkText("Seating Info Email was retrieved.","my_id");
+            arrOkText.add(okText);
+            responseStatus = RespConstants.Status.OK;
+        }   else {
+
+            Text errorText = new ErrorText("There is currently no seating info email setup. Please contact your support representative","my_id") ;
+            arrErrorText.add(errorText);
+
+            responseStatus = RespConstants.Status.ERROR;
+            jspLogging.error("Email Template for Seating Info is empty Admin Id : " + sAdminId  + " Event ID : " +  sEventId );
+
+        }
+
     }else  {
         Text errorText = new ErrorText("Oops!! Your request could not be processed at this time.","my_id") ;
         arrErrorText.add(errorText);
