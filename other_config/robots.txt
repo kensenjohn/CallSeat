@@ -1,0 +1,15 @@
+User-agent: *
+Disallow: /web/css/
+Disallow: /web/js/
+Disallow: /web/img/
+Disallow: /web/r/
+Disallow: /web/com/gs/common/
+Disallow: /web/com/gs/event/
+Disallow: /web/com/gs/guests/
+Disallow: /web/com/gs/twilio/
+Disallow: /web/com/gs/utilities/
+Allow: /index.jsp
+Allow: /web/com/gs/common/pricing_plan_display.jsp
+Allow: /web/com/gs/common/contact.jsp
+Sitemap: https://www.callseat.com/sitemap.xml
+
