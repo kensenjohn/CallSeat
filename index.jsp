@@ -150,7 +150,7 @@
         </div>
     </div>
 </section>
-<form action="event/host_dashboard.jsp" method="POST" id="frm_lobby_admin">
+<form action="/web/com/gs/event/host_dashboard.jsp" method="POST" id="frm_lobby_admin">
     <input type="hidden" id="host_lobby_admin_id" name="host_lobby_admin_id" value="<%=isSignedIn ? sAdminIdSecure: "" %>"/>
 </form>
 </body>
@@ -247,9 +247,10 @@
             $( "#event_dt_sbt" ).blur();
             displayMssgBoxAlert('A date must be selected to create a seating plan. Please select a date from the calendar pop up.', true);
         } else  {
+
             $("#hid_event_date").attr( "value", $("#event_date").attr("value") );
             $("#hid_tmp_email").attr( "value", $("#tmp_email").attr("value") );
-            $("#call_forward").attr("action","event/event_setup.jsp");
+            $("#call_forward").attr("action","/web/com/gs/event/event_setup.jsp");
             $("#from_landing").val("true");
             $("#call_forward").submit();
         }

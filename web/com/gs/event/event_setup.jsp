@@ -753,7 +753,7 @@
                                             &nbsp;
                                         </div>
                                         <div class="span2">
-                                            <input type="button" id="send_rsvp_response_email" name="send_rsvp_response_email" class="btn btn-large ispn5" value="Email guests RSVP options"/>
+                                            <input type="button" id="send_rsvp_response_email" name="send_rsvp_response_email" class="btn btn-large" value="Email Guests"/>
                                         </div>
                                     </div>
                                     <div class="row">
@@ -822,7 +822,7 @@
                                             &nbsp;
                                         </div>
                                         <div class="span2">
-                                            <input type="button" id="send_seating_info_email" name="send_seating_info_email" class="btn btn-large" value="Email guests seating information"/>
+                                            <input type="button" id="send_seating_info_email" name="send_seating_info_email" class="btn btn-large" value="Email Guests"/>
                                         </div>
                                     </div>
                                     <div class="row">

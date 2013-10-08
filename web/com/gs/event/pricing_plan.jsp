@@ -18,6 +18,12 @@
     String sGateAdminId = sAdminId;
     AdminManager adminManager = new AdminManager();
     AdminBean adminBean = adminManager.getAdmin(sAdminId);
+
+    boolean hasPermToUsePayChannelTestKey = false;
+    if(adminBean!=null && !Utility.isNullOrEmpty(adminBean.getAdminId())) {
+        User user = new User(adminBean );
+        hasPermToUsePayChannelTestKey = user.can(Permission.USE_PAYMENT_CHANNEL_TEST_API_KEY);
+    }
 %>
 <%@include file="../common/gatekeeper.jsp"%>
 
@@ -39,9 +45,11 @@
 							<div class="span3">
 								<h2 style="font-size:155%; color:#793866; margin : 0px; clear:both">Select a Pricing Plan</h2>
 							</div>
+                            <% if(hasPermToUsePayChannelTestKey)  { %>
                             <div class="span5">
                                 <input type="checkbox" id="test_api" style="width:50px" checked>&nbsp;&nbsp;<span style="font-size:110%; color:#793866; margin : 0px; clear:both">Use Test API Key</span>
                             </div>
+                            <% } %>
 						</div>
 						<div class="row">							
 							<div class="span8">

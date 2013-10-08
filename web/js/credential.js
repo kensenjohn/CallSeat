@@ -21,9 +21,8 @@ function credentialSuccess(jsonResponse,varSource)
 	$('#div_goto_lobby').show();
 	$('#link_goto_lobby').removeAttr("href");
 	$('#link_goto_lobby').attr('href','/web/com/gs/event/host_dashboard.jsp?host_lobby_admin_id='+jsonResponse.user_id);
-	
-	if(varSource == 'index.jsp')
-	{
+
+	if(varSource == 'index.jsp') {
 		$('#host_lobby_admin_id').val(jsonResponse.user_id);
 		$('#frm_lobby_admin').submit();
 	}
