@@ -11,7 +11,7 @@
 <%
 try
 {
-    Logger jspLogging = LoggerFactory.getLogger("JspLogging");
+    Logger jspLogging = LoggerFactory.getLogger(Constants.JSP_LOGS);
     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
     String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
 
@@ -76,10 +76,7 @@ try
                                 <h4><%=checkoutBean.getItemName()%></h4>
                             </div>
                             <div class="offset_0_5 span4">
-                                <span class="fld_txt_small">Seating Phone Number:&nbsp;<%=purchaseResponseTransactionBean.getSeatingTelNumber()%></span>
-                            </div>
-                            <div class="offset_0_5 span4">
-                                <span class="fld_txt_small">RSVP Phone Number:&nbsp;<%=purchaseResponseTransactionBean.getRsvpTelNumber()%></span>
+                                <span class="fld_txt_small">Telephone Number:&nbsp;<%=purchaseResponseTransactionBean.getTelephoneNumber()%></span>
                             </div>
                         </div>
 

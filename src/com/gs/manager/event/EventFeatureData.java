@@ -75,13 +75,12 @@ public class EventFeatureData {
 
             ArrayList<Object> aParams = DBDAO.createConstraint(sEventId, eventFeatures.getEventFeature() );
 
-            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(ADMIN_DB,sQuery,aParams,true,sourceFile,"getAllEventFeatures()");
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(ADMIN_DB,sQuery,aParams,true,sourceFile,"getEventFeaturesValues()");
 
             if(arrResult!=null && !arrResult.isEmpty())
             {
                 HashMap<String,String> hmEventFeature = new HashMap<String, String>();
-                for(HashMap<String, String> hmResult : arrResult )
-                {
+                for(HashMap<String, String> hmResult : arrResult ) {
                     hmEventFeature.put(hmResult.get("FEATURE_NAME"), hmResult.get("FEATUREVALUE"));
                 }
                 eventFeatureBean.setHmFeatureValue(hmEventFeature);

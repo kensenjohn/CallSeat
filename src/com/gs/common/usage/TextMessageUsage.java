@@ -81,7 +81,7 @@ public class TextMessageUsage  implements Usage {
             String sQuery = "SELECT * from GTSMSTRANSACTION GTST, GTTELNUMBERTYPE GTTNT,  GTTELNUMBERS GTT " +
                     " WHERE GTST.FK_EVENTID=? and GTST.SMS_STATUS='COMPLETE'   AND GTST.FK_EVENTID=GTT.FK_EVENTID  and "  +
                     " GTT.TELNUMBER=GTST.FROM_TELNUMBER AND  GTT.FK_TELNUMBERTYPEID=GTTNT.TELNUMBERTYPEID   AND " +
-                    " GTTNT.TELNUMTYPE IN ('"+Constants.EVENT_TASK.DEMO_SEATING.getTask()+"','"+Constants.EVENT_TASK.DEMO_RSVP.getTask()+"') " +
+                    " GTTNT.TELNUMTYPE =  '"+Constants.EVENT_TASK.DEMO_TELEPHONE_NUMBER.getTask()+"'" +
                     " AND GTTNT.TELNUMTYPE = GTST.EVENT_TYPE";
 
             ArrayList<Object> aParams = DBDAO.createConstraint(usageMetaData.getEventId());
@@ -100,7 +100,7 @@ public class TextMessageUsage  implements Usage {
             String sQuery = "SELECT * from GTSMSTRANSACTION GTST, GTTELNUMBERTYPE GTTNT,  GTTELNUMBERS GTT " +
                     " WHERE GTST.FK_EVENTID=? and GTST.SMS_STATUS='COMPLETE'   AND GTST.FK_EVENTID=GTT.FK_EVENTID  and "  +
                     " GTT.TELNUMBER=GTST.FROM_TELNUMBER AND  GTT.FK_TELNUMBERTYPEID=GTTNT.TELNUMBERTYPEID   AND " +
-                    " GTTNT.TELNUMTYPE IN ('"+Constants.EVENT_TASK.SEATING.getTask()+"','"+Constants.EVENT_TASK.RSVP.getTask()+"') " +
+                    " GTTNT.TELNUMTYPE = '"+Constants.EVENT_TASK.PREMIUM_TELEPHONE_NUMBER.getTask()+"'" +
                     " AND GTTNT.TELNUMTYPE = GTST.EVENT_TYPE";
 
 

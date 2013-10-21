@@ -646,6 +646,34 @@ a.btn-rust[disabled],
     text-align: center;
 }
 
+
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:portrait) {
+    #pricing_grid .display_dimension{
+        width: 120px;
+        height: 315px;
+        cursor:default;
+    }
+
+    #pricing_grid .action_display{
+        width: 120px;
+        height: 375px;
+        cursor:pointer;
+    }
+}
+@media all and (device-width: 768px) and (device-height: 1024px) and (orientation:landscape) {
+    #pricing_grid .display_dimension{
+        width: 150px;
+        height: 315px;
+        cursor:default;
+    }
+
+    #pricing_grid .action_display{
+        width: 150px;
+        height: 375px;
+        cursor:pointer;
+    }
+}
+
 #pricing_grid .display_dimension{
     width: 150px;
     height: 315px;
@@ -657,6 +685,7 @@ a.btn-rust[disabled],
     height: 375px;
     cursor:pointer;
 }
+
 
 #pricing_grid > div:first-child {
     margin-left: 0;

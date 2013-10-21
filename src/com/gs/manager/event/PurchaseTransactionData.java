@@ -34,14 +34,14 @@ public class PurchaseTransactionData {
         if (sAdminId != null && !"".equalsIgnoreCase(sAdminId) && sEventId!=null && !"".equalsIgnoreCase(sEventId)) {
             String sQuery = "select PURCHASETRANSACTIONID , FK_EVENTID  , FK_ADMINID  , IS_PURCHASE_COMPLETE , RSVP_TELNUMBER ," +
                     " SEATING_TELNUMBER , FK_PRICEGROUPID  , FIRSTNAME , LASTNAME , ADDRESS1  , STATE , ZIPCODE  , COUNTRY  ," +
-                    " STRIPE_CUSTOMER_ID , STRIPE_TOKEN , CREDIT_CARD_LAST4_DIGITS , CREATEDATE , HUMANCREATEDATE   , UNIQUE_PURCHASE_TOKEN  , API_KEY_TYPE "+
+                    " STRIPE_CUSTOMER_ID , STRIPE_TOKEN , CREDIT_CARD_LAST4_DIGITS , CREATEDATE , HUMANCREATEDATE   , UNIQUE_PURCHASE_TOKEN  ," +
+                    " API_KEY_TYPE  , TELEPHONE_NUMBER  "+
                     " from GTPURCHASETRANSACTIONS where FK_ADMINID = ? and FK_EVENTID = ?";
 
             ArrayList<Object> aParams = DBDAO.createConstraint(sAdminId,sEventId);
 
-            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(
-                    ADMIN_DB, sQuery, aParams, false, "PurchaseTransactionData.java",
-                    "getPurchaseTransaction(sAdminId,sEventId)");
+            ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(  ADMIN_DB, sQuery, aParams, false,
+                    "PurchaseTransactionData.java", "getPurchaseTransaction(sAdminId,sEventId)");
             if (arrResult != null && !arrResult.isEmpty()) {
                 for (HashMap<String, String> hmResult : arrResult) {
 
@@ -86,22 +86,21 @@ public class PurchaseTransactionData {
         if(purchaseTransactionBean!=null)
         {
             String sQuery = "INSERT INTO GTPURCHASETRANSACTIONS (PURCHASETRANSACTIONID,FK_EVENTID,FK_ADMINID, " +
-                    " IS_PURCHASE_COMPLETE,RSVP_TELNUMBER,SEATING_TELNUMBER, FK_PRICEGROUPID,FIRSTNAME,LASTNAME, STATE,ZIPCODE,STRIPE_CUSTOMER_ID," +
-                    " CREATEDATE,HUMANCREATEDATE,UNIQUE_PURCHASE_TOKEN,API_KEY_TYPE ) "
-                    + " VALUES(?,?,?,   ?,?,?,	 ?,?,?,  ?,?,?,  ?,?,?,  ?)";
+                    " IS_PURCHASE_COMPLETE , FK_PRICEGROUPID,FIRSTNAME,LASTNAME, STATE,ZIPCODE,STRIPE_CUSTOMER_ID," +
+                    " CREATEDATE,HUMANCREATEDATE,UNIQUE_PURCHASE_TOKEN,API_KEY_TYPE,TELEPHONE_NUMBER ) "
+                    + " VALUES(?,?,?,   ?,	 ?,?,?,  ?,?,?,  ?,?,?,  ?,?)";
 
             Long lCreateDate = DateSupport.getEpochMillis();
             String sHumanCreateDate = DateSupport.getUTCDateTime();
 
             ArrayList<Object> aParams = DBDAO.createConstraint(ParseUtil.checkNull(purchaseTransactionBean.getPurchaseTransactionId()),
                     ParseUtil.checkNull(purchaseTransactionBean.getEventId()), ParseUtil.checkNull(purchaseTransactionBean.getAdminId()),
-                    purchaseTransactionBean.isPurchaseComplete()?"1":"0", ParseUtil.checkNull(purchaseTransactionBean.getRsvpTelNumber()),
-                    ParseUtil.checkNull(purchaseTransactionBean.getSeatingTelNumber()),ParseUtil.checkNull(purchaseTransactionBean.getPriceGroupId()),
+                    purchaseTransactionBean.isPurchaseComplete()?"1":"0",ParseUtil.checkNull(purchaseTransactionBean.getPriceGroupId()),
                     ParseUtil.checkNull(purchaseTransactionBean.getFirstName()),ParseUtil.checkNull(purchaseTransactionBean.getLastName()),
                     ParseUtil.checkNull(purchaseTransactionBean.getState()),ParseUtil.checkNull(purchaseTransactionBean.getZipcode()),
                     ParseUtil.checkNull(purchaseTransactionBean.getStripeCustomerId()), lCreateDate , sHumanCreateDate,
                     ParseUtil.checkNull(purchaseTransactionBean.getUniquePurchaseToken()),
-                    ParseUtil.checkNull(purchaseTransactionBean.getApiKeyType()) );
+                    ParseUtil.checkNull(purchaseTransactionBean.getApiKeyType()),ParseUtil.checkNull(purchaseTransactionBean.getTelephoneNumber()) );
             iNumOfRows = DBDAO.putRowsQuery(sQuery,aParams,ADMIN_DB,"PurchaseTransactionData.java","insertPurchaseTransaction()");
         }
         return iNumOfRows;
@@ -113,9 +112,9 @@ public class PurchaseTransactionData {
         if(purchaseTransactionBean!=null)
         {
             String sQuery = "UPDATE GTPURCHASETRANSACTIONS set FK_EVENTID = ? , FK_ADMINID = ? , IS_PURCHASE_COMPLETE = ?," +
-                    " RSVP_TELNUMBER = ? , SEATING_TELNUMBER = ? , FK_PRICEGROUPID = ? , FIRSTNAME = ? , LASTNAME = ? , " +
+                    " FK_PRICEGROUPID = ? , FIRSTNAME = ? , LASTNAME = ? , " +
                     " STATE = ? , ZIPCODE = ? , COUNTRY = ? , STRIPE_CUSTOMER_ID = ? , CREATEDATE = ? , HUMANCREATEDATE = ? , STRIPE_TOKEN = ? , " +
-                    " CREDIT_CARD_LAST4_DIGITS = ? , UNIQUE_PURCHASE_TOKEN = ?, API_KEY_TYPE = ? WHERE PURCHASETRANSACTIONID = ?";
+                    " CREDIT_CARD_LAST4_DIGITS = ? , UNIQUE_PURCHASE_TOKEN = ?, API_KEY_TYPE = ?, TELEPHONE_NUMBER = ? WHERE PURCHASETRANSACTIONID = ?";
 
             Long lCreateDate = DateSupport.getEpochMillis();
             String sHumanCreateDate = DateSupport.getUTCDateTime();
@@ -124,8 +123,6 @@ public class PurchaseTransactionData {
                     ParseUtil.checkNull(purchaseTransactionBean.getEventId()),
                     ParseUtil.checkNull(purchaseTransactionBean.getAdminId()),
                     purchaseTransactionBean.isPurchaseComplete()?"1":"0",
-                    ParseUtil.checkNull(purchaseTransactionBean.getRsvpTelNumber()),
-                    ParseUtil.checkNull(purchaseTransactionBean.getSeatingTelNumber()),
                     ParseUtil.checkNull(purchaseTransactionBean.getPriceGroupId()),
                     ParseUtil.checkNull(purchaseTransactionBean.getFirstName()),
                     ParseUtil.checkNull(purchaseTransactionBean.getLastName()),
@@ -139,6 +136,7 @@ public class PurchaseTransactionData {
                     ParseUtil.checkNull(purchaseTransactionBean.getCreditCardLast4Digits()),
                     ParseUtil.checkNull(purchaseTransactionBean.getUniquePurchaseToken()),
                     ParseUtil.checkNull(purchaseTransactionBean.getApiKeyType()),
+                    ParseUtil.checkNull(purchaseTransactionBean.getTelephoneNumber() ),
                     ParseUtil.checkNull(purchaseTransactionBean.getPurchaseTransactionId()) );
             appLogging.info("Calling this forever there is nothing to do here. move along" +
                     " " + aParams.toString() + " - " + purchaseTransactionBean );

@@ -326,9 +326,7 @@ public class GuestData {
 	public ArrayList<GuestBean> getGuestsByTelNumber(
 			TelNumberMetaData telNumMetaData) {
 		ArrayList<GuestBean> arrGuestBean = new ArrayList<GuestBean>();
-		if (telNumMetaData != null
-				&& telNumMetaData.getGuestTelNumber() != null
-				&& !"".equalsIgnoreCase(telNumMetaData.getGuestTelNumber())) {
+		if (telNumMetaData != null && telNumMetaData.getGuestTelNumber() != null && !"".equalsIgnoreCase(telNumMetaData.getGuestTelNumber())) {
 			String sQuery = "SELECT GG.GUESTID, GG.FK_USERINFOID, GG.FK_ADMINID, GG.CREATEDATE, "
 					+ " GG.TOTAL_SEATS, GG.RSVP_SEATS, GG.IS_TMP, GG.DEL_ROW, GG.HUMANCREATEDATE, "
 					+ " GU.FIRST_NAME, GU.LAST_NAME, GU.ADDRESS_1, GU.ADDRESS_2, GU.CITY, "
@@ -340,15 +338,12 @@ public class GuestData {
 					telNumMetaData.getGuestTelNumber(),
 					telNumMetaData.getGuestTelNumber());
             appLogging.info(sQuery + ": " + aParams );
-			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(
-					ADMIN_DB, sQuery, aParams, false, "GuestData.java",
-					"getGuestsByTelNumber()");
+			ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData( ADMIN_DB, sQuery, aParams, false, "GuestData.java", "getGuestsByTelNumber()");
 
 			if (arrResult != null && !arrResult.isEmpty()) {
 				for (HashMap<String, String> hmGuests : arrResult) {
 					GuestBean guestBean = createGuestBeanFromResult(hmGuests);
-					if (guestBean != null && guestBean.getGuestId() != null
-							&& !"".equalsIgnoreCase(guestBean.getGuestId())) {
+					if (guestBean != null && guestBean.getGuestId() != null && !"".equalsIgnoreCase(guestBean.getGuestId())) {
 
 						arrGuestBean.add(guestBean);
 					}
@@ -546,45 +541,29 @@ public class GuestData {
 		GuestBean guestBean = new GuestBean();
 		if (hmGuests != null && !hmGuests.isEmpty()) {
 			guestBean.setGuestId(ParseUtil.checkNull(hmGuests.get("GUESTID")));
-			guestBean.setUserInfoId(ParseUtil.checkNull(hmGuests
-					.get("FK_USERINFOID")));
-			guestBean
-					.setAdminId(ParseUtil.checkNull(hmGuests.get("FK_ADMINID")));
+			guestBean.setUserInfoId(ParseUtil.checkNull(hmGuests.get("FK_USERINFOID")));
+			guestBean.setAdminId(ParseUtil.checkNull(hmGuests.get("FK_ADMINID")));
 			guestBean.setCreateDate(ParseUtil.sToL(hmGuests.get("CREATEDATE")));
-			guestBean.setTotalSeat(ParseUtil.checkNull(hmGuests
-					.get("TOTAL_SEATS")));
-			guestBean.setRsvpSeat(ParseUtil.checkNull(hmGuests
-					.get("RSVP_SEATS")));
-			guestBean
-					.setIsTemporary(ParseUtil.checkNull(hmGuests.get("IS_TMP")));
-			guestBean
-					.setDeleteRow(ParseUtil.checkNull(hmGuests.get("DEL_ROW")));
+			guestBean.setTotalSeat(ParseUtil.checkNull(hmGuests.get("TOTAL_SEATS")));
+			guestBean.setRsvpSeat(ParseUtil.checkNull(hmGuests.get("RSVP_SEATS")));
+			guestBean.setIsTemporary(ParseUtil.checkNull(hmGuests.get("IS_TMP")));
+			guestBean.setDeleteRow(ParseUtil.checkNull(hmGuests.get("DEL_ROW")));
 
 			UserInfoBean userInfoBean = new UserInfoBean();
 
-			userInfoBean.setFirstName(ParseUtil.checkNull(hmGuests
-					.get("FIRST_NAME")));
-			userInfoBean.setLastName(ParseUtil.checkNull(hmGuests
-					.get("LAST_NAME")));
-			userInfoBean.setAddress1(ParseUtil.checkNull(hmGuests
-					.get("ADDRESS_1")));
-			userInfoBean.setAddress2(ParseUtil.checkNull(hmGuests
-					.get("ADDRESS_2")));
+			userInfoBean.setFirstName(ParseUtil.checkNull(hmGuests.get("FIRST_NAME")));
+			userInfoBean.setLastName(ParseUtil.checkNull(hmGuests.get("LAST_NAME")));
+			userInfoBean.setAddress1(ParseUtil.checkNull(hmGuests.get("ADDRESS_1")));
+			userInfoBean.setAddress2(ParseUtil.checkNull(hmGuests.get("ADDRESS_2")));
 			userInfoBean.setCity(ParseUtil.checkNull(hmGuests.get("CITY")));
 			userInfoBean.setState(ParseUtil.checkNull(hmGuests.get("STATE")));
-			userInfoBean
-					.setCountry(ParseUtil.checkNull(hmGuests.get("COUNTRY")));
-			userInfoBean.setIpAddress(ParseUtil.checkNull(hmGuests
-					.get("IP_ADDRESS")));
-			userInfoBean.setCellPhone(ParseUtil.checkNull(hmGuests
-					.get("CELL_PHONE")));
-			userInfoBean.setPhoneNum(ParseUtil.checkNull(hmGuests
-					.get("PHONE_NUM")));
+			userInfoBean.setCountry(ParseUtil.checkNull(hmGuests.get("COUNTRY")));
+			userInfoBean.setIpAddress(ParseUtil.checkNull(hmGuests.get("IP_ADDRESS")));
+			userInfoBean.setCellPhone(ParseUtil.checkNull(hmGuests.get("CELL_PHONE")));
+			userInfoBean.setPhoneNum(ParseUtil.checkNull(hmGuests.get("PHONE_NUM")));
 			userInfoBean.setEmail(ParseUtil.checkNull(hmGuests.get("EMAIL")));
-			userInfoBean.setIsTemporary(ParseUtil.checkNull(hmGuests
-					.get("USER_ISTMP")));
-			userInfoBean.setDeleteRow(ParseUtil.checkNull(hmGuests
-					.get("USER_DELROW")));
+			userInfoBean.setIsTemporary(ParseUtil.checkNull(hmGuests.get("USER_ISTMP")));
+			userInfoBean.setDeleteRow(ParseUtil.checkNull(hmGuests.get("USER_DELROW")));
 
             userInfoBean.setHumanCellPhone( userInfoBean.getHumanFormattedPhoneNumber(userInfoBean.getCellPhone()) );
             userInfoBean.setHumanPhoneNum( userInfoBean.getHumanFormattedPhoneNumber(userInfoBean.getPhoneNum()) );

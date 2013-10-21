@@ -1,5 +1,7 @@
 package com.gs.manager.event;
 
+import com.gs.common.Constants;
+
 public class TelNumberMetaData {
 	private String guestTelNumber = "";
 	private String eventTaskTelNumber = "";
@@ -16,6 +18,12 @@ public class TelNumberMetaData {
 	private String secretEventIdentifier = "";
 	private String secretEventSecretKey = "";
 	private String humanTelNumber = "";
+
+
+    private String telephoneNumNumDigit = Constants.EMPTY;
+
+    private Long currentTime = 0L;
+    private String currentHumanTime = Constants.EMPTY;
 
 	public String getSeatingTelNumDigit() {
 		return seatingTelNumDigit;
@@ -148,4 +156,27 @@ public class TelNumberMetaData {
 		this.humanTelNumber = humanTelNumber;
 	}
 
+    public Long getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(Long currentTime) {
+        this.currentTime = currentTime;
+    }
+
+    public String getCurrentHumanTime() {
+        return currentHumanTime;
+    }
+
+    public void setCurrentHumanTime(String currentHumanTime) {
+        this.currentHumanTime = currentHumanTime;
+    }
+
+    public String getTelephoneNumNumDigit() {
+        return telephoneNumNumDigit;
+    }
+
+    public void setTelephoneNumNumDigit(String telephoneNumNumDigit) {
+        this.telephoneNumNumDigit = telephoneNumNumDigit;
+    }
 }

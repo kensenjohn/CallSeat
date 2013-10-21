@@ -32,6 +32,8 @@ public class PurchaseTransactionBean {
     private String uniquePurchaseToken = "";
     private String apiKeyType = Constants.EMPTY;
 
+    private String telephoneNumber = "";
+
     public PurchaseTransactionBean()
     {
 
@@ -43,8 +45,6 @@ public class PurchaseTransactionBean {
         setAdminId(ParseUtil.checkNull(hmResult.get("FK_ADMINID")));
         setEventId(ParseUtil.checkNull(hmResult.get("FK_EVENTID")));
         setPurchaseComplete(ParseUtil.sTob(hmResult.get("IS_PURCHASE_COMPLETE")));
-        setRsvpTelNumber(ParseUtil.checkNull(hmResult.get("RSVP_TELNUMBER")));
-        setSeatingTelNumber(ParseUtil.checkNull(hmResult.get("SEATING_TELNUMBER")));
         setPriceGroupId(ParseUtil.checkNull(hmResult.get("FK_PRICEGROUPID")));
         setFirstName(ParseUtil.checkNull(hmResult.get("FIRSTNAME")));
         setLastName(ParseUtil.checkNull(hmResult.get("LASTNAME")));
@@ -57,6 +57,7 @@ public class PurchaseTransactionBean {
         setCreditCardLast4Digits(ParseUtil.checkNull(hmResult.get("CREDIT_CARD_LAST4_DIGITS")));
         setUniquePurchaseToken( ParseUtil.checkNull(hmResult.get("UNIQUE_PURCHASE_TOKEN")) );
         setApiKeyType( ParseUtil.checkNull(hmResult.get("API_KEY_TYPE"))  );
+        setTelephoneNumber(  ParseUtil.checkNull(hmResult.get("TELEPHONE_NUMBER"))   );
     }
 
     public String getPurchaseTransactionId() {
@@ -203,6 +204,14 @@ public class PurchaseTransactionBean {
         this.apiKeyType = apiKeyType;
     }
 
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
+    }
+
     @Override
     public String toString() {
         return "PurchaseTransactionBean{" +
@@ -210,8 +219,6 @@ public class PurchaseTransactionBean {
                 ", adminId='" + adminId + '\'' +
                 ", eventId='" + eventId + '\'' +
                 ", isPurchaseComplete=" + isPurchaseComplete +
-                ", rsvpTelNumber='" + rsvpTelNumber + '\'' +
-                ", seatingTelNumber='" + seatingTelNumber + '\'' +
                 ", priceGroupId='" + priceGroupId + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
@@ -224,6 +231,7 @@ public class PurchaseTransactionBean {
                 ", createDate=" + createDate +
                 ", uniquePurchaseToken='" + uniquePurchaseToken + '\'' +
                 ", apiKeyType='" + apiKeyType + '\'' +
+                ", telephoneNumber='" + telephoneNumber + '\'' +
                 '}';
     }
 }

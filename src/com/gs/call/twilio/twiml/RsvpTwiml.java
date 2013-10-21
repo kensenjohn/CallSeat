@@ -32,6 +32,8 @@ public class RsvpTwiml
 	public CallResponse getRsvpDigitsSuccess(CallResponse callResponse, String sMessage) {
 		if (callResponse != null && callResponse.getEventGuestBean() != null) {
 			EventGuestBean eventGuestBean = callResponse.getEventGuestBean();
+            EventBean eventBean = callResponse.getEventBean();
+
 			TwiMLResponse response = new TwiMLResponse();
 
             Play playThankYou = new Play(VOICE_PATH+"_thank_you.wav");
@@ -50,13 +52,13 @@ public class RsvpTwiml
                 callResponse.setResponse(response);
                 callResponse.setTwilResponseSuccess(true);
 
-                EventBean eventBean = callResponse.getEventBean();
+
                 InformGuestBean informGuestBean = new InformGuestBean();
                 informGuestBean.setEventId( eventBean.getEventId() );
                 informGuestBean.setAdminId( eventBean.getEventAdminId() );
                 informGuestBean.setGuestId( eventGuestBean.getGuestId() );
-                informGuestBean.setEventTask( Constants.EVENT_TASK.RSVP );
-
+                informGuestBean.setEventTask( Constants.EVENT_TASK.PREMIUM_TELEPHONE_NUMBER );
+                telephonyLogging.info("Informing guest their RSVP confirmation ");
                 InformGuestTask.sendRSVPConfirmation(informGuestBean);
             } catch (TwiMLException e) {
                 callResponse.setTwilResponseSuccess(false);
@@ -192,7 +194,7 @@ public class RsvpTwiml
                 response.append(playWelcome);
                 response.append(playIWillHelpWithRSVP);
                 response.append(playHalfSecondSilence);
-                telephonyLogging.error("RSVP - Building Voice to gather RSVP exception occurred when trying to RSVP Respond to guest " +
+                telephonyLogging.error("RSVP - Building Voice to gather RSVP " +
                         " From : " + twilioIncomingBean.getFrom()  + " To : " + twilioIncomingBean.getFrom() + " Invited seats : " + iTotalInvitedSeats );
 
                 Gather gatherRsvp = getGatherRSVPVerb(iTotalInvitedSeats,twilioIncomingBean,Constants.CALL_TYPE.RSVP_DIGIT_RESP);

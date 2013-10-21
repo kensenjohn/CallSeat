@@ -78,13 +78,10 @@
                 {
                     EventPricingGroupManager eventPricingManager = new EventPricingGroupManager();
                     ArrayList<PricingGroupBean> arrPricingBean = eventPricingManager.getDemoPricingGroups();
-                    if( arrPricingBean !=null )
-                    {
-                        for(PricingGroupBean pricingGroupBean : arrPricingBean )
-                        {
-                            if(pricingGroupBean!=null)
-                            {
-                                EventFeatureManager eventFeatureManager = new EventFeatureManager();
+                    EventFeatureManager eventFeatureManager = new EventFeatureManager();
+                    if( arrPricingBean !=null ) {
+                        for(PricingGroupBean pricingGroupBean : arrPricingBean ) {
+                            if(pricingGroupBean!=null) {
                                 eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.DEMO_TOTAL_CALL_MINUTES,ParseUtil.iToS(pricingGroupBean.getMaxMinutes()));
                                 eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.DEMO_TOTAL_TEXT_MESSAGES,ParseUtil.iToS(pricingGroupBean.getSmsCount()));
                                 eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE, Constants.TELNUMBER_TYPE.DEMO.getType() );
@@ -93,7 +90,7 @@
 
                         }
                     }
-
+                    eventFeatureManager.createEventFeatures( eventBean.getEventId() ,  Constants.EVENT_FEATURES.SEATINGPLAN_MODE, Constants.EVENT_SEATINGPLAN_MODE.RSVP.getMode() );
                     TelNumberManager telNumberManager = new TelNumberManager();
                     telNumberManager.setEventDemoNumber(eventBean.getEventId(),adminBean.getAdminId());
                 }
@@ -109,14 +106,10 @@
 			AdminManager adminManager = new AdminManager();		
 			adminBean = adminManager.getAdmin(sAdminId);
 		}
-		if(isNewEventClicked)
-		{
+		if(isNewEventClicked) {
 			
-		}
-		else
-		{
-			if(sEventId!=null && !"".equalsIgnoreCase(sEventId))
-			{
+		} else {
+			if(sEventId!=null && !"".equalsIgnoreCase(sEventId)) {
 				
 				EventManager eventManager = new EventManager();
 				eventBean = eventManager.getEvent(sEventId);
@@ -299,12 +292,30 @@
                                                 &nbsp;
                                             </div>
                                         </div>
+
+                                        <div class="row">
+                                            <div class="span5" >
+                                                <span class="fld_name">Current Mode : </span>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="span12" >
+                                                <select id="e_current_mode" name="e_current_mode">
+                                                    <option id="<%=Constants.EVENT_SEATINGPLAN_MODE.RSVP.getMode()%>" value="<%=Constants.EVENT_SEATINGPLAN_MODE.RSVP.getMode()%>"><%=Constants.EVENT_SEATINGPLAN_MODE.RSVP.getDisplayText()%></option>
+                                                    <option id="<%=Constants.EVENT_SEATINGPLAN_MODE.SEATING.getMode()%>" value="<%=Constants.EVENT_SEATINGPLAN_MODE.SEATING.getMode()%>"><%=Constants.EVENT_SEATINGPLAN_MODE.SEATING.getDisplayText()%></option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="span3" >
+                                                &nbsp;
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="span5" >
                                                 <span class="fld_name">RSVP deadline : </span>
                                             </div>
                                         </div>
-
                                         <div class="row">
                                             <div class="span12" >
                                                 <input type="text" class="ispn2" id="e_rsvp_deadline_date" name="e_rsvp_deadline_date"/>
@@ -346,48 +357,19 @@
 							</div>
 							<div class="row">
 								<div class="span5">
-									<h4>Phone Numbers</h4>
+									<h4>Phone Settings</h4>
 								</div>
 							</div>
-							<div class="row">
-								<div class="offset1 span5">
-									<span class="fld_name"> Seating: </span>
-									<span class="fld_txt" id="e_summ_seating_telnum" ><span class="fld_txt_small">Create a new seating plan to see your telephone number. </span> </span>
-								</div>
-							</div>
-                            <div class="row" id="div_seating_event_num" style="display:none;">
-                                <div class="offset2 span4">
-                                    <span class="fld_txt_small" style="font-weight:bold;"> Plan Id: </span>
-                                    <span class="fld_txt_small" id="e_summ_seating_event_num" ></span>
-                                </div>
-                            </div>
-                            <div class="row" id="div_seating_extension" style="display:none;">
-                                <div class="offset2 span4">
-                                    <span class="fld_txt_small" style="font-weight:bold;"> Extension: </span>
-                                    <span class="fld_txt_small" id="e_summ_seating_extension" ></span>
-                                </div>
-                            </div>
                             <div class="row">
-                                <div class="span1">
-                                    &nbsp;
+                                <div class="offset1 span5">
+                                    <span class="fld_name"> Phone Number: </span>
+                                    <span class="fld_txt" id="e_summ_telnum" ><span class="fld_txt_small">Create a new seating plan to see your telephone number. </span> </span>
                                 </div>
                             </div>
-							<div class="row">
-								<div class="offset1 span5">
-									<span class="fld_name"> RSVP : </span>
-									<span class="fld_txt" id="e_summ_rsvp_telnum" ><span class="fld_txt_small">Create a new seating plan to see your telephone number.</span></span>
-								</div>
-							</div>
-                            <div class="row" id="div_rsvp_event_num" style="display:none;">
-                                <div class="offset2 span4">
+                            <div class="row" id="div_event_num" style="display:none;">
+                                <div class="offset1 span5">
                                     <span class="fld_txt_small" style="font-weight:bold;"> Plan Id: </span>
-                                    <span class="fld_txt_small" id="e_summ_rsvp_event_num" ></span>
-                                </div>
-                            </div>
-                            <div class="row" id="div_rsvp_extension" style="display:none;">
-                                <div class="offset2 span4">
-                                    <span class="fld_txt_small" style="font-weight:bold;"> Extension: </span>
-                                    <span class="fld_txt_small" id="e_summ_rsvp_extension" ></span>
+                                    <span class="fld_txt_small" id="e_summ_event_num" ></span>
                                 </div>
                             </div>
                             <div class="row">
@@ -502,38 +484,53 @@
                             </div>
                         </div>
                             <form id="frm_phone_numbers" >
+                            <div class="row">
+                                <div class="span2"  style="text-align:right;">
+                                    <h4>Phone Number : </h4>
+                                </div>
+                                <div class="span4">
+                                    <span class="fld_txt" id="telephone_num"></span>
+                                </div>
+                            </div>
+                            <div class="row"  id="telephone_div_event_id" style="display:none;">
+                                <div class="span2"   style="text-align:right;">
+                                    <span class="fld_txt_small" style="font-weight:bold;">Plan Id :  </span>
+                                </div>
+                                <div class="span4">
+                                    <span class="fld_txt" id="telephone_event_id"></span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span2">
+                                    <h4>&nbsp;</h4>
+                                </div>
+                            </div>
+                            <div class="row" >
+                                <div class="span2"   style="text-align:right;">
+                                    <h4>Current Mode :  </h4>
+                                </div>
+                                <div class="span4">
+                                    <span class="fld_txt" id="telephone_current_mode"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="span2">
+                                    &nbsp;
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="span2">
+                                    <h4>&nbsp;</h4>
+                                </div>
+                            </div>
 							<div class="row">
-								<div class="span2">
+								<div class="offset_0_5 span2" >
 									<h4>Seating</h4>
 								</div>
 							</div>
 							<div class="row">
 								<div class="offset1">
-									<div class="row">
-										<div class="span2"    style="text-align:right;">
-											<span class="fld_name" >Phone Number :  </span>
-										</div>
-										<div class="span4">
-											<span class="fld_txt" id="seating_gen_num"></span>
-										</div>
-										<div class="span2" style="display:none;"><label id="seating_search">Advanced Search</label></div>
-									</div>
-									<div class="row"  id="seating_div_event_id" >
-										<div class="span2"   style="text-align:right;">
-											<span class="fld_txt_small" style="font-weight:bold;">Plan Id :  </span>
-										</div>
-										<div class="span4">
-											<span class="fld_txt" id="seating_event_id"></span>
-										</div>
-									</div>
-									<div class="row" id="seating_div_secret_key" >
-										<div class="span2"   style="text-align:right;">
-											<span class="fld_txt_small" style="font-weight:bold;">Extension :  </span>
-										</div>
-										<div class="span4">
-											<span class="fld_txt" id="seating_secret_key"></span>
-										</div>
-									</div>
                                     <div class="row" id="seating_div_error_call_forward">
                                         <div class="span2"   style="text-align:right;">
                                             <span class="fld_name" >Forward Calls to :  </span>
@@ -571,36 +568,12 @@
                                 </div>
                             </div>
 							<div class="row">
-								<div class="span2">
+								<div class="offset_0_5 span2">
 									<h4>RSVP</h4>
 								</div>
 							</div>
 							<div class="row">
 								<div class="offset1">
-									<div class="row"> 
-										<div class="span2"   style="text-align:right;"> 
-											<span class="fld_name" >Phone Number :  </span>
-										</div>
-										<div class="span4">
-											<span class="fld_txt" id="rsvp_gen_num"></span>
-										</div>
-									</div>
-									<div class="row" id="rsvp_div_event_id">
-										<div class="span2"   style="text-align:right;">
-											<span class="fld_txt_small" style="font-weight:bold;">Plan Id :  </span>
-										</div>
-										<div class="span4">
-											<span class="fld_txt" id="rsvp_event_id"></span>
-										</div>
-									</div>
-									<div class="row" id="rsvp_div_secret_key">
-										<div class="span2"   style="text-align:right;">
-											<span class="fld_txt_small" style="font-weight:bold;">Extension :  </span>
-										</div>
-										<div class="span4">
-											<span class="fld_txt" id="rsvp_secret_key"></span>
-										</div>
-									</div>
                                     <div class="row" id="rsvp_div_error_call_forward">
                                         <div class="span2"   style="text-align:right;">
                                             <span class="fld_name" >Forward Calls to :  </span>
@@ -677,8 +650,8 @@
                                 <div class="span2">
                                     <button id="btn_save_phone_number" name="btn_save_phone_number" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="btn">Save Changes</button>
                                 </div>
-								<div class="span3"  id="div_get_own_phone">
-									 <input id="bt_get_own_phone" name="bt_get_own_phone" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="btn btn-blue btn-large ispn4" value="Buy personalized phone numbers"/>
+								<div class="span3"  id="div_get_own_phone"  style="display:none;">
+									 <input id="bt_get_own_phone" name="bt_get_own_phone" type="button" href="search_phone_number.jsp?event_id=<%=sEventId%>&admin_id=<%=sAdminId%>" class="btn btn-blue btn-large ispn4" value="Get a personalized phone number"/>
 								</div>
 							</div>
                             <div class="row">
@@ -703,7 +676,7 @@
                             </div>
                             <div class="row">
                                 <div class="span6">
-                                    <h2>Gather RSVP from Guests</h2>
+                                    <h2>Gather RSVP from Guests (who did not RSVP)</h2>
                                 </div>
                             </div>
                             <div class="row">
@@ -885,7 +858,10 @@
 	var varDemoSeatingNumType = '<%=Constants.EVENT_TASK.DEMO_SEATING.getTask()%>';
 	var varRsvpNumType = '<%=Constants.EVENT_TASK.RSVP.getTask()%>';
 	var varDemoRsvpNumType = '<%=Constants.EVENT_TASK.DEMO_RSVP.getTask()%>';
-	
+
+    var varPremiumTelephoneNumType = '<%=Constants.EVENT_TASK.PREMIUM_TELEPHONE_NUMBER.getTask()%>';
+    var varDemoTelephoneNumType = '<%=Constants.EVENT_TASK.DEMO_TELEPHONE_NUMBER.getTask()%>';
+
 	$(document).ready(function() {
 		$("#loading_wheel").hide();
 		setCredentialEventId(varEventID);
@@ -942,9 +918,7 @@
 			{
 				//alert('First create the event before adding tables;');
 				displayMssgBoxAlert('Please create the seating plan before creating phone numbers', true);
-			}
-			else
-			{
+			} else {
 				toggleActionNavs('li_phone_num');
 				displayPhoneNumberView('li_phone_num');
                 loadEventFeatures();
@@ -1173,6 +1147,9 @@
 
                         varUsageLimitAction = varMapFeatureValue.USAGE_LIMIT_REACHED_ACTION;
                     }
+
+                    $('#telephone_current_mode').text(jsonResponseObj.event_seatingplan_mode);
+
 
                     var varUsageLimitAction = 'STOP_USAGE'; //default action
                     var varTmpUsageLimitAction = varMapFeatureValue.USAGE_LIMIT_REACHED_ACTION;
@@ -1640,8 +1617,9 @@
 			$("#e_summ_assigned_seats").text(eventSummary.assigned_seats);
 			$("#e_summ_total_invited").text(eventSummary.total_guest_invited);
 			$("#e_summ_total_rsvp").text(eventSummary.total_guest_rsvp);
-			$("#e_summ_rsvp_telnum").text(eventSummary.rsvp_tel_number);
-			$("#e_summ_seating_telnum").text(eventSummary.seating_tel_number);
+
+            $("#e_summ_telnum").text(eventSummary.telephone_number);
+
 
             var varEventDateObj = eventSummary.event_date_obj;
             $("#e_summ_event_date").val(varEventDateObj.event_date);
@@ -1667,33 +1645,18 @@
 
             var varTxtMssgSent = eval(varTextMessageUsage.telnum_premium_text_mssg_sent) + eval( varTextMessageUsage.telnum_demo_text_mssg_sent );
             $("#e_summ_text_mmsg_sent").text(varTxtMssgSent);
-
+            $('#e_current_mode').val(eventSummary.seating_plan_mode);
             if( eventSummary.is_demo_numbers == true )
             {
-                $("#div_seating_event_num").show();
-                $("#e_summ_seating_event_num").text(eventSummary.telephony_event_number);
-                $("#div_seating_extension").show();
-                $("#e_summ_seating_extension").text(eventSummary.telephony_seating_secret_key);
-
-                $("#div_rsvp_event_num").show();
-                $("#e_summ_rsvp_event_num").text(eventSummary.telephony_event_number);
-                $("#div_rsvp_extension").show();
-                $("#e_summ_rsvp_extension").text(eventSummary.telephony_rsvp_secret_key);
+                $("#div_event_num").show();
+                $("#e_summ_event_num").text(eventSummary.telephony_event_number);
 
                 $("#tab_event_summary_demo_warning").show();
 
-            }
-            else
-            {
-                $("#div_seating_event_num").hide();
-                $("#div_seating_extension").hide();
-                $("#e_summ_seating_event_num").text('');
-                $("#e_summ_seating_extension").text('');
+            } else {
 
-                $("#div_rsvp_event_num").hide();
-                $("#div_rsvp_extension").hide();
-                $("#e_summ_rsvp_event_num").text('');
-                $("#e_summ_rsvp_extension").text('');
+                $("#div_event_num").hide();
+                $("#e_summ_event_num").text('');
 
                 $("#tab_event_summary_demo_warning").hide();
             }
@@ -2093,7 +2056,6 @@
 	{
 		var varTelNumbers= jsonResponseObj.telnumbers;
 		var totalRows = varTelNumbers.num_of_rows;
-		//alert('processTelNumbers = ' + totalRows);
 		if(totalRows!=undefined)
 		{
 			var varTelNumList = varTelNumbers.telnum_array;
@@ -2102,63 +2064,25 @@
 				for(var iRow = 0; iRow < totalRows ; iRow++ )
 				{
 					var telNumBean = varTelNumList[iRow];
-					
-					//alert('tel number = ' + telNumBean.telnum);
-					
-					if(telNumBean.telnum_type == varSeatingNumType || telNumBean.telnum_type ==  varDemoSeatingNumType)
-					{
-						$("#seating_gen_num").text(telNumBean.human_telnum);
-						
-					}
-					if(telNumBean.telnum_type == varRsvpNumType || telNumBean.telnum_type ==  varDemoRsvpNumType )
-					{
-						$("#rsvp_gen_num").text(telNumBean.human_telnum);
-					}
 
-					if(telNumBean.telnum_type ==  varDemoSeatingNumType)
-					{
-						$("#seating_div_event_id").show();
-						$("#seating_event_id").text(telNumBean.secret_event_identity);
-						
-						$("#seating_div_secret_key").show();
-						$("#seating_secret_key").text(telNumBean.secret_event_key);
+                    $("#telephone_num").text(telNumBean.human_telnum);
+                    $("#telephone_current_mode").text( telNumBean.event_seatingplan_mode );
+
+                    if( telNumBean.telnum_type == varDemoTelephoneNumType ) {
+                        $("#telephone_div_event_id").show();
+                        $("#telephone_event_id").text(telNumBean.secret_event_identity);
 
                         $("#tab_phone_demo_warning").show();
-					}
-					if(telNumBean.telnum_type ==  varSeatingNumType)
-					{
-                        $("#div_get_own_phone").hide();
-						$("#seating_div_event_id").hide();
-						$("#seating_event_id").text('');
-						$("#seating_div_secret_key").hide();
-						$("#seating_secret_key").text('');
-
+                        $("#div_get_own_phone").show();
+                    } else {
                         $("#tab_phone_demo_warning").hide();
-					}
-					
-					if(telNumBean.telnum_type ==  varDemoRsvpNumType)
-					{
-						$("#rsvp_div_event_id").show();
-						$("#rsvp_event_id").text(telNumBean.secret_event_identity);
-						
-						$("#rsvp_div_secret_key").show();
-						$("#rsvp_secret_key").text(telNumBean.secret_event_key);
-
-                        $("#tab_phone_demo_warning").show();
-					}
-					if(telNumBean.telnum_type ==  varRsvpNumType)
-					{
                         $("#div_get_own_phone").hide();
-						$("#rsvp_div_event_id").hide();
-						$("#rsvp_event_id").text('');
-						
-						$("#rsvp_div_secret_key").hide();
-						$("#rsvp_secret_key").text('');
+                        $("#telephone_div_event_id").hide();
+                        $("#tab_phone_demo_warning").remove();
+                        $("#div_get_own_phone").remove();
+                        $("#telephone_div_event_id").remove();
 
-                        $("#tab_phone_demo_warning").hide();
-					}
-					
-						
+                    }
 				}
 			}
 			

@@ -274,10 +274,10 @@ public class AdminManager {
             TelNumberBean rsvpTelNumberBean = new TelNumberBean();
             if(arrTelNumberBean!=null && !arrTelNumberBean.isEmpty()) {
                 for(TelNumberBean telNumberBean : arrTelNumberBean ){
-                    if( Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))  {
+                    if( Constants.EVENT_TASK.PREMIUM_TELEPHONE_NUMBER.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))  {
                         emailTemplateType =  Constants.EMAIL_TEMPLATE.RSVPRESPONSE ;
                         rsvpTelNumberBean = telNumberBean;
-                    } else if ( Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()) ) {
+                    } else if ( Constants.EVENT_TASK.DEMO_TELEPHONE_NUMBER.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()) ) {
                         emailTemplateType =  Constants.EMAIL_TEMPLATE.RSVPRESPONSEDEMO ;
                         rsvpTelNumberBean = telNumberBean;
                     }
@@ -347,8 +347,8 @@ public class AdminManager {
         if(sText!=null && !"".equalsIgnoreCase(sText) && rsvpTelNumberBean!=null && !"".equalsIgnoreCase(rsvpTelNumberBean.getTelNumberId())) {
 
             String sTelephoneNumber = ParseUtil.checkNull(rsvpTelNumberBean.getHumanTelNumber());
-            if ( Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(rsvpTelNumberBean.getTelNumberType()) ) {
-                sTelephoneNumber = " Plan Id : " + ParseUtil.checkNull( rsvpTelNumberBean.getSecretEventIdentity() ) + " Extension : " +  ParseUtil.checkNull( rsvpTelNumberBean.getSecretEventKey() );
+            if ( Constants.EVENT_TASK.DEMO_TELEPHONE_NUMBER.getTask().equalsIgnoreCase(rsvpTelNumberBean.getTelNumberType()) ) {
+                sTelephoneNumber = sTelephoneNumber + " Plan Id : " + ParseUtil.checkNull( rsvpTelNumberBean.getSecretEventIdentity() );
             }
             srcText = srcText.replaceAll("__RSVPPHONENUM__",ParseUtil.checkNull( sTelephoneNumber ));
 

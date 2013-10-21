@@ -139,18 +139,7 @@ public class SmsCreatorService {
                     {
                         for( TelNumberBean telNumberBean : arrTelNumberBean )
                         {
-                            if (Constants.SMS_TEMPLATE.SMS_RSVP_CONFIRMATION.getSmsTemplate().equalsIgnoreCase( smsTemplateBean.getSmsTemplateName() )   &&
-                               ( Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType())
-                                    || Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()) ) )
-                            {
-                                smsObject.setFromPhoneNumber( ParseUtil.checkNull(telNumberBean.getTelNumber()) );   // set FROM Number
-                            }
-                            else if (Constants.SMS_TEMPLATE.SMS_SEATING_CONFIRMATION.getSmsTemplate().equalsIgnoreCase( smsTemplateBean.getSmsTemplateName() ) &&
-                                (Constants.EVENT_TASK.SEATING.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType())
-                                    || Constants.EVENT_TASK.DEMO_SEATING.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()) ) )
-                            {
-                                smsObject.setFromPhoneNumber( ParseUtil.checkNull(telNumberBean.getTelNumber()) );    // set FROM Number
-                            }
+                            smsObject.setFromPhoneNumber( ParseUtil.checkNull(telNumberBean.getTelNumber()) );   // set FROM Number
                         }
                     }
                 }

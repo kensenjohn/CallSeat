@@ -37,6 +37,15 @@ try
     String sEventAmPm =  ParseUtil.checkNull(request.getParameter("e_summ_event_ampm"));
     String sEventTimeZone =  ParseUtil.checkNull(request.getParameter("e_summ_event_timezone"));
     String sRsvpDeadlineDate =  ParseUtil.checkNull(request.getParameter("e_rsvp_deadline_date"));
+    String sSeatingPlanMode =  ParseUtil.checkNull(request.getParameter("e_current_mode"));
+
+    Constants.EVENT_SEATINGPLAN_MODE seatingplanMode = null;
+    if( Constants.EVENT_SEATINGPLAN_MODE.RSVP.getMode().equalsIgnoreCase(sSeatingPlanMode) ) {
+        seatingplanMode =  Constants.EVENT_SEATINGPLAN_MODE.RSVP;
+    }  else if (Constants.EVENT_SEATINGPLAN_MODE.SEATING.getMode().equalsIgnoreCase(sSeatingPlanMode)) {
+        seatingplanMode =  Constants.EVENT_SEATINGPLAN_MODE.SEATING;
+    }
+    appLogging.info("seatingplanMode : " + seatingplanMode.getMode() + " -- " + sSeatingPlanMode );
 
 	boolean  isCreateEvent =  ParseUtil.sTob(request.getParameter("create_event"));
 	
@@ -47,15 +56,17 @@ try
 		
 		responseStatus = RespConstants.Status.ERROR;
 	}
-	else if( Utility.isNullOrEmpty(sEventDate) ||  Utility.isNullOrEmpty(sEventHour) ||  Utility.isNullOrEmpty(sEventMin) ||  Utility.isNullOrEmpty(sEventAmPm) ||  Utility.isNullOrEmpty(sEventTimeZone))
+	else if( Utility.isNullOrEmpty(sEventDate) ||  Utility.isNullOrEmpty(sEventHour) ||  Utility.isNullOrEmpty(sEventMin)
+            ||  Utility.isNullOrEmpty(sEventAmPm) ||  Utility.isNullOrEmpty(sEventTimeZone))
 	{
 		Text errorText = new ErrorText("*Required","e_summ_event_date") ;		
 		arrErrorText.add(errorText);
 		
 		responseStatus = RespConstants.Status.ERROR;
-	}
-	else
-	{
+	}  else if (seatingplanMode == null) {
+        Text errorText = new ErrorText("*Required","e_current_mode") ;
+        arrErrorText.add(errorText);
+    } else {
 		responseStatus = RespConstants.Status.OK;
 	}
 	com.gs.manager.event.EventManager eventManager = new com.gs.manager.event.EventManager();
@@ -71,39 +82,30 @@ try
         String sRsvpDeadlineDateTimePattern = "MM/dd/yyyy HH:mm:ss";
 
         DateObject eventDateObject = DateSupport.convertTime(sEventDateTime ,DateSupport.getTimeZone( sEventTimeZone ), sEventDateTimePattern , DateSupport.getTimeZone(Constants.DEFAULT_TIMEZONE) , Constants.DATE_PATTERN_TZ  );
-
+        appLogging.info(" Event DAte Time : " + sEventDateTime + " Timezone : " + sEventTimeZone + " eventDateObject :  " + eventDateObject.getFormattedTime() + " Event creation millis : " +
+                eventDateObject.getMillis() + " current time : " + lCurrentTime);
         Long lEventCreateDate = eventDateObject.getMillis();
-		if(isCreateEvent)
-		{
-			if(sEventName==null || "".equalsIgnoreCase(sEventName))
-			{
+		if(isCreateEvent) {
+			if(sEventName==null || "".equalsIgnoreCase(sEventName)) {
 				Text errorText = new ErrorText("We were unable to recognize the Admin. Please log in again.","e_summ_event_name") ;
 				arrErrorText.add(errorText);
 				
 				responseStatus = RespConstants.Status.ERROR;
 			} else {
-
-
                 Long lFutureDateLimit = DateSupport.addTime( lCurrentTime , 1 , Constants.TIME_UNIT.YEARS  );
-                if( lEventCreateDate < lCurrentTime )
-                {
+                if( lEventCreateDate < lCurrentTime ) {
                     Text errorText = new ErrorText("We were unable to create a seating plan for the selected date. Please select a date in the future.","e_summ_event_name") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
-                }
-                else if (lEventCreateDate  > lFutureDateLimit )
-                {
+                } else if (lEventCreateDate  > lFutureDateLimit ) {
                     Text errorText = new ErrorText("We were unable to create a seating plan for the selected date. Please select a date within a year from today.","e_summ_event_name") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
-                }
-                else
-                {
+                } else  {
                     AdminManager adminManager = new AdminManager();
-                    if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId))
-                    {
+                    if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId)) {
                         AdminBean adminBean = adminManager.getAdmin(sAdminId);
 
                         EventCreationMetaDataBean eventMeta = new EventCreationMetaDataBean();
@@ -119,25 +121,25 @@ try
                         EventBean eventBean = eventManager.createEvent(eventMeta);
 
 
-                        if(eventBean!=null && eventBean.getEventId()!=null && !"".equalsIgnoreCase(eventBean.getEventId()))
-                        {
+                        if(eventBean!=null && eventBean.getEventId()!=null && !"".equalsIgnoreCase(eventBean.getEventId())) {
+
+                            EventFeatureManager eventFeatureManager = new EventFeatureManager();
                             EventPricingGroupManager eventPricingManager = new EventPricingGroupManager();
                             ArrayList<PricingGroupBean> arrPricingBean = eventPricingManager.getDemoPricingGroups();
                             appLogging.info("Demo Pricing Bean selected " + arrPricingBean );
-                            if( arrPricingBean !=null )
-                            {
-                                for(PricingGroupBean pricingGroupBean : arrPricingBean )
-                                {
-                                    if(pricingGroupBean!=null)
-                                    {
-                                        EventFeatureManager eventFeatureManager = new EventFeatureManager();
+                            if( arrPricingBean !=null ) {
+                                for(PricingGroupBean pricingGroupBean : arrPricingBean ) {
+                                    if(pricingGroupBean!=null) {
                                         eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.DEMO_TOTAL_CALL_MINUTES,ParseUtil.iToS(pricingGroupBean.getMaxMinutes()));
                                         eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.DEMO_TOTAL_TEXT_MESSAGES,ParseUtil.iToS(pricingGroupBean.getSmsCount()));
+                                        eventFeatureManager.createEventFeatures(eventBean.getEventId(), Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE, Constants.TELNUMBER_TYPE.DEMO.getType() );
                                         break;
                                     }
-
                                 }
                             }
+                            Integer iNumOfRows = eventFeatureManager.createEventFeatures( eventBean.getEventId() ,  Constants.EVENT_FEATURES.SEATINGPLAN_MODE, seatingplanMode.getMode() );
+                            appLogging.info("createEventFeatures : " + seatingplanMode.getMode() + " --iNumOfRows :  " + iNumOfRows );
+
                             TelNumberManager telNumberManager = new TelNumberManager();
                             telNumberManager.setEventDemoNumber(eventBean.getEventId(),adminBean.getAdminId());
 
@@ -158,9 +160,7 @@ try
                 }
 			}
 			
-		}
-		else
-		{
+		} else {
 			if(sEventId!=null && !"".equalsIgnoreCase(sEventId)){
 
                 Long lFutureDateLimit = 0L;
@@ -172,9 +172,7 @@ try
                 ArrayList<TelNumberBean> arrTelNumberBean = telNumManager.getTelNumbersByEvent(telNumberMetaData);
                 if (arrTelNumberBean != null && !arrTelNumberBean.isEmpty()) {
                     for (TelNumberBean telNumberBean : arrTelNumberBean) {
-                        if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType())
-                                || Constants.EVENT_TASK.SEATING.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()) )
-                        {
+                        if( Constants.EVENT_TASK.PREMIUM_TELEPHONE_NUMBER.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType())) {
                             PurchaseTransactionBean purchaseTransactionBean = new PurchaseTransactionBean();
                             purchaseTransactionBean.setAdminId(sAdminId);
                             purchaseTransactionBean.setEventId(sEventId);
@@ -183,17 +181,12 @@ try
                             PurchaseTransactionBean purchaseResponseTransactionBean = purchaseTransactionManager.getPurchaseTransactionByEventAdmin(purchaseTransactionBean);
 
                             if(purchaseResponseTransactionBean!=null && !"".equalsIgnoreCase(purchaseResponseTransactionBean.getPurchaseTransactionId())) {
-                                lEventCreateDate = purchaseResponseTransactionBean.getCreateDate();
-                                lFutureDateLimit = DateSupport.addTime( lEventCreateDate , 1 , Constants.TIME_UNIT.YEARS  );
+                                lFutureDateLimit = DateSupport.addTime( purchaseResponseTransactionBean.getCreateDate() , 1 , Constants.TIME_UNIT.YEARS  );
                                 break;
                             }
-                        }
-                        else if ( Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType())
-                                    || Constants.EVENT_TASK.DEMO_SEATING.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()) )
-                        {
+                        } else if(  Constants.EVENT_TASK.DEMO_TELEPHONE_NUMBER.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()) ) {
                             EventBean eventBean = eventManager.getEvent(sEventId);
-                            if(eventBean!=null)
-                            {
+                            if(eventBean!=null) {
                                 lEventCreateDate = eventDateObject.getMillis();
                                 lFutureDateLimit = DateSupport.addTime( lEventCreateDate , 1 , Constants.TIME_UNIT.YEARS  );
                                 break;
@@ -202,23 +195,18 @@ try
                     }
                 }
 
-                if( lEventCreateDate < lCurrentTime )
-                {
+                if( lEventCreateDate < lCurrentTime ) {
                     Text errorText = new ErrorText("We were unable to create a seating plan for the selected date. Please select a date in the future.","e_summ_event_name") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
-                }
-                else if (lEventCreateDate  > lFutureDateLimit  )
-                {
+                } else if (lEventCreateDate  > lFutureDateLimit  ) {
                     Text errorText = new ErrorText("We were unable to create a seating plan for the selected date. The date must be before " +
                             DateSupport.getTimeByZone( lFutureDateLimit,DateTimeZone.UTC.getID(),Constants.PRETTY_DATE_PATTERN_2 )+ ".","e_summ_event_name") ;
                     arrErrorText.add(errorText);
 
                     responseStatus = RespConstants.Status.ERROR;
-                }
-                else
-                {
+                } else {
                     AdminManager adminManager = new AdminManager();
                     AdminBean adminBean = adminManager.getAdmin(sAdminId);
 
@@ -240,9 +228,10 @@ try
                         arrErrorText.add(errorText);
 
                         responseStatus = RespConstants.Status.ERROR;
-                    }
-                    else
-                    {
+                    }else{
+                        EventFeatureManager eventFeatureManager = new EventFeatureManager();
+                        Integer iRows = eventFeatureManager.updateEventFeatures( sEventId , Constants.EVENT_FEATURES.SEATINGPLAN_MODE , seatingplanMode.getMode());
+                        appLogging.info("updateEventFeatures : " + seatingplanMode.getMode() + " --iRows :  " + iRows );
 
                         jsonResponseObj.put("update_event",true);
                         responseStatus = RespConstants.Status.OK;

@@ -2,6 +2,8 @@ package com.gs.call.twilio.twiml;
 
 import java.util.ArrayList;
 
+import com.gs.common.Utility;
+import com.gs.manager.event.EventFeatureManager;
 import com.twilio.sdk.verbs.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -72,7 +74,22 @@ public class TwimlSupport {
 				+ twilioIncomingBean.getFrom());
 		return strURl;
 	}
-
+    public static String getSeatingPlanModeFromTelnumber(TelNumberBean telNumBean) {
+        String telNumType = Constants.EMPTY;
+        if( telNumBean!=null && !Utility.isNullOrEmpty(telNumBean.getEventId()) ) {
+            telNumType = EventFeatureManager.getStringValueFromEventFeature(telNumBean.getEventId(), Constants.EVENT_FEATURES.SEATINGPLAN_MODE);
+        }
+        return telNumType;
+    }
+    public static String getSeatingPlanModeFromTelnumber(ArrayList<TelNumberBean> arrTelNumBean) {
+        String telNumType = Constants.EMPTY;
+        if (arrTelNumBean != null && !arrTelNumBean.isEmpty()) {
+            for (TelNumberBean telNumBean : arrTelNumBean) {
+                telNumType = getSeatingPlanModeFromTelnumber(telNumBean);
+            }
+        }
+        return telNumType;
+    }
 	public static String getTelNumberType(ArrayList<TelNumberBean> arrTelNumBean) {
 		String telNumType = "";
 		if (arrTelNumBean != null && !arrTelNumBean.isEmpty()) {

@@ -96,13 +96,10 @@ public class EventFeatureManager {
 
             if( eventFeaturesBean!=null )
             {
-                HashMap<String, String> hmEventFeatureId = eventFeaturesBean.getHmFeatureId();
-                if(hmEventFeatureId!=null && !hmEventFeatureId.isEmpty())
-                {
-                    for(Map.Entry<String,String> mapEventFeature : hmEventFeatureId.entrySet() )
-                    {
-                        if( mapEventFeature.getKey().equalsIgnoreCase( eventFeature.getEventFeature() ))
-                        {
+                HashMap<String, String> hmEventFeatureValue = eventFeaturesBean.getHmFeatureValue();
+                if(hmEventFeatureValue!=null && !hmEventFeatureValue.isEmpty()) {
+                    for(Map.Entry<String,String> mapEventFeature : hmEventFeatureValue.entrySet() )  {
+                        if( mapEventFeature.getKey().equalsIgnoreCase( eventFeature.getEventFeature() ))  {
                             isExists = true;
                             break;
                         }

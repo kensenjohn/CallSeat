@@ -27,8 +27,7 @@ public class IncomingCallManager {
 		CallResponse callResponse = new CallResponse();
 		if (incomingCallBean != null) {
 			ProcessCalls processCalls = null;
-			if (Constants.CALL_SERVICE.TWILIO.getCallService().equalsIgnoreCase(SELECTED_CALL_SERVICE))
-            {
+			if (Constants.CALL_SERVICE.TWILIO.getCallService().equalsIgnoreCase(SELECTED_CALL_SERVICE)) {
 				TwilioIncomingCallBean twilioIncominCallBean = (TwilioIncomingCallBean) incomingCallBean;
 				processCalls = new ProcessTwilioCalls(twilioIncominCallBean);
 			}

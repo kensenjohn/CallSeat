@@ -6,6 +6,7 @@ import com.gs.bean.sms.SmsQueueBean;
 import com.gs.bean.sms.SmsTransactionBean;
 import com.gs.common.Constants;
 import com.gs.common.DateSupport;
+import com.gs.common.ParseUtil;
 import com.gs.common.exception.ExceptionHandler;
 import com.gs.common.Utility;
 import com.gs.common.sms.SmsSender;
@@ -45,7 +46,7 @@ public class SmsTwiml  implements SmsSender {
                 // To send SMS we need the Account SID and Auth Token of the number(in our case a Sub account)
 
                 SmsAccountDetails smsAccountDetail = getAccountDetails( smsQueueBean );
-
+                smsLogging.info("Sms Account telnum type : " + smsAccountDetail.getTelnumType() );
                 if(smsAccountDetail!=null && !"".equalsIgnoreCase(smsAccountDetail.getAccountSid()) && !"".equalsIgnoreCase(smsAccountDetail.getAuthToken()))
                 {
                     TwilioRestClient client = new TwilioRestClient(  smsAccountDetail.getAccountSid(), smsAccountDetail.getAuthToken() );
@@ -56,18 +57,21 @@ public class SmsTwiml  implements SmsSender {
                     params.put("To", "+"+smsQueueBean.getToTelNumber());
                     params.put("From", "+"+smsQueueBean.getFromTelNumber());
 
-                    //smsLogging.info("Sms Body : " + params.get("Body") + "\nFrom : " + params.get("From") + "\nTo : " + params.get("To")  );
+                    smsLogging.info("Sms Body : " + params.get("Body") + "\nFrom : " + params.get("From") + "\nTo : " + params.get("To")  );
 
                     SmsFactory messageFactory = client.getAccount().getSmsFactory();
                     Sms message = messageFactory.create(params);
 
                     if(message!=null && !"".equalsIgnoreCase(message.getSid()))
                     {
+                        iNumOfRows = 1; // Success sending SMS
                         SmsTransactionBean smsTransactionBean = getTmpSmsTransactionBean( smsQueueBean ,
                                 message.getSid(), Constants.SCHEDULER_STATUS.COMPLETE.getSchedulerStatus() );
                         SmsTransaction smsTransaction = SmsTransaction.getInstance();
                         smsTransaction.createTransaction( smsTransactionBean );
                     }
+                }  else {
+                    smsLogging.error("Could not find a valid Sms Account  : " + ParseUtil.checkNullObject(smsQueueBean));
                 }
             } catch (TwilioRestException e) {
                 smsLogging.error("Sms send failure\n" + ExceptionHandler.getStackTrace(e));
@@ -136,8 +140,7 @@ public class SmsTwiml  implements SmsSender {
 
                         smsAccountDetail.setTelnumType( telNumberBean.getTelNumberType() );
 
-                        if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase( telNumberBean.getTelNumberType() )
-                                || Constants.EVENT_TASK.SEATING.getTask().equalsIgnoreCase( telNumberBean.getTelNumberType() ) )
+                        if (Constants.EVENT_TASK.PREMIUM_TELEPHONE_NUMBER.getTask().equalsIgnoreCase( telNumberBean.getTelNumberType() ))
                         {
 
                             AdminTelephonyAccountMeta adminAccountMeta = new AdminTelephonyAccountMeta();
@@ -156,14 +159,13 @@ public class SmsTwiml  implements SmsSender {
                                 }
                             }
 
-                        }
-                        else if (Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase( telNumberBean.getTelNumberType()  )
-                                || Constants.EVENT_TASK.DEMO_SEATING.getTask().equalsIgnoreCase( telNumberBean.getTelNumberType()  ) )
-                        {
+                        }  else if (Constants.EVENT_TASK.DEMO_TELEPHONE_NUMBER.getTask().equalsIgnoreCase( telNumberBean.getTelNumberType()  )) {
 
                             smsAccountDetail.setAccountSid( TwilioAccount.getAccountSid() );
                             smsAccountDetail.setAuthToken( TwilioAccount.getAccountToken() );
                         }
+                    } else {
+                        smsLogging.info("The From Number does not match the number for the event in Data base : " + ParseUtil.checkNull(telNumberBean.getTelNumber()) + " - " + ParseUtil.checkNull(smsQueueBean.getFromTelNumber()));
                     }
                 }
             }

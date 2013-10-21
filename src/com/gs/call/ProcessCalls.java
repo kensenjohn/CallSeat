@@ -3,6 +3,7 @@ package com.gs.call;
 import java.util.ArrayList;
 
 import com.gs.bean.CallTransactionBean;
+import com.gs.call.twilio.twiml.TwimlSupport;
 import com.gs.common.CallTransaction;
 import com.gs.common.ParseUtil;
 import org.slf4j.Logger;
@@ -56,8 +57,7 @@ public abstract class ProcessCalls {
                 telNumMetaData.setSecretEventSecretKey(sEventSecretKey);
 
                 TelNumberManager telNumManager = new TelNumberManager();
-                ArrayList<TelNumberBean> arrTelNumBean = telNumManager
-                        .getTelNumbersFromSecretEventNumAndKey(telNumMetaData);
+                ArrayList<TelNumberBean> arrTelNumBean = telNumManager.getTelNumbersFromSecretEventNum(telNumMetaData);
                 if (arrTelNumBean != null && !arrTelNumBean.isEmpty()) {
                     for (TelNumberBean telNumberBean : arrTelNumBean) {
                         if (telNumberBean != null
@@ -97,11 +97,12 @@ public abstract class ProcessCalls {
                     if (telNumberBean != null && telNumberBean.isTelNumBeanSet()) {
                         String sEventId = telNumberBean.getEventId();
                         String sAdminId = telNumberBean.getAdminId();
-                        // String sGuestTelNumber = telNumberBean.
-                        if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType())) {
+
+                        String sSeatingPlanMode = TwimlSupport.getSeatingPlanModeFromTelnumber(telNumberBean);
+                        if (Constants.EVENT_SEATINGPLAN_MODE.RSVP.getMode().equalsIgnoreCase(sSeatingPlanMode))  {
                             task = new RsvpTask(sEventId, sAdminId);
                             telephonyLogging.info("Task => RsvpTask  From :" + sGuestTelNumber  + " To(Event Phone Number) : " + sEventTelNumber + " call type : " + this.incomingCallBean.getCallType());
-                        } else if (Constants.EVENT_TASK.SEATING.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType())) {
+                        } else if (Constants.EVENT_SEATINGPLAN_MODE.SEATING.getMode().equalsIgnoreCase(sSeatingPlanMode)) {
                             task = new SeatingTask(sEventId, sAdminId);
                             telephonyLogging.info("Task => SeatingTask From :" + sGuestTelNumber + " To(Event Phone Number) : " + sEventTelNumber + " call type : " + this.incomingCallBean.getCallType());
                         }

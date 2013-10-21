@@ -232,13 +232,9 @@ public class EventManager {
                 eventDateObj.setEventAmPm(DateSupport.getTimeByZone( dateObject.getMillis() , DateSupport.getTimeZone(eventBean.getEventTimeZone()).getID(),  "a"  ));
                 eventDateObj.setEventTimeZone( eventBean.getEventTimeZone() );
                 eventSummaryBean.setEventDateObj( eventDateObj );
-                appLogging.info("eventDateObj : "  + eventSummaryBean.getEventDateObj());
-
 
                 DateObject dateObjectRsvpDeadline = DateSupport.getTimeDateObjectByZone( eventBean.getRsvpDeadlineDate() , DateSupport.getTimeZone(eventBean.getEventTimeZone()).getID(),  Constants.PRETTY_DATE_PATTERN_2  );
                 eventSummaryBean.setRsvpDeadLineDate( dateObjectRsvpDeadline.getFormattedTime() ) ;
-                appLogging.info("sRsvpDeadlineDateUTC : "  + eventSummaryBean.getRsvpDeadLineDate() );
-
 			}
 
 			TableManager tableManager = new TableManager();
@@ -305,33 +301,23 @@ public class EventManager {
 			ArrayList<TelNumberBean> arrTelNumberBean = telNumManager.getTelNumbersByEvent(telNumberMetaData);
 			if (arrTelNumberBean != null && !arrTelNumberBean.isEmpty()) {
 				for (TelNumberBean telNumberBean : arrTelNumberBean) {
-					if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))
-                    {
-						eventSummaryBean.setRsvpNumber(telNumberBean.getHumanTelNumber());
-                        eventSummaryBean.setDemoMode(false);
-					}
-                    else if (Constants.EVENT_TASK.SEATING.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))
-                    {
-						eventSummaryBean.setSeatingNumber(telNumberBean.getHumanTelNumber());
-                        eventSummaryBean.setDemoMode(false);
-					}
-                    else if (Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))
-                    {
-                        eventSummaryBean.setRsvpNumber(telNumberBean.getHumanTelNumber());
+                    if (Constants.EVENT_TASK.DEMO_TELEPHONE_NUMBER.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType())) {
+                        eventSummaryBean.setTelephoneNumber(telNumberBean.getHumanTelNumber());
                         eventSummaryBean.setTelephonyEventNumber(telNumberBean.getSecretEventIdentity());
-                        eventSummaryBean.setTelephonyRSVPSecretKey(telNumberBean.getSecretEventKey());
                         eventSummaryBean.setDemoMode(true);
-                    }
-                    else if (Constants.EVENT_TASK.DEMO_SEATING.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))
-                    {
-                        eventSummaryBean.setSeatingNumber(telNumberBean.getHumanTelNumber());
-                        eventSummaryBean.setTelephonyEventNumber(telNumberBean.getSecretEventIdentity());
-                        eventSummaryBean.setTelephonySeatingSecretKey(telNumberBean.getSecretEventKey());
-                        eventSummaryBean.setDemoMode(true);
+                    }  else if (Constants.EVENT_TASK.PREMIUM_TELEPHONE_NUMBER.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType())) {
+                        eventSummaryBean.setTelephoneNumber(telNumberBean.getHumanTelNumber());
+                        eventSummaryBean.setDemoMode(false);
                     }
 
 				}
 			}
+
+            if(Constants.TELNUMBER_TYPE.PREMIUM.getType().equalsIgnoreCase(EventFeatureManager.getStringValueFromEventFeature(sEventId,Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE))) {
+                eventSummaryBean.setDemoMode(false);
+            } else if(Constants.TELNUMBER_TYPE.DEMO.getType().equalsIgnoreCase(EventFeatureManager.getStringValueFromEventFeature(sEventId,Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE))){
+                eventSummaryBean.setDemoMode(true);
+            }
 
             // Usage Summary
             {
@@ -355,8 +341,30 @@ public class EventManager {
             }
 
 
+            {
+                // Seating plan mode
+                Constants.EVENT_SEATINGPLAN_MODE eventSeatingplanMode = getEventSeatingMode( sEventId );
+                if(eventSeatingplanMode!=null){
+                    eventSummaryBean.setSeatingPlanMode(eventSeatingplanMode.getMode()) ;
+                }
+
+            }
+
+
 		}
 		return eventSummaryBean;
 
 	}
+
+    public Constants.EVENT_SEATINGPLAN_MODE getEventSeatingMode(String sEventId) {
+
+        Constants.EVENT_SEATINGPLAN_MODE eventSeatingplanMode = null;
+        String sValueFromEventFeature =   EventFeatureManager.getStringValueFromEventFeature(sEventId,Constants.EVENT_FEATURES.SEATINGPLAN_MODE);
+        if( Constants.EVENT_SEATINGPLAN_MODE.RSVP.getMode().equalsIgnoreCase(sValueFromEventFeature)) {
+            eventSeatingplanMode = Constants.EVENT_SEATINGPLAN_MODE.RSVP;
+        } else  if( Constants.EVENT_SEATINGPLAN_MODE.SEATING.getMode().equalsIgnoreCase(sValueFromEventFeature)) {
+            eventSeatingplanMode = Constants.EVENT_SEATINGPLAN_MODE.SEATING;
+        }
+        return eventSeatingplanMode;
+    }
 }

@@ -69,7 +69,7 @@ public class InformGuestTask {
                             SmsSchedulerData smsSchedulerData = new SmsSchedulerData();
                             SmsScheduleBean smsScheduleBean = smsSchedulerData.getGuestScheduler( requestSmsSchedulerBean , Constants.SCHEDULER_STATUS.NEW_SCHEDULE );
 
-                            // appLogging.info("RSVP SMSSChedule bean  : " + smsScheduleBean  );
+                           appLogging.info("RSVP SMSSChedule bean  : " + smsScheduleBean  );
                             if(smsScheduleBean!=null && smsScheduleBean.getSmsScheduleId()!=null && !"".equalsIgnoreCase(smsScheduleBean.getSmsScheduleId()))
                             {
                                 Long currentTime = DateSupport.getEpochMillis();
@@ -193,7 +193,6 @@ public class InformGuestTask {
                             }
                         }
 
-                        appLogging.info("Event features  : " + mapFeatureValue.getKey() + " - " + ParseUtil.sTob(mapFeatureValue.getValue())   );
                         if( Constants.EVENT_FEATURES.SEATING_EMAIL_GUEST_AFTER_CALL.getEventFeature().equalsIgnoreCase(mapFeatureValue.getKey())
                                 && ParseUtil.sTob(mapFeatureValue.getValue()) )
                         {

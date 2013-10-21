@@ -197,12 +197,16 @@
                 }
 
 
-            }
-            else if(sAction!=null && "load".equalsIgnoreCase(sAction))
-            {
+            } else if(sAction!=null && "load".equalsIgnoreCase(sAction)) {
                 EventFeatureBean allEventFeatureBean =  eventFeatureManager.getEventFeatures(sEventId);
 
                 jsonResponseObj.put("all_features",allEventFeatureBean.toJson());
+
+                EventManager eventManager = new  EventManager();
+                Constants.EVENT_SEATINGPLAN_MODE eventSeatingplanMode = eventManager.getEventSeatingMode(sEventId);
+                if(eventSeatingplanMode!=null) {
+                    jsonResponseObj.put("event_seatingplan_mode",eventSeatingplanMode.getDisplayText() );
+                }
 
                 Text okText = new OkText("Loading data complete.","err_mssg") ;
                 arrErrorText.add(okText);

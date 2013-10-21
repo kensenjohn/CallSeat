@@ -49,9 +49,9 @@ try {
 
         if(arrTelNumberBean!=null && !arrTelNumberBean.isEmpty()){
             for(TelNumberBean telNumberBean : arrTelNumberBean ) {
-                if( Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))  {
+                if( Constants.EVENT_TASK.PREMIUM_TELEPHONE_NUMBER.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))  {
                     emailSchedulerRequest.setEmailTemplate(Constants.EMAIL_TEMPLATE.RSVPRESPONSE);
-                } else if ( Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()) ) {
+                } else if ( Constants.EVENT_TASK.DEMO_TELEPHONE_NUMBER.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()) ) {
                     emailSchedulerRequest.setEmailTemplate(Constants.EMAIL_TEMPLATE.RSVPRESPONSEDEMO);
                 }
             }

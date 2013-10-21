@@ -21,8 +21,7 @@
 
     PurchaseTransactionManager purchaseTransactionManager = new PurchaseTransactionManager();
     PurchaseTransactionBean purchaseResponseTransactionBean = purchaseTransactionManager.getPurchaseTransactionByEventAdmin(purchaseTransactionBean);
-    if(purchaseResponseTransactionBean!=null)
-    {
+    if(purchaseResponseTransactionBean!=null) {
         purchaseResponseTransactionBean.setUniquePurchaseToken(Utility.getNewGuid());
         purchaseTransactionManager.modifyPurchaseTransaction(purchaseResponseTransactionBean);
     }
@@ -77,10 +76,7 @@
                                     <h4><%=checkoutBean.getItemName()%></h4>
                                 </div>
                                 <div class="offset_0_5 span4">
-                                    <span class="fld_txt_small">Seating Phone Number:&nbsp;<%=purchaseResponseTransactionBean.getSeatingTelNumber()%></span>
-                                </div>
-                                <div class="offset_0_5 span4">
-                                    <span class="fld_txt_small">RSVP Phone Number:&nbsp;<%=purchaseResponseTransactionBean.getRsvpTelNumber()%></span>
+                                    <span class="fld_txt_small">Telephone Phone Number:&nbsp;<%=purchaseResponseTransactionBean.getTelephoneNumber()%></span>
                                 </div>
                             </div>
 
@@ -95,8 +91,7 @@
                         </div>
                     </div>
                     <%
-                        if(checkoutBean.getDiscountAmount()>0)
-                        {
+                        if(checkoutBean.getDiscountAmount()>0) {
                     %>
                             <div class="row">
                                 <div class="offset_0_5 span4"   style="text-align:right;" >
@@ -110,8 +105,7 @@
                         }
                     %>
                     <%
-                        if(checkoutBean.getDiscountAmount()>0 && checkoutBean.getTaxPercentage()>0)
-                        {
+                        if(checkoutBean.getDiscountAmount()>0 && checkoutBean.getTaxPercentage()>0) {
                     %>
                             <div class="row">
                                 <div class="offset_0_5 span4"   style="text-align:right;">
@@ -130,8 +124,7 @@
                         }
                     %>
                     <%
-                        if(checkoutBean.getTaxPercentage()>0)
-                        {
+                        if(checkoutBean.getTaxPercentage()>0) {
                     %>
 
                             <div class="row">

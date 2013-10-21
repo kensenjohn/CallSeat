@@ -39,7 +39,7 @@ public class EmailSchedulerData {
                     emailRequestSchedulerBean.getEventId(), emailRequestSchedulerBean.getAdminId(), ParseUtil.checkNull(emailRequestSchedulerBean.getGuestId()),
                     emailRequestSchedulerBean.getCreateDate(), emailRequestSchedulerBean.getHumanCreateDate(), emailRequestSchedulerBean.getScheduledSendDate(),
                     emailRequestSchedulerBean.getHumanScheduledSendDate(), emailRequestSchedulerBean.getScheduleStatus());
-
+            emailLogging.info(" Creating schedule for email : Query : " + sQuery + " Params : " + aParams );
             iNumberOfRows = DBDAO.putRowsQuery( sQuery,aParams,ADMIN_DB,sourceFile,"createSchedule()" );
         }
         return iNumberOfRows;

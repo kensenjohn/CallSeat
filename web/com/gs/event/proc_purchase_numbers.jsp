@@ -57,21 +57,14 @@
                 {
                     TelNumberManager telNumManager = new TelNumberManager();
 
-                    String sUnformattedRSVPText = purchaseResponseTransactionBean.getRsvpTelNumber().replaceAll(" ","").replace(")","").replace("(","");
-                    String sUnformattedSeatingText = purchaseResponseTransactionBean.getSeatingTelNumber().replaceAll(" ","").replace(")","").replace("(","");
+                    String sUnformattedTelephonyText = purchaseResponseTransactionBean.getTelephoneNumber().replaceAll(" ","").replace(")","").replace("(","");
 
-                    TelNumberMetaData searchRsvpTelNumberMetaData = new TelNumberMetaData();
-                    searchRsvpTelNumberMetaData.setTextPatternSearch( sUnformattedRSVPText  );
-                    ArrayList<TelNumberBean> arrRSVPTelNumberBean  = telNumManager.searchTelNumber(searchRsvpTelNumberMetaData,Constants.EVENT_TASK.RSVP.getTask());
-                    appLogging.info("RSVP number : "  + sUnformattedRSVPText + " Result after search : " + arrRSVPTelNumberBean );
+                    TelNumberMetaData searchTelephoneTelNumberMetaData = new TelNumberMetaData();
+                    searchTelephoneTelNumberMetaData.setTextPatternSearch( sUnformattedTelephonyText  );
+                    ArrayList<TelNumberBean> arrTelephoneTelNumberBean  = telNumManager.searchTelNumber(searchTelephoneTelNumberMetaData,Constants.EVENT_TASK.PREMIUM_TELEPHONE_NUMBER.getTask());
 
-                    TelNumberMetaData searchSeatingtelNumberMetaData = new TelNumberMetaData();
-                    searchSeatingtelNumberMetaData.setTextPatternSearch( sUnformattedSeatingText );
-                    ArrayList<TelNumberBean> arrSeatingTelNumberBean  = telNumManager.searchTelNumber(searchSeatingtelNumberMetaData,Constants.EVENT_TASK.SEATING.getTask());
-                    appLogging.info("Seating number : "  + sUnformattedSeatingText + " Result after search : " + arrSeatingTelNumberBean );
-                    if(arrRSVPTelNumberBean!=null && !arrRSVPTelNumberBean.isEmpty() && arrSeatingTelNumberBean!=null && !arrSeatingTelNumberBean.isEmpty() ){
-                        if(sUniquePurchaseToken!=null && sUniquePurchaseToken.equalsIgnoreCase(purchaseResponseTransactionBean.getUniquePurchaseToken()))
-                        {
+                    if(arrTelephoneTelNumberBean!=null && !arrTelephoneTelNumberBean.isEmpty()){
+                        if(sUniquePurchaseToken!=null && sUniquePurchaseToken.equalsIgnoreCase(purchaseResponseTransactionBean.getUniquePurchaseToken())) {
 
                             EventPricingGroupManager eventPricingGroupManager = new EventPricingGroupManager();
                             PricingGroupBean pricingGroupBean = eventPricingGroupManager.getPricingGroups(purchaseResponseTransactionBean.getPriceGroupId());
@@ -143,21 +136,17 @@
                                     accountManager.createAccount(adminAccountMeta);
 
                                     //String sPurchasedRsvpNum = "678690589";
-                                    String sPurchasedRsvpNum =  telNumManager.purchaseTelephoneNumber(adminAccountMeta,purchaseResponseTransactionBean.getRsvpTelNumber() );
-                                    String sPurchasedSeatingNum = telNumManager.purchaseTelephoneNumber(adminAccountMeta,purchaseResponseTransactionBean.getSeatingTelNumber() );
+                                    String sPurchasedTelephoneNum =  telNumManager.purchaseTelephoneNumber(adminAccountMeta,purchaseResponseTransactionBean.getTelephoneNumber() );
 
-                                    if(pricingGroupBean!=null)
-                                    {
+                                    if(pricingGroupBean!=null) {
                                         EventFeatureManager eventFeatureManager = new EventFeatureManager();
                                         eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.PREMIUM_TOTAL_CALL_MINUTES,ParseUtil.iToS(pricingGroupBean.getMaxMinutes()));
                                         eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.PREMIUM_TOTAL_TEXT_MESSAGES,ParseUtil.iToS(pricingGroupBean.getSmsCount()));
 
-                                        if ( EventFeatureManager.isEventFeatureExists( sEventId, Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE ) )
-                                        {
+                                        if ( EventFeatureManager.isEventFeatureExists( sEventId, Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE ) ) {
+                                            jspLogging.error("Phone CAll Usage : " + Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE.getEventFeature() );
                                             eventFeatureManager.updateEventFeatures( sEventId , Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE, Constants.TELNUMBER_TYPE.PREMIUM.getType()  );
-                                        }
-                                        else
-                                        {
+                                        } else {
                                             eventFeatureManager.createEventFeatures(sEventId, Constants.EVENT_FEATURES.SEATINGPLAN_TELNUMBER_TYPE,Constants.TELNUMBER_TYPE.PREMIUM.getType());
                                         }
 
@@ -183,18 +172,14 @@
 
                                     }
 
-                                    if(sPurchasedRsvpNum!=null && !"".equalsIgnoreCase(sPurchasedRsvpNum)
-                                            && sPurchasedSeatingNum!=null && !"".equalsIgnoreCase(sPurchasedSeatingNum)){
-
-
+                                    if( !Utility.isNullOrEmpty(sPurchasedTelephoneNum) ){
 
                                         TelNumberMetaData telNumberMetaData = new TelNumberMetaData();
                                         telNumberMetaData.setAdminId(sAdminId);
                                         telNumberMetaData.setEventId(sEventId);
-                                        telNumberMetaData.setRsvpTelNumDigit(purchaseResponseTransactionBean.getRsvpTelNumber());
-                                        telNumberMetaData.setSeatingTelNumDigit(purchaseResponseTransactionBean.getSeatingTelNumber());
+                                        telNumberMetaData.setTelephoneNumNumDigit( purchaseResponseTransactionBean.getTelephoneNumber() );
 
-                                        telNumManager.saveTelNumbers(telNumberMetaData);
+                                        telNumManager.saveConvertDemoToPremiumTelNumbers(telNumberMetaData);
                                         telNumManager.sendNewTelnumberPurchasedEmail(telNumberMetaData,adminUserInfoBean);
 
                                         Text okText = new OkText("Your purchase was completed successfully.","my_id");
@@ -245,19 +230,13 @@
                         }
                     } else {
                         // At least one number is not available for purchase
-                        StringBuilder sErrorMessage = new StringBuilder("The following phone number/s are sold out:<br>");
+                        StringBuilder sErrorMessage = new StringBuilder("The following phone number is sold out:<br>");
 
 
-                        if(arrRSVPTelNumberBean==null || (arrRSVPTelNumberBean!=null && arrRSVPTelNumberBean.isEmpty()) ) {
-                            sErrorMessage.append("RSVP: ").append( purchaseResponseTransactionBean.getRsvpTelNumber() ).append("<br>");
-                            jspLogging.error("The RSVP phone number "  + purchaseResponseTransactionBean.getRsvpTelNumber() +" already exists. Admin Id : " + sAdminId + " Event Id : " + sEventId);
+                        if(arrTelephoneTelNumberBean==null || (arrTelephoneTelNumberBean!=null && arrTelephoneTelNumberBean.isEmpty()) ) {
+                            sErrorMessage.append("Telephone Number : ").append( purchaseResponseTransactionBean.getTelephoneNumber() ).append("<br>");
+                            jspLogging.error("The Telephone Number "  + purchaseResponseTransactionBean.getTelephoneNumber() +" does not exist for purchase. Admin Id : " + sAdminId + " Event Id : " + sEventId);
                         }
-
-                        if( arrSeatingTelNumberBean ==null || (arrSeatingTelNumberBean!=null && arrSeatingTelNumberBean.isEmpty()) ) {
-                            sErrorMessage.append("Seating: ").append( purchaseResponseTransactionBean.getSeatingTelNumber() ).append("<br>");
-                            jspLogging.error("The Seating phone number "  + purchaseResponseTransactionBean.getSeatingTelNumber() +" already exists. Admin Id : " + sAdminId + " Event Id : " + sEventId);
-                        }
-
                         Text errorText = new ErrorText(sErrorMessage.append("Please select new phone numbers and try again.").toString(),"my_id") ;
                         arrErrorText.add(errorText);
 

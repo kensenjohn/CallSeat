@@ -72,6 +72,7 @@ public class EmailSchedulerService {
                     }
                 }
             }
+            appLogging.info("Before creating the schedule bean for sending out email emailScheduleBean : " + ParseUtil.checkNullObject(emailScheduleBean));
             if(emailScheduleBean!=null && !Utility.isNullOrEmpty(emailScheduleBean.getEmailScheduleId()) && emailSchedulerRequest.isUpdateScheduleIfExists()){
                 requestEmailSchedulerBean.setEmailScheduleId(emailScheduleBean.getEmailScheduleId());
                 iNumOfRecords =emailSchedulerData.updateSchedule( requestEmailSchedulerBean );
@@ -80,6 +81,8 @@ public class EmailSchedulerService {
                 requestEmailSchedulerBean.setEmailScheduleId(Utility.getNewGuid() );
                 requestEmailSchedulerBean.setCreateDate( currentTime );
                 requestEmailSchedulerBean.setHumanCreateDate( DateSupport.getUTCDateTime() );
+
+                appLogging.info("REquest being sent for creating email schedule : " + ParseUtil.checkNullObject(requestEmailSchedulerBean));
 
                 iNumOfRecords =emailSchedulerData.createSchedule( requestEmailSchedulerBean );
             }

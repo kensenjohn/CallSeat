@@ -2,6 +2,7 @@ package com.gs.bean;
 
 import com.gs.bean.usage.PhoneCallUsageBean;
 import com.gs.bean.usage.TextMessageUsageBean;
+import com.gs.common.Constants;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -29,6 +30,10 @@ public class EventSummaryBean {
 
     private EventDateObj eventDateObj = new EventDateObj();
     private String rsvpDeadLineDate = "";
+
+
+    private String telephoneNumber = Constants.EMPTY;
+    private String seatingPlanMode = Constants.EMPTY;
 
 	public String getEventId() {
 		return eventId;
@@ -182,6 +187,22 @@ public class EventSummaryBean {
         this.rsvpDeadLineDate = rsvpDeadLineDate;
     }
 
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
+    }
+
+    public String getSeatingPlanMode() {
+        return seatingPlanMode;
+    }
+
+    public void setSeatingPlanMode(String seatingPlanMode) {
+        this.seatingPlanMode = seatingPlanMode;
+    }
+
     @Override
     public String toString() {
         return "EventSummaryBean{" +
@@ -231,6 +252,8 @@ public class EventSummaryBean {
             jsonObject.put("text_message_usage", this.textMessageUsageBean.toJson());
             jsonObject.put("event_date_obj", this.eventDateObj.toJson());
             jsonObject.put("rsvp_deadline_date", this.rsvpDeadLineDate );
+            jsonObject.put("telephone_number", this.telephoneNumber );
+            jsonObject.put("seating_plan_mode", this.seatingPlanMode );
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

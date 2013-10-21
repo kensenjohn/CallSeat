@@ -11,8 +11,8 @@
 <%
 JSONObject jsonResponseObj = new JSONObject();
 
-Logger jspLogging = LoggerFactory.getLogger("JspLogging");
-Logger appLogging = LoggerFactory.getLogger("AppLogging");
+Logger jspLogging = LoggerFactory.getLogger(Constants.JSP_LOGS);
+Logger appLogging = LoggerFactory.getLogger(Constants.APP_LOGS);
 response.setContentType("application/json");
 
 ArrayList<Text> arrOkText = new ArrayList<Text>();
@@ -29,28 +29,19 @@ try
 	boolean isCustomNumGen = ParseUtil.sTob(request.getParameter("custom_num_gen"));
 	boolean isGetNewNum = ParseUtil.sTob(request.getParameter("get_new_phone_num"));
 	String sNumberType = ParseUtil.checkNull(request.getParameter("num_type"));
-	String sAreaCode = ParseUtil.checkNull(request.getParameter("seating_area_code"));
-	String sTextPattern = ParseUtil.checkNull(request.getParameter("seating_text_pattern"));
 
-	String sRsvpAreaCode = ParseUtil.checkNull(request.getParameter("rsvp_area_code"));
-	String sRsvpTextPattern = ParseUtil.checkNull(request.getParameter("rsvp_text_pattern"));
+	String sAreaCode = ParseUtil.checkNull(request.getParameter("telephony_area_code"));
+	String sTextPattern = ParseUtil.checkNull(request.getParameter("telephony_text_pattern"));
 	
-	
-	if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId) && sEventId!=null && !"".equalsIgnoreCase(sEventId) )
-	{
+	if(!Utility.isNullOrEmpty(sAdminId) && !Utility.isNullOrEmpty(sEventId) ) {
 		TelNumberMetaData telNumberMetaData = new TelNumberMetaData();
 		telNumberMetaData.setAdminId(sAdminId);
 		telNumberMetaData.setEventId(sEventId);
 		
 		TelNumberManager telNumManager = new TelNumberManager();
 		ArrayList<TelNumberBean> arrTelNumberBean = new ArrayList<TelNumberBean>();
-		if(isCustomNumGen)
-		{
-			if(Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(sNumberType))
-			{
-				sAreaCode = sRsvpAreaCode;
-				sTextPattern = sRsvpTextPattern;
-			}
+        appLogging.info("StartTime : " + DateSupport.getUTCDateTime());
+		if(isCustomNumGen) {
 			telNumberMetaData.setAreaCodeSearch(sAreaCode);
 			telNumberMetaData.setTextPatternSearch(sTextPattern);
 			
@@ -58,40 +49,18 @@ try
 		}
 		else if(isGetNewNum)
 		{
-			arrTelNumberBean = telNumManager.getGeneratedTelNumbers(false,false,telNumberMetaData, arrTelNumberBean);
-		}
-		else
-		{
+			arrTelNumberBean = telNumManager.getGeneratedTelNumbers( telNumberMetaData, arrTelNumberBean);
+		} else {
+            appLogging.info("BEggining to get tel numbers : " + DateSupport.getUTCDateTime());
 			arrTelNumberBean = telNumManager.getTelNumEventDetails(telNumberMetaData);
 		}
-		
 
-        if(arrTelNumberBean!=null && !arrTelNumberBean.isEmpty())
-        {
+        appLogging.info("Middle Time : " + DateSupport.getUTCDateTime());
+
+        if(arrTelNumberBean!=null && !arrTelNumberBean.isEmpty()) {
             jsonResponseObj.put("telnumbers",  telNumManager.getTelNumberBeanJson(arrTelNumberBean));
         }
-        else
-        {
-
-        }
-		if(arrTelNumberBean==null || (arrTelNumberBean!=null && arrTelNumberBean.isEmpty()))
-		{
-			
-			if(isCustomNumGen)
-			{
-				
-			}
-			else
-			{
-				
-			}
-		}
-		
-		
-		
-		
-		
-
+        appLogging.info("End Time : " + DateSupport.getUTCDateTime());
 		
 		Text okText = new OkText("Loading Phone number complete","my_id");		
 		arrOkText.add(okText);

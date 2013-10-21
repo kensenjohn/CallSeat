@@ -116,7 +116,7 @@ try
 								telNumberMetaData.setRsvpTelNumDigit(sRsvpNumber);
 								telNumberMetaData.setSeatingTelNumDigit(sSeatingNumber);
 								
-								telNumManager.saveTelNumbers(telNumberMetaData);
+								telNumManager.saveConvertDemoToPremiumTelNumbers(telNumberMetaData);
 								telNumManager.sendNewTelnumberPurchasedEmail(telNumberMetaData,adminUserInfoBean);
 								
 								Text okText = new OkText("Your purchase was completed successfully.","my_id");

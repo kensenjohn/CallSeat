@@ -246,7 +246,7 @@ public class DemoCallTwiml {
 				TwiMLResponse response = new TwiMLResponse();
 
 
-                telephonyLogging.error("DEMO - Building Voice to gather RSVP exception occurred when trying to RSVP Respond to guest " +
+                telephonyLogging.error("DEMO - Building Voice to gather RSVP  " +
                         " From : " + twilioIncomingBean.getFrom()  + " To : " + twilioIncomingBean.getFrom() + " Invited seats : " + iTotalInvitedSeats );
                 Gather gatherRsvp = RsvpTwiml.getGatherRSVPVerb(iTotalInvitedSeats,twilioIncomingBean,Constants.CALL_TYPE.DEMO_GATHER_RSVP_NUM) ;
                 if( gatherRsvp!=null )  {
@@ -379,7 +379,7 @@ public class DemoCallTwiml {
                 informGuestBean.setEventId( eventBean.getEventId() );
                 informGuestBean.setAdminId( eventBean.getEventAdminId() );
                 informGuestBean.setGuestId( eventGuestBean.getGuestId() );
-                informGuestBean.setEventTask( Constants.EVENT_TASK.RSVP );
+                informGuestBean.setEventTask( Constants.EVENT_TASK.DEMO_TELEPHONE_NUMBER );
 
                 InformGuestTask.sendRSVPConfirmation(informGuestBean);
 			} catch (TwiMLException e) {

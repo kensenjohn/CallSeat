@@ -15,10 +15,7 @@ import com.gs.call.twilio.twiml.RsvpTwiml;
 import com.gs.common.Constants;
 import com.gs.common.ParseUtil;
 import com.gs.data.event.EventData;
-import com.gs.manager.event.EventGuestManager;
-import com.gs.manager.event.EventGuestMetaData;
-import com.gs.manager.event.TelNumberManager;
-import com.gs.manager.event.TelNumberMetaData;
+import com.gs.manager.event.*;
 
 public class RsvpTask extends Task {
 
@@ -49,7 +46,9 @@ public class RsvpTask extends Task {
                     callResponse = TwimlSupport.rejectCall( callResponse );
                 }
 			} else if (Constants.CALL_TYPE.RSVP_DIGIT_RESP.equals(incomingCallBean.getCallType())) {
-				callResponse = processRsvpDigits(incomingCallBean);
+                telephonyLogging.info("Going to get the RSVP Digit response : " + incomingCallBean.getCallType() + " From :" + incomingCallBean.getFrom() + " To : " + incomingCallBean.getTo());
+
+                callResponse = processRsvpDigits(incomingCallBean);
 			}
 		}
 		return callResponse;
@@ -73,13 +72,12 @@ public class RsvpTask extends Task {
 			telNumMetaData.setDigits(twilioIncomingCallBean.getDigits());
 
 			TelNumberManager telNumManager = new TelNumberManager();
-			EventGuestBean tmpEventGuestBean = telNumManager
-					.getTelNumGuestDetails(telNumMetaData);
+			EventGuestBean tmpEventGuestBean = telNumManager.getTelNumGuestDetails(telNumMetaData);
 
-			int iTotalSeats = ParseUtil.sToI(tmpEventGuestBean
-					.getTotalNumberOfSeats());
+			int iTotalSeats = ParseUtil.sToI(tmpEventGuestBean.getTotalNumberOfSeats());
 			int iRsvpSeatsSel = ParseUtil.sToI(rsvpNum);
 
+            telephonyLogging.info("process the RSVP input that was entered iTotalSeats : " + iTotalSeats + " RSVP number of didigts : " + iRsvpSeatsSel + " From :" + incomingCallBean.getFrom() + " To : " + incomingCallBean.getTo());
 
 
             CallTransactionBean callTransactionBean = new CallTransactionBean();
@@ -96,36 +94,37 @@ public class RsvpTask extends Task {
 
             EventGuestMetaData eventGuestMetaData = new EventGuestMetaData();
             eventGuestMetaData.setEventId(super.eventId);
-            eventGuestMetaData.setRsvpDigits(twilioIncomingCallBean
-                    .getDigits());
+            eventGuestMetaData.setRsvpDigits(twilioIncomingCallBean.getDigits());
             eventGuestMetaData.setArrGuestId(arrGuestID);
 
-            EventGuestManager eventGuestManager = new EventGuestManager();
-            EventGuestBean eventGuestBean = eventGuestManager
-                    .getGuest(eventGuestMetaData);
-
-            callResponse.setEventGuestBean(eventGuestBean);
-
 			if (iRsvpSeatsSel <= iTotalSeats) {
+                EventGuestManager eventGuestManager = new EventGuestManager();
 				eventGuestManager.setGuestRsvpForEvent(eventGuestMetaData);
 
+                EventGuestBean eventGuestBean = eventGuestManager.getGuest(eventGuestMetaData);
 
-				if (eventGuestBean.getRsvpSeats().equalsIgnoreCase(
-						twilioIncomingCallBean.getDigits())) {
-					callResponse = rsvpTwiml.getRsvpDigitsSuccess(callResponse,
-							"Your RSVP of "
-									+ eventGuestBean.getRsvpSeats() +" has been accepted.");
+                callResponse.setEventGuestBean(eventGuestBean);
+
+                telephonyLogging.info("processing RSVP digits - RSVP Seats : " + eventGuestBean.getRsvpSeats() + " TWilio Digits : " +  twilioIncomingCallBean.getDigits() + " From :" + incomingCallBean.getFrom() + " To : " + incomingCallBean.getTo());
+
+
+                EventManager eventManager = new EventManager();
+                EventBean eventBean = eventManager.getEvent(eventGuestMetaData.getEventId());
+
+                callResponse.setEventBean(eventBean);
+
+                if (eventGuestBean.getRsvpSeats().equalsIgnoreCase( twilioIncomingCallBean.getDigits())) {
+					callResponse = rsvpTwiml.getRsvpDigitsSuccess(callResponse, "Your RSVP of " + eventGuestBean.getRsvpSeats() +" has been accepted.");
 				} else {
-					callResponse = rsvpTwiml
-							.getRsvpDigitsFail(
-									callResponse,
-									" We were unable to process your RSVP. Please call again later.",
-									Constants.RSVP_STATUS.RSVP_UPDATE_FAIL,twilioIncomingCallBean);
+					callResponse = rsvpTwiml.getRsvpDigitsFail( callResponse, " We were unable to process your RSVP. Please call again later.",
+									    Constants.RSVP_STATUS.RSVP_UPDATE_FAIL,twilioIncomingCallBean);
 
 				}
 
 			} else {
-				// RSVP selected has exceed the total invited seats.
+                telephonyLogging.info("User entered RSVP greater than total invited seats - iTotalSeats : " + iTotalSeats + " RSVP number of digits : " + iRsvpSeatsSel + " From :" + incomingCallBean.getFrom() + " To : " + incomingCallBean.getTo());
+
+                // RSVP selected has exceed the total invited seats.
 				callResponse = rsvpTwiml
 						.getRsvpDigitsFail(
 								callResponse,

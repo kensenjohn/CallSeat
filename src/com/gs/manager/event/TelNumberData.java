@@ -3,16 +3,13 @@ package com.gs.manager.event;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import com.gs.common.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gs.bean.DemoTelNumber;
 import com.gs.bean.TelNumberBean;
 import com.gs.bean.TelNumberTypeBean;
-import com.gs.common.Configuration;
-import com.gs.common.Constants;
-import com.gs.common.ParseUtil;
-import com.gs.common.Utility;
 import com.gs.common.db.DBDAO;
 
 public class TelNumberData {
@@ -43,48 +40,29 @@ public class TelNumberData {
 	}
 
 	public ArrayList<TelNumberTypeBean> getTelNumberTypes() {
-		ArrayList<TelNumberTypeBean> arrTelNumTypeBean = getTelNumberTypes(Constants.EVENT_TASK.ALL
-				.getTask());
+		ArrayList<TelNumberTypeBean> arrTelNumTypeBean = getTelNumberTypes(Constants.EVENT_TASK.ALL);
 
 		return arrTelNumTypeBean;
 	}
 
-	public ArrayList<TelNumberTypeBean> getTelNumberTypes(String sTelNumberType) {
+	public ArrayList<TelNumberTypeBean> getTelNumberTypes(Constants.EVENT_TASK telNumberType) {
 
 		ArrayList<TelNumberTypeBean> arrTelNumTypeBean = new ArrayList<TelNumberTypeBean>();
 
 		ArrayList<Object> aParams = new ArrayList<Object>();
 		String sQuery = "SELECT * FROM GTTELNUMBERTYPE";
 
-		if (sTelNumberType != null
-				&& !"".equalsIgnoreCase(sTelNumberType)
-				&& !Constants.EVENT_TASK.ALL.getTask().equalsIgnoreCase(
-						sTelNumberType)) {
+		if (telNumberType != null&& !Constants.EVENT_TASK.ALL.getTask().equalsIgnoreCase(telNumberType.getTask())) {
 			sQuery = "SELECT * FROM GTTELNUMBERTYPE WHERE TELNUMTYPE = ?";
-
-			if (Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(
-					sTelNumberType)) {
-				aParams.add(Constants.EVENT_TASK.RSVP.getTask());
-			} else if (Constants.EVENT_TASK.SEATING.getTask().equalsIgnoreCase(
-					sTelNumberType)) {
-				aParams.add(Constants.EVENT_TASK.SEATING.getTask());
-			} else if (Constants.EVENT_TASK.DEMO_RSVP.getTask()
-					.equalsIgnoreCase(sTelNumberType)) {
-				aParams.add(Constants.EVENT_TASK.DEMO_RSVP.getTask());
-			} else if (Constants.EVENT_TASK.DEMO_SEATING.getTask()
-					.equalsIgnoreCase(sTelNumberType)) {
-				aParams.add(Constants.EVENT_TASK.DEMO_SEATING.getTask());
-			}
+            aParams.add(telNumberType.getTask());
 		}
 
-		ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(
-				ADMIN_DB, sQuery, aParams, false, "TelNumberData.java",
+		ArrayList<HashMap<String, String>> arrResult = DBDAO.getDBData(ADMIN_DB, sQuery, aParams, false, "TelNumberData.java",
 				"getTelNumberTypes()");
 
 		if (arrResult != null && !arrResult.isEmpty()) {
 			for (HashMap<String, String> hmResult : arrResult) {
-				TelNumberTypeBean telNumTypeBean = new TelNumberTypeBean(
-						hmResult);
+				TelNumberTypeBean telNumTypeBean = new TelNumberTypeBean(hmResult);
 				arrTelNumTypeBean.add(telNumTypeBean);
 			}
 		}
@@ -121,30 +99,20 @@ public class TelNumberData {
 
 	private TelNumberBean getTelNumberBean(HashMap<String, String> hmResult) {
 		TelNumberBean telNumberBean = new TelNumberBean();
-		telNumberBean.setTelNumberId(ParseUtil.checkNull(hmResult
-				.get("TELNUMBERID")));
-		telNumberBean.setTelNumber(ParseUtil.checkNull(hmResult
-				.get("TELNUMBER")));
-		telNumberBean.setTelNumberTypeId(ParseUtil.checkNull(hmResult
-				.get("FK_TELNUMBERTYPEID")));
-		telNumberBean
-				.setEventId(ParseUtil.checkNull(hmResult.get("FK_EVENTID")));
-		telNumberBean
-				.setAdminId(ParseUtil.checkNull(hmResult.get("FK_ADMINID")));
+		telNumberBean.setTelNumberId(ParseUtil.checkNull(hmResult.get("TELNUMBERID")));
+		telNumberBean.setTelNumber(ParseUtil.checkNull(hmResult.get("TELNUMBER")));
+		telNumberBean.setTelNumberTypeId(ParseUtil.checkNull(hmResult.get("FK_TELNUMBERTYPEID")));
+		telNumberBean.setEventId(ParseUtil.checkNull(hmResult.get("FK_EVENTID")));
+		telNumberBean.setAdminId(ParseUtil.checkNull(hmResult.get("FK_ADMINID")));
 		telNumberBean.setDelRow(ParseUtil.checkNull(hmResult.get("DEL_ROW")));
-		telNumberBean.setTelNumberType(ParseUtil.checkNull(hmResult
-				.get("TELNUMTYPE")));
+		telNumberBean.setTelNumberType(ParseUtil.checkNull(hmResult.get("TELNUMTYPE")));
 
 		telNumberBean.setIsactive(ParseUtil.sTob(hmResult.get("IS_ACTIVE")));
-		telNumberBean
-				.setPurchased(ParseUtil.sTob(hmResult.get("IS_PURCHASED")));
+		telNumberBean.setPurchased(ParseUtil.sTob(hmResult.get("IS_PURCHASED")));
 
-		telNumberBean.setSecretEventIdentity(ParseUtil.checkNull(hmResult
-				.get("SECRET_EVENT_NUMBER")));
-		telNumberBean.setSecretEventKey(ParseUtil.checkNull(hmResult
-				.get("SECRET_KEY")));
-		telNumberBean.setHumanTelNumber(ParseUtil.checkNull(hmResult
-				.get("HUMAN_TELNUMBER")));
+		telNumberBean.setSecretEventIdentity(ParseUtil.checkNull(hmResult.get("SECRET_EVENT_NUMBER")));
+		telNumberBean.setSecretEventKey(ParseUtil.checkNull(hmResult.get("SECRET_KEY")));
+		telNumberBean.setHumanTelNumber(ParseUtil.checkNull(hmResult.get("HUMAN_TELNUMBER")));
 
 		return telNumberBean;
 	}
@@ -164,8 +132,7 @@ public class TelNumberData {
 					telNumMetaData.getAdminId(), telNumMetaData.getEventId(),
 					demoTelNumTypeBean.getTelNumberTypeId());
 
-			iNumOfRows = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
-					"TelNumberData.java", "updateTelNumber()");
+			iNumOfRows = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB, "TelNumberData.java", "updateTelNumber()");
 
 		}
 
@@ -235,17 +202,10 @@ public class TelNumberData {
 	}
 
 	public int createTelNumber(TelNumberMetaData telNumMetaData) {
-		/*
-		 * -------------------+-------------+------+-----+---------+-------+ |
-		 * TELNUMBERID | varchar(45) | NO | PRI | NULL | | | TELNUMBER |
-		 * varchar(45) | NO | | NULL | | | FK_TELNUMBERTYPEID | varchar(45) | NO
-		 * | | NULL | | | FK_EVENTID | varchar(45) | NO | | NULL | | |
-		 * FK_ADMINID | varchar(45) | NO | | NULL | | | DEL_ROW | int(1) | NO |
-		 * | 0 | | | IS_ACTIVE | int(1) | YES | | 0 | | | IS_PURCHASED
-		 */
 		String sQuery = "INSERT INTO GTTELNUMBERS (TELNUMBERID,TELNUMBER,FK_TELNUMBERTYPEID,FK_EVENTID,"
-				+ " FK_ADMINID,DEL_ROW,IS_ACTIVE,IS_PURCHASED, SECRET_EVENT_NUMBER, SECRET_KEY, HUMAN_TELNUMBER ) "
-				+ " VALUES(?,?,?,   ?,?,?,	 ?,?,?,  ?,?)";
+				+ " FK_ADMINID,DEL_ROW,IS_ACTIVE,IS_PURCHASED, SECRET_EVENT_NUMBER, SECRET_KEY, HUMAN_TELNUMBER,CREATEDATE, " +
+                "  HUMANCREATEDATE ) "
+				+ " VALUES(?,?,?,   ?,?,?,	 ?,?,?,  ?,?,?,  ?)";
 
 		String sTelNumberID = Utility.getNewGuid();
 		ArrayList<Object> aParams = DBDAO
@@ -260,7 +220,8 @@ public class TelNumberData {
 						telNumMetaData.isPurchased() ? "1" : "0",
 						(telNumMetaData.getSecretEventIdentifier() != null && !"".equalsIgnoreCase(telNumMetaData.getSecretEventIdentifier())) ? telNumMetaData.getSecretEventIdentifier() : "-",
 						(telNumMetaData.getSecretEventSecretKey() != null && !"".equalsIgnoreCase(telNumMetaData.getSecretEventSecretKey())) ? telNumMetaData.getSecretEventSecretKey() : "-",
-						(telNumMetaData.getHumanTelNumber() != null && !"".equalsIgnoreCase(telNumMetaData.getHumanTelNumber())) ? telNumMetaData.getHumanTelNumber() : telNumMetaData.getDigits());
+						(telNumMetaData.getHumanTelNumber() != null && !"".equalsIgnoreCase(telNumMetaData.getHumanTelNumber())) ? telNumMetaData.getHumanTelNumber() : telNumMetaData.getDigits(),
+                        telNumMetaData.getCurrentTime() , telNumMetaData.getCurrentHumanTime() );
 
 		int iNumOfRows = DBDAO.putRowsQuery(sQuery, aParams, ADMIN_DB,
 				"TelNumberData.java", "createTelNumber()");

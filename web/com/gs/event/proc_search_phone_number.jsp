@@ -25,44 +25,33 @@
     {
         String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
         String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
-        String sRsvpNumber = ParseUtil.checkNull(request.getParameter("purchase_transact_rsvp_num"));
-        String sSeatingNumber = ParseUtil.checkNull(request.getParameter("purchase_transact_seating_num"));
+        String sTelephoneNumber = ParseUtil.checkNull(request.getParameter("purchase_transact_telephone_num"));
 
-        if(sAdminId!=null && !"".equalsIgnoreCase(sAdminId) && sEventId!=null && !"".equalsIgnoreCase(sEventId) )
-        {
+        if(!Utility.isNullOrEmpty(sAdminId)  && !Utility.isNullOrEmpty(sEventId) )  {
             PurchaseTransactionManager purchaseTransactionManager = new PurchaseTransactionManager();
 
             PurchaseTransactionBean requestPurchaseTransactionBean = new  PurchaseTransactionBean();
             requestPurchaseTransactionBean.setAdminId(sAdminId);
             requestPurchaseTransactionBean.setEventId(sEventId);
-            requestPurchaseTransactionBean.setRsvpTelNumber(sRsvpNumber);
-            requestPurchaseTransactionBean.setSeatingTelNumber(sSeatingNumber);
+            requestPurchaseTransactionBean.setTelephoneNumber(sTelephoneNumber);
 
             PurchaseTransactionBean responsePurchaseTransactionBean = purchaseTransactionManager.getPurchaseTransactionByEventAdmin(requestPurchaseTransactionBean);
-            appLogging.info("Response Purchase Transaction Id." + responsePurchaseTransactionBean );
             Integer iNumOfRows = 0;
-            if(responsePurchaseTransactionBean != null && responsePurchaseTransactionBean.getPurchaseTransactionId()!=null && !"".equalsIgnoreCase(responsePurchaseTransactionBean.getPurchaseTransactionId()))
-            {
-                responsePurchaseTransactionBean.setRsvpTelNumber(requestPurchaseTransactionBean.getRsvpTelNumber());
-                responsePurchaseTransactionBean.setSeatingTelNumber(requestPurchaseTransactionBean.getSeatingTelNumber());
+            if(responsePurchaseTransactionBean != null && !Utility.isNullOrEmpty(responsePurchaseTransactionBean.getPurchaseTransactionId())) {
+                responsePurchaseTransactionBean.setTelephoneNumber(sTelephoneNumber);
                  // update Transaction with latest phone numbers
                 iNumOfRows = purchaseTransactionManager.modifyPurchaseTransaction(responsePurchaseTransactionBean);
-            }
-            else
-            {
+            } else  {
                 requestPurchaseTransactionBean.setPurchaseTransactionId(Utility.getNewGuid());
-                // insert Transaction with latest phone numbers
+                 // insert Transaction with latest phone numbers
                 iNumOfRows = purchaseTransactionManager.createPurchaseTransaction(requestPurchaseTransactionBean);
             }
 
-            if(iNumOfRows>0)
-            {
+            if(iNumOfRows>0)  {
                 Text okText = new OkText("Loading Data Complete ","my_id");
                 arrOkText.add(okText);
                 responseStatus = RespConstants.Status.OK;
-            }
-            else
-            {
+            }  else  {
                 appLogging.error("Transaction records were not created." + responsePurchaseTransactionBean );
                 Text errorText = new ErrorText("Your request was not processed. Please try again later.","my_id") ;
                 arrErrorText.add(errorText);

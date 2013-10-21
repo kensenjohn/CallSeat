@@ -107,8 +107,8 @@ public class Constants {
 	}
 
 	public enum EVENT_TASK {
-		RSVP("RSVP_TEL"), SEATING("SEATING_TEL"), DEMO_RSVP("DEMO_RSVP_TEL"), DEMO_SEATING(
-				"DEMO_SEATING_TEL"), ALL("ALL");
+		RSVP("RSVP_TEL"), SEATING("SEATING_TEL"), DEMO_RSVP("DEMO_RSVP_TEL"), DEMO_SEATING("DEMO_SEATING_TEL"), ALL("ALL"),
+        DEMO_TELEPHONE_NUMBER("DEMO_TELEPHONE_NUMBER"),PREMIUM_TELEPHONE_NUMBER("PREMIUM_TELEPHONE_NUMBER");
 
 		private String sTask = "";
 
@@ -467,7 +467,8 @@ public class Constants {
         PREMIUM_FINAL_CALL_MINUTES_USED("PREMIUM_FINAL_CALL_MINUTES_USED"),
         PREMIUM_FINAL_TEXT_MESSAGES_SENT("PREMIUM_FINAL_TEXT_MESSAGES_SENT"),
         USAGE_LIMIT_REACHED_ACTION("USAGE_LIMIT_REACHED_ACTION"),
-        SEATINGPLAN_TELNUMBER_TYPE("SEATINGPLAN_TELNUMBER_TYPE");
+        SEATINGPLAN_TELNUMBER_TYPE("SEATINGPLAN_TELNUMBER_TYPE"),
+        SEATINGPLAN_MODE("SEATINGPLAN_MODE");
 
         private String eventFeature = "";
         EVENT_FEATURES(String eventFeature)
@@ -545,6 +546,26 @@ public class Constants {
             return this.action;
         }
 
+    }
+
+    public enum EVENT_SEATINGPLAN_MODE {
+        RSVP("RSVP","Gathering RSVP from guests"),
+        SEATING("SEATING","Seating guests");
+
+        private String mode = "";
+        private String displayText = "";
+        EVENT_SEATINGPLAN_MODE(String mode , String displayText ) {
+            this.mode = mode;
+            this.displayText = displayText;
+        }
+
+        public String getMode(){
+            return this.mode;
+        }
+
+        public String getDisplayText() {
+            return this.displayText;
+        }
     }
 
     public enum TELNUMBER_TYPE

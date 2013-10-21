@@ -137,7 +137,7 @@ public class EmailCreatorService {
             if( Constants.EMAIL_TEMPLATE.RSVP_CONFIRMATION_EMAIL.getEmailTemplate().equalsIgnoreCase( emailTemplateBean.getTemplateName() )) {
                 arrEmailObject.add( getRSVPEmailObject(emailScheduleBean, emailTemplateBean) );
             } else if( Constants.EMAIL_TEMPLATE.SEATING_CONFIRMATION_EMAIL.getEmailTemplate().equalsIgnoreCase( emailTemplateBean.getTemplateName() )) {
-                arrEmailObject.add(getSeatingConfirmationEmailObject(emailScheduleBean, emailTemplateBean));
+                arrEmailObject = getSeatingConfirmationEmailObject(emailScheduleBean, emailTemplateBean);
             } else if( Constants.EMAIL_TEMPLATE.RSVPRESPONSE.getEmailTemplate().equalsIgnoreCase( emailTemplateBean.getTemplateName() ) ||
                     Constants.EMAIL_TEMPLATE.RSVPRESPONSEDEMO.getEmailTemplate().equalsIgnoreCase( emailTemplateBean.getTemplateName() )) {
                 arrEmailObject = getRsvpResponseEmail(emailScheduleBean , emailTemplateBean );
@@ -284,23 +284,20 @@ public class EmailCreatorService {
                         TelNumberManager telNumManager = new TelNumberManager();
                         ArrayList<TelNumberBean> arrTelNumberBean = telNumManager.getTelNumEventDetails(telNumberMetaData);
 
-                        Constants.EMAIL_TEMPLATE emailTemplateType = Constants.EMAIL_TEMPLATE.RSVPRESPONSEDEMO;
                         TelNumberBean rsvpTelNumberBean = new TelNumberBean();
                         if(arrTelNumberBean!=null && !arrTelNumberBean.isEmpty()) {
                             for(TelNumberBean telNumberBean : arrTelNumberBean ){
-                                if( Constants.EVENT_TASK.RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))  {
-                                    emailTemplateType =  Constants.EMAIL_TEMPLATE.RSVPRESPONSE ;
+                                if( Constants.EVENT_TASK.PREMIUM_TELEPHONE_NUMBER.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()))  {
                                     rsvpTelNumberBean = telNumberBean;
-                                } else if ( Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()) ) {
-                                    emailTemplateType =  Constants.EMAIL_TEMPLATE.RSVPRESPONSEDEMO ;
+                                } else if ( Constants.EVENT_TASK.DEMO_TELEPHONE_NUMBER.getTask().equalsIgnoreCase(telNumberBean.getTelNumberType()) ) {
                                     rsvpTelNumberBean = telNumberBean;
                                 }
                             }
                         }
 
                         String sTelephoneNumber = ParseUtil.checkNull(rsvpTelNumberBean.getHumanTelNumber());
-                        if ( Constants.EVENT_TASK.DEMO_RSVP.getTask().equalsIgnoreCase(rsvpTelNumberBean.getTelNumberType()) ) {
-                            sTelephoneNumber = " Plan Id : " + ParseUtil.checkNull( rsvpTelNumberBean.getSecretEventIdentity() ) + " Extension : " +  ParseUtil.checkNull( rsvpTelNumberBean.getSecretEventKey() );
+                        if ( Constants.EVENT_TASK.DEMO_TELEPHONE_NUMBER.getTask().equalsIgnoreCase(rsvpTelNumberBean.getTelNumberType()) ) {
+                            sTelephoneNumber = " Plan Id : " + ParseUtil.checkNull( rsvpTelNumberBean.getSecretEventIdentity() );
                         }
                         sHtmlBody = sHtmlBody.replaceAll("__RSVPPHONENUM__",ParseUtil.checkNull(sTelephoneNumber));
                         sTextBody = sTextBody.replaceAll("__RSVPPHONENUM__",ParseUtil.checkNull(sTelephoneNumber));
@@ -343,6 +340,7 @@ public class EmailCreatorService {
         } else {
             GuestTableManager guestTableManager = new GuestTableManager();
             HashMap<Integer, TableGuestsBean> hmTableGuests = guestTableManager.getTablesAndGuest(  ParseUtil.checkNull( emailScheduleBean.getEventId() ) );
+            emailLogging.info("Table and Guests Hashmap : " + hmTableGuests );
             if(hmTableGuests!=null && !hmTableGuests.isEmpty()) {
                 HashMap<String,String> hmGuestId = new HashMap<String, String>();
                 for(Map.Entry<Integer,TableGuestsBean>mapTableGuestsBean : hmTableGuests.entrySet() ) {
@@ -361,6 +359,7 @@ public class EmailCreatorService {
             }
 
         }
+        emailLogging.info("All events guest : " + arrEventGuestId );
         return arrEventGuestId;
     }
 
@@ -383,9 +382,9 @@ public class EmailCreatorService {
         return sTableFormattedText;
     }
 
-    private EmailObject getSeatingConfirmationEmailObject( EmailScheduleBean emailScheduleBean,EmailTemplateBean emailTemplateBean  )
+    private ArrayList<EmailObject> getSeatingConfirmationEmailObject( EmailScheduleBean emailScheduleBean,EmailTemplateBean emailTemplateBean  )
     {
-        EmailObject emailObject = new EmailQueueBean();
+        ArrayList<EmailObject> arrEmailObject = new ArrayList<EmailObject>();
         if( emailScheduleBean!=null )
         {
             String sEventID = ParseUtil.checkNull( emailScheduleBean.getEventId() );
@@ -403,7 +402,7 @@ public class EmailCreatorService {
 
 
                     ArrayList<TableGuestsBean> arrTableGuestBean = guestTableManager.getGuestsEventTableAssignments( guestTableMetaData );
-
+                    emailLogging.info("Assignment for guests  : " + arrTableGuestBean );
                     if(arrTableGuestBean!=null && !arrTableGuestBean.isEmpty()) {
                         String sTableText = getTableAssignmentFormattedText(arrTableGuestBean);
                         if( !Utility.isNullOrEmpty(sTableText) ) {
@@ -434,6 +433,7 @@ public class EmailCreatorService {
 
 
 
+                            EmailObject emailObject = new EmailQueueBean();
                             emailObject.setHtmlBody( sHtmlBody );
                             emailObject.setTextBody( sTextBody );
 
@@ -445,7 +445,7 @@ public class EmailCreatorService {
                             emailObject.setStatus( Constants.EMAIL_STATUS.NEW.getStatus() );
                             emailObject.setEmailSubject( ParseUtil.checkNull(emailTemplateBean.getEmailSubject() ) );
 
-
+                            arrEmailObject.add(emailObject);
                         } else {
                             emailLogging.info("This guest has no table assigned,");
                         }
@@ -460,7 +460,7 @@ public class EmailCreatorService {
         } else{
             emailLogging.info("Invalid request bean");
         }
-        return emailObject;
+        return arrEmailObject;
     }
 
     public EmailObject updateEventData(EmailObject emailObject, String sEventId)

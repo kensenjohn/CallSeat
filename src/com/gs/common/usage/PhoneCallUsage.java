@@ -109,7 +109,7 @@ public class PhoneCallUsage implements Usage {
             String sQuery = "select * from GTCALLTRANSACTION GTCT , GTTELNUMBERTYPE GTTNT, GTTELNUMBERS GTT WHERE " +
                     " GTCT.FK_EVENTID=? and GTCT.CALL_STATUS='completed' and GTCT.SECRET_EVENT_NUMBER = GTT.SECRET_EVENT_NUMBER " +
                     " AND GTCT.FK_EVENTID=GTT.FK_EVENTID and GTT.TELNUMBER=GTCT.TO_TELNUMBER AND GTT.FK_TELNUMBERTYPEID=GTTNT.TELNUMBERTYPEID " +
-                    " AND GTTNT.TELNUMTYPE IN ('"+Constants.EVENT_TASK.DEMO_SEATING.getTask()+"','"+Constants.EVENT_TASK.DEMO_RSVP.getTask()+"')";
+                    " AND GTTNT.TELNUMTYPE = '"+Constants.EVENT_TASK.DEMO_TELEPHONE_NUMBER.getTask()+"'";
 
             ArrayList<Object> aParams = DBDAO.createConstraint(usageMetaData.getEventId());
 
@@ -127,7 +127,7 @@ public class PhoneCallUsage implements Usage {
             String sQuery = "select * from GTCALLTRANSACTION GTCT , GTTELNUMBERTYPE GTTNT, GTTELNUMBERS GTT WHERE " +
                     " GTCT.FK_EVENTID=? and GTCT.CALL_STATUS='completed' and (GTCT.SECRET_EVENT_NUMBER IS NULL OR GTCT.SECRET_EVENT_NUMBER='') " +
                     " AND GTCT.FK_EVENTID=GTT.FK_EVENTID and GTT.TELNUMBER=GTCT.TO_TELNUMBER AND GTT.FK_TELNUMBERTYPEID=GTTNT.TELNUMBERTYPEID " +
-                    " AND GTTNT.TELNUMTYPE IN ('"+Constants.EVENT_TASK.SEATING.getTask()+"','"+Constants.EVENT_TASK.RSVP.getTask()+"')";
+                    " AND GTTNT.TELNUMTYPE = '"+Constants.EVENT_TASK.PREMIUM_TELEPHONE_NUMBER.getTask()+"'";
 
             ArrayList<Object> aParams = DBDAO.createConstraint(usageMetaData.getEventId());
 
