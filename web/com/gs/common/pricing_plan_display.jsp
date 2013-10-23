@@ -49,7 +49,7 @@
                                 <div class="body" ><span ><%=pricingGroupBean.getMaxMinutes()%> call minutes</span></div>
                                 <div class="body" ><span ><%=pricingGroupBean.getSmsCount()%> txt messages</span></div>
                                 <div class="body"><span >&nbsp;</span></div>
-                                <div class="body" ><span >2 private phone numbers</span></div>
+                                <div class="body" ><span >1 private phone numbers</span></div>
                                 <div class="body"><span >&nbsp;</span></div>
                                 <div class="body" ><span >$<%=pricingGroupBean.getPrice()%> per plan</span></div>
                             </div>
