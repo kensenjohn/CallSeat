@@ -47,7 +47,7 @@
                             <div class="header"><h1> <%=ParseUtil.checkNull(pricingGroupBean.getPricegroupname())%> </h1><span style="text-align: center;"><%=subTitle%></span></div>
                             <div style="padding: 3px;">
                                 <div class="body" ><span ><%=pricingGroupBean.getMaxMinutes()%> call minutes</span></div>
-                                <div class="body" ><span ><%=pricingGroupBean.getSmsCount()%> txt messages</span></div>
+                                <div class="body" ><span ><%=pricingGroupBean.getSmsCount()%> text messages</span></div>
                                 <div class="body"><span >&nbsp;</span></div>
                                 <div class="body" ><span >1 phone number</span></div>
                                 <div class="body"><span >&nbsp;</span></div>
