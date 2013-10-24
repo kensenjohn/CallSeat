@@ -49,7 +49,7 @@
                                 <div class="body" ><span ><%=pricingGroupBean.getMaxMinutes()%> call minutes</span></div>
                                 <div class="body" ><span ><%=pricingGroupBean.getSmsCount()%> text messages</span></div>
                                 <div class="body"><span >&nbsp;</span></div>
-                                <div class="body" ><span >1 phone number</span></div>
+                                <div class="body" ><span >A phone number for RSVP/Seating</span></div>
                                 <div class="body"><span >&nbsp;</span></div>
                                 <div class="body" ><span >$<%=pricingGroupBean.getPrice()%> per plan</span></div>
                             </div>
