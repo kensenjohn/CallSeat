@@ -22,7 +22,7 @@
     <jsp:include page="/web/com/gs/common/top_nav_fancybox.jsp"/>
     <div class="fnbx_scratch_area">
         <div class="row">
-            <div class="offset1 span9">
+            <div class="offset_0_5 span9">
                 <div class="row">
                     <div class="span5">
                         &nbsp;
@@ -34,35 +34,32 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="offset1 span6">
-                        <h3>Step 1: Create a seating plan</h3>
+                    <div class="offset_0_5 span6">
+                        <h3>Step 1: Create a free seating plan</h3>
                     </div>
-                    <div class="offset2 span7">
-                        <p>Select a name and date for the seating plan. Create new guests  with the number of seats they are invited to.</p>
-                        <p>Free phone numbers with extensions are provided for a short run through.</p>
-                    </div>
-                </div>
-                <div class="row">
                     <div class="offset1 span7">
-                        <h3>Step 2: Purchase telephone numbers with no extensions</h3>
-                    </div>
-                    <div class="offset2 span7">
-                        <p>Purchase personalized phone numbers along with an usage plan.
-                        The usage plan will specify a cap for the telephone call minutes and text message usage.</p>
-                        <p>If a cap is reached, then either the plan can be setup to switch to next usage slab or
-                        to stop responding to any more calls.  </p>
-
+                        <p>Select a name and date for the seating plan. Set the mode of the plan (RSVP or Seating).
+                            Invite your guests and create tables for them to be seated.</p>
+                        <p>You get a demo phone number with an extension. This demo service has limited free call minutes and text message.</p>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="offset1 span9">
-                        <h3>Step 3: RSVP and seating information by phone.</h3>
+                    <div class="offset_0_5 span9">
+                        <h3>Step 2: Gather RSVP and provide seating information.</h3>
                     </div>
-                    <div class="offset2 span7">
-                        <p> Guests will RSVP or change their previous RSVP by calling the personalized number.
-                        Assign seating for the guests after they RSVP.</p>
-                        <p> If a guest calls after their seating has been assigned,
-                        then they will get the table numbers they have been seated at. </p>
+                    <div class="offset1 span7">
+                        <p> When in RSVP mode, guests can RSVP or change their previous RSVP online by email or by calling the phone number.
+                            A confirmation text message or email can be sent out after a gu
+                            Assign seating for the guests after they RSVP.</p>
+                        <p> In Seating mode guest can get their table number online, by phone or text message. </p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="offset_0_5 span7">
+                        <h3>Step 3: Get our Premium service (Personalized Phone Number)</h3>
+                    </div>
+                    <div class="offset1 span7">
+                        <p>You get access to a personalized phone number with more call minutes and text messages.</p>
                     </div>
                 </div>
                 <div class="row">

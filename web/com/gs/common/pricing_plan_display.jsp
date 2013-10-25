@@ -4,6 +4,9 @@
 <%@ page import="com.gs.manager.event.EventPricingGroupManager" %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.gs.bean.PricingGroupBean" %>
+<%@ page import="java.math.BigDecimal" %>
+<%@ page import="java.util.Locale" %>
+<%@ page import="java.text.NumberFormat" %>
 
 <jsp:include page="../common/header_top.jsp"/>
 <jsp:include page="../common/security.jsp"/>
@@ -35,6 +38,7 @@
                     <div  id="pricing_grid" >
 
             <%
+                NumberFormat dollarFormat = NumberFormat.getCurrencyInstance(Locale.US);
                 for(PricingGroupBean pricingGroupBean : arrPricingBean )  {
                     String priceClass = Constants.EMPTY;
                     String subTitle = "&nbsp;";
@@ -42,6 +46,7 @@
                         priceClass = "most_popular";
                         subTitle = "Most Popular";
                     }
+                    BigDecimal currencyPrice = new BigDecimal(pricingGroupBean.getPrice());
             %>
                         <div  class="<%=priceClass%> display_dimension">
                             <div class="header"><h1> <%=ParseUtil.checkNull(pricingGroupBean.getPricegroupname())%> </h1><span style="text-align: center;"><%=subTitle%></span></div>
@@ -49,9 +54,10 @@
                                 <div class="body" ><span ><%=pricingGroupBean.getMaxMinutes()%> call minutes</span></div>
                                 <div class="body" ><span ><%=pricingGroupBean.getSmsCount()%> txt messages</span></div>
                                 <div class="body"><span >&nbsp;</span></div>
-                                <div class="body" ><span >2 private phone numbers</span></div>
+                                <div class="body" ><span >1 phone number</span></div>
+                                <div class="body" ><span >Emails and Online RSVP and seating</span></div>
                                 <div class="body"><span >&nbsp;</span></div>
-                                <div class="body" ><span >$<%=pricingGroupBean.getPrice()%> per plan</span></div>
+                                <div class="body" ><span ><%=dollarFormat.format(currencyPrice.doubleValue())%> per plan</span></div>
                             </div>
                         </div>
             <%
@@ -67,12 +73,12 @@
             </div>
             <div class="row">
                 <div class="offset1 span12">
-                    <span>1) One  phone number is for your guests to RSVP. The second phone number is to provide seating information.</span>
+                    <span>1) One phone number for RSVP and guest seating. Switch between modes when required.</span>
                 </div>
             </div>
             <div class="row">
                 <div class="offset1 span12">
-                    <span>2) Guests can RSVP online.</span>
+                    <span>2) Guests can RSVP and get seating information online.</span>
                 </div>
             </div>
             <div class="row">
