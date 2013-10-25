@@ -57,7 +57,7 @@
         <div class="row">
             <div class="offset1 span11">
                 <div class="slide-caption" style="text-align:center;">
-                    <h1 style="color:#f5f5f5">Smart RSVP and hassle free guest seating</h1>
+                    <h1 style="color:#f5f5f5">Gather RSVP and Provide Seating Information</h1>
                     <form id="frm_event_dt" name="frm_event_dt">
                         <input type="text" id="tmp_email" class="ispn3 inp-large" style="vertical-align: bottom;"  value="Email" name="tmp_email">
                         <input type="text" id="event_date" class="ispn3 inp-large" style="vertical-align: bottom;"  value="Wedding Date" name="event_date" readonly>
@@ -66,7 +66,7 @@
                     </form>
                     <div class="row">
                         <div class="span9">
-                            <h4 style="color:#f5f5f5">Private phone numbers to gather RSVP and inform guests of their seat assignment</h4>
+                            <h4 style="color:#f5f5f5">Personalized phone number, text messages and online access for your guests</h4>
                         </div>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
     <div class="blank_scratch_area">
 
         <div class="row" style="text-align:center;">
-            <h2>Recognizes your guest's RSVP and seats, so you don't have to.&nbsp;&nbsp;<a href="/web/com/gs/common/how_it_works.jsp?admin_id=<%=sTmpUserId %>&referrer_source=host_landing_steps" id="btn_how_it_works" class="btn btn-blue btn-large" >See how it works</a></h2>
+            <h2>Manage information and communicate with your guests quickly&nbsp;&nbsp;<a href="/web/com/gs/common/how_it_works.jsp?admin_id=<%=sTmpUserId %>&referrer_source=host_landing_steps" id="btn_how_it_works" class="btn btn-blue btn-large" >See how it works</a></h2>
         </div>
         <div class="row" style="text-align:center;">
             &nbsp;
@@ -109,6 +109,11 @@
         <div class="row">
             <div class="offset2 span11">
                 <h4><span class="icon-ok">&nbsp;</span>&nbsp;&nbsp;You don't have to personally wait for your guests' RSVP.</h4>
+            </div>
+        </div>
+        <div class="row">
+            <div class="offset2 span11">
+                <h4><span class="icon-ok">&nbsp;</span>&nbsp;&nbsp;Recognizes your guests from their called id.</h4>
             </div>
         </div>
         <div class="row">
@@ -129,17 +134,17 @@
             <div class="offset1 span3 step_box" style="text-align: center;  border-radius: 15px; min-height: 134px; ">
                 <h1 style="padding-top:15px;">Step 1</h1>
                 <h4  style="padding:5px;">Create a Seating Plan</h4>
-                <span class="fld_txt_small">Add guests and tables.</span>
-            </div>
-            <div class="span3 step_box" style="text-align: center;  border-radius: 15px; min-height: 134px;  ">
-                <h1 style="padding-top:15px;">Step 2</h1>
-                <h4 style="padding:5px;">Purchase telephone numbers</h4>
-                <span class="fld_txt_small" style="padding:3px;">Personalize phone numbers and buy it from us.</span>
+                <span class="fld_txt_small">Invite guests and create tables.</span>
             </div>
             <div class="span3 step_box" style="text-align: center; border-radius: 15px; min-height: 134px; ">
+                <h1 style="padding-top:15px;">Step 2</h1>
+                <h4 style="padding:5px;">Gather RSVP and Provide Seating</h4>
+                <span class="fld_txt_small">By phone, text message or online</span>
+            </div>
+            <div class="span3 step_box" style="text-align: center;  border-radius: 15px; min-height: 134px;  ">
                 <h1 style="padding-top:15px;">Step 3</h1>
-                <h4 style="padding:5px;">RSVP and seating by phone</h4>
-                <span class="fld_txt_small">Guests call to RSVP and get seating details.</span>
+                <h4 style="padding:5px;">Get our Premium Service</h4>
+                <span class="fld_txt_small" style="padding:3px;">Personalized phone number, more call minutes and text message, online and email access.</span>
             </div>
         </div>
         <div class="row" style="margin: auto;text-align:center;">
