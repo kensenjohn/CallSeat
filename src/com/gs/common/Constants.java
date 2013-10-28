@@ -312,7 +312,8 @@ public class Constants {
     }
 	
 	public enum ANALYTICS_KEYS {
-		GOOGLE_TRACKING_ID("google_tracking_id");
+		GOOGLE_TRACKING_ID("google_tracking_id"),
+        MIXPANEL_TRACKING_ID("mixpanel.trackerid");
 		
 		private String sAnalyticKey = "";
 		ANALYTICS_KEYS(String sAnalyticKey){

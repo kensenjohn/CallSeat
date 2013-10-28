@@ -20,9 +20,15 @@
     AdminBean adminBean = adminManager.getAdmin(sAdminId);
 
     boolean hasPermToUsePayChannelTestKey = false;
+    String sUserEmail = Constants.EMPTY;
     if(adminBean!=null && !Utility.isNullOrEmpty(adminBean.getAdminId())) {
         User user = new User(adminBean );
         hasPermToUsePayChannelTestKey = user.can(Permission.USE_PAYMENT_CHANNEL_TEST_API_KEY);
+        UserInfoBean userInforBean = adminBean.getAdminUserInfoBean();
+        if( userInforBean!=null && !Utility.isNullOrEmpty((userInforBean.getEmail())) ) {
+            sUserEmail = userInforBean.getEmail();
+        }
+
     }
 %>
 <%@include file="../common/gatekeeper.jsp"%>
@@ -71,12 +77,12 @@
 
                       <div class="row">
                           <div class="span12">
-                              <span>1) One  phone number is for your guests to RSVP. The second phone number is to provide seating information.</span>
+                              <span>1) One phone number for RSVP and guest seating. Switch between modes when required.</span>
                           </div>
                       </div>
                       <div class="row">
                           <div class="span12">
-                              <span>2) Guests can RSVP online.</span>
+                              <span>2) Guests can RSVP and get seating information online.</span>
                           </div>
                       </div>
                       <div class="row">
@@ -154,6 +160,7 @@ $(document).ready(function()
 {
 	loadPricingPlan();
 	$('#btn_pricing_plan').click(submitPricingPlan);
+    mixpanel.track('Pg pricing_plan.jsp', {'Referrer' : 'Shopping Cart','Admin id' : varAdminId ,'Event id' : varEventId });
 });
 
 function loadPricingPlan()
@@ -240,10 +247,10 @@ function processPricingPlan(varResponse)
         varPricingGrid = varPricingGrid + '<div class="body" ><span >'+ varArrPricingPlan[vari].max_minutes +' call minutes</span></div>';
         varPricingGrid = varPricingGrid + '<div class="body" ><span >'+ varArrPricingPlan[vari].sms_count +' txt messages</span></div>';
         varPricingGrid = varPricingGrid + '<div class="body"><span >&nbsp;</span></div>';
-        varPricingGrid = varPricingGrid + '<div class="body" ><span >2 private phone numbers</span></div>';
+        varPricingGrid = varPricingGrid + '<div class="body" ><span >1 phone number</span></div>';
+        varPricingGrid = varPricingGrid + '<div class="body"><span >Emails and Online RSVP and seating</span></div>';
         varPricingGrid = varPricingGrid + '<div class="body"><span >&nbsp;</span></div>';
         varPricingGrid = varPricingGrid + '<div class="body" ><span >$'+varArrPricingPlan[vari].price+' per plan</span></div>';
-        varPricingGrid = varPricingGrid + '<div class="body"><span >&nbsp;</span></div>';
         varPricingGrid = varPricingGrid + '<div class="body"><span ><input class="btn btn-blue ispn2" type="button" value="Select"></span></div>';
         varPricingGrid = varPricingGrid + '</div>';
         varPricingGrid = varPricingGrid + '</div>';

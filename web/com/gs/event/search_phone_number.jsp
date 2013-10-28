@@ -203,6 +203,7 @@ var varIsNumberSelectedPreviously = <%=isTelephoneNumberSelectedPreviously%>;
         }, function() {
             $("#telephony_numbers_gen").slideUp();
         });
+        mixpanel.track('Shopping Cart Search Phone Number', {'Admin id' : varAdminId, 'Event Id' : varEventId });
 	});
 	
 	function enablePassThruButton() {
@@ -339,6 +340,7 @@ var varIsNumberSelectedPreviously = <%=isTelephoneNumberSelectedPreviously%>;
 			} else if( jsonResult.status == 'ok' && varResponseObj !=undefined) {
 				
 				var varIsPayloadExist = varResponseObj.is_payload_exist;
+                mixpanel.track('Shopping Cart Custom Phone Number search', {'Admin id' : varAdminId, 'Event Id' : varEventId });
 				//alert('after searching for number - payload exists = ' + varIsPayloadExist);
 				if(varIsPayloadExist == true) {
 					var jsonResponseObj = varResponseObj.payload;

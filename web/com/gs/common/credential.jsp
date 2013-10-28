@@ -250,16 +250,18 @@
                 registerUser();
             }
         });
+        mixpanel.track('Pg credential.jsp', {'Referrer' : '<%=sRefferrerSource%>','action':'<%=sAction%>'});
 	});
-	function showLogin()
-	{
+	function showLogin(){
 		$("#div_signup").hide();
 		$("#div_login").show();
+        mixpanel.track("Show Login option", {'Referrer' : <%=sRefferrerSource%>,'action':'<%=sAction%>'});
 	}
 	function showSignUp()
 	{
 		$("#div_login").hide();
 		$("#div_signup").show();
+        mixpanel.track("Show Signup option",  {'Referrer' : <%=sRefferrerSource%>,'action':'<%=sAction%>'});
 	}
 	function submitForgotPassword()
 	{
