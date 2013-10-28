@@ -6,15 +6,18 @@
 <%
 
 	JSONObject jsonParentObj = new JSONObject();
+    try{
+        String sEmail = ParseUtil.checkNull(request.getParameter("tmp_email"));
 
-	String sEventDate = ParseUtil.checkNull(request.getParameter("event_date"));
-
-	if(!Utility.isNullOrEmpty(sEventDate) && DateSupport.isValidDate(sEventDate,"MM/dd/yyyy") ) {
+        if(!Utility.isNullOrEmpty(sEmail) && sEmail.contains("@") ) {
+            jsonParentObj.put("success",true);
+        }   else {
+            jsonParentObj.put("success",false);
+        }
+    } catch (Exception e) {
         jsonParentObj.put("success",true);
-		
-	} else {
-        jsonParentObj.put("success",false);
-	}
+    }
+
 	
 	out.println( jsonParentObj.toString() );
 	

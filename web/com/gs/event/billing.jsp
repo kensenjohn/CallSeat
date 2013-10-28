@@ -330,6 +330,7 @@ $(document).ready(function()
 	$("#loading_wheel").hide();
 	$('#bill_state').selectToAutocomplete();
 	$("#bt_checkout_tel_numbers").click(checkoutNumbers);
+    mixpanel.track('Shopping Cart billing', {'Admin id' : '<%=sAdminId%>', 'Event Id' : '<%=sEventId%>' });
 	 Stripe.setPublishableKey('<%=sPublishableKey%>');
 });
 $.ajaxSetup({

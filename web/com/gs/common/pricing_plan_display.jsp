@@ -116,6 +116,9 @@
 </body>
 <script src="/web/js/pricing/jquery-1.7.2.min.js"></script>
 <script type="text/javascript">
+    $(document).ready(function() {
+        mixpanel.track('Pg pricing_plan_display.jsp', {'Referrer' : 'Footer link'});
+    });
 </script>
 <jsp:include page="../common/footer_bottom_fancybox.jsp"/>
 </html>

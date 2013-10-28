@@ -57,12 +57,12 @@
         <div class="row">
             <div class="offset1 span11">
                 <div class="slide-caption" style="text-align:center;">
-                    <h1 style="color:#f5f5f5">Gather RSVP and Provide Seating Information</h1>
+                    <h1 style="color:#f5f5f5">Quickest RSVP and Guest Seating App</h1>
                     <form id="frm_event_dt" name="frm_event_dt">
                         <input type="text" id="tmp_email" class="ispn3 inp-large" style="vertical-align: bottom;"  value="Email" name="tmp_email">
-                        <input type="text" id="event_date" class="ispn3 inp-large" style="vertical-align: bottom;"  value="Wedding Date" name="event_date" readonly>
+                        <!-- <input type="text" id="event_date" class="ispn3 inp-large" style="vertical-align: bottom;"  value="Wedding Date (" name="event_date" readonly>   -->
 
-                        <input type="button" class="btn btn-large btn-green" style="margin-bottom: 7px;" id="event_dt_sbt" value="Create Free Seating Plan"/>
+                        <input type="button" class="btn btn-large btn-green" style="margin-bottom: 7px;" id="event_dt_sbt" value="Get Started for Free"/>
                     </form>
                     <div class="row">
                         <div class="span9">
@@ -74,7 +74,6 @@
         </div>
         <div class="row">
             <div class="offset3 span9">
-                <!-- <input type="button" class="btn btn-large btn-blue" id="event_dt_sbt" value="Create New Seating Plan"/>  -->
             </div>
 
             <div class="span3">
@@ -214,7 +213,7 @@
             'padding'			: 0,
             'margin'			: 0
         });
-
+        mixpanel.track("Landing Page");
     });
 
     function managePlaceholder(varId, defaultTxt) {
@@ -250,9 +249,8 @@
     function getResult(jsonResult) {
         if(!jsonResult.success) {
             $( "#event_dt_sbt" ).blur();
-            displayMssgBoxAlert('A date must be selected to create a seating plan. Please select a date from the calendar pop up.', true);
+            displayMssgBoxAlert('Please use a valid email address.', true);
         } else  {
-
             $("#hid_event_date").attr( "value", $("#event_date").attr("value") );
             $("#hid_tmp_email").attr( "value", $("#tmp_email").attr("value") );
             $("#call_forward").attr("action","/web/com/gs/event/event_setup.jsp");

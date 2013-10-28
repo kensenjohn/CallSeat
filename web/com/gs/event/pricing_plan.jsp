@@ -20,9 +20,15 @@
     AdminBean adminBean = adminManager.getAdmin(sAdminId);
 
     boolean hasPermToUsePayChannelTestKey = false;
+    String sUserEmail = Constants.EMPTY;
     if(adminBean!=null && !Utility.isNullOrEmpty(adminBean.getAdminId())) {
         User user = new User(adminBean );
         hasPermToUsePayChannelTestKey = user.can(Permission.USE_PAYMENT_CHANNEL_TEST_API_KEY);
+        UserInfoBean userInforBean = adminBean.getAdminUserInfoBean();
+        if( userInforBean!=null && !Utility.isNullOrEmpty((userInforBean.getEmail())) ) {
+            sUserEmail = userInforBean.getEmail();
+        }
+
     }
 %>
 <%@include file="../common/gatekeeper.jsp"%>
@@ -154,6 +160,7 @@ $(document).ready(function()
 {
 	loadPricingPlan();
 	$('#btn_pricing_plan').click(submitPricingPlan);
+    mixpanel.track('Pg pricing_plan.jsp', {'Referrer' : 'Shopping Cart','Admin id' : varAdminId ,'Event id' : varEventId });
 });
 
 function loadPricingPlan()

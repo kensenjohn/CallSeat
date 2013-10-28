@@ -74,7 +74,11 @@
 <script>
     !window.jQuery && document.write('<script src="/web/js/fancybox/jquery-1.4.3.min.js"><\/script>');
 </script>
-
+<script type="text/javascript">
+    $(document).ready(function() {
+        mixpanel.track('Pg how_it_works.jsp', {'Referrer' : '<%=sReferrer%>'});
+    });
+</script>
 <jsp:include page="../common/footer_top.jsp"/>
 <jsp:include page="../common/footer_bottom_fancybox.jsp"/>
 </html>

@@ -51,11 +51,18 @@
 		} else {
 			adminBean = adminManager.createAdmin();
 			adminManager.createTemporaryContact(adminBean , sTmpEmail );
+
+            sTmpEmail = sTmpEmail.replaceAll("\'","&apos;");
 		}
 		
 		
-		if(adminBean!=null)
-		{
+		if(adminBean!=null) {
+
+            if ( Utility.isNullOrEmpty(sEventDate) ) {
+                Long tmpEventCreationDate = DateSupport.addTime( DateSupport.getEpochMillis(), 1 , Constants.TIME_UNIT.YEARS );
+                sEventDate = DateSupport.getTimeByZone(tmpEventCreationDate , DateTimeZone.UTC.getID() , Constants.PRETTY_DATE_PATTERN_2);
+            }
+
             Long lCurrentTime = DateSupport.getEpochMillis();
             Long lEventCreateDate = DateSupport.getMillis( sEventDate + " 00:00:00","MM/dd/yyyy HH:mm:ss", DateTimeZone.UTC.getID() );
             Long lFutureDateLimit = DateSupport.addTime( lCurrentTime , 1 , Constants.TIME_UNIT.YEARS  );
@@ -246,7 +253,7 @@
 										</div>
 										<div class="row">
 											<div class="span5" >
-												<span class="fld_name">When : </span>
+												<span class="fld_name">When (can be changed later): </span>
 											</div>
                                             <div class="span2" style="text-align : left;  padding-top:5px;" >
                                                 <span id="e_summ_event_date_mssg"></span>
@@ -313,7 +320,7 @@
                                         </div>
                                         <div class="row">
                                             <div class="span5" >
-                                                <span class="fld_name">RSVP deadline : </span>
+                                                <span class="fld_name">RSVP deadline (can be changed later) : </span>
                                             </div>
                                         </div>
                                         <div class="row">
@@ -862,8 +869,14 @@
     var varPremiumTelephoneNumType = '<%=Constants.EVENT_TASK.PREMIUM_TELEPHONE_NUMBER.getTask()%>';
     var varDemoTelephoneNumType = '<%=Constants.EVENT_TASK.DEMO_TELEPHONE_NUMBER.getTask()%>';
 
+    var varIsFromLandingPage = <%=isFromLanding%>;
+    var varTmpAdminId = '<%=adminBean.getAdminId()%>';
+
 	$(document).ready(function() {
 		$("#loading_wheel").hide();
+        if(varIsFromLandingPage) {
+            mixpanel.track("Create Free Plan",  {"Admin id": varTmpAdminId});
+        }
 		setCredentialEventId(varEventID);
 		if(!varIsSignedIn)
 		{
@@ -895,6 +908,7 @@
 			}
 			else
 			{
+                mixpanel.track('Add/Edit Table Tab', {'Admin id' : varAdminID, 'Event Id' : varEventID });
 				toggleActionNavs('table_action_nav');
 				displayTableView('li_table_view');
 			}
@@ -908,6 +922,7 @@
 			}
 			else
 			{
+                mixpanel.track('Invite Guest Tab', {'Admin id' : varAdminID, 'Event Id' : varEventID });
 				displayGuestView('li_guest_view');
 				toggleActionNavs('invite_guest_action_nav');				
 			}
@@ -919,6 +934,7 @@
 				//alert('First create the event before adding tables;');
 				displayMssgBoxAlert('Please create the seating plan before creating phone numbers', true);
 			} else {
+                mixpanel.track('Personalize Phone Number Tab', {'Admin id' : varAdminID, 'Event Id' : varEventID });
 				toggleActionNavs('li_phone_num');
 				displayPhoneNumberView('li_phone_num');
                 loadEventFeatures();
@@ -929,6 +945,7 @@
             if(varEventID == '') {
                 displayMssgBoxAlert('Please create the seating plan before creating phone numbers', true);
             } else {
+                mixpanel.track('Email Guest Tab', {'Admin id' : varAdminID, 'Event Id' : varEventID });
                 toggleActionNavs('li_email');
                 displayEmailView('li_email');
                 //loadEventFeatures();

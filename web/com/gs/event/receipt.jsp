@@ -194,6 +194,11 @@ try
         </div>
     </div>
 </body>
+<script type="text/javascript">
+    $(document).ready(function() {
+        mixpanel.track('Shopping Cart receipt',  {'Admin id' : '<%=sAdminId%>', 'Event Id' : '<%=sEventId%>' });
+    });
+</script>
 <%
 }
 catch(Exception e)
