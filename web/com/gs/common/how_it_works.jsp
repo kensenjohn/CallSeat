@@ -76,7 +76,9 @@
 </script>
 <script type="text/javascript">
     $(document).ready(function() {
-        mixpanel.track('Pg how_it_works.jsp', {'Referrer' : '<%=sReferrer%>'});
+        if(mixpanel!=undefined) {
+            mixpanel.track('Pg how_it_works.jsp', {'Referrer' : '<%=sReferrer%>'});
+        }
     });
 </script>
 <jsp:include page="../common/footer_top.jsp"/>

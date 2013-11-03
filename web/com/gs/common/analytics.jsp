@@ -34,5 +34,7 @@ if(!"".equals(sGoogleTrackId))
             b._i.push([a,e,d])};b.__SV=1.2}})(document,window.mixpanel||[]);
         mixpanel.init("<%=sMixPanelTrackId%>");</script><!-- end Mixpanel -->
 <%
+    } else {
+%>        <!-- start Mixpanel --><script type="text/javascript">var mixpanel = undefined;</script><!-- end Mixpanel --><%
     }
 %>

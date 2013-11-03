@@ -45,6 +45,7 @@
 		</div>
 	</body>
 	<script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
+<script type="text/javascript" src="/web/js/general.js"></script>
 	<script type="text/javascript">
 		var varAdminId = '<%=sAdminId%>';
 		var varGuestId = '<%=sGuestId%>';
@@ -148,7 +149,13 @@
 						var varTmpEventId = varGuest.event_id;
 						$('#event_invite_status_'+varTmpEventId).text('Yes');
 						$('#event_invited_'+varTmpEventId).val(varGuest.total_seats);
-						$('#event_rsvp_'+varTmpEventId).val(varGuest.rsvp_seats);
+                        if( varGuest.rsvp_seats == -1 ) {
+                            $('#event_rsvp_'+varTmpEventId).val('No Response');
+                        } else if( varGuest.rsvp_seats == '0' ) {
+                            $('#event_rsvp_'+varTmpEventId).val('Not Attending');
+                        } else {
+                            $('#event_rsvp_'+varTmpEventId).val(varGuest.rsvp_seats);
+                        }
 						$('#event_assign_'+varTmpEventId).text('Update');
 						$('#event_remove_'+varTmpEventId).show();
 						$('#event_guest_id_'+varTmpEventId).val(varGuest.event_guest_id);
@@ -170,8 +177,16 @@
 					{
 						var varTmpEvent = varArrEvents[i];
 						var varTmpEventId = varTmpEvent.event_id;
-						//alert('event id - ' + varTmpEventId);
-						
+                        if( $('#event_invited_'+varTmpEventId).val() == 'Not Invited' ) {
+                            managePlaceholder( 'event_invited_'+varTmpEventId,'Not Invited');
+                        }
+                        if( $('#event_rsvp_'+varTmpEventId).val() == 'No Response' ) {
+                            managePlaceholder( 'event_rsvp_'+varTmpEventId,'No Response');
+                        }
+                        if( $('#event_rsvp_'+varTmpEventId).val() == 'Not Attending' ) {
+                            managePlaceholder( 'event_rsvp_'+varTmpEventId,'Not Attending');
+                        }
+
 						$('#event_assign_'+varTmpEventId).bind('click', {event_id: varTmpEventId} , function(event){  inviteEventHandler(event.data.event_id) });
 						$('#event_remove_'+varTmpEventId).bind('click', {event_id: varTmpEventId} , function(event){ 
 							
@@ -295,7 +310,7 @@
 			'<th style="width:12%" class="tbl_th">Is Invited</th>'+
 			'<th style="width:27%" class="tbl_th">Seating Plan Name</th>'+
 			'<th style="width:18%" class="tbl_th">Invited for seats</th>'+
-			'<th style="width:18%" class="tbl_th">RSVP to seats</th><th style="width:25%" class="tbl_th"></th>'+
+			'<th style="width:18%" class="tbl_th">RSVP to seats<br><h4 style="font-weight: normal;font-size: 85%;">0 if guest will not attend<br>-1 or leave blank for no response</h4></th><th style="width:25%" class="tbl_th"></th>'+
 			'</tr></thead>';
 			return valHeader; 
 		}
@@ -308,8 +323,8 @@
 				valRows = valRows + '<tr id="event_'+varTmpEvent.event_id+'">'+
 					'<td  class="tbl_td"><span style="text-align:center;" id="event_invite_status_'+varTmpEvent.event_id+'">No</span></td>'+
 					'<td  class="tbl_td">'+varTmpEvent.event_name+'</td>'+
-					'<td  class="tbl_td txt_center"><input id="event_invited_'+varTmpEvent.event_id+'" name="event_invited_'+varTmpEvent.event_id+'" class="ispn2"  type="text"></td>' +
-					'<td  class="tbl_td txt_center"><input id="event_rsvp_'+varTmpEvent.event_id+'" name="event_rsvp_'+varTmpEvent.event_id+'" class="ispn2" type="text" ></td>'+
+					'<td  class="tbl_td txt_center"><input id="event_invited_'+varTmpEvent.event_id+'" name="event_invited_'+varTmpEvent.event_id+'" class="ispn2"  type="text" value="Not Invited"></td>' +
+					'<td  class="tbl_td txt_center"><input id="event_rsvp_'+varTmpEvent.event_id+'" name="event_rsvp_'+varTmpEvent.event_id+'" class="ispn2" type="text"  value=""></td>'+
 					'<td  class="tbl_td txt_center">'+
 					'<button id="event_assign_'+varTmpEvent.event_id+'" name="event_assign_'+varTmpEvent.event_id+'" type="button" class="btn btn-small" >Invite</button>'+
 					'<button id="event_remove_'+varTmpEvent.event_id+'" name="event_remove_'+varTmpEvent.event_id+'" type="button" class="btn btn-small" style="display:none;">Uninvite</button>'+

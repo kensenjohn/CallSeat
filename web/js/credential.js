@@ -61,9 +61,10 @@ function resetAdminId(tmpAdminId)
 function setNewEventClick()
 {
 	$("#lnk_new_event_id").unbind("click");
-	$("#lnk_new_event_id").click(function() 
-	{
-        mixpanel.track('New Seating Plan button', {'Admin id' : varAdminID });
+	$("#lnk_new_event_id").click(function()  {
+        if(mixpanel!=undefined) {
+            mixpanel.track('New Seating Plan button', {'Admin id' : varAdminID });
+        }
 		$("#frm_lobby_tab").attr("action" , "/web/com/gs/event/event_setup.jsp");
 		$("#lobby_create_new").val(true);
 		$("#lobby_admin_id").val(varAdminID);
@@ -75,7 +76,9 @@ function setNewEventClick()
 function setAllGuestButtonClick()
 {
 	$("#lnk_guest_id").unbind("click");
-    mixpanel.track('My Guests button', {'Admin id' : varAdminID });
+    if(mixpanel!=undefined) {
+        mixpanel.track('My Guests button', {'Admin id' : varAdminID });
+    }
 	$("#lnk_guest_id").click(function() 
 	{
 		$("#frm_lobby_tab").attr("action" , "/web/com/gs/event/guest_setup.jsp");
@@ -89,7 +92,9 @@ function setAllGuestButtonClick()
 function setLobbyButtonClick()
 {
 	$("#lnk_dashboard_id").unbind("click");
-    mixpanel.track('My Seating Plan button', {'Admin id' : varAdminID });
+    if(mixpanel!=undefined) {
+        mixpanel.track('My Seating Plan button', {'Admin id' : varAdminID });
+    }
 	$("#lnk_dashboard_id").click(function() {
 		$("#frm_lobby_tab").attr("action" , "/web/com/gs/event/host_dashboard.jsp");
 		$("#lobby_event_id").val(varCredEventID);

@@ -158,6 +158,7 @@
     <input type="hidden" id="host_lobby_admin_id" name="host_lobby_admin_id" value="<%=isSignedIn ? sAdminIdSecure: "" %>"/>
 </form>
 </body>
+<script type="text/javascript" src="/web/js/general.js"></script>
 <script type="text/javascript" src="/web/js/jquery.datepick.js"></script>
 <script type="text/javascript" src="/web/js/credential.js"></script>
 <script type="text/javascript" src="/web/js/jquery.msgBox.js"></script>
@@ -168,7 +169,7 @@
     }
     $(document).ready(function() {
         managePlaceholder('tmp_email','Email');
-        managePlaceholder('event_date','Wedding Date');
+        //managePlaceholder('event_date','Wedding Date');
 
         $("#event_date").datepick({ minDate: 1, maxDate: "+1Y" });
         $( "#event_dt_sbt" ).bind( "click", function() {
@@ -213,20 +214,12 @@
             'padding'			: 0,
             'margin'			: 0
         });
-        mixpanel.track("Landing Page");
+        if(mixpanel!=undefined) {
+            mixpanel.track("Landing Page");
+        }
     });
 
-    function managePlaceholder(varId, defaultTxt) {
-        $('#'+varId).focus(function() {
-            if( $('#'+varId).val() == defaultTxt) {
-                $('#'+varId).val('');
-            }
-        }).blur(function() {
-                    if( $('#'+varId).val() == '') {
-                        $('#'+varId).val(defaultTxt);
-                    }
-                });
-    }
+
     function callSubmitEvent()
     {
         var url = '/web/com/gs/proc_host_landing.jsp';

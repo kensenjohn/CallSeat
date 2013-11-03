@@ -283,12 +283,10 @@ public class EventManager {
 				int totalGuestRsvp = 0;
 				int totalGuestInvited = 0;
 				for (EventGuestBean eventGuestBean : arrEventGuestBean) {
-					totalGuestRsvp = totalGuestRsvp
-							+ ParseUtil.sToI(eventGuestBean.getRsvpSeats());
-					totalGuestInvited = totalGuestInvited
-							+ ParseUtil.sToI(eventGuestBean
-									.getTotalNumberOfSeats());
-
+                    if( ParseUtil.sToI(eventGuestBean.getRsvpSeats()) >0 ) {
+                        totalGuestRsvp = totalGuestRsvp + ParseUtil.sToI(eventGuestBean.getRsvpSeats());
+                    }
+					totalGuestInvited = totalGuestInvited + ParseUtil.sToI(eventGuestBean.getTotalNumberOfSeats());
 				}
 				eventSummaryBean.setTotalGuestRsvp(totalGuestRsvp);
 				eventSummaryBean.setTotalGuestsInvited(totalGuestInvited);

@@ -196,7 +196,9 @@ try
 </body>
 <script type="text/javascript">
     $(document).ready(function() {
-        mixpanel.track('Shopping Cart receipt',  {'Admin id' : '<%=sAdminId%>', 'Event Id' : '<%=sEventId%>' });
+        if(mixpanel!=undefined) {
+            mixpanel.track('Shopping Cart receipt',  {'Admin id' : '<%=sAdminId%>', 'Event Id' : '<%=sEventId%>' });
+        }
     });
 </script>
 <%

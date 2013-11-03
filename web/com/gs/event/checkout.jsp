@@ -227,7 +227,9 @@
     {
         $("#loading_wheel").hide();
         enablePurchaseButton();
-        mixpanel.track('Shopping Cart checkout', {'Admin id' : '<%=sAdminId%>', 'Event Id' : '<%=sEventId%>' });
+        if(mixpanel!=undefined) {
+            mixpanel.track('Shopping Cart checkout', {'Admin id' : '<%=sAdminId%>', 'Event Id' : '<%=sEventId%>' });
+        }
 
     });
     $.ajaxSetup({

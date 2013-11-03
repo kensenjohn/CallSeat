@@ -55,3 +55,15 @@ function FormatPhone (e,input) {
     input.value = returnString;
 
     return false}
+
+function managePlaceholder(varId, defaultTxt) {
+    $('#'+varId).focus(function() {
+        if( $('#'+varId).val() == defaultTxt) {
+            $('#'+varId).val('');
+        }
+    }).blur(function() {
+        if( $('#'+varId).val() == '') {
+            $('#'+varId).val(defaultTxt);
+        }
+     });
+}

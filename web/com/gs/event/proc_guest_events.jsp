@@ -17,8 +17,29 @@ boolean  isLoadData = ParseUtil.sTob(request.getParameter("load_data"));
 boolean  isSaveData = ParseUtil.sTob(request.getParameter("save_data"));
 boolean  isInviteGuest = ParseUtil.sTob(request.getParameter("invite_guest"));
 boolean  isUnInviteGuest = ParseUtil.sTob(request.getParameter("un_invite_guest"));
-Integer iInvitedSeats = ParseUtil.sToI(request.getParameter("invited_seats"));
-Integer iRsvpSeats = ParseUtil.sToI(request.getParameter("rsvp_seats"));
+boolean isValidInvitationNumber = false;
+boolean isValidRsvpNumber = false;
+Integer iInvitedSeats = 0;
+if(ParseUtil.isValidInteger(request.getParameter("invited_seats")) && ParseUtil.sToI(request.getParameter("invited_seats"))>0) {
+    iInvitedSeats = ParseUtil.sToI(request.getParameter("invited_seats"));
+    isValidInvitationNumber = true;
+}
+Integer iRsvpSeats = 0;
+if(ParseUtil.isValidInteger(request.getParameter("rsvp_seats")) || "".equalsIgnoreCase(ParseUtil.checkNull(request.getParameter("rsvp_seats")))) {
+    iRsvpSeats = ParseUtil.sToI(request.getParameter("rsvp_seats"));
+    if(iRsvpSeats>=-1) {
+        if("".equalsIgnoreCase(ParseUtil.checkNull(request.getParameter("rsvp_seats"))))  {
+            iRsvpSeats = -1;
+        }
+        isValidRsvpNumber = true;
+    }
+} else if("No Response".equalsIgnoreCase(ParseUtil.checkNull(request.getParameter("rsvp_seats")))) {
+    iRsvpSeats = -1;
+    isValidRsvpNumber = true;
+}  else if("Not Attending".equalsIgnoreCase(ParseUtil.checkNull(request.getParameter("rsvp_seats")))) {
+    iRsvpSeats = 0;
+    isValidRsvpNumber = true;
+}
 String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
 String sEventGuestId = ParseUtil.checkNull(request.getParameter("event_guest_id"));
 Logger jspLogging = LoggerFactory.getLogger("JspLogging");
@@ -115,7 +136,17 @@ try
 				
 				responseStatus = RespConstants.Status.ERROR;
 				
-			}
+			} else if(!isValidInvitationNumber ) {
+                Text errorText = new ErrorText("Please enter a valid Invite number.","err_mssg") ;
+                arrErrorText.add(errorText);
+
+                responseStatus = RespConstants.Status.ERROR;
+            } else if(!isValidRsvpNumber ) {
+                Text errorText = new ErrorText("Please enter a valid RSVP number.","err_mssg") ;
+                arrErrorText.add(errorText);
+
+                responseStatus = RespConstants.Status.ERROR;
+            }
 			else if(iRsvpSeats > iInvitedSeats)
 			{
 				Text errorText = new ErrorText("Guest's RSVP is greater than invited number of seats.","err_mssg") ;		

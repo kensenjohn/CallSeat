@@ -875,7 +875,9 @@
 	$(document).ready(function() {
 		$("#loading_wheel").hide();
         if(varIsFromLandingPage) {
-            mixpanel.track("Create Free Plan",  {"Admin id": varTmpAdminId});
+            if(mixpanel!=undefined) {
+                mixpanel.track("Create Free Plan",  {"Admin id": varTmpAdminId});
+            }
         }
 		setCredentialEventId(varEventID);
 		if(!varIsSignedIn)
@@ -905,10 +907,10 @@
 			{
 				//alert('First create the event before adding tables;');
 				displayMssgBoxAlert('Please create the seating plan before adding tables', true);
-			}
-			else
-			{
-                mixpanel.track('Add/Edit Table Tab', {'Admin id' : varAdminID, 'Event Id' : varEventID });
+			} else {
+                if(mixpanel!=undefined) {
+                    mixpanel.track('Add/Edit Table Tab', {'Admin id' : varAdminID, 'Event Id' : varEventID });
+                }
 				toggleActionNavs('table_action_nav');
 				displayTableView('li_table_view');
 			}
@@ -919,10 +921,10 @@
 			{
 				//alert('First create the event before adding tables;');
 				displayMssgBoxAlert('Please create the seating plan before inviting guests', true);
-			}
-			else
-			{
-                mixpanel.track('Invite Guest Tab', {'Admin id' : varAdminID, 'Event Id' : varEventID });
+			} else {
+                if(mixpanel!=undefined) {
+                    mixpanel.track('Invite Guest Tab', {'Admin id' : varAdminID, 'Event Id' : varEventID });
+                }
 				displayGuestView('li_guest_view');
 				toggleActionNavs('invite_guest_action_nav');				
 			}
@@ -934,7 +936,9 @@
 				//alert('First create the event before adding tables;');
 				displayMssgBoxAlert('Please create the seating plan before creating phone numbers', true);
 			} else {
-                mixpanel.track('Personalize Phone Number Tab', {'Admin id' : varAdminID, 'Event Id' : varEventID });
+                if(mixpanel!=undefined) {
+                    mixpanel.track('Personalize Phone Number Tab', {'Admin id' : varAdminID, 'Event Id' : varEventID });
+                }
 				toggleActionNavs('li_phone_num');
 				displayPhoneNumberView('li_phone_num');
                 loadEventFeatures();
@@ -945,7 +949,9 @@
             if(varEventID == '') {
                 displayMssgBoxAlert('Please create the seating plan before creating phone numbers', true);
             } else {
-                mixpanel.track('Email Guest Tab', {'Admin id' : varAdminID, 'Event Id' : varEventID });
+                if(mixpanel!=undefined) {
+                    mixpanel.track('Email Guest Tab', {'Admin id' : varAdminID, 'Event Id' : varEventID });
+                }
                 toggleActionNavs('li_email');
                 displayEmailView('li_email');
                 //loadEventFeatures();

@@ -160,7 +160,9 @@ $(document).ready(function()
 {
 	loadPricingPlan();
 	$('#btn_pricing_plan').click(submitPricingPlan);
-    mixpanel.track('Pg pricing_plan.jsp', {'Referrer' : 'Shopping Cart','Admin id' : varAdminId ,'Event id' : varEventId });
+    if(mixpanel!=undefined) {
+        mixpanel.track('Pg pricing_plan.jsp', {'Referrer' : 'Shopping Cart','Admin id' : varAdminId ,'Event id' : varEventId });
+    }
 });
 
 function loadPricingPlan()
