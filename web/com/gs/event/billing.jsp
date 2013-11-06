@@ -221,7 +221,7 @@
 					</div>
 					<div class="row">
 						<div class="span5">
-							<input type="text" id="bill_zip" name="bill_zip"   value="<%=sZipCode%>">
+							<input type="text" id="bill_zip" name="bill_zip"   value="<%=sZipCode%>">&nbsp;&nbsp;<span style="font-size: 85%">(e.g. 75038, Y4O 6L8) </span>
 						</div>
 					</div>
 					<div class="row">
@@ -241,16 +241,28 @@
                                    for( Map.Entry<String, Constants.US_STATES> entryMapUsStates : mapStates.entrySet() )
                                    {
                                        boolean isSelected = false;
-                                       if( entryMapUsStates.getValue().getShortForm().equalsIgnoreCase(sState))
-                                       {
+                                       if( entryMapUsStates.getValue().getShortForm().equalsIgnoreCase(sState)) {
                                            isSelected = true;
                                        }
                                         %>
-
                                             <option value="<%=entryMapUsStates.getValue().getShortForm()%>"  <%=isSelected?"selected=\"selected\"":""%>><%=entryMapUsStates.getValue().getFullName()%></option>
                                         <%
                                    }
                                 }
+
+                                SortedMap<String, Constants.CANADA_STATES> mapCanadaStates = Constants.SORTED_CANADA_STATES();
+                                if(mapCanadaStates!=null && !mapCanadaStates.isEmpty()) {
+                                    for( Map.Entry<String, Constants.CANADA_STATES> entryMapCanadaStates : mapCanadaStates.entrySet() ) {
+                                        boolean isSelected = false;
+                                        if( entryMapCanadaStates.getValue().getShortForm().equalsIgnoreCase(sState)) {
+                                            isSelected = true;
+                                        }
+                                        %>
+                                            <option value="<%=entryMapCanadaStates.getValue().getShortForm()%>"  <%=isSelected?"selected=\"selected\"":""%>><%=entryMapCanadaStates.getValue().getFullName()%></option>
+                                        <%
+                                    }
+                                }
+
                             %>
 						</select>
 						</div>
@@ -261,7 +273,6 @@
 						</div>
 					</div>
 				</div>
-				  		<input type="hidden" id="bill_country" name="bill_country" value="USA"/>
 				  		<input type="hidden" name="admin_id" id="admin_id" value="<%=sAdminId%>"/>
 						<input type="hidden" name="event_id" id="event_id" value="<%=sEventId%>"/>
 						<input type="hidden" id="seating_tel_num" name="seating_tel_num"  value="<%=sPassthruSeatingNumber%>"/>
@@ -370,7 +381,6 @@ function stripeResponseHandler(status, response) {
         $('#purchase_last_name').val($('#bill_last_name').val());
         $('#purchase_state').val($('#bill_state').val());
         $('#purchase_zip_code').val($('#bill_zip').val());
-        $('#purchase_country').val($('#bill_country').val());
         $('#purchase_stripe_token').val(response['id']);
         $('#purchase_cc_last4').val(response.card['last4']);
         var actionUrl = "proc_billing.jsp";
@@ -482,8 +492,7 @@ function checkoutNumbers()
                 exp_year: $('#credit_card_expire_year').val(),
                 name: $('#bill_first_name').val() + ' ' + $('#bill_last_name').val(),
                 address_zip: $('#bill_zip').val(),
-                address_state: $('#bill_state').val(),
-                address_country: $('#bill_country').val()
+                address_state: $('#bill_state').val()
             }, stripeResponseHandler);
         }
     }

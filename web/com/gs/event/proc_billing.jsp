@@ -26,7 +26,6 @@
     String sPurchaseLastName = ParseUtil.checkNull(request.getParameter("purchase_last_name"));
     String sPurchaseState = ParseUtil.checkNull(request.getParameter("purchase_state"));
     String sPurchaseZipcode = ParseUtil.checkNull(request.getParameter("purchase_zip_code"));
-    String sPurchaseCountry = ParseUtil.checkNull(request.getParameter("purchase_country"));
     String sPurchaseStripeToken = ParseUtil.checkNull(request.getParameter("purchase_stripe_token"));
     String sPurchaseLast4CreditCard = ParseUtil.checkNull(request.getParameter("purchase_cc_last4"));
 
@@ -62,7 +61,6 @@
                         responsePurchaseTransactionBean.setLastName(sPurchaseLastName);
                         responsePurchaseTransactionBean.setState(sPurchaseState);
                         responsePurchaseTransactionBean.setZipcode(sPurchaseZipcode);
-                        responsePurchaseTransactionBean.setCountry(sPurchaseCountry);
                         responsePurchaseTransactionBean.setStripeToken(sPurchaseStripeToken);
                         responsePurchaseTransactionBean.setCreditCardLast4Digits(sPurchaseLast4CreditCard);
                         // update Transaction with latest phone numbers

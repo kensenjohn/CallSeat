@@ -252,7 +252,7 @@ function processPricingPlan(varResponse)
         varPricingGrid = varPricingGrid + '<div class="body" ><span >1 phone number</span></div>';
         varPricingGrid = varPricingGrid + '<div class="body"><span >Emails and Online RSVP and seating</span></div>';
         varPricingGrid = varPricingGrid + '<div class="body"><span >&nbsp;</span></div>';
-        varPricingGrid = varPricingGrid + '<div class="body" ><span >$'+varArrPricingPlan[vari].price+' per plan</span></div>';
+        varPricingGrid = varPricingGrid + '<div class="body" ><span >$'+varArrPricingPlan[vari].price+' USD per plan</span></div>';
         varPricingGrid = varPricingGrid + '<div class="body"><span ><input class="btn btn-blue ispn2" type="button" value="Select"></span></div>';
         varPricingGrid = varPricingGrid + '</div>';
         varPricingGrid = varPricingGrid + '</div>';

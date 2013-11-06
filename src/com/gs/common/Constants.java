@@ -349,6 +349,47 @@ public class Constants {
     public static String PROP_PRODUCT_PHONE = "product_phone";
     public static String PROP_PRODUCT_ADDRESS = "product_address";
 
+    public enum CANADA_STATES {
+        NewfoundlandAndLabrador("Newfoundland and Labrador","NL"),
+        NovaScotia("Nova Scotia","NS"),
+        PrinceEdwardIsland("Prince Edward Island","PE"),
+        NewBrunswick("New Brunswick","NB"),
+        Quebec("Quebec","QC"),
+        Ontario("Ontario","ON"),
+        Manitoba("Manitoba","MB"),
+        Saskatchewan("Saskatchewan","SK"),
+        Alberta("Alberta","AB"),
+        BritishColumbia("British Columbia","BC"),
+        Nunavut("Nunavut","NU"),
+        NorthwestTerritories("Northwest Territories","NT"),
+        Yukon("Yukon","YT");
+
+        private String fullName = "";
+        private String shortForm = "";
+        CANADA_STATES(String fullName, String shortForm) {
+            this.fullName = fullName;
+            this.shortForm = shortForm;
+        }
+
+        public String getFullName() {
+            return this.fullName;
+        }
+
+        public String getShortForm() {
+            return this.shortForm;
+        }
+    }
+
+    public static SortedMap<String, CANADA_STATES> SORTED_CANADA_STATES()
+    {
+        SortedMap<String, CANADA_STATES> mapStates = new TreeMap<String,CANADA_STATES>();
+        for (CANADA_STATES canadaState : CANADA_STATES.values()) {
+            mapStates.put(canadaState.getFullName(), canadaState);
+        }
+
+        return mapStates;
+    }
+
     public enum US_STATES
     {
         Alabama ("Alabama","AL"),

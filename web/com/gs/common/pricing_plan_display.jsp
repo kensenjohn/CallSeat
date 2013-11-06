@@ -57,7 +57,7 @@
                                 <div class="body" ><span >1 phone number</span></div>
                                 <div class="body" ><span >Emails and Online RSVP and seating</span></div>
                                 <div class="body"><span >&nbsp;</span></div>
-                                <div class="body" ><span ><%=dollarFormat.format(currencyPrice.doubleValue())%> per plan</span></div>
+                                <div class="body" ><span ><%=dollarFormat.format(currencyPrice.doubleValue())%> USD per plan</span></div>
                             </div>
                         </div>
             <%

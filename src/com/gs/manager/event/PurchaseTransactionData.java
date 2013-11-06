@@ -113,7 +113,7 @@ public class PurchaseTransactionData {
         {
             String sQuery = "UPDATE GTPURCHASETRANSACTIONS set FK_EVENTID = ? , FK_ADMINID = ? , IS_PURCHASE_COMPLETE = ?," +
                     " FK_PRICEGROUPID = ? , FIRSTNAME = ? , LASTNAME = ? , " +
-                    " STATE = ? , ZIPCODE = ? , COUNTRY = ? , STRIPE_CUSTOMER_ID = ? , CREATEDATE = ? , HUMANCREATEDATE = ? , STRIPE_TOKEN = ? , " +
+                    " STATE = ? , ZIPCODE = ?  , STRIPE_CUSTOMER_ID = ? , CREATEDATE = ? , HUMANCREATEDATE = ? , STRIPE_TOKEN = ? , " +
                     " CREDIT_CARD_LAST4_DIGITS = ? , UNIQUE_PURCHASE_TOKEN = ?, API_KEY_TYPE = ?, TELEPHONE_NUMBER = ? WHERE PURCHASETRANSACTIONID = ?";
 
             Long lCreateDate = DateSupport.getEpochMillis();
@@ -128,7 +128,6 @@ public class PurchaseTransactionData {
                     ParseUtil.checkNull(purchaseTransactionBean.getLastName()),
                     ParseUtil.checkNull(purchaseTransactionBean.getState()),
                     ParseUtil.checkNull(purchaseTransactionBean.getZipcode()),
-                    ParseUtil.checkNull(purchaseTransactionBean.getCountry()),
                     ParseUtil.checkNull(purchaseTransactionBean.getStripeCustomerId()),
                     lCreateDate ,
                     sHumanCreateDate,

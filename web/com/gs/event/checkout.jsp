@@ -145,7 +145,7 @@
                     </div>
                     <div class="row">
                         <div class="offset_0_5 span5" style="text-align:right;">
-                            <h2 style="color:#37291C;">You Pay &nbsp;&nbsp;&nbsp;<%=checkoutBean.getFormattedGrandTotal()%></h2>
+                            <h2 style="color:#37291C;">You Pay &nbsp;&nbsp;&nbsp;<%=checkoutBean.getFormattedGrandTotal()%> USD</h2>
                         </div>
                     </div>
 
@@ -198,7 +198,7 @@
                 Address:
             </div>
             <div class="span4"  style="text-align:left;">
-                <%=purchaseResponseTransactionBean.getZipcode()%> <br> <%=purchaseResponseTransactionBean.getState()%>&nbsp;<%=purchaseResponseTransactionBean.getCountry()%>
+                <%=purchaseResponseTransactionBean.getZipcode()%> <br> <%=purchaseResponseTransactionBean.getState()%>
             </div>
         </div>
     </div>

@@ -135,7 +135,7 @@
                                     AdminTelephonyAccountManager accountManager = new AdminTelephonyAccountManager();
                                     accountManager.createAccount(adminAccountMeta);
 
-                                    //String sPurchasedRsvpNum = "678690589";
+                                    //String sPurchasedTelephoneNum = "678690589";
                                     String sPurchasedTelephoneNum =  telNumManager.purchaseTelephoneNumber(adminAccountMeta,purchaseResponseTransactionBean.getTelephoneNumber() );
 
                                     if(pricingGroupBean!=null) {
