@@ -135,6 +135,9 @@ public class TelNumberManager {
 		AvailablePhoneNumberList phoneNumbers = null;
 		if (hmFilter != null && !hmFilter.isEmpty()) {
 			phoneNumbers = mainAccount.getAvailablePhoneNumbers(hmFilter);
+            if(phoneNumbers!=null && phoneNumbers.getPageData()!=null && phoneNumbers.getPageData().size()<=0) {
+                phoneNumbers = mainAccount.getAvailablePhoneNumbers(hmFilter,"CA","local");
+            }
 		} else {
 			phoneNumbers = mainAccount.getAvailablePhoneNumbers();
 		}
@@ -142,7 +145,6 @@ public class TelNumberManager {
 		if (phoneNumbers != null) {
 			list = phoneNumbers.getPageData();
 		}
-
 		return list;
 	}
 
@@ -176,10 +178,9 @@ public class TelNumberManager {
 			AdminTelephonyAccountMeta adminAccountMeta, String sTelephoneNum)
 			throws TwilioRestException {
 
-        appLogging.info("Purchase the Telephone Num : " + sTelephoneNum + " adminid : " + adminAccountMeta.getAdminId());
+        appLogging.info("Purchase the Telephone Num FRom Twilio : " + sTelephoneNum + " adminid : " + adminAccountMeta.getAdminId());
 		String sPurchasedPhoneNum = "777-888-9999";
-		if (adminAccountMeta != null
-				&& !"".equalsIgnoreCase(adminAccountMeta.getAdminId())) {
+		if (adminAccountMeta != null && !"".equalsIgnoreCase(adminAccountMeta.getAdminId())) {
 
 			AdminTelephonyAccountManager adminTelAcMan = new AdminTelephonyAccountManager();
 			AdminTelephonyAccountBean adminTelephonyAccBean = adminTelAcMan.getAdminAccount(adminAccountMeta);
@@ -187,15 +188,13 @@ public class TelNumberManager {
 			if (adminTelephonyAccBean != null && !"".equalsIgnoreCase(adminTelephonyAccBean.getAccountSid())
 					&& !"".equalsIgnoreCase(adminTelephonyAccBean.getAuthToken())) {
 
-				TwilioRestClient client = new TwilioRestClient(
-						adminTelephonyAccBean.getAccountSid(),
-						adminTelephonyAccBean.getAuthToken());
+				TwilioRestClient client = new TwilioRestClient( adminTelephonyAccBean.getAccountSid(), adminTelephonyAccBean.getAuthToken());
 
 				Account mainAccount = client.getAccount();
 
-				String sEnvironment = applicationConfig.get(Constants.PROP_ENVIRONMENT);
-				if (Constants.ENVIRONMENT.VIRTUAL_MACHINE.getEnv().equalsIgnoreCase(sEnvironment)
-						|| Constants.ENVIRONMENT.SANDBOX.getEnv().equalsIgnoreCase(sEnvironment)
+				String sEnvironment = ParseUtil.checkNull(applicationConfig.get(Constants.PROP_ENVIRONMENT));
+                appLogging.info("Before Purchase environment of application : " + sEnvironment );
+				if (Constants.ENVIRONMENT.VIRTUAL_MACHINE.getEnv().equalsIgnoreCase(sEnvironment) || Constants.ENVIRONMENT.SANDBOX.getEnv().equalsIgnoreCase(sEnvironment)
 						|| Constants.ENVIRONMENT.ALPHA.getEnv().equalsIgnoreCase(sEnvironment)) {
 
 					sPurchasedPhoneNum = "777-888-9999";

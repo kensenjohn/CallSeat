@@ -8,6 +8,23 @@
 <jsp:include page="/web/com/gs/common/header_bottom.jsp"/>
 
 <%
+    String userAgent = ParseUtil.checkNull(request.getHeader( "User-Agent" ));
+    boolean isInternetExplorer = false;
+    boolean isOldInternetExplorer = false;
+    boolean isOtherBrowsers = false;
+    boolean isAppleBrowser = false;
+    if(userAgent.contains("MSIE")) {
+        isInternetExplorer = true;
+        if(userAgent.contains("MSIE 7") || userAgent.contains("MSIE 8")) {
+            isOldInternetExplorer = true;
+        }
+    } else {
+        isOtherBrowsers = true;
+        if(userAgent.contains("iPhone") || userAgent.contains("iPad") || userAgent.contains("iPod")) {
+            isAppleBrowser = true;
+        }
+    }
+
     Logger jspLogging = LoggerFactory.getLogger("JspLogging");
     String sAdminId = ParseUtil.checkNull(request.getParameter("admin_id"));
     String sEventId = ParseUtil.checkNull(request.getParameter("event_id"));
@@ -48,10 +65,52 @@
                         <h3>Step 2: Gather RSVP and provide seating information.</h3>
                     </div>
                     <div class="offset1 span7">
-                        <p> When in RSVP mode, guests can RSVP or change their previous RSVP online by email or by calling the phone number.
-                            A confirmation text message or email can be sent out after a gu
-                            Assign seating for the guests after they RSVP.</p>
-                        <p> In Seating mode guest can get their table number online, by phone or text message. </p>
+                        <p> When in RSVP mode, guests can RSVP or change their previous RSVP, online by email or by calling the phone number.
+                            A confirmation text message or email can be sent out after the RSVP.
+                            Assign seating for the guests after they RSVP.<br>
+                        <%
+                        if(isOtherBrowsers) {
+                            if(!isAppleBrowser){
+                            %>
+                            Listen to RSVP Sample &nbsp; <audio src="/web/voice/sample_RSVP_message_wav.wav" controls  ></audio> &nbsp;&nbsp;
+                            <%
+                            }
+
+                        } else if( isInternetExplorer ) {
+                            if(isOldInternetExplorer) {
+                            %>
+                                <a type="application/octet-stream" href="/web/voice/sample_RSVP_message.mp3" target="_blank">Click to listen to RSVP Message</a> &nbsp;&nbsp;
+                            <%
+                            } else {
+                            %>
+                                Listen to RSVP Sample &nbsp; <audio src="/web/voice/sample_RSVP_message.mp3" controls  ></audio> &nbsp;&nbsp;
+                            <%
+                            }
+                        }
+                        %>
+                        </p>
+                        <p> In Seating mode guest can get their table number online, by phone or text message.
+                        <%
+                        if(isOtherBrowsers) {
+                            if(!isAppleBrowser){
+                            %>
+                            Listen to Seating Message sample <audio src="/web/voice/sample_Seating_message_wav.wav" controls  ></audio>
+                            <%
+                            }
+
+                        } else if( isInternetExplorer ) {
+                            if(isOldInternetExplorer) {
+                        %>
+                            <a type="application/octet-stream" href="/web/voice/sample_Seating_message.mp3" target="_blank">Click to listen to Seating message sample</a>
+                        <%
+                            } else {
+                        %>
+                            Listen to Seating Message sample &nbsp; <audio src="web/voice/sample_Seating_message.mp3" controls  ></audio>
+                        <%
+                            }
+                         }
+                        %>
+                        </p>
                     </div>
                 </div>
                 <div class="row">

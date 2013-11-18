@@ -40,7 +40,6 @@ try
 		
 		TelNumberManager telNumManager = new TelNumberManager();
 		ArrayList<TelNumberBean> arrTelNumberBean = new ArrayList<TelNumberBean>();
-        appLogging.info("StartTime : " + DateSupport.getUTCDateTime());
 		if(isCustomNumGen) {
 			telNumberMetaData.setAreaCodeSearch(sAreaCode);
 			telNumberMetaData.setTextPatternSearch(sTextPattern);
@@ -51,16 +50,13 @@ try
 		{
 			arrTelNumberBean = telNumManager.getGeneratedTelNumbers( telNumberMetaData, arrTelNumberBean);
 		} else {
-            appLogging.info("BEggining to get tel numbers : " + DateSupport.getUTCDateTime());
 			arrTelNumberBean = telNumManager.getTelNumEventDetails(telNumberMetaData);
 		}
 
-        appLogging.info("Middle Time : " + DateSupport.getUTCDateTime());
 
         if(arrTelNumberBean!=null && !arrTelNumberBean.isEmpty()) {
             jsonResponseObj.put("telnumbers",  telNumManager.getTelNumberBeanJson(arrTelNumberBean));
         }
-        appLogging.info("End Time : " + DateSupport.getUTCDateTime());
 		
 		Text okText = new OkText("Loading Phone number complete","my_id");		
 		arrOkText.add(okText);
