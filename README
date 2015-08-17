@@ -1,0 +1,10 @@
+Complete source code of the www.callseat.com website.
+
+These are some of the higlights.
+
+•	We used J2EE, JQuery, MYSQL, Redis-NoSql, Backbone
+•	Deployed and hosted on the Amazon EC2 cloud instances (AWS). 
+•	Amazon S3 and SES for content management and email service.
+•	Github/Git for source tracking and issue tracking. 
+•	Security, Cross Site Scripting checks using custom and OWASP tools.
+•	Twilio and Stripe API integration for telephony, SMS and billing.
